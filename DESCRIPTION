@@ -1,0 +1,20 @@
+Package: CFAEpiNow2Pipeline
+Title: EpiNow2 wrapper for deployment to Azure Batch
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Zachary", "Susswein", , "utb2@cdc.gov", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-4329-4833")),
+    person("Katelyn", "Gostic", , "uep6@cdc.gov", role = "aut",
+           comment = c(ORCID = "0000-0002-9369-6371"))
+    )
+Description: Add logging, metadata handling, and data handling
+    functions to use EpiNow2 in a pipeline. This pipeline is optimized
+    for the Center for Forecasting and Outbreak Analytic's use-case,
+    fitting hundreds of models in parallel.
+License: Apache License (>= 2)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
