@@ -1,11 +1,11 @@
-^.lintr$
-^.secrets.baseline$
-^CONTRIBUTING.md$
 ^DISCLAIMER.md$
-^LICENSE$
+^LICENSE.md$
 ^LICENSE.md$
 ^\.github$
+^\.lintr$
 ^\.pre-commit-config\.yaml$
+^\.secrets.baseline$
+^\.vscode$
 ^\.vscode$
 ^_pkgdown\.yml$
 ^code-of-conduct.md$
