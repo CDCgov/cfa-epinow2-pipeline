@@ -48,7 +48,7 @@ Examples of information which has been deemed not sensitive and may be posted on
 * Process flows
 * Program pain points
 * Software Service Descriptions
- 
+
 Sensitive information, which should not be posted, includes (but is not limited to) the following.
 
 * Information directly attributed to an individual in a sensitive manner
@@ -59,7 +59,7 @@ Sensitive information, which should not be posted, includes (but is not limited 
 * Non-public Links to CDC SharePoint or other internal references
 * Non-public Details on CDC internal infrastructure
 
-If there’s any question on whether information may be sensitive (such as detailed interview notes or specific references provided during a program interview), further guidance should be sought from the security steward prior to posting the information on any GitHub. 
+If there’s any question on whether information may be sensitive (such as detailed interview notes or specific references provided during a program interview), further guidance should be sought from the security steward prior to posting the information on any GitHub.
 
 ## Enforcement
 
