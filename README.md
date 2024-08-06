@@ -2,7 +2,7 @@
 
 ## Overview
 
-A lightweight wrapper around `[{EpiNow2}](https://github.com/epiforecasts/EpiNow2)` to add functionality for deployment in Azure Batch.
+A lightweight wrapper around [{EpiNow2}](https://github.com/epiforecasts/EpiNow2) to add functionality for deployment in Azure Batch.
 
 ## Project Admin
 
