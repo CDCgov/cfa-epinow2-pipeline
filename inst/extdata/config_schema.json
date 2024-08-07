@@ -1,0 +1,191 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/Epinow2",
+    "definitions": {
+        "Epinow2": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "job_id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "task_id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "as_of_date": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "disease": {
+                    "type": "string"
+                },
+                "geo_value": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "geo_type": {
+                    "type": "string"
+                },
+                "parameters": {
+                    "$ref": "#/definitions/Parameters"
+                },
+                "data": {
+                    "$ref": "#/definitions/Data"
+                },
+                "seed": {
+                    "type": "integer"
+                },
+                "horizon": {
+                    "type": "integer"
+                },
+                "priors": {
+                    "$ref": "#/definitions/Priors"
+                },
+                "sampler_opts": {
+                    "$ref": "#/definitions/SamplerOpts"
+                }
+            },
+            "required": [
+                "as_of_date",
+                "data",
+                "disease",
+                "geo_type",
+                "geo_value",
+                "horizon",
+                "job_id",
+                "parameters",
+                "priors",
+                "sampler_opts",
+                "seed",
+                "task_id"
+            ],
+            "title": "Epinow2"
+        },
+        "Data": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "path": {
+                    "type": "string"
+                },
+                "blob_storage_container": {
+                    "type": ["null", "string"]
+                },
+                "report_date": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "reference_date": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                }
+            },
+            "required": [
+                "blob_storage_container",
+                "path",
+                "reference_date",
+                "report_date"
+            ],
+            "title": "Data"
+        },
+        "Parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "path": {
+                    "type": "string"
+                },
+                "blob_storage_container": {
+                    "type": ["string", "null"]
+                }
+            },
+            "required": [
+                "blob_storage_container",
+                "path"
+            ],
+            "title": "Parameters"
+        },
+        "Priors": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "rt": {
+                    "$ref": "#/definitions/Rt"
+                },
+                "gp": {
+                    "$ref": "#/definitions/Gp"
+                }
+            },
+            "required": [
+                "gp",
+                "rt"
+            ],
+            "title": "Priors"
+        },
+        "Gp": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "alpha_sd": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "alpha_sd"
+            ],
+            "title": "Gp"
+        },
+        "Rt": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "mean": {
+                    "type": "integer"
+                },
+                "sd": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "mean",
+                "sd"
+            ],
+            "title": "Rt"
+        },
+        "SamplerOpts": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "cores": {
+                    "type": "integer"
+                },
+                "chains": {
+                    "type": "integer"
+                },
+                "adapt_delta": {
+                    "type": "number"
+                },
+                "max_treedepth": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "adapt_delta",
+                "chains",
+                "cores",
+                "max_treedepth"
+            ],
+            "title": "SamplerOpts"
+        }
+    }
+}
