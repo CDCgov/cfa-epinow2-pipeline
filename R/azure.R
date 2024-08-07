@@ -11,6 +11,7 @@
 #' @return NULL on success
 #' @export
 download_from_azure_blob <- function(blob_names, local_dest, container_name) {
+  # Attempt to connect to the storage container
   blob_container <- rlang::try_fetch(
     fetch_blob_container(container_name),
     error = function(con) {
