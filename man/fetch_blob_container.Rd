@@ -11,7 +11,7 @@ fetch_blob_container(container_name)
 credentials}
 }
 \value{
-A Blob endpoint from \code{\link[AzureStor:storage_endpoint]{AzureStor::blob_endpoint()}}
+A Blob endpoint
 }
 \description{
 This \strong{impure} function depends on the environment variables:
