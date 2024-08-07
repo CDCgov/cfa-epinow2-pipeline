@@ -19,9 +19,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
+          # Dropping these for now because we deploy only on Ubuntu.
+          # Ucomment as needed if supporting additional environments.
+          #- {os: macos-latest,   r: 'release'}
+          #- {os: windows-latest, r: 'release'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
