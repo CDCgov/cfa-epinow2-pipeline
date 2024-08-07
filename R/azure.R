@@ -25,6 +25,7 @@ download_from_azure_blob <- function(blob_names, local_dest, container_name) {
     }
   )
 
+  # Attempt to save each blob into local storage
   for (blob in blob_names) {
     local_file_path <- file.path(local_dest, blob)
     rlang::try_fetch(
