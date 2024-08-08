@@ -1,13 +1,28 @@
 {
     "job_id": "6183da58-89bc-455f-8562-4f607257a876",
     "task_id": "bc0c3eb3-7158-4631-a2a9-86b97357f97e",
-    "as_of_date": "2023-01-01",
     "disease": "test",
     "geo_value": ["test"],
     "geo_type": "test",
     "parameters": {
-       "path": "data/parameters.parquet",
-       "blob_storage_container": null
+       "right_truncation": {
+         "path": "data/parameters.parquet",
+         "blob_storage_container": null,
+         "as_of_date": "2023-01-01",
+         "format": "PMF"
+       },
+       "generation_interval": {
+         "path": "data/parameters.parquet",
+         "blob_storage_container": null,
+         "as_of_date": "2023-01-01",
+         "format": "PMF"
+       },
+       "delay_interval": {
+         "path": "data/parameters.parquet",
+         "blob_storage_container": null,
+         "as_of_date": "2023-01-01",
+         "format": "PMF"
+        }
     },
     "data": {
         "path": "gold/",

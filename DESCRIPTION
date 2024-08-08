@@ -21,6 +21,8 @@ Config/testthat/edition: 3
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
 Imports: 
     cli,
+    DBI,
+    duckdb,
     jsonlite,
     jsonvalidate,
     rlang
