@@ -138,8 +138,7 @@ fetch_credential_from_env_var <- function(env_var) {
         "Error loading Azure credentials from environment variables",
         "!" = "Environment variable {.envvar {env_var}} not specified or empty"
       ),
-      class = "CFA_Rt",
-      parent = con
+      class = "CFA_Rt"
     )
   }
 
