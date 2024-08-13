@@ -26,7 +26,7 @@
 
 #' @value a character vector containing all required credentials
 #'
-#' @details used to view required credentials and internally to ensure the set 
+#' @details used to view required credentials and internally to ensure the set
 #' of required credentials is consistent in downstream functions
 #' @export
 az_required_credentials <- function() {
@@ -42,8 +42,8 @@ az_required_credentials <- function() {
 #' az_storage_account, az_token strings containing the relevant Azure credential
 #' The function will create an env var with the same name. One or more non-NULL
 #' input is required.
-#' 
-#' @details This is a thin wrappper around [Sys.setenv]. 
+#'
+#' @details This is a thin wrappper around [Sys.setenv].
 #' @export
 az_set_env_credentials <- function(
     az_client_id = NULL,
@@ -53,50 +53,63 @@ az_set_env_credentials <- function(
     az_storage_account = NULL,
     az_token = NULL,
     cred_list = NULL) {
-
-  ## Only non-null values kept when null values are set in a vector
-  inputs = c(
+  # Check that no input has length > 1
+  inputs <- c(
     "az_client_id" = az_client_id,
     "az_tenant_id" = az_tenant_id,
     "az_subscription" = az_subscription,
     "az_resource_group" = az_resource_group,
     "az_storage_account" = az_storage_account,
-    "az_token" = az_token,
-    unlist(list_inputs)
+    "az_token" = az_token
   )
 
-  if(length(inputs) == 0){
+  if (length(inputs) == 0 & length(cred_list) == 0) {
     cli::cli_abort("Must input at least one non-null value")
   }
-  if(!all(names(inputs) %in% az_required_credentials())){
-    bad_names = names(inputs)[names(inputs) %in% az_required_credentials()]
-    cli::cli_abort(
-        c(
-        "!" = "Valid credential names are: {.field {az_required_credentials()}}",
-        "i" = "You input these invalid names: {.field {bad_names}}")
+
+  length_gt_1 <- sapply(inputs, function(x) {
+    !length(x) > 1
+  })
+  if (any(length_gt_1)) {
+    bad_inputs <- names(inputs)[length_gt_1]
+    cli::cli_abort("input {bad_inputs} must be length one")
   }
-  if(!all(names(inputs) %in% az_required_credentials())){
-    bad_names = names(inputs)[names(inputs) %in% az_required_credentials()]
-    cli::cli_abort(
-        c(
-        "!" = "Valid credential names are: {.field {az_required_credentials()}}",
-        "i" = "You input these invalid names: {.field {bad_names}}")
+
+  ## Only non-null values kept when null values are set in a vector
+  inputs <- c(
+    inputs,
+    unlist(cred_list)
+  )
+
+  if (any(duplicated(names(inputs)))) {
+    dup_name <- names(inputs)[duplicated(names(inputs))]
+    cli::cli_abort("Input {.field {dup_name}} is duplicated")
   }
-  if(!all(is.character(inputs))){
+
+  if (!all(names(inputs) %in% az_required_credentials())) {
+    bad_names <- names(inputs)[!names(inputs) %in% az_required_credentials()]
+    cli::cli_abort(
+      c(
+        "!" = "Valid credential names are: {.field {az_required_credentials()}}",
+        "i" = "You input these invalid names: {.field {bad_names}}"
+      )
+    )
+  }
+
+  if (!all(is.character(inputs))) {
     cli::cli_abort("Credential values must all be strings")
   }
-  if(any(inputs == "")){
+  if (any(inputs == "")) {
     cli::cli_abort("Credential values must be non-empty. You input `` at least once.")
   }
   ## Set env vars
-  for(vv in 1:length(inputs)){
-    cli::cli_alert_info("Setting env var {.envvar {names(inputs[vv])}} = {.field {inputs[vv]}}")
+  for (vv in 1:length(inputs)) {
+    cli::cli_alert_info("Setting env var {.envvar {names(inputs[vv])}} = {.envvar {inputs[vv]}}")
   }
   do.call(Sys.setenv, as.list(inputs))
-
 }
 
-#' Fetch Azure credential from environment variable
+#' Internal function: fetch one Azure credential from environment variable
 #' and throw an informative error if credential is not found
 #'
 #' @param env_var A character vector, the credential(s) to fetch
@@ -110,9 +123,9 @@ fetch_env_credential <- function(env_var) {
     cli::cli_abort(
       c(
         "Error loading Azure credentials from environment variables",
-        "!" = "Environment variable {.envvar {names(missing_creds)}} not 
+        "!" = "Environment variable {.envvar {names(missing_creds)}} not
         specified or empty",
-        "i" = "See {.fn crazuR::set_env_credentials} for help setting 
+        "i" = "See {.fn crazuR::az_set_env_credentials} for help setting
         credentials"
       ),
       class = "CFA_Rt"
@@ -128,25 +141,25 @@ fetch_env_credential <- function(env_var) {
 #' "az_subscription", "az_resource_group", "az_storage_account", and "az_token",
 #' or an informative error if any are missing
 #'
-#' @details See []() for help finding and specifying Azure credntials
+#' @details See []() for help finding and specifying Azure credntials.
 #' @export
 az_get_env_credentials <- function() {
-  fetch_env_credential(expected_credentials) |> as.list()
+  fetch_env_credential(az_required_credentials()) |> as.list()
 }
 
 
 ## 1. Validate credentials -----------------------------------------------------
 
 #' Checks that a list of credentials contains all expected credentials
-#' 
+#'
 #' @param cred_list a named list of credentials. Names must match the set of
-#' required credentials returned by [az_required_credentials()]. All values must 
+#' required credentials returned by [az_required_credentials()]. All values must
 #' be non-empty strings.
-#' 
-#' @details Checks that credentials exist, but does not connect to Azure to 
+#'
+#' @details Checks that credentials exist, but does not connect to Azure to
 #' check that the credentials are valid
-#' @export 
-validate_credlist <- function(cred_list) {
+#' @export
+az_validate_credlist <- function(cred_list) {
   ## Check that is list
   if (!is.list(cred_list)) {
     cli::cli_abort("!" = "Input `cred_list` must be a list.")
@@ -163,13 +176,13 @@ validate_credlist <- function(cred_list) {
       )
     )
   }
-  element_length = sapply(cred_list, length)
-  bad_inputs = cred_list[element_length > 1]
+  element_length <- sapply(cred_list, length)
+  bad_inputs <- cred_list[element_length > 1]
   if (!all(element_length == 1)) {
     cli::cli_abort(
       c(
         "!" = "Each credential value must be a single nonempty string.",
-        "i" = "You input these values with length > 1: 
+        "i" = "You input these values with length > 1:
         {.field {names(bad_inputs)}} with values {.field {bad_inputs}}."
       )
     )
@@ -182,7 +195,7 @@ validate_credlist <- function(cred_list) {
     cli::cli_abort(
       c(
         "!" = "Each credential value must be a single nonempty string.",
-        "i" = "You input these bad credentials: {.field {names(bad_inputs)}} 
+        "i" = "You input these bad credentials: {.field {names(bad_inputs)}}
         with values {.field {bad_inputs}}."
       )
     )
