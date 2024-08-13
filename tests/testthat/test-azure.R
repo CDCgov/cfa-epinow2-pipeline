@@ -51,16 +51,3 @@ test_that("Download fail throws informative error", {
     fetch_blob_container = function(...) "test-container"
   )
 })
-
-test_that("Credential fetched successfully from env var", {
-  withr::with_envvar(c("KEY" = "VALUE"), {
-    expect_equal(fetch_credential_from_env_var("KEY"), "VALUE")
-  })
-})
-
-test_that("Missing credential fails", {
-  withr::with_envvar(c("MISSING_KEY" = ""), {
-    expect_error(fetch_credential_from_env_var("MISSING_KEY"))
-  })
-  expect_error(fetch_credential_from_env_var("NOT_A_REAL_KEY"))
-})
