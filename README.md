@@ -3,6 +3,32 @@
 ## Overview
 
 A lightweight wrapper around [{EpiNow2}](https://github.com/epiforecasts/EpiNow2) to add functionality for deployment in Azure Batch.
+It holds some lightweight helper functions to interface with Azure services, convert input data to EpiNow2's expected input format, and save expected outputs. It also adds metadata and logging.
+
+This package is meant to meet CFA's needs around model deployment in its computational environment.
+The code is open source as part of CFA's goals around development, but it may not be possible to support extensions to additional environments.
+
+## Structure
+
+This repository holds an R package, `{CFAEpiNow2Pipeline}`.
+The repository is structured as a standard R package.
+All PRs pass R CMD check as part of the CI suite as a pre-condition for merge to main.
+
+The package contains contains some adapters and wrappers to run `{EpiNow2}` at moderate computational scale, fitting hundreds or thousands of independent models in parallel with cloud resources.
+The adapters read from datasets with standardized formats and produces outputs as flat files with standard names.
+
+This package does _not_ manage pipeline deployment or kickoff, data extraction and transformation, or model output visualization.
+
+## Components
+
+1. **Config**: Model parameterization and input/output paths are specified by a config, with the path to this config passed at runtime.
+    - The config is validated at runtime, but config generation is specified at pipeline runtime and not part of this package.
+1. **Data**: Data load from the CFA data lake or from a local environment.
+1. **Parameters**: Required parameters are read from the CFA data lake or from a local environment.
+1. **Model run**: The R environment is managed such that the model runs from a fixed random seed, both for EpiNow2 initialization and Stan sampling.
+1. **Outputs**: Model fits are saved as flat files with standardized formats and RDS objects.
+1. **Logging**: Steps in the pipeline have comprehensive R-style logging, with the the [cli](https://github.com/r-lib/cli) package
+1. **Metadata**: Model runs generate comprehensive metadata stored alongside outputs
 
 ## Project Admin
 
