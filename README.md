@@ -3,7 +3,7 @@
 ## Overview
 
 A lightweight wrapper around [{EpiNow2}](https://github.com/epiforecasts/EpiNow2) to add functionality for deployment in Azure Batch.
-It holds some lightweight helper functions to interface with Azure services, convert input data to `{EpiNow2}`'s expected input format, and save expected outputs.
+It holds some helper functions to interface with Azure services, convert input data to EpiNow2's expected input format, and save expected outputs. 
 It also adds metadata and logging.
 
 This package is meant to meet CFA's needs around model deployment in its computational environment.
@@ -17,6 +17,7 @@ All PRs pass R CMD check as part of the CI suite as a pre-condition for merge to
 
 The package contains contains some adapters and wrappers to run `{EpiNow2}` at moderate computational scale, fitting hundreds or thousands of independent models in parallel with cloud resources.
 The adapters read from datasets with standardized formats and produces outputs as flat files with standard names.
+The wrapper functions enhance EpiNow2 functionality to support cloud deployments, adding more logging and standardizing the R environment.
 
 This package does _not_ manage pipeline deployment or kickoff, data extraction and transformation, or model output visualization.
 
