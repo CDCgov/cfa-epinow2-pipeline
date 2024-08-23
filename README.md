@@ -16,7 +16,7 @@ The repository is structured as a standard R package.
 All PRs pass R CMD check as part of the CI suite as a pre-condition for merge to main.
 If interested in contributing see `CONTRIBUTING.md` and open an issue or a PR.
 
-The package contains contains some adapters and wrappers to run `{EpiNow2}` at moderate computational scale, fitting hundreds or thousands of independent models in parallel with cloud resources.
+The package contains contains some adapters and wrappers to run to run many independent {EpiNow2} models in parallel with cloud resources.
 The adapters read from datasets with standardized formats and produces outputs as flat files with standard names.
 The wrapper functions enhance EpiNow2 functionality to support cloud deployments, adding more logging and standardizing the R environment.
 
