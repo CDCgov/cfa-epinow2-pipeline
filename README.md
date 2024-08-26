@@ -3,7 +3,8 @@
 ## Overview
 
 A lightweight wrapper around [{EpiNow2}](https://github.com/epiforecasts/EpiNow2) to add functionality for deployment in Azure Batch.
-It holds some lightweight helper functions to interface with Azure services, convert input data to EpiNow2's expected input format, and save expected outputs. It also adds metadata and logging.
+It holds some lightweight helper functions to interface with Azure services, convert input data to `{EpiNow2}`'s expected input format, and save expected outputs.
+It also adds metadata and logging.
 
 This package is meant to meet CFA's needs around model deployment in its computational environment.
 The code is open source as part of CFA's goals around development, but it may not be possible to support extensions to additional environments.
@@ -25,7 +26,7 @@ This package does _not_ manage pipeline deployment or kickoff, data extraction a
     - The config is validated at runtime, but config generation is specified at pipeline runtime and not part of this package.
 1. **Data**: Data load from the CFA data lake or from a local environment.
 1. **Parameters**: Required parameters are read from the CFA data lake or from a local environment.
-1. **Model run**: The R environment is managed such that the model runs from a fixed random seed, both for EpiNow2 initialization and Stan sampling.
+1. **Model run**: The R environment is managed such that the model runs from a fixed random seed, both for `{EpiNow2}` initialization and Stan sampling.
 1. **Outputs**: Model fits are saved as flat files with standardized formats and RDS objects.
 1. **Logging**: Steps in the pipeline have comprehensive R-style logging, with the the [cli](https://github.com/r-lib/cli) package
 1. **Metadata**: Model runs generate comprehensive metadata stored alongside outputs
