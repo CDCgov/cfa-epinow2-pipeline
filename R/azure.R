@@ -93,15 +93,15 @@ fetch_blob_container <- function(container_name) {
   cli::cli_alert_info("Loading Azure credentials from env vars")
   # nolint start: object_name_linter
   az_tenant_id <- fetch_credential_from_env_var("az_tenant_id ")
-  az_subscription_id<- fetch_credential_from_env_var("az_subscription_id")
-  az_resource_group<- fetch_credential_from_env_var("az_resource_group")
-  az_storage_account<- fetch_credential_from_env_var("az_storage_account")
+  az_subscription_id <- fetch_credential_from_env_var("az_subscription_id")
+  az_resource_group <- fetch_credential_from_env_var("az_resource_group")
+  az_storage_account <- fetch_credential_from_env_var("az_storage_account")
   # nolint end: object_name_linter
   cli::cli_alert_success("Credentials loaded successfully")
 
 
   cli::cli_alert_info("Authenticating with loaded credentials")
-  az <- AzureRMR::get_azure_login(az_tenant_id )
+  az <- AzureRMR::get_azure_login(az_tenant_id)
   subscription <- az$get_subscription(az_subscription_id)
   resource_group <- subscription$get_resource_group(az_resource_group)
   storage_account <- resource_group$get_storage_account(az_storage_account)
