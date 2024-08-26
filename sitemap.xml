@@ -9,6 +9,9 @@
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/news/index.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/open_practices.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/add_two_numbers.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/download_from_azure_blob.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/fetch_blob_container.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/fetch_credential_from_env_var.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/rules_of_behavior.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/thanks.html</loc></url>
