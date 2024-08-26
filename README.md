@@ -16,7 +16,7 @@ The repository is structured as a standard R package.
 All PRs pass R CMD check as part of the CI suite as a pre-condition for merge to main.
 If interested in contributing see `CONTRIBUTING.md` and open an issue or a PR.
 
-The package contains contains some adapters and wrappers to run to run many independent {EpiNow2} models in parallel with cloud resources.
+The package contains contains some adapters and wrappers to run to run many independent `{EpiNow2}` models in parallel with cloud resources.
 The adapters read from datasets with standardized formats and produces outputs as flat files with standard names.
 The wrapper functions enhance EpiNow2 functionality to support cloud deployments, adding more logging and standardizing the R environment.
 
@@ -25,12 +25,15 @@ This package does _not_ manage pipeline deployment or kickoff, data extraction a
 
 ## Components
 
-1. **Config**: Model parameterization and input/output paths are specified by a config, with the path to this config passed at runtime.
+This package implements functions for:
+
+1. **Configuration**: Loads parameters such as prior distributions, generation intervals, and right-truncation from a config in a standard schema, with the path to this config passed at runtime.
     - The config is validated at runtime, but config generation is specified at pipeline runtime and not part of this package.
-1. **Data**: Data load from the CFA data lake or from a local environment.
-1. **Parameters**: Required parameters are read from the CFA data lake or from a local environment.
-1. **Model run**: The R environment is managed such that the model runs from a fixed random seed, both for `{EpiNow2}` initialization and Stan sampling.
-1. **Outputs**: Model fits are saved as flat files with standardized formats and RDS objects.
+1. **Data load**: Loads data from the CFA data lake or from a local environment and translates it from CFA's schema to the expected EpiNow2 format.
+    - Paths are specified via the config
+1. **Parameters**: Loads pre-specified and -validated generation interval, delay interval, and right-truncation distributions from from the CFA data lake or from a local environment and formats them for use in EpiNow2.
+1. **Model run**: Manages R environment to run EpiNow2 from a fixed random seed, both for `{EpiNow2}` initialization and Stan sampling.
+1. **Outputs**: Provides functionality to process `{EpiNow2}` model fits to a standardised flat output format (as described in forthcoming link). Within the pipeline, model fits are saved both in their entirety as `.rds` files, as well as via this flat output format.
 1. **Logging**: Steps in the pipeline have comprehensive R-style logging, with the the [cli](https://github.com/r-lib/cli) package
 1. **Metadata**: Model runs generate comprehensive metadata stored alongside outputs
 
