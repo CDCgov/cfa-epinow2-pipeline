@@ -76,10 +76,10 @@ download_file_from_container <- function(
 #' Load Azure Blob endpoint using credentials in environment variables
 #'
 #' This **impure** function depends on the environment variables:
-#' * TENANT_ID
-#' * SUBSCRIPTION
-#' * RESOURCE_GROUP
-#' * STORAGE_ACCOUNT
+#' * az_tenant_id
+#' * az_subscription_id
+#' * az_resource_group
+#' * az_storage_account
 #'
 #' It will error out if any of the above is not set.
 #' @param container_name The Azure Blob Storage container associated with the
@@ -92,19 +92,19 @@ fetch_blob_container <- function(container_name) {
   )
   cli::cli_alert_info("Loading Azure credentials from env vars")
   # nolint start: object_name_linter
-  TENANT_ID <- fetch_credential_from_env_var("TENANT_ID")
-  SUBSCRIPTION <- fetch_credential_from_env_var("SUBSCRIPTION")
-  RESOURCE_GROUP <- fetch_credential_from_env_var("RESOURCE_GROUP")
-  STORAGE_ACCOUNT <- fetch_credential_from_env_var("STORAGE_ACCOUNT")
+  az_tenant_id <- fetch_credential_from_env_var("az_tenant_id ")
+  az_subscription_id<- fetch_credential_from_env_var("az_subscription_id")
+  az_resource_group<- fetch_credential_from_env_var("az_resource_group")
+  az_storage_account<- fetch_credential_from_env_var("az_storage_account")
   # nolint end: object_name_linter
   cli::cli_alert_success("Credentials loaded successfully")
 
 
   cli::cli_alert_info("Authenticating with loaded credentials")
-  az <- AzureRMR::get_azure_login(TENANT_ID)
-  subscription <- az$get_subscription(SUBSCRIPTION)
-  resource_group <- subscription$get_resource_group(RESOURCE_GROUP)
-  storage_account <- resource_group$get_storage_account(STORAGE_ACCOUNT)
+  az <- AzureRMR::get_azure_login(az_tenant_id )
+  subscription <- az$get_subscription(az_subscription_id)
+  resource_group <- subscription$get_resource_group(az_resource_group)
+  storage_account <- resource_group$get_storage_account(az_storage_account)
 
   # Getting the access key
   keys <- storage_account$list_keys()
