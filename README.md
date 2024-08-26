@@ -35,7 +35,7 @@ This package implements functions for:
 1. **Model run**: Manages R environment to run `{EpiNow2}` from a fixed random seed, both for `{EpiNow2}` initialization and Stan sampling.
 1. **Outputs**: Provides functionality to process `{EpiNow2}` model fits to a standardised flat output format (as described in forthcoming link). Within the pipeline, model fits are saved both in their entirety as `.rds` files, as well as via this flat output format.
 1. **Logging**: Steps in the pipeline have comprehensive R-style logging, with the the [cli](https://github.com/r-lib/cli) package
-1. **Metadata**: Model runs generate comprehensive metadata stored alongside outputs
+1. **Metadata**: Extract comprehensive metadata on the model run and store alongside outputs
 
 ## Project Admin
 
