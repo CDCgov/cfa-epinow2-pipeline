@@ -3,7 +3,7 @@
 ## Overview
 
 A lightweight wrapper around [{EpiNow2}](https://github.com/epiforecasts/EpiNow2) to add functionality for deployment in Azure Batch.
-It holds some helper functions to interface with Azure services, convert input data to EpiNow2's expected input format, and save expected outputs. 
+It holds some helper functions to interface with Azure services, convert input data to EpiNow2's expected input format, and save expected outputs.
 It also adds metadata and logging.
 
 This package is meant to enhance the `{EpiNow2}` package to support deployment in CFA's computational environment.

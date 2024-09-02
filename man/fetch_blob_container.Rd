@@ -16,10 +16,10 @@ A Blob endpoint
 \description{
 This \strong{impure} function depends on the environment variables:
 \itemize{
-\item TENANT_ID
-\item SUBSCRIPTION
-\item RESOURCE_GROUP
-\item STORAGE_ACCOUNT
+\item az_tenant_id
+\item az_subscription_id
+\item az_resource_group
+\item az_storage_account
 }
 }
 \details{

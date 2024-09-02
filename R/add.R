@@ -1,5 +1,7 @@
 #' A temp function
 #'
+#' Adding some meaningless text to test rendering via PR command.
+#'
 #' @param x A number
 #' @param y Another number
 #' @return Their sum
