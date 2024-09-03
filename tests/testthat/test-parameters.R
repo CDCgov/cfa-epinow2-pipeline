@@ -182,13 +182,16 @@ test_that("Invalid PMF errors", {
       start_date = start_date,
       end_date = NA
     )
-    expect_error(read_interval_pmf(
-      path = path,
-      parameter = parameter,
-      disease = disease,
-      as_of_date = start_date + 1,
-      state = "test"
-    ))
+    expect_error(
+      read_interval_pmf(
+        path = path,
+        parameter = parameter,
+        disease = disease,
+        as_of_date = start_date + 1,
+        state = "test"
+      ),
+      class = "invalid_pmf"
+    )
   })
 })
 
@@ -265,12 +268,15 @@ test_that("Not a PMF errors", {
       start_date = start_date,
       end_date = NA
     )
-    expect_error(read_interval_pmf(
-      path = path,
-      disease = disease,
-      as_of_date = start_date + 1,
-      parameter = parameter
-    ))
+    expect_error(
+      read_interval_pmf(
+        path = path,
+        disease = disease,
+        as_of_date = start_date + 1,
+        parameter = parameter
+      ),
+      class = "not_a_pmf"
+    )
   })
 })
 
@@ -293,12 +299,15 @@ test_that("Invalid disease errors", {
       end_date = NA
     )
 
-    expect_error(read_interval_pmf(
-      path = path,
-      disease = disease,
-      as_of_date = start_date + 1,
-      parameter = parameter
-    ))
+    expect_error(
+      read_interval_pmf(
+        path = path,
+        disease = disease,
+        as_of_date = start_date + 1,
+        parameter = parameter
+      ),
+      regexp = "`disease` must be one of"
+    )
   })
 })
 
@@ -321,12 +330,15 @@ test_that("Invalid parameter errors", {
       end_date = NA
     )
 
-    expect_error(read_interval_pmf(
-      path = path,
-      disease = disease,
-      as_of_date = start_date + 1,
-      parameter = parameter
-    ))
+    expect_error(
+      read_interval_pmf(
+        path = path,
+        disease = disease,
+        as_of_date = start_date + 1,
+        parameter = parameter
+      ),
+      regexp = "`parameter` must be one of"
+    )
   })
 })
 
@@ -350,12 +362,15 @@ test_that("Return isn't exactly one errors", {
     )
 
     # Date too early
-    expect_error(read_interval_pmf(
-      path = path,
-      disease = disease,
-      as_of_date = start_date - 1,
-      parameter = parameter
-    ))
+    expect_error(
+      read_interval_pmf(
+        path = path,
+        disease = disease,
+        as_of_date = start_date - 1,
+        parameter = parameter
+      ),
+      class = "not_one_row_returned"
+    )
   })
 })
 
@@ -366,12 +381,15 @@ test_that("No file exists errors", {
   start_date <- as.Date("2023-01-01")
   disease <- "COVID-19"
 
-  expect_error(read_interval_pmf(
-    path = "not_a_real_file",
-    disease = disease,
-    as_of_date = start_date - 1,
-    parameter = parameter
-  ))
+  expect_error(
+    read_interval_pmf(
+      path = "not_a_real_file",
+      disease = disease,
+      as_of_date = start_date - 1,
+      parameter = parameter
+    ),
+    class = "file_not_found"
+  )
 })
 
 test_that("Invalid query throws wrapped error", {
@@ -393,11 +411,14 @@ test_that("Invalid query throws wrapped error", {
       end_date = NA
     )
 
-    expect_error(read_interval_pmf(
-      path = path,
-      disease = disease,
-      as_of_date = "abc123",
-      parameter = parameter
-    ))
+    expect_error(
+      read_interval_pmf(
+        path = path,
+        disease = disease,
+        as_of_date = "abc123",
+        parameter = parameter
+      ),
+      class = "wrapped_error"
+    )
   })
 })

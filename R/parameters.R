@@ -111,7 +111,9 @@ read_interval_pmf <- function(path,
   as_of_date <- stringify_date(as_of_date)
   cli::cli_alert_info("Reading {.arg right_truncation} from {.path {path}}")
   if (!file.exists(path)) {
-    cli::cli_abort("File {.path {path}} does not exist")
+    cli::cli_abort("File {.path {path}} does not exist",
+      class = "file_not_found"
+    )
   }
 
 
@@ -155,11 +157,14 @@ read_interval_pmf <- function(path,
       params = parameters
     ),
     error = function(cnd) {
-      cli::cli_abort(c(
-        "Failure loading {.arg {parameter}} from {.path {path}}",
-        "Using {.val {disease}}, {.val {as_of_date}}, and {.val {state}}",
-        "Original error: {cnd}"
-      ))
+      cli::cli_abort(
+        c(
+          "Failure loading {.arg {parameter}} from {.path {path}}",
+          "Using {.val {disease}}, {.val {as_of_date}}, and {.val {state}}",
+          "Original error: {cnd}"
+        ),
+        class = "wrapped_error"
+      )
     }
   )
   DBI::dbDisconnect(con)
@@ -168,32 +173,41 @@ read_interval_pmf <- function(path,
   ################
   # Validate loaded PMF
   if (nrow(pmf_df) != 1) {
-    cli::cli_abort(c(
-      "Failure loading {.arg {parameter}} from {.path {path}} ",
-      "Query did not return exactly one row",
-      "Using {.val {disease}}, {.val {as_of_date}}, and {.val {state}}",
-      "Query matched {.val {nrow(pmf_df)}} rows"
-    ))
+    cli::cli_abort(
+      c(
+        "Failure loading {.arg {parameter}} from {.path {path}} ",
+        "Query did not return exactly one row",
+        "Using {.val {disease}}, {.val {as_of_date}}, and {.val {state}}",
+        "Query matched {.val {nrow(pmf_df)}} rows"
+      ),
+      class = "not_one_row_returned"
+    )
   }
 
   pmf <- pmf_df[["value"]][[1]]
 
   if ((length(pmf) < 1) || !rlang::is_bare_numeric(pmf)) {
-    cli::cli_abort(c(
-      "Invalid {.arg {parameter}} returned.",
-      "x" = "Expected a PMF",
-      "i" = "Loaded object: {pmf_df}"
-    ))
+    cli::cli_abort(
+      c(
+        "Invalid {.arg {parameter}} returned.",
+        "x" = "Expected a PMF",
+        "i" = "Loaded object: {pmf_df}"
+      ),
+      class = "not_a_pmf"
+    )
   }
 
   if (any(pmf < 0) || any(pmf > 1) || abs(sum(pmf) - 1) > 1e-10) {
-    cli::cli_abort(c(
-      "Returned numeric vector is not a valid PMF",
-      "Any below 0: {any(pmf < 0)}",
-      "Any above 1: {any(pmf > 1)}",
-      "Within 1 with tol of 1e-10: {abs(sum(pmf) - 1) < 1e-10},
+    cli::cli_abort(
+      c(
+        "Returned numeric vector is not a valid PMF",
+        "Any below 0: {any(pmf < 0)}",
+        "Any above 1: {any(pmf > 1)}",
+        "Within 1 with tol of 1e-10: {abs(sum(pmf) - 1) < 1e-10},
       pmf: : {.val {pmf}}"
-    ))
+      ),
+      class = "invalid_pmf"
+    )
   }
 
   cli::cli_alert_success("{.arg {parameter}} loaded")
