@@ -16,6 +16,9 @@
 #'   `generation_interval`, `delay_interval`, and `right_truncation`. If a path
 #'   to a local file is not provided (NA or NULL), the corresponding parameter
 #'   estimate will be NA in the returned list.
+#'  @details `generation_interval_path` is required because the generation interval is 
+#'   a required parameter for $R_t$ estimation. `delay_interval_path` and 
+#'  `right_truncation_path` are optional (but strongly suggested).
 #' @export
 read_parameters <- function(
     generation_interval_path,
@@ -40,7 +43,7 @@ read_parameters <- function(
     )
   } else {
     cli::cli_alert_warning(
-      "No delay interval path specified. Using a delay of 0 days"
+      "No delay interval path specified. Using a delay of 0 days."
     )
     delay_interval <- NA
   }
@@ -83,6 +86,12 @@ path_is_specified <- function(path) {
 #' * start_date
 #' * end_date
 #' * value
+#'
+#' start_date and end_date specify the date range for which the value was used.
+#' end_date may be NULL (e.g. for the current value used in production).
+#' value must contain a pmf vector whose values are all positive and sum to 1.
+#' all other fields must be consistent with the specifications of the function arguments
+#' describe below, which are used to query from the .parquet file.
 #'
 #' @param path A path to a local file
 #' @param disease One of "COVID-19" or "Influenza"
