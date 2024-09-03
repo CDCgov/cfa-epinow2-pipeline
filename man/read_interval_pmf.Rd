@@ -9,7 +9,7 @@ read_interval_pmf(
   disease = c("COVID-19", "Influenza", "test"),
   as_of_date,
   parameter = c("generation_interval", "delay", "right_truncation"),
-  state = NA
+  group = NA
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ read_interval_pmf(
 
 \item{parameter}{One of "generation interval", "delay", or "right-truncation}
 
-\item{state}{An optional parameter to subset the query to a parameter with a
+\item{group}{An optional parameter to subset the query to a parameter with a
 particular two-letter state abbrevation. Right now, the only parameter with
 state-specific estimates is \code{right-truncation}.}
 }
@@ -39,4 +39,15 @@ format with column names:
 \item end_date
 \item value
 }
+}
+\details{
+start_date and end_date specify the date range for which the value was used.
+end_date may be NULL (e.g. for the current value used in production). value
+must contain a pmf vector whose values are all positive and sum to 1. all
+other fields must be consistent with the specifications of the function
+arguments describe below, which are used to query from the .parquet file.
+
+SCD2 format is shorthand for slowly changing dimension type 2. This format is
+normalized to track change over time:
+https://en.wikipedia.org/wiki/Slowly_changing_dimension#Type_2:_add_new_row
 }
