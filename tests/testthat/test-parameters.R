@@ -39,7 +39,7 @@ test_that("Can read all params on happy path", {
       right_truncation_path = "right_truncation.parquet",
       disease = "COVID-19",
       as_of_date = start_date + 1,
-      state = "test"
+      group = "test"
     )
   })
 
@@ -95,7 +95,7 @@ test_that("Can skip params on happy path", {
       right_truncation_path = NULL,
       disease = "COVID-19",
       as_of_date = start_date + 1,
-      state = "test"
+      group = "test"
     )
   })
 
@@ -133,7 +133,7 @@ test_that("Can read right-truncation on happy path", {
       parameter = parameter,
       disease = disease,
       as_of_date = start_date + 1,
-      state = "test"
+      group = "test"
     )
   })
   expect_equal(actual, expected)
@@ -157,7 +157,7 @@ test_that("Can read right-truncation on happy path", {
       parameter = parameter,
       disease = disease,
       as_of_date = start_date + 1,
-      state = "test"
+      group = "test"
     )
   })
   expect_equal(actual, expected)
@@ -188,7 +188,7 @@ test_that("Invalid PMF errors", {
         parameter = parameter,
         disease = disease,
         as_of_date = start_date + 1,
-        state = "test"
+        group = "test"
       ),
       class = "invalid_pmf"
     )
