@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Parameters read from local files
 * Additional CI bug squashing
 * Bug fixed in the updated, faster pre-commit checks
 * Updated, faster pre-commit checks
