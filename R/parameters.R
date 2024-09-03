@@ -16,9 +16,10 @@
 #'   `generation_interval`, `delay_interval`, and `right_truncation`. If a path
 #'   to a local file is not provided (NA or NULL), the corresponding parameter
 #'   estimate will be NA in the returned list.
-#'  @details `generation_interval_path` is required because the generation interval is
-#'   a required parameter for $R_t$ estimation. `delay_interval_path` and
-#'  `right_truncation_path` are optional (but strongly suggested).
+#' @details `generation_interval_path` is required because the generation
+#'   interval is a required parameter for $R_t$ estimation.
+#'   `delay_interval_path` and `right_truncation_path` are optional (but
+#'   strongly suggested).
 #' @export
 read_parameters <- function(
     generation_interval_path,
@@ -88,10 +89,14 @@ path_is_specified <- function(path) {
 #' * value
 #'
 #' start_date and end_date specify the date range for which the value was used.
-#' end_date may be NULL (e.g. for the current value used in production).
-#' value must contain a pmf vector whose values are all positive and sum to 1.
-#' all other fields must be consistent with the specifications of the function arguments
-#' describe below, which are used to query from the .parquet file.
+#' end_date may be NULL (e.g. for the current value used in production). value
+#' must contain a pmf vector whose values are all positive and sum to 1. all
+#' other fields must be consistent with the specifications of the function
+#' arguments describe below, which are used to query from the .parquet file.
+#'
+#' SCD2 format is shorthand for slowly changing dimension type 2. This format is
+#' normalized to track change over time:
+#' https://en.wikipedia.org/wiki/Slowly_changing_dimension#Type_2:_add_new_row
 #'
 #' @param path A path to a local file
 #' @param disease One of "COVID-19" or "Influenza"
@@ -212,8 +217,8 @@ read_interval_pmf <- function(path,
         "Returned numeric vector is not a valid PMF",
         "Any below 0: {any(pmf < 0)}",
         "Any above 1: {any(pmf > 1)}",
-        "Within 1 with tol of 1e-10: {abs(sum(pmf) - 1) < 1e-10},
-      pmf: : {.val {pmf}}"
+        "Sum is within 1 with tol of 1e-10: {abs(sum(pmf) - 1) < 1e-10}",
+        "pmf: {.val {pmf}}"
       ),
       class = "invalid_pmf"
     )
