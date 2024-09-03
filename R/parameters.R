@@ -16,8 +16,8 @@
 #'   `generation_interval`, `delay_interval`, and `right_truncation`. If a path
 #'   to a local file is not provided (NA or NULL), the corresponding parameter
 #'   estimate will be NA in the returned list.
-#'  @details `generation_interval_path` is required because the generation interval is 
-#'   a required parameter for $R_t$ estimation. `delay_interval_path` and 
+#'  @details `generation_interval_path` is required because the generation interval is
+#'   a required parameter for $R_t$ estimation. `delay_interval_path` and
 #'  `right_truncation_path` are optional (but strongly suggested).
 #' @export
 read_parameters <- function(
