@@ -13,7 +13,8 @@
 #'
 #' @return A named list with three PMFs. The list elements are named
 #'   `generation_interval`, `delay_interval`, and `right_truncation`. If a path
-#'   is
+#'   to a local file is not provided (NA or NULL), the corresponding parameter
+#'   estimate will be NA in the returned list.
 #' @export
 read_parameters <- function(
     generation_interval_path,
