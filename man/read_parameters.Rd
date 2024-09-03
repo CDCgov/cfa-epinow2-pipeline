@@ -20,17 +20,19 @@ different file.}
 
 \item{disease}{One of \code{COVID-19} or \code{Influenza}}
 
-\item{as_of_date}{The date "as of" the run. Set for the current date for the
-most up-to-to date version of the parameters and set to an earlier date to
-use parameters from an earlier time period.}
+\item{as_of_date}{Use the parameters that were used in production on this
+date. Set for the current date for the most up-to-to date version of the
+parameters and set to an earlier date to use parameters from an earlier
+time period.}
 
-\item{state}{Used only for right-truncation, the two-letter uppercase state
-abbrevation.}
+\item{state}{Used only for parameters with a state-level estimate (i.e., only
+right-truncation). The two-letter uppercase state abbreviation.}
 }
 \value{
 A named list with three PMFs. The list elements are named
 \code{generation_interval}, \code{delay_interval}, and \code{right_truncation}. If a path
-is
+to a local file is not provided (NA or NULL), the corresponding parameter
+estimate will be NA in the returned list.
 }
 \description{
 Read in disease process parameters from an external file or files

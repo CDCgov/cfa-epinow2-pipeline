@@ -15,5 +15,6 @@ add_two_numbers(x, y)
 Their sum
 }
 \description{
-A temp function
+Adding some meaningless text to test rendering via PR command.
+Adding some more
 }
