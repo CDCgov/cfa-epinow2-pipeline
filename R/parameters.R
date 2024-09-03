@@ -5,9 +5,10 @@
 #'   details on the file schema. The parameters can be in the same file or a
 #'   different file.
 #' @param disease One of `COVID-19` or `Influenza`
-#' @param as_of_date The date "as of" the run. Set for the current date for the
-#'   most up-to-to date version of the parameters and set to an earlier date to
-#'   use parameters from an earlier time period.
+#' @param as_of_date Use the parameters that were used in production on this
+#'   date. Set for the current date for the most up-to-to date version of the
+#'   parameters and set to an earlier date to use parameters from an earlier
+#'   time period.
 #' @param state Used only for right-truncation, the two-letter uppercase state
 #'   abbrevation.
 #'
