@@ -1,6 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
-* Parameters read from local files
+* Parameters read from local parquet file or files
 * Additional CI bug squashing
 * Bug fixed in the updated, faster pre-commit checks
 * Updated, faster pre-commit checks
