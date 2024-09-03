@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Additional CI bug squashing
 * Bug fixed in the updated, faster pre-commit checks
 * Updated, faster pre-commit checks
 * Azure Blob file download utilities
