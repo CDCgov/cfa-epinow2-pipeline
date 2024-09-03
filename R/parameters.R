@@ -9,8 +9,8 @@
 #'   date. Set for the current date for the most up-to-to date version of the
 #'   parameters and set to an earlier date to use parameters from an earlier
 #'   time period.
-#' @param state Used only for right-truncation, the two-letter uppercase state
-#'   abbrevation.
+#' @param state Used only for parameters with a state-level estimate (i.e., only
+#'   right-truncation). The two-letter uppercase state abbreviation.
 #'
 #' @return A named list with three PMFs. The list elements are named
 #'   `generation_interval`, `delay_interval`, and `right_truncation`. If a path
