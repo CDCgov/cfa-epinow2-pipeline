@@ -9,7 +9,7 @@
 #'   date. Set for the current date for the most up-to-to date version of the
 #'   parameters and set to an earlier date to use parameters from an earlier
 #'   time period.
-#' @param state Used only for parameters with a state-level estimate (i.e., only
+#' @param group Used only for parameters with a state-level estimate (i.e., only
 #'   right-truncation). The two-letter uppercase state abbreviation.
 #'
 #' @return A named list with three PMFs. The list elements are named
@@ -27,7 +27,7 @@ read_parameters <- function(
     right_truncation_path,
     disease,
     as_of_date,
-    state) {
+    group) {
   generation_interval <- read_interval_pmf(
     path = generation_interval_path,
     disease = disease,
@@ -55,7 +55,7 @@ read_parameters <- function(
       disease = disease,
       as_of_date = as_of_date,
       parameter = "right_truncation",
-      state = state
+      group = group
     )
   } else {
     cli::cli_alert_warning(
@@ -102,7 +102,7 @@ path_is_specified <- function(path) {
 #' @param disease One of "COVID-19" or "Influenza"
 #' @param as_of_date The parameters "as of" the date of the model run
 #' @param parameter One of "generation interval", "delay", or "right-truncation
-#' @param state An optional parameter to subset the query to a parameter with a
+#' @param group An optional parameter to subset the query to a parameter with a
 #'   particular two-letter state abbrevation. Right now, the only parameter with
 #'   state-specific estimates is `right-truncation`.
 #'
@@ -116,7 +116,7 @@ read_interval_pmf <- function(path,
                                 "delay",
                                 "right_truncation"
                               ),
-                              state = NA) {
+                              group = NA) {
   ###################
   # Validate input
   rlang::arg_match(parameter)
@@ -153,11 +153,11 @@ read_interval_pmf <- function(path,
 
   # Handle state separately because can't use `=` for NULL comparison and
   # DBI::dbBind() can't parameterize a query after IS
-  if (rlang::is_na(state) || rlang::is_null(state)) {
+  if (rlang::is_na(group) || rlang::is_null(group)) {
     query <- paste(query, "AND geo_value IS NULL;")
   } else {
     query <- paste(query, "AND geo_value = ?")
-    parameters <- c(parameters, list(state))
+    parameters <- c(parameters, list(group))
   }
 
   ################
@@ -174,7 +174,7 @@ read_interval_pmf <- function(path,
       cli::cli_abort(
         c(
           "Failure loading {.arg {parameter}} from {.path {path}}",
-          "Using {.val {disease}}, {.val {as_of_date}}, and {.val {state}}",
+          "Using {.val {disease}}, {.val {as_of_date}}, and {.val {group}}",
           "Original error: {cnd}"
         ),
         class = "wrapped_error"
@@ -191,7 +191,7 @@ read_interval_pmf <- function(path,
       c(
         "Failure loading {.arg {parameter}} from {.path {path}} ",
         "Query did not return exactly one row",
-        "Using {.val {disease}}, {.val {as_of_date}}, and {.val {state}}",
+        "Using {.val {disease}}, {.val {as_of_date}}, and {.val {group}}",
         "Query matched {.val {nrow(pmf_df)}} rows"
       ),
       class = "not_one_row_returned"
