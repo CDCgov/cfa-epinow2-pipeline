@@ -59,11 +59,11 @@ read_data <- function(data_path,
   if (state_abb == "US") {
     query <- "
    SELECT
-     sum(value) AS confirm,
-     reference_date,
      report_date,
+     reference_date,
      -- We want to inject the 'US' as our abbrevation here bc data is not agg'd
-     'US' AS state_abb
+     'US' AS state_abb,
+      sum(value) AS confirm
     FROM read_parquet(?)
     WHERE 1=1
       AND disease = ?
@@ -78,10 +78,10 @@ read_data <- function(data_path,
     # We want just one state so aggregate over facilites in that one state only
     query <- "
   SELECT
-    sum(value) AS confirm,
-    reference_date,
     report_date,
-    geo_value AS state_abb
+    reference_date,
+    geo_value AS state_abb,
+    sum(value) AS confirm,
   FROM read_parquet(?)
   WHERE 1=1
     AND disease = ?
@@ -107,6 +107,7 @@ read_data <- function(data_path,
   }
 
   con <- DBI::dbConnect(duckdb::duckdb())
+  on.exit(expr = DBI::dbDisconnect(con))
   df <- rlang::try_fetch(
     DBI::dbGetQuery(
       con,
@@ -124,7 +125,6 @@ read_data <- function(data_path,
       )
     }
   )
-  DBI::dbDisconnect(con)
 
   # Guard against empty return
   if (nrow(df) == 0) {
@@ -146,9 +146,7 @@ read_data <- function(data_path,
       to = as.Date(max_reference_date),
       by = "day"
     ), "%Y-%m-%d")
-    missing_dates <- expected_dates[
-      !(expected_dates %in% df[["reference_date"]])
-    ]
+    missing_dates <- setdiff(expected_dates, df[["reference_date"]])
     cli::cli_warn(
       c(
         "Incomplete number of rows returned",
