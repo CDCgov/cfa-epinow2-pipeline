@@ -5,6 +5,7 @@ test_that("Data read for one state works on happy path", {
                          SELECT
                            report_date,
                            reference_date,
+                           disease,
                            geo_value AS state_abb,
                            value AS confirm
                          FROM read_parquet(?)
@@ -31,6 +32,7 @@ test_that("Data read for US overall works on happy path", {
                          SELECT
                            report_date,
                            reference_date,
+                           disease,
                            geo_value AS state_abb,
                            value AS confirm
                          FROM read_parquet(?)
