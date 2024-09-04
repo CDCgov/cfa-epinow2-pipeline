@@ -1,7 +1,7 @@
 # CFAEpiNow2Pipeline (development version)
 
 * Parameters read from local parquet file or files
-* Additional CI bug squashing
+* Additional CI bugs squashed
 * Bug fixed in the updated, faster pre-commit checks
 * Updated, faster pre-commit checks
 * Azure Blob file download utilities
