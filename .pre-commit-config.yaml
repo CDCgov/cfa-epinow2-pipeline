@@ -8,7 +8,6 @@ repos:
     -   id: style-files
         args: [--style_pkg=styler, --style_fun=tidyverse_style,
                --cache-root=styler-perm]
-    -   id: roxygenize
     -   id: use-tidy-description
     -   id: lintr
     -   id: readme-rmd-rendered
@@ -49,7 +48,7 @@ repos:
 #####
 # Python
 -   repo: https://github.com/psf/black
-    rev: 24.4.2
+    rev: 24.8.0
     hooks:
         # if you have ipython notebooks, consider using
         # `black-jupyter` hook instead
@@ -62,13 +61,13 @@ repos:
         args: ['--profile', 'black',
                '--line-length', '79']
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.4.2
+  rev: v0.6.3
   hooks:
     - id: ruff
 #####
 # Java
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-  rev: v2.13.0
+  rev: v2.14.0
   hooks:
   - id: pretty-format-java
     args: [--aosp,--autofix]
@@ -83,7 +82,7 @@ repos:
 #####
 # Secrets
 -   repo: https://github.com/Yelp/detect-secrets
-    rev: v1.4.0
+    rev: v1.5.0
     hooks:
     -   id: detect-secrets
         args: ['--baseline', '.secrets.baseline']
@@ -97,5 +96,4 @@ ci:
     autoupdate_branch: ''
     autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
     autoupdate_schedule: weekly
-    skip: [roxygenize]
     submodules: false

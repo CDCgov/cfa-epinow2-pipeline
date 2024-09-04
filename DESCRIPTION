@@ -26,5 +26,7 @@ Imports:
     AzureRMR,
     AzureStor,
     cli,
+    DBI,
+    duckdb,
     rlang
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
