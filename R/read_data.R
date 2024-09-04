@@ -61,6 +61,7 @@ read_data <- function(data_path,
    SELECT
      report_date,
      reference_date,
+     disease,
      -- We want to inject the 'US' as our abbrevation here bc data is not agg'd
      'US' AS state_abb,
       sum(value) AS confirm
@@ -71,7 +72,7 @@ read_data <- function(data_path,
       AND reference_date >= ?
       AND reference_date <= ?
       AND report_date = ?
-    GROUP BY reference_date, report_date
+    GROUP BY reference_date, report_date, disease
     ORDER BY reference_date
    "
   } else {
@@ -80,6 +81,7 @@ read_data <- function(data_path,
   SELECT
     report_date,
     reference_date,
+    disease,
     geo_value AS state_abb,
     sum(value) AS confirm,
   FROM read_parquet(?)
@@ -90,7 +92,7 @@ read_data <- function(data_path,
     AND reference_date <= ?
     AND report_date = ?
     AND geo_value = ?
-  GROUP BY geo_value, reference_date, report_date
+  GROUP BY geo_value, reference_date, report_date, disease
   ORDER BY reference_date
   "
     # Append `geo_value` to the query
