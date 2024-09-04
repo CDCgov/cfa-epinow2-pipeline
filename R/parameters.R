@@ -21,7 +21,7 @@
 #'   `delay_interval_path` and `right_truncation_path` are optional (but
 #'   strongly suggested).
 #' @export
-read_parameters <- function(
+read_disease_parameters <- function(
     generation_interval_path,
     delay_interval_path,
     right_truncation_path,

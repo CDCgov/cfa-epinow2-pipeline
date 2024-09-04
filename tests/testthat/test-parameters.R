@@ -33,7 +33,7 @@ test_that("Can read all params on happy path", {
     )
 
 
-    actual <- read_parameters(
+    actual <- read_disease_parameters(
       generation_interval_path = "generation_interval.parquet",
       delay_interval_path = "delay_interval.parquet",
       right_truncation_path = "right_truncation.parquet",
@@ -89,7 +89,7 @@ test_that("Can skip params on happy path", {
     )
 
 
-    actual <- read_parameters(
+    actual <- read_disease_parameters(
       generation_interval_path = "generation_interval.parquet",
       delay_interval_path = NULL,
       right_truncation_path = NULL,
