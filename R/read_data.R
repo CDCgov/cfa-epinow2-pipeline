@@ -1,0 +1,165 @@
+#' Read in the dataset of incident case counts
+#'
+#' Each row of the table corresponds to a single facilities' cases for a
+#' reference-date/report-date/disease tuple. We want to aggregate these counts
+#' to the level of geographic aggregate/report-date/reference-date/disease.
+#'
+#' We handle two distinct cases for geographic aggregates:
+#'
+#' 1. A single state: Subset to facilities **in that state only** and aggregate
+#' up to the state level 2. The US overall: Aggregate over all facilities
+#' without any subsetting
+#'
+#' Note that we do _not_ apply exclusions here. The exclusions are applied
+#' later, after the aggregations. That means that for the US overall, we
+#' aggregate over points that might potentially be excluded at the state level.
+#' Our recourse in this case is to exclude the US overall aggregate point.
+#'
+#' @param data_path The path to the local file. This could contain a glob and
+#'   must be in parquet format.
+#' @param disease One of "COVID-19" or "Influenza"
+#' @param state_abb A two-letter uppercase abbreviation
+#' @param report_date The desired single report date
+#' @param max_reference_date,min_reference_date The first and last reference
+#'   dates, inclusive, of the timeseries
+#'
+#' @return A dataframe with one or more rows and columns `report_date`,
+#'   `reference_date`, `state_abb`, `confirm`
+#' @export
+read_data <- function(data_path,
+                      disease = c("COVID-19", "Influenza", "test"),
+                      state_abb,
+                      report_date,
+                      max_reference_date,
+                      min_reference_date) {
+  rlang::arg_match(disease)
+  # NOTE: this is temporary workaround until we switch to the new API. I'm not
+  # sure if there's a better way to do this without a whole bunch of special
+  # casing -- which is its own code smell. I think this should really be handled
+  # upstream in the ETL job and standardize on "COVID-19", but that's beyond
+  # scope here and we need to do _something_ in the meantime so this runs.
+  disease_map <- c(
+    "COVID-19" = "COVID-19/Omicron",
+    "Influenza" = "Influenza",
+    "test" = "test"
+  )
+  mapped_disease <- disease_map[[disease]]
+
+  parameters <- list(
+    data_path,
+    mapped_disease,
+    stringify_date(min_reference_date),
+    stringify_date(max_reference_date),
+    stringify_date(report_date)
+  )
+
+  # We need different queries for the states and the US overall. For US overall
+  # we need to aggregate over all the facilities in all the states. For the
+  # states, we need to aggregate over all the facilities in that one state
+  if (state_abb == "US") {
+    query <- "
+   SELECT
+     sum(value) AS confirm,
+     reference_date,
+     report_date,
+     -- We want to inject the 'US' as our abbrevation here bc data is not agg'd
+     'US' AS state_abb
+    FROM read_parquet(?)
+    WHERE 1=1
+      AND disease = ?
+      AND metric = 'count_ed_visits'
+      AND reference_date >= ?
+      AND reference_date <= ?
+      AND report_date = ?
+    GROUP BY reference_date, report_date
+    ORDER BY reference_date
+   "
+  } else {
+    # We want just one state so aggregate over facilites in that one state only
+    query <- "
+  SELECT
+    sum(value) AS confirm,
+    reference_date,
+    report_date,
+    geo_value AS state_abb
+  FROM read_parquet(?)
+  WHERE 1=1
+    AND disease = ?
+    AND metric = 'count_ed_visits'
+    AND reference_date >= ?
+    AND reference_date <= ?
+    AND report_date = ?
+    AND geo_value = ?
+  GROUP BY geo_value, reference_date, report_date
+  ORDER BY reference_date
+  "
+    # Append `geo_value` to the query
+    parameters <- c(parameters, list(state_abb))
+  }
+
+  # Guard against file does not exist
+  cli::cli_alert("Reading data from {.path {data_path}}")
+  if (!file.exists(data_path)) {
+    cli::cli_abort(
+      "Cannot read data. File {.path {data_path}} doesn't exist",
+      class = "file_not_found"
+    )
+  }
+
+  con <- DBI::dbConnect(duckdb::duckdb())
+  df <- rlang::try_fetch(
+    DBI::dbGetQuery(
+      con,
+      statement = query,
+      params = parameters
+    ),
+    error = function(con) {
+      cli::cli_abort(
+        c(
+          "Error fetching data from {.path {data_path}}",
+          "Using parameters {parameters}",
+          "Original error: {con}"
+        ),
+        class = "wrapped_invalid_query"
+      )
+    }
+  )
+  DBI::dbDisconnect(con)
+
+  # Guard against empty return
+  if (nrow(df) == 0) {
+    cli::cli_abort(
+      c(
+        "No data matching returned from {.path {data_path}}",
+        "Using parameters {parameters}"
+      ),
+      class = "empty_return"
+    )
+  }
+  # Warn for incomplete return
+  if (
+    nrow(df) != as.Date(max_reference_date) - as.Date(min_reference_date) + 1
+  ) {
+    n_rows_expected <- as.Date(max_reference_date) - as.Date(min_reference_date)
+    expected_dates <- format(seq.Date(
+      from = as.Date(min_reference_date),
+      to = as.Date(max_reference_date),
+      by = "day"
+    ), "%Y-%m-%d")
+    missing_dates <- expected_dates[
+      !(expected_dates %in% df[["reference_date"]])
+    ]
+    cli::cli_warn(
+      c(
+        "Incomplete number of rows returned",
+        "Expected {.val {n_rows_expected}} rows",
+        "Observed {.val {nrow(df)}} rows ",
+        "Missing reference date(s): {.val {missing_dates}}"
+      ),
+      class = "incomplete_return"
+    )
+  }
+
+  cli::cli_alert_success("Read {nrow(df)} rows from {.path {data_path}}")
+  return(df)
+}
