@@ -43,9 +43,8 @@
 #'    \item{true_r0}{The initial R0 of the system (i.e., 2)}
 #'    \item{true_rt}{The known, true Rt of the epidemic system}
 #' }
-#' @source
-#' <https://github.com/cobeylab/Rt_estimation/tree/d9d8977ba8492ac1a3b8287d2f470b313bfb9f1d> # nolint
-NULL
+#' @source <https://github.com/cobeylab/Rt_estimation/tree/d9d8977ba8492ac1a3b8287d2f470b313bfb9f1d> # nolint
+"gostic_toy_rt"
 
 #' Generation interval corresponding to the sample `gostic_toy_rt` dataset
 #'
@@ -76,4 +75,4 @@ NULL
 #' @name gostic_gt_pmf
 #' @format `gostic_gt_pmf` A numeric vector of length 26 that sums to one within
 #'   numerical tolerance
-NULL
+"gostic_gt_pmf"
