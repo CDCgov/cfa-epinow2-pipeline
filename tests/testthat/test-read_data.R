@@ -3,10 +3,10 @@ test_that("Data read for one state works on happy path", {
   con <- DBI::dbConnect(duckdb::duckdb())
   expected <- DBI::dbGetQuery(con, "
                          SELECT
-                           value AS confirm,
-                           reference_date,
                            report_date,
-                           geo_value AS state_abb
+                           reference_date,
+                           geo_value AS state_abb,
+                           value AS confirm
                          FROM read_parquet(?)
                          WHERE reference_date <= '2023-01-22'",
     params = list(data_path)
@@ -29,10 +29,10 @@ test_that("Data read for US overall works on happy path", {
   con <- DBI::dbConnect(duckdb::duckdb())
   expected <- DBI::dbGetQuery(con, "
                          SELECT
-                           value AS confirm,
-                           reference_date,
                            report_date,
-                           geo_value AS state_abb
+                           reference_date,
+                           geo_value AS state_abb,
+                           value AS confirm
                          FROM read_parquet(?)
                          WHERE reference_date <= '2023-01-22'",
     params = list(data_path)
