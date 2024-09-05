@@ -50,7 +50,6 @@ test_that("Data read for US overall works on happy path", {
   expect_equal(actual, expected)
 })
 
-
 test_that("Reading a file that doesn't exist fails", {
   data_path <- "not_a_real_file"
   expect_error(
