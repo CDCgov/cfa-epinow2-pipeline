@@ -2,7 +2,7 @@
 #'
 #' A dataset produced by Katelyn Gostic as part of a published manuscript:
 #' Gostic, Katelyn M., et al. "Practical considerations for measuring the
-#' effective reproductive number, R t." PLoS computational biology 16.12 (2020):
+#' effective reproductive number, Rt." PLoS Computational Biology 16.12 (2020):
 #' e1008409. The data are simulated from a stochastic SEIR compartment model.
 #'
 #' This synthetic dataset has a number of desirable properties: 1. The force of
