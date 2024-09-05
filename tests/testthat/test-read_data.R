@@ -93,7 +93,6 @@ test_that("An invalid query throws a wrapped error", {
   )
 })
 
-
 test_that("Incomplete return throws warning", {
   data_path <- test_path("data/test_data.parquet")
 
