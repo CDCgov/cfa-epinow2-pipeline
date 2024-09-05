@@ -26,7 +26,7 @@ testing.}
 }
 }
 \source{
-\url{https://github.com/cobeylab/Rt_estimation/tree/d9d8977ba8492ac1a3b8287d2f470b313bfb9f1d} # nolint
+\url{https://github.com/cobeylab/Rt_estimation/tree/d9d8977ba8492ac1a3b8287d2f470b313bfb9f1d}nolint
 }
 \usage{
 gostic_toy_rt
@@ -34,23 +34,29 @@ gostic_toy_rt
 \description{
 A dataset produced by Katelyn Gostic as part of a published manuscript:
 Gostic, Katelyn M., et al. "Practical considerations for measuring the
-effective reproductive number, R t." PLoS computational biology 16.12 (2020):
-e1008409. The data are simulated from a stochastic SEIR compartment model.
+effective reproductive number, Rt." PLoS Computational Biology 16.12 (2020):
+e1008409. The data are simulated from a stochastic SEIR compartmental model.
 }
 \details{
-This synthetic dataset has a number of desirable properties: 1. The force of
-infection is manipulated by changing the Rt, allowing for sudden changes in
-infection dynamics. This behavior is a strong test of the flexibility of an
-Rt estimation framework 2. The realized Rt is known at each timepoint 3. The
-dataset incorporates a simple generation interval and a reporting delay
+This synthetic dataset has a number of desirable properties:
+\enumerate{
+\item The force of infection changes depending on the Rt, allowing for sudden
+changes in the Rt. This allows for modeling of sudden changes in infection
+dynamics, which might otherwise be difficult to capture. Rt estimation
+framework
+\item The realized Rt is known at each timepoint
+\item The dataset incorporates a simple generation interval and a reporting
+delay.
+}
 
-In their manuscript, Gostic et al. benchmark the performance of a number of
-Rt estimation frameworks, providing practical guidance on how to use this
-dataset to evaluate Rt estimates.
+Gostic et al. benchmark the performance of a number of Rt estimation
+frameworks, providing practical guidance on how to use this dataset to
+evaluate Rt estimates.
 
 In practice, we've found that the amount of observation noise in the
 incidence and/or observed cases is often undesirably low for testing. Many
-empirical datasets are much noisier and models that are built with these
+empirical datasets are much noisier. As a result, models built with these
+settings in mind can perform poorly or fail to converge on this dataset.
 settings in mind can perform poorly on this dataset or fail to converge. We
 manually add observation noise with \code{rnbinom(299, mu = gostic_toy_rt[["obs_cases"]], size = 10)} and the random seed 123456 and
 store it in the \code{obs_incidence} column.
