@@ -11,7 +11,7 @@ the Rt. This allows for modeling of sudden changes in infection dynamics, which 
 #' Rt estimation framework 2. The realized Rt is known at each timepoint 3. The
 #' dataset incorporates a simple generation interval and a reporting delay.
 #'
-#' In their manuscript, Gostic et al. benchmark the performance of a number of
+#' Gostic et al. benchmark the performance of a number of
 #' Rt estimation frameworks, providing practical guidance on how to use this
 #' dataset to evaluate Rt estimates.
 #'
