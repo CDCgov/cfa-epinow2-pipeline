@@ -17,7 +17,7 @@ the Rt. This allows for modeling of sudden changes in infection dynamics, which 
 #'
 #' In practice, we've found that the amount of observation noise in the
 #' incidence and/or observed cases is often undesirably low for testing. Many
-#' empirical datasets are much noisier and models that are built with these
+#' empirical datasets are much noisier. As a result, models built with these settings in mind can perform poorly or fail to converge on this dataset.
 #' settings in mind can perform poorly on this dataset or fail to converge. We
 #' manually add observation noise with `rnbinom(299, mu =
 #' gostic_toy_rt[["obs_cases"]], size = 10)` and the random seed 123456 and
