@@ -1,8 +1,7 @@
 #' Synthetic dataset of stochastic SIR system with known Rt
 #'
 #' A dataset from Gostic, Katelyn M., et al. "Practical considerations for
-#' Gostic, Katelyn M., et al. "Practical considerations for measuring the
-#' effective reproductive number, Rt." PLoS Computational Biology 16.12 (2020):
+#' measuring the effective reproductive number, Rt." PLoS Computational Biology 16.12 (2020):
 #' e1008409. The data are simulated from a stochastic SEIR compartmental model.
 #'
 #' This synthetic dataset has a number of desirable properties:
@@ -24,7 +23,6 @@
 #' In practice, we've found that the amount of observation noise in the
 #' incidence and/or observed cases is often undesirably low for testing. Many
 #' empirical datasets are much noisier. As a result, models built with these
-#' settings in mind can perform poorly or fail to converge on this dataset.
 #' settings in mind can perform poorly on this dataset or fail to converge. We
 #' manually add observation noise with `rnbinom(299, mu =
 #' gostic_toy_rt[["obs_cases"]], size = 10)` and the random seed 123456 and
