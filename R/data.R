@@ -50,7 +50,7 @@ the Rt. This allows for modeling of sudden changes in infection dynamics, which 
 #'
 #' Gostic et al., 2020 simulates data from a stochastic SEIR model. Residence
 #' time in both the E and the I compartments is exponentially distributed, with
-#' a mean of 4 days (or a rate/inverse-scale of 1/4). These waiting times imply
+#' a mean of 4 days (or a rate/inverse-scale of 1/4). These residence times imply
 #' a gamma-distributed generation time distribution with a shape of 2 and a rate
 #' of 1/4. We convert the continuous gamma distribution into a PMF to use with
 #' `{RtGam}`.
