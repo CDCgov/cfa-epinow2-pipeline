@@ -7,7 +7,7 @@
 #'
 #' This synthetic dataset has a number of desirable properties: 1. The force of
 #' infection changes depending on the Rt, allowing for sudden changes in
-#' infection dynamics. This behavior is a strong test of the flexibility of an
+the Rt. This allows for modeling of sudden changes in infection dynamics, which might otherwise be difficult to capture.
 #' Rt estimation framework 2. The realized Rt is known at each timepoint 3. The
 #' dataset incorporates a simple generation interval and a reporting delay
 #'
