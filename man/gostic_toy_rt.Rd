@@ -26,7 +26,7 @@ testing.}
 }
 }
 \source{
-\url{https://github.com/cobeylab/Rt_estimation/tree/d9d8977ba8492ac1a3b8287d2f470b313bfb9f1d}nolint
+\url{https://github.com/cobeylab/Rt_estimation/tree/d9d8977ba8492ac1a3b8287d2f470b313bfb9f1d} # nolint
 }
 \usage{
 gostic_toy_rt
