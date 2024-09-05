@@ -45,6 +45,8 @@ read_data <- function(data_path,
   )
   mapped_disease <- disease_map[[disease]]
 
+  check_file_exists(data_path)
+
   parameters <- list(
     data_path,
     mapped_disease,
@@ -97,15 +99,6 @@ read_data <- function(data_path,
   "
     # Append `geo_value` to the query
     parameters <- c(parameters, list(state_abb))
-  }
-
-  # Guard against file does not exist
-  cli::cli_alert("Reading data from {.path {data_path}}")
-  if (!file.exists(data_path)) {
-    cli::cli_abort(
-      "Cannot read data. File {.path {data_path}} doesn't exist",
-      class = "file_not_found"
-    )
   }
 
   con <- DBI::dbConnect(duckdb::duckdb())
