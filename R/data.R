@@ -3,7 +3,7 @@
 #' A dataset produced by Katelyn Gostic as part of a published manuscript:
 #' Gostic, Katelyn M., et al. "Practical considerations for measuring the
 #' effective reproductive number, Rt." PLoS Computational Biology 16.12 (2020):
-#' e1008409. The data are simulated from a stochastic SEIR compartment model.
+#' e1008409. The data are simulated from a stochastic SEIR compartmental model.
 #'
 #' This synthetic dataset has a number of desirable properties: 1. The force of
 #' infection is manipulated by changing the Rt, allowing for sudden changes in
