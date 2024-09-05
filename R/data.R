@@ -5,12 +5,17 @@
 #' effective reproductive number, Rt." PLoS Computational Biology 16.12 (2020):
 #' e1008409. The data are simulated from a stochastic SEIR compartmental model.
 #'
-#' This synthetic dataset has a number of desirable properties: 1. The force of
-#' infection changes depending on the Rt, allowing for sudden changes in the Rt.
-#' This allows for modeling of sudden changes in infection dynamics, which might
-#' otherwise be difficult to capture. Rt estimation framework 2. The realized Rt
-#' is known at each timepoint 3. The dataset incorporates a simple generation
-#' interval and a reporting delay.
+#' This synthetic dataset has a number of desirable properties:
+#'
+#' 1. The force of infection changes depending on the Rt, allowing for sudden
+#' changes in the Rt. This allows for modeling of sudden changes in infection
+#' dynamics, which might otherwise be difficult to capture. Rt estimation
+#' framework
+#'
+#' 2. The realized Rt is known at each timepoint
+#'
+#' ??3. The dataset incorporates a simple generation interval and a reporting
+#' delay.
 #'
 #' Gostic et al. benchmark the performance of a number of Rt estimation
 #' frameworks, providing practical guidance on how to use this dataset to
@@ -46,7 +51,7 @@
 #'    \item{true_rt}{The known, true Rt of the epidemic system}
 #' }
 #' @source
-#'   <https://github.com/cobeylab/Rt_estimation/tree/d9d8977ba8492ac1a3b8287d2f470b313bfb9f1d> # nolint
+#' <https://github.com/cobeylab/Rt_estimation/tree/d9d8977ba8492ac1a3b8287d2f470b313bfb9f1d> # nolint
 "gostic_toy_rt"
 
 #' Generation interval corresponding to the sample `gostic_toy_rt` dataset
