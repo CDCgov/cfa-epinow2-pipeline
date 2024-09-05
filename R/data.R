@@ -14,7 +14,7 @@
 #'
 #' 2. The realized Rt is known at each timepoint
 #'
-#' ??3. The dataset incorporates a simple generation interval and a reporting
+#' 3. The dataset incorporates a simple generation interval and a reporting
 #' delay.
 #'
 #' Gostic et al. benchmark the performance of a number of Rt estimation
