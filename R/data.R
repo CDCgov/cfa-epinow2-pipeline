@@ -1,6 +1,6 @@
 #' Synthetic dataset of stochastic SIR system with known Rt
 #'
-#' A dataset produced by Katelyn Gostic as part of a published manuscript:
+#' A dataset from Gostic, Katelyn M., et al. "Practical considerations for
 #' Gostic, Katelyn M., et al. "Practical considerations for measuring the
 #' effective reproductive number, Rt." PLoS Computational Biology 16.12 (2020):
 #' e1008409. The data are simulated from a stochastic SEIR compartmental model.
