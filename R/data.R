@@ -24,10 +24,11 @@
 #' In practice, we've found that the amount of observation noise in the
 #' incidence and/or observed cases is often undesirably low for testing. Many
 #' empirical datasets are much noisier. As a result, models built with these
-#' settings in mind can perform poorly on this dataset or fail to converge. To the original dataset, we add a new column with the original incidence counts with additional observation noise: `obs_incidence`. We
-#' manually add observation noise with `rnbinom(299, mu =
-#' gostic_toy_rt[["obs_cases"]], size = 10)` and the random seed 123456 and
-#' store it in the `obs_incidence` column.
+#' settings in mind can perform poorly on this dataset or fail to converge. To
+#' the original dataset, we add a new column with the original incidence counts
+#' with additional observation noise: `obs_incidence`. We manually add
+#' observation noise with `rnbinom(299, mu = gostic_toy_rt[["obs_cases"]], size
+#' = 10)` and the random seed 123456 and store it in the `obs_incidence` column.
 #'
 #' @name gostic_toy_rt
 #' @format `gostic_toy_rt` A data frame with 301 rows and 12 columns:
