@@ -7,7 +7,7 @@
 fit_model(data, parameters, seed, horizon, priors, sampler_opts)
 }
 \arguments{
-\item{data}{As returned from \code{\link[=read_data]{read_data()}}}
+\item{data, }{in the format returned by \code{\link[=read_data]{read_data()}}}
 
 \item{parameters}{As returned from
 \code{\link[=read_disease_parameters]{read_disease_parameters()}}}
