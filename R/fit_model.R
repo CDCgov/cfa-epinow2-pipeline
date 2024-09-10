@@ -92,8 +92,8 @@ fit_model <- function(
 
 #' Format PMFs for EpiNow2
 #'
-#' Opinionated wrappers around EpiNow2::generation_time_opts(), 
-#' EpiNow2::delay_opts(), or EpiNow2::dist_spec() that 
+#' Opinionated wrappers around EpiNow2::generation_time_opts(),
+#' EpiNow2::delay_opts(), or EpiNow2::dist_spec() that
 #' formats the generation interval, delay, or right truncation parameters
 #' as an object ready for input to EpiNow2.
 #'
