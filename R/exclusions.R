@@ -1,7 +1,11 @@
 #' Convert case counts in matching rows to NA
 #'
-#' NAs are skipped in model fitting by EpiNow2, so matched rows are excluded
-#' from the model likelihood.
+#' Mark selected points to be ignored in model fitting. This manual selection
+#' occurs externally to the pipeline and is passed to the pipeline in an
+#' exclusions file read with [read_exclusions()]. Mechanically, the exclusions
+#' are applied by converting specified points to NAs in the dataset. NAs are
+#' skipped in model fitting by EpiNow2, so matched rows are excluded from the
+#' model likelihood.
 #'
 #' @param cases A dataframe returned by [read_data()]
 #' @param exclusions A dataframe returned by [read_exclusions()]
