@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Fit EpiNow2 model using params and fixed seed
 * Read and apply exclusions to case data
 * Data reader and processor
 * Parameters read from local parquet file or files
