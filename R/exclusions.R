@@ -6,8 +6,8 @@
 #' @param cases A dataframe returned by [read_data()]
 #' @param exclusions A dataframe returned by [read_exclusions()]
 #'
-#' @return A dataframe with the same rows and schema as `cases` and the value in
-#'   the column `confirm` converted to NA in any rows that match a row in
+#' @return A dataframe with the same rows and schema as `cases` where the value
+#'   in the column `confirm` converted to NA in any rows that match a row in
 #'   `exclusions`
 #' @export
 apply_exclusions <- function(cases, exclusions) {
