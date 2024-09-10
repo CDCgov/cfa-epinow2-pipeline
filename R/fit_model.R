@@ -1,6 +1,6 @@
 #' Fit an EpiNow2 model
 #'
-#' @param data As returned from [CFAEpiNow2Pipeline::read_data()]
+#' @param data, in the format returned by [CFAEpiNow2Pipeline::read_data()]
 #' @param parameters As returned from
 #'   [CFAEpiNow2Pipeline::read_disease_parameters()]
 #' @param seed The random seed, used for both initialization by EpiNow2 in R and
@@ -92,8 +92,13 @@ fit_model <- function(
 
 #' Format PMFs for EpiNow2
 #'
-#' Format PMFs for use by EpiNow2. Delays or right truncation are optional and
-#' can be skipped by passing an NA.
+#' Opinionated wrappers around EpiNow2::generation_time_opts(), 
+#' EpiNow2::delay_opts(), or EpiNow2::dist_spec() that 
+#' formats the generation interval, delay, or right truncation parameters
+#' as an object ready for input to EpiNow2.
+#'
+#' Delays or right truncation are optional and
+#' can be skipped by passing `pmf = NA`.
 #'
 #' @param pmf As returned from [CFAEpiNow2Pipeline::read_disease_parameters()].
 #'   A PMF vector or an NA, if not applying the PMF to the model fit.
