@@ -1,5 +1,7 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Read and apply exclusions to case data
+* Data reader and processor
 * Parameters read from local parquet file or files
 * Additional CI bugs squashed
 * Bug fixed in the updated, faster pre-commit checks
