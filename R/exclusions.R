@@ -54,8 +54,7 @@ apply_exclusions <- function(cases, exclusions) {
 #' These columns have the same meaning as in [read_data()]. Additional columns
 #' are allowed and will be ignored by the reader.
 #'
-#' @param path The path to the local file in `.csv` format with points to
-#'   exclude
+#' @param path The path to the exclusions file in `.csv` format
 #'
 #' @return A dataframe with columns `reference_date`, `report_date`,
 #'   `state_abb`, `disease`
