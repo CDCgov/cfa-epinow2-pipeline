@@ -7,8 +7,7 @@
 read_exclusions(path)
 }
 \arguments{
-\item{path}{The path to the local file in \code{.csv} format with points to
-exclude}
+\item{path}{The path to the exclusions file in \code{.csv} format}
 }
 \value{
 A dataframe with columns \code{reference_date}, \code{report_date},
@@ -24,6 +23,6 @@ Expects to read a CSV with required columns:
 }
 }
 \details{
-These columns have the same meaning as in \link{read_data}. Additional columns are
-allowed and will be ignored by the reader.
+These columns have the same meaning as in \code{\link[=read_data]{read_data()}}. Additional columns
+are allowed and will be ignored by the reader.
 }
