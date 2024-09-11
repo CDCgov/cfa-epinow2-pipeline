@@ -130,7 +130,9 @@ format_generation_interval <- function(pmf) {
 #' @rdname opts_formatter
 #' @export
 format_delay_interval <- function(pmf) {
-  if (rlang::is_na(pmf) || rlang::is_null(pmf)) {
+  if (
+    rlang::is_na(pmf) || rlang::is_null(pmf)
+  ) {
     cli::cli_alert("Not adjusting for infection to case delay")
     EpiNow2::delay_opts()
   } else {
