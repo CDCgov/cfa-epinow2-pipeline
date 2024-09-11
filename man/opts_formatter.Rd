@@ -14,8 +14,8 @@ format_delay_interval(pmf)
 format_right_truncation(pmf, data)
 }
 \arguments{
-\item{pmf}{As returned from \code{\link[=read_disease_parameters]{read_disease_parameters()}}.
-A PMF vector or an NA, if not applying the PMF to the model fit.}
+\item{pmf}{As returned by \code{\link[=read_disease_parameters]{read_disease_parameters()}}. A
+PMF vector or an NA, if not applying the PMF to the model fit.}
 
 \item{data}{in the format returned by \code{\link[=read_data]{read_data()}}}
 }
@@ -24,11 +24,10 @@ An EpiNow2::*_opts() formatted object or NA with a message
 }
 \description{
 Opinionated wrappers around EpiNow2::generation_time_opts(),
-EpiNow2::delay_opts(), or EpiNow2::dist_spec() that
-formats the generation interval, delay, or right truncation parameters
-as an object ready for input to EpiNow2.
+EpiNow2::delay_opts(), or EpiNow2::dist_spec() that formats the generation
+interval, delay, or right truncation parameters as an object ready for input
+to EpiNow2.
 }
 \details{
-Delays or right truncation are optional and
-can be skipped by passing \code{pmf = NA}.
+Delays or right truncation are optional and can be skipped by passing \code{pmf = NA}.
 }
