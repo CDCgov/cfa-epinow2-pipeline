@@ -16,3 +16,5 @@
 ^pkgdown$
 ^rules_of_behavior.md$
 ^thanks.md$
+^Makefile$
+^Dockerfile$

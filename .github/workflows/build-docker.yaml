@@ -1,0 +1,31 @@
+name: Builds Docker image
+
+on: 
+  workflow_dispatch: 
+
+env:
+  IMAGE_NAME: gvegayon/cfa-epinow2-pipeline-docker:latest
+
+jobs:
+  build_image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+  run_tests:
+    runs-on: ubuntu-latest
+    container: ${{ IMAGE_NAME }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build the package
+        run: |
+          R CMD build .
+        shell: Rscript {0}
+
+      - name: Check the package
+        run: |
+          R CMD check *tar.gz
+        shell: Rscript {0}
