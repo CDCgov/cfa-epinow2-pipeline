@@ -111,6 +111,11 @@ test_that("Minimal model fit with no right trunc or delay runs", {
 })
 
 test_that("Bad params w/ failing fit issues warning and returns NA", {
+  # Parameterization is same as above except Stan argument `iter_warmup` is
+  # negative, which is an illegal parameterizaion. As a result, EpiNow2 starts
+  # the Stan sampler but it terminates unexpectedly with an error, which is the
+  # desired testing condition.
+
   # Parameters
   parameters <- list(
     generation_interval = gostic_gt_pmf,
