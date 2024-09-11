@@ -100,7 +100,7 @@ fit_model <- function(
 #' Delays or right truncation are optional and
 #' can be skipped by passing `pmf = NA`.
 #'
-#' @param pmf As returned from [CFAEpiNow2Pipeline::read_disease_parameters()].
+#' @param pmf As returned by [CFAEpiNow2Pipeline::read_disease_parameters()].
 #'   A PMF vector or an NA, if not applying the PMF to the model fit.
 #'
 #' @return An EpiNow2::*_opts() formatted object or NA with a message
