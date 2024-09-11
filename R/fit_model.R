@@ -93,15 +93,15 @@ fit_model <- function(
 #' Format PMFs for EpiNow2
 #'
 #' Opinionated wrappers around EpiNow2::generation_time_opts(),
-#' EpiNow2::delay_opts(), or EpiNow2::dist_spec() that
-#' formats the generation interval, delay, or right truncation parameters
-#' as an object ready for input to EpiNow2.
+#' EpiNow2::delay_opts(), or EpiNow2::dist_spec() that formats the generation
+#' interval, delay, or right truncation parameters as an object ready for input
+#' to EpiNow2.
 #'
-#' Delays or right truncation are optional and
-#' can be skipped by passing `pmf = NA`.
+#' Delays or right truncation are optional and can be skipped by passing `pmf =
+#' NA`.
 #'
-#' @param pmf As returned by [CFAEpiNow2Pipeline::read_disease_parameters()].
-#'   A PMF vector or an NA, if not applying the PMF to the model fit.
+#' @param pmf As returned by [CFAEpiNow2Pipeline::read_disease_parameters()]. A
+#'   PMF vector or an NA, if not applying the PMF to the model fit.
 #'
 #' @return An EpiNow2::*_opts() formatted object or NA with a message
 #' @name opts_formatter
