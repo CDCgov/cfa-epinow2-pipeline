@@ -15,7 +15,7 @@ jobs:
 
   run_tests:
     runs-on: ubuntu-latest
-    container: $IMAGE_NAME
+    container: ${{ env.IMAGE_NAME }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
