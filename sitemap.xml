@@ -13,9 +13,11 @@
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/download_from_azure_blob.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/fetch_blob_container.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/fetch_credential_from_env_var.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/fit_model.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/gostic_gt_pmf.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/gostic_toy_rt.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/opts_formatter.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/read_data.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/read_disease_parameters.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/read_exclusions.html</loc></url>
