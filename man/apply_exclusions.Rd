@@ -12,11 +12,15 @@ apply_exclusions(cases, exclusions)
 \item{exclusions}{A dataframe returned by \code{\link[=read_exclusions]{read_exclusions()}}}
 }
 \value{
-A dataframe with the same rows and schema as \code{cases} and the value in
-the column \code{confirm} converted to NA in any rows that match a row in
+A dataframe with the same rows and schema as \code{cases} where the value
+in the column \code{confirm} converted to NA in any rows that match a row in
 \code{exclusions}
 }
 \description{
-NAs are skipped in model fitting by EpiNow2, so matched rows are excluded
-from the model likelihood.
+Mark selected points to be ignored in model fitting. This manual selection
+occurs externally to the pipeline and is passed to the pipeline in an
+exclusions file read with \code{\link[=read_exclusions]{read_exclusions()}}. Mechanically, the exclusions
+are applied by converting specified points to NAs in the dataset. NAs are
+skipped in model fitting by EpiNow2, so matched rows are excluded from the
+model likelihood.
 }
