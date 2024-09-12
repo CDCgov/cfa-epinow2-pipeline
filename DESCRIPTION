@@ -32,7 +32,7 @@ Imports:
     EpiNow2 (>= 1.4.0),
     rlang
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
-Imports: 
+Imports:
     cli,
     jsonlite,
     jsonvalidate,
