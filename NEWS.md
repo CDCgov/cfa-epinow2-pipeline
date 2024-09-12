@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Fit EpiNow2 model using params and fixed seed
 * Removed `.vscode` folder from repo
 * Read and apply exclusions to case data
 * Data reader and processor
@@ -12,3 +13,4 @@
 * Initial R package with checks running in CI
 * Updated DESCRIPTION and added guidelines for package authorship
 * Set up README with explanation of purpose and scope
+* Removed `add.R` placeholder
