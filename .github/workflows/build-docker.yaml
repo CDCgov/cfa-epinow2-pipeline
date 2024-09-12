@@ -37,6 +37,7 @@ jobs:
 
       - name: Build the package
         run: |
+          Rscript --vanilla -e '.libPaths() |> list.files()'
           R CMD build .
 
       - name: Check the package
