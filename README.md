@@ -37,6 +37,166 @@ This package implements functions for:
 1. **Logging**: Steps in the pipeline have comprehensive R-style logging, with the the [cli](https://github.com/r-lib/cli) package
 1. **Metadata**: Extract comprehensive metadata on the model run and store alongside outputs
 
+## Configuration Specification
+
+This section provides a detailed description of the configuration parameters used in the application.
+They should be provided to the pipeline in JSON format, with all keys below _required_.
+
+### Overview
+
+The configuration is represented in JSON format as follows:
+
+```json
+{
+    "job_id": "6183da58-89bc-455f-8562-4f607257a876",
+    "task_id": "bc0c3eb3-7158-4631-a2a9-86b97357f97e",
+    "as_of_date": "2023-01-01",
+    "disease": "test",
+    "geo_value": ["test"],
+    "geo_type": "test",
+    "parameters": {
+       "path": "data/parameters.parquet",
+       "blob_storage_container": null
+    },
+    "data": {
+        "path": "gold/",
+        "blob_storage_container": null,
+        "report_date": [
+            "2023-01-01"
+        ],
+        "reference_date": [
+            "2023-01-01",
+            "2022-12-30",
+            "2022-12-29"
+        ]
+    },
+    "seed": 42,
+    "horizon": 14,
+    "priors": {
+        "rt": {
+            "mean": 1.0,
+            "sd": 0.2
+        },
+        "gp": {
+            "alpha_sd": 0.01
+        }
+    },
+    "sampler_opts": {
+        "cores": 4,
+        "chains": 4,
+        "adapt_delta": 0.99,
+        "max_treedepth": 12
+    }
+}
+```
+
+### Parameter Descriptions
+
+#### `job_id`
+
+- **Type**: `String`
+- **Description**: A unique identifier for the job.
+
+#### `task_id`
+
+- **Type**: `String`
+- **Description**: A unique identifier for the task within the job. See [Azure Batch for documentation](https://learn.microsoft.com/en-us/azure/batch/jobs-and-tasks) of the task vs. job abstraction.
+
+#### `as_of_date`
+
+- **Type**: `String` (Date in `YYYY-MM-DD` format)
+- **Description**: Use the parameters that were used in production on this date. Set for the current date for the most up-to-to date version of the parameters and set to an earlier date to use parameters from an earlier time period.
+
+#### `disease`
+
+- **Type**: `String`
+- **Description**: The name of the disease being modeled. One of `COVID-19`, `Influenza`, or `test`.
+
+#### `geo_value`
+
+- **Type**: `Array[String]`
+- **Description**: A [FIPS Alpha code](https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code) identifying a state or territory. This code is the standard uppercase two-letter state abbreviation. It can also be `US` for an aggregate national estimate.
+
+#### `geo_type`
+
+- **Type**: `String`
+- **Description**: The type of geographical area (e.g., `"state"`, `"county"`).
+
+#### `parameters`
+
+An object containing paths to parameter files.
+
+- **`path`**
+  - **Type**: `String`
+  - **Description**: File path to the parameters file in Parquet format.
+- **`blob_storage_container`**
+  - **Type**: `String` or `null`
+  - **Description**: Name of the blob storage container, if applicable.
+
+#### `data`
+
+An object containing data paths and dates.
+
+- **`path`**
+  - **Type**: `String`
+  - **Description**: Directory path to the data files.
+- **`blob_storage_container`**
+  - **Type**: `String` or `null`
+  - **Description**: Name of the blob storage container, if applicable.
+- **`report_date`**
+  - **Type**: `Array[String]` (Dates in `YYYY-MM-DD` format)
+  - **Description**: List of report dates to include.
+- **`reference_date`**
+  - **Type**: `Array[String]` (Dates in `YYYY-MM-DD` format)
+  - **Description**: List of reference dates to include.
+
+#### `seed`
+
+- **Type**: `Integer`
+- **Description**: Random seed for reproducibility.
+
+#### `horizon`
+
+- **Type**: `Integer`
+- **Description**: Forecast horizon in days. Must be a natural number.
+
+#### `priors`
+
+An object specifying prior distributions for model parameters. See the [EpiNow2](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html) model definition for more information.
+
+- **`rt`**: Prior settings for the reproduction number \( R_t \).
+  - **`mean`**
+    - **Type**: `Float`
+    - **Description**: Mean of the prior distribution for \( R_t \).
+  - **`sd`**
+    - **Type**: `Float`
+    - **Description**: Standard deviation of the prior distribution for \( R_t \).
+- **`gp`**: Prior settings for the latent Gaussian process of Rt.
+  - **`alpha_sd`**
+    - **Type**: `Float`
+    - **Description**: Standard deviation for the alpha parameter in the Gaussian process. A larger standard deviation implies more wiggliness in the Rt estimate.
+
+#### `sampler_opts`
+
+An object containing options for the Stan HMC algorithm.
+
+- **`cores`**
+  - **Type**: `Integer`
+  - **Description**: Number of CPU cores to utilize.
+- **`chains`**
+  - **Type**: `Integer`
+  - **Description**: Number of Markov chains to run. Should be greater than or equal to the number of cores.
+- **`adapt_delta`**
+  - **Type**: `Float`
+  - **Description**: Target acceptance probability for the sampler's adaptation phase.
+- **`max_treedepth`**
+  - **Type**: `Integer`
+  - **Description**: Log of the number of evaluations allowed before termination for non-convergence.
+
+---
+
+**Note**: All date strings should follow the `YYYY-MM-DD` format to ensure consistency and proper parsing.
+
 ## Project Admin
 
 - @zsusswein
