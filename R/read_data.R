@@ -132,15 +132,15 @@ read_data <- function(data_path,
     )
   }
   # Warn for incomplete return
+  n_rows_expected <- as.Date(max_reference_date) - as.Date(min_reference_date) + 1
   if (
-    nrow(df) != as.Date(max_reference_date) - as.Date(min_reference_date) + 1
+    nrow(df) != n_rows_expected
   ) {
-    n_rows_expected <- as.Date(max_reference_date) - as.Date(min_reference_date)
-    expected_dates <- format(seq.Date(
+    expected_dates <- seq.Date(
       from = as.Date(min_reference_date),
       to = as.Date(max_reference_date),
       by = "day"
-    ), "%Y-%m-%d")
+    )
     missing_dates <- setdiff(expected_dates, df[["reference_date"]])
     cli::cli_warn(
       c(
