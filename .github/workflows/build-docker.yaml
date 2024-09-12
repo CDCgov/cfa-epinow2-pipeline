@@ -29,6 +29,7 @@ jobs:
       IMAGE_NAME: ${{ env.IMAGE_NAME }}
 
   run_tests:
+    needs: build_image
     runs-on: ubuntu-latest
     container: ${{ needs.build_image.outputs.IMAGE_NAME }}
     steps:
