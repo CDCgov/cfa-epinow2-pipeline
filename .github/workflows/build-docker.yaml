@@ -27,7 +27,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
     outputs:
-      IMAGE_NAME: ${{ env.IMAGE_NAME }}/${{ env.REGISTRY}}
+      IMAGE_NAME: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}
 
   run_tests:
     needs: build_image
