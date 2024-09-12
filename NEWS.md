@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Added Docker image with all the requirements to build the package.
 * Fit EpiNow2 model using params and fixed seed
 * Removed `.vscode` folder from repo
 * Read and apply exclusions to case data
