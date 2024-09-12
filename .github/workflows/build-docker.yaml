@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
     outputs:
       IMAGE_NAME: ${{ env.IMAGE_NAME }}
 
@@ -33,7 +33,7 @@ jobs:
     container: ${{ needs.build_image.outputs.IMAGE_NAME }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build the package
         run: |
