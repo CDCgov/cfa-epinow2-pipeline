@@ -13,3 +13,4 @@
 * Initial R package with checks running in CI
 * Updated DESCRIPTION and added guidelines for package authorship
 * Set up README with explanation of purpose and scope
+* Removed `add.R` placeholder
