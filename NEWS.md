@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Fit EpiNow2 model using params and fixed seed
 * Removed `.vscode` folder from repo
 * Read and apply exclusions to case data
 * Data reader and processor
