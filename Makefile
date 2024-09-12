@@ -14,4 +14,4 @@ push:
 	$(CNTR_PROG) push $(CNTR_USER)/$(IMAGE_NAME)
 
 run:
-	$(CNTR_PROG) run -it --rm -v $(PWD):/mnt $(IMAGE_NAME) 
+	$(CNTR_PROG) run -it --rm -v $(PWD):/mnt $(IMAGE_NAME)

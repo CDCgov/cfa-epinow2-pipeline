@@ -1,20 +1,20 @@
-# This GitHub Actions workflow builds a Docker image for the 
+# This GitHub Actions workflow builds a Docker image for the
 # cfa-epinow2-pipeline-docker project. It consists of two jobs: build_image
 # and run_tests:
-# 
+#
 # - The build_image job checks out the code and outputs the IMAGE_NAME
 #   environment variable.
 #
 # - The run_tests job runs on the ubuntu-latest runner and uses the Docker image
 #   built in the build_image job.
-# 
+#
 #   It checks out the code, builds the package using R CMD build, and checks the
 #   package using R CMD check.
 
 name: Builds Docker image
 
-on: 
-  workflow_dispatch: 
+on:
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: gvegayon/cfa-epinow2-pipeline

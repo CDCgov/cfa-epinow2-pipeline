@@ -1,6 +1,8 @@
 ^CONTRIBUTING.md$
 ^DISCLAIMER.md$
+^Dockerfile$
 ^LICENSE.md$
+^Makefile$
 ^\.github$
 ^\.lintr$
 ^\.pre-commit-config\.yaml$
@@ -16,5 +18,3 @@
 ^pkgdown$
 ^rules_of_behavior.md$
 ^thanks.md$
-^Makefile$
-^Dockerfile$
