@@ -17,7 +17,7 @@ on:
   workflow_dispatch: 
 
 env:
-  IMAGE_NAME: gvegayon/cfa-epinow2-pipeline-docker:latest
+  IMAGE_NAME: gvegayon/cfa-epinow2-pipeline:latest
   REGISTRY: docker.io
 
 jobs:
