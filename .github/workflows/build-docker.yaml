@@ -17,7 +17,7 @@ on:
   workflow_dispatch: 
 
 env:
-  IMAGE_NAME: gvegayon/cfa-epinow2-pipeline:latest
+  IMAGE_NAME: gvegayon/cfa-epinow2-pipeline
   REGISTRY: docker.io
 
 jobs:
@@ -26,8 +26,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          tags: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
+
     outputs:
-      IMAGE_NAME: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}
+      IMAGE_NAME: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
 
   run_tests:
     needs: build_image
@@ -39,7 +46,6 @@ jobs:
 
       - name: Build the package
         run: |
-          Rscript --vanilla -e '.libPaths() |> list.files()'
           R CMD build .
 
       - name: Check the package
