@@ -98,12 +98,13 @@ test_that("An invalid query throws a wrapped error", {
 test_that("Incomplete return throws warning", {
   data_path <- test_path("data/test_data.parquet")
 
-  expect_warning(
+  # Two missing dates
+  expect_snapshot_warning(
     read_data(data_path,
       disease = "test",
       state_abb = "test",
       report_date = "2023-10-28",
-      min_reference_date = "2022-12-01",
+      min_reference_date = "2022-12-31",
       max_reference_date = "2023-01-22"
     ),
     class = "incomplete_return"
