@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline (development version)
 
 * Config reader with schema validation and enforcement
+* Fix bug in warning message for incomplete data read (h/t @damonbayer)
 * Fit EpiNow2 model using params and fixed seed
 * Removed `.vscode` folder from repo
 * Read and apply exclusions to case data
@@ -10,7 +11,6 @@
 * Bug fixed in the updated, faster pre-commit checks
 * Updated, faster pre-commit checks
 * Azure Blob file download utilities
->>>>>>> main
 * CI running on Ubuntu only & working pkgdown deploy to Github Pages
 * Initial R package with checks running in CI
 * Updated DESCRIPTION and added guidelines for package authorship
