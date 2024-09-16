@@ -4,7 +4,7 @@ ifndef CNTR_PROG
 endif
 
 CNTR_USER=gvegayon
-IMAGE_NAME=cfa-epinow2-pipeline:latest
+IMAGE_NAME=cfa-epinow2-pipeline-dependencies:latest
 
 build:
 	$(CNTR_PROG) build -t $(IMAGE_NAME) -f Dockerfile . && \

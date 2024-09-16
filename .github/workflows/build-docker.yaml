@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: gvegayon/cfa-epinow2-pipeline
+  IMAGE_NAME: gvegayon/cfa-epinow2-pipeline-dependencies
   REGISTRY: docker.io
 
 jobs:
@@ -27,11 +27,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check cache
+        uses: actions/cache@v3
+        id: cache
+        with:
+          key: ${{ runner.os }}-build-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}
+          path:
+            ./DESCRIPTION
+
       - name: Build and push
         uses: docker/build-push-action@v6
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           push: false
           tags: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
+          file: ./Dockerfile-dependencies
 
     outputs:
       IMAGE_NAME: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
