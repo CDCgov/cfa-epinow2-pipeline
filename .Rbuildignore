@@ -1,6 +1,8 @@
 ^CONTRIBUTING.md$
 ^DISCLAIMER.md$
+^Dockerfile$
 ^LICENSE.md$
+^Makefile$
 ^\.github$
 ^\.lintr$
 ^\.pre-commit-config\.yaml$
