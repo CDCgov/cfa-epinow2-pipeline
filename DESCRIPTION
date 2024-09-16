@@ -27,10 +27,15 @@ Imports:
     AzureRMR,
     AzureStor,
     cli,
+    data.table,
     DBI,
     duckdb,
     EpiNow2 (>= 1.4.0),
-    rlang
+    rlang,
+    rstan,
+    tidybayes
+Additional_repositories:
+    https://mc-stan.org/r-packages/
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
 Depends:
     R (>= 2.10)
