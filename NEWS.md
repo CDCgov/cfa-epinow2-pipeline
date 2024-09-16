@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline (development version)
 
 * Config reader with schema validation and enforcement
+* Bump pre-commit hooks
 * Fix bug in warning message for incomplete data read (h/t @damonbayer)
 * Fit EpiNow2 model using params and fixed seed
 * Removed `.vscode` folder from repo
