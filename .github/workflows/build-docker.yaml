@@ -1,18 +1,26 @@
 # This GitHub Actions workflow builds a Docker image for the
-# cfa-epinow2-pipeline-docker project. It consists of three jobs: build_image_dependencies,
-# build_image, and run_tests:
-# - The `build_image_dependencies` job carries out the first part of a multi-stage build.
-#   If there are new dependencies added in the `DEPENDENCIES` file, it updates the base image
-#   with these packages.
-# 
-# - The build_image job checks out the code and outputs the IMAGE_NAME
-#   environment variable.
+# cfa-epinow2-pipeline-docker project. It consists of two jobs:
+# build_image_dependencies and build_image.
 #
-# - The run_tests job runs on the ubuntu-latest runner and uses the Docker image
-#   built in the build_image job.
+# - The `build_image_dependencies` job carries out the first part of a
+#   multi-stage build. It downloads and install all the dependencies
+#   listed in the `DESCRIPTION` file. It uses the `Dockerfile-dependencies`
+#   file to build the image.
 #
-#   It checks out the code, builds the package using R CMD build, and checks the
-#   package using R CMD check.
+#   The built image is then pushed to the corresponding registry.
+#
+#   The process is cached to avoid rebuilding the image if the dependencies
+#   have not changed. This is by hashing the `DESCRIPTION` file and the
+#   `Dockerfile-dependencies` file.
+#
+# - The build_image job builds the final image using the `Dockerfile` file.
+#   It uses the image built in the previous job as a base image.
+#
+#   During the build process, the package is installed and built. Furthermore
+#   the package is checked using `R CMD check` to ensure that it is working
+#   correctly.
+#
+#   Once the image is built, it is pushed to the corresponding registry.
 
 name: Builds Docker image
 
