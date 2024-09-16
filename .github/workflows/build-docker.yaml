@@ -1,7 +1,10 @@
 # This GitHub Actions workflow builds a Docker image for the
-# cfa-epinow2-pipeline-docker project. It consists of two jobs: build_image
-# and run_tests:
-#
+# cfa-epinow2-pipeline-docker project. It consists of three jobs: build_image_dependencies,
+# build_image, and run_tests:
+# - The `build_image_dependencies` job carries out the first part of a multi-stage build.
+#   If there are new dependencies added in the `DEPENDENCIES` file, it updates the base image
+#   with these packages.
+# 
 # - The build_image job checks out the code and outputs the IMAGE_NAME
 #   environment variable.
 #
