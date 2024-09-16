@@ -1,10 +1,4 @@
-FROM rocker/geospatial:4.4.1
-
-# Installing missing dependencies
-RUN install2.r -n 2 \
-    AzureStor \
-    AzureRMR \
-    EpiNow2
+FROM gvegayon/cfa-epinow2-pipeline-dependencies:latest
 
 # Will copy the package to the container preserving the directory structure
 COPY . pkg/
@@ -14,6 +8,7 @@ COPY . pkg/
 RUN R CMD build --no-build-vignettes pkg && \
     R CMD INSTALL CFAEpiNow2Pipeline_*.tar.gz
 
+# Ensure the package is working properly
 RUN R CMD check CFAEpiNow2Pipeline_*.tar.gz
 
 CMD ["bash"]

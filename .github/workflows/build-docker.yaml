@@ -14,14 +14,17 @@
 name: Builds Docker image
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: gvegayon/cfa-epinow2-pipeline-dependencies
+  IMAGE_NAME: gvegayon/cfa-epinow2-pipeline
   REGISTRY: docker.io
 
 jobs:
-  build_image:
+  build_image_dependencies:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -46,18 +49,14 @@ jobs:
     outputs:
       IMAGE_NAME: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
 
-  run_tests:
-    needs: build_image
+  build_image:
+    needs: build_image_dependencies
     runs-on: ubuntu-latest
-    container: ${{ needs.build_image.outputs.IMAGE_NAME }}
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build the package
-        run: |
-          R CMD build .
-
-      - name: Check the package
-        run: |
-          R CMD check *tar.gz
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          tags: ${{ needs.build_image_dependencies.outputs.IMAGE_NAME }}
+          file: ./Dockerfile
