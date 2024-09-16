@@ -4,6 +4,8 @@ FROM rocker/geospatial:4.4.1
 COPY . pkg/
 
 # Installing missing dependencies
-RUN r --vanilla -e 'remotes::install_deps(pkgdir = "pkg")'
+RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
+RUN install2.r pak
+RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = NA)'
 
 CMD ["bash"]

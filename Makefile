@@ -7,7 +7,7 @@ CNTR_USER=gvegayon
 IMAGE_NAME=cfa-epinow2-pipeline-dependencies:latest
 
 build:
-	$(CNTR_PROG) build -t $(IMAGE_NAME) -f Dockerfile . && \
+	$(CNTR_PROG) build -t $(IMAGE_NAME) -f Dockerfile-dependencies . && \
 	$(CNTR_PROG) tag $(IMAGE_NAME) $(CNTR_USER)/$(IMAGE_NAME)
 
 push:
