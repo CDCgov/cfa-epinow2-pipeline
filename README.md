@@ -37,6 +37,25 @@ This package implements functions for:
 1. **Logging**: Steps in the pipeline have comprehensive R-style logging, with the the [cli](https://github.com/r-lib/cli) package
 1. **Metadata**: Extract comprehensive metadata on the model run and store alongside outputs
 
+## Output format
+
+```bash
+output/
+├── job_<job_id>/
+│   ├── raw_samples/
+│   │   ├── raw_samples_task_<task_id>.parquet
+│   ├── summarized_quantiles/
+│   │   ├── summarized_quantiles_task_<task_id>.parquet
+│   ├── tasks/
+│   │   ├── task_<task_id>/
+│   │   │   ├── model.stan
+│   │   │   ├── metadata.json
+│   │   │   ├── task.log
+│   │   │   └── error.log
+│   ├── job_metadata.json
+```
+
+
 ## Project Admin
 
 - @zsusswein
