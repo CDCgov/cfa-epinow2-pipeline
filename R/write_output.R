@@ -277,7 +277,11 @@ write_parquet <- function(data, path) {
   # ephemeral from a temporary in-memory DB. There's no actual database to
   # guard against a SQL injection attack and all the data are already available
   # here.
-  query <- paste0("COPY (SELECT * FROM df) TO '", path, "' (FORMAT PARQUET, CODEC 'zstd')")
+  query <- paste0(
+    "COPY (SELECT * FROM df) TO '",
+    path,
+    "' (FORMAT PARQUET, CODEC 'zstd')"
+  )
   con <- DBI::dbConnect(duckdb::duckdb())
   on.exit(expr = DBI::dbDisconnect(con))
 
