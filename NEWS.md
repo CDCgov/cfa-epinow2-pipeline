@@ -1,5 +1,5 @@
 # CFAEpiNow2Pipeline (development version)
-
+* Now uses CFA Azure ACR and images in the workflows and Dockerfiles, etc.
 * Added Docker image with all the requirements to build the package.
 * Bump pre-commit hooks
 * Fix bug in warning message for incomplete data read (h/t @damonbayer)
