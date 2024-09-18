@@ -1,4 +1,5 @@
-FROM gvegayon/cfa-epinow2-pipeline-dependencies:latest
+# This requires access to the Azure Container Registry
+FROM cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:latest
 
 # Will copy the package to the container preserving the directory structure
 COPY . pkg/

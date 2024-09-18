@@ -22,7 +22,7 @@
 #
 #   Once the image is built, it is pushed to the corresponding registry.
 
-name: Builds Docker image
+name: Builds and Pushes Docker image
 
 on:
   push:
@@ -31,12 +31,13 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: gvegayon/cfa-epinow2-pipeline
-  REGISTRY: docker.io
-
+  # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
+  REGISTRY: cfaprdbatchcr.azurecr.io
+  IMAGE_NAME: cfa-epinow2-pipeline
+  
 jobs:
   build_image_dependencies:
-    runs-on: ubuntu-latest
+    runs-on: cfa-linux-ext
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -49,25 +50,40 @@ jobs:
           path:
             ./DESCRIPTION
 
+      - name: Login to the Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: "cfaprdbatchcr.azurecr.io"
+          username: "cfaprdbatchcr"
+          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+
       - name: Build and push
         uses: docker/build-push-action@v6
         if: steps.cache.outputs.cache-hit != 'true'
         with:
-          push: false
-          tags: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
+          push: true
+          tags: |
+            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:latest
+            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:${{ github.sha }}
           file: ./Dockerfile-dependencies
-
-    outputs:
-      IMAGE_NAME: ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
 
   build_image:
     needs: build_image_dependencies
-    runs-on: ubuntu-latest
-
+    runs-on: cfa-linux-ext
     steps:
+      
+      - name: Login to the Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: "cfaprdbatchcr.azurecr.io"
+          username: "cfaprdbatchcr"
+          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+          
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          push: false
-          tags: ${{ needs.build_image_dependencies.outputs.IMAGE_NAME }}
+          push: true
+          tags: |
+            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           file: ./Dockerfile
