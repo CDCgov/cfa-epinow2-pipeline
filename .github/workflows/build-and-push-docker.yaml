@@ -34,7 +34,7 @@ env:
   # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
   REGISTRY: cfaprdbatchcr.azurecr.io
   IMAGE_NAME: cfa-epinow2-pipeline
-  
+
 jobs:
   build_image_dependencies:
     runs-on: cfa-linux-ext
@@ -71,14 +71,14 @@ jobs:
     needs: build_image_dependencies
     runs-on: cfa-linux-ext
     steps:
-      
+
       - name: Login to the Container Registry
         uses: docker/login-action@v3
         with:
           registry: "cfaprdbatchcr.azurecr.io"
           username: "cfaprdbatchcr"
           password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
-          
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
