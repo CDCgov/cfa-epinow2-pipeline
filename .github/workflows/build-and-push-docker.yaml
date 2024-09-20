@@ -22,7 +22,7 @@
 #
 #   Once the image is built, it is pushed to the corresponding registry.
 
-name: Builds and Pushes Docker image
+name: Build and Push Docker image
 
 on:
   push:
