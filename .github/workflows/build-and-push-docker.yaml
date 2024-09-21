@@ -59,7 +59,7 @@ jobs:
           password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
 
       # if: steps.cache.outputs.cache-hit != 'true'
-      
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
