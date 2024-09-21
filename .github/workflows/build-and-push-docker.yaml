@@ -92,24 +92,24 @@ jobs:
 
   create-and-launch-batch-pools:
     runs-on: cfa-cdcgov
-    needs: 
+    needs:
       - build_image
-        
+
     permissions:
       contents: read
       packages: write
-        
-    steps:   
+
+    steps:
       - name: Checkout Repo
         id: checkout_repo
         uses: actions/checkout@v4
-       
+
       - name: Login to Azure with NNH Service Principal
         id: azure_login_2
         uses: azure/login@v2
         with:
         # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }} 
+          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
       - name: Download Configuration Tomls from cfadatalakeprd/cfapredict
         id: download_config_tomls
@@ -137,7 +137,7 @@ jobs:
           if [ -z "$EPINOW2_POOL_EXISTS" ]; then
               echo -e "Batch pool $pool_id does not exist."
           else
-              echo -e "Batch pool $pool_id exists. Deleting it now..."  
+              echo -e "Batch pool $pool_id exists. Deleting it now..."
               az batch pool delete \
                 --account-name cfaprdba \
                 --account-endpoint https://cfaprdba.eastus.batch.azure.com \
@@ -151,4 +151,4 @@ jobs:
         run: |
           echo 'hello world'
 
-     
+
