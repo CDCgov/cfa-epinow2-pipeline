@@ -7,6 +7,7 @@ on:
     branches: [main]
 
 name: test-coverage
+run-name: (7) Test Coverage - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
 jobs:
   test-coverage:

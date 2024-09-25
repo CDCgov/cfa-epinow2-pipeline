@@ -1,3 +1,6 @@
+name: Run Epinow2 Pipeline
+run-name: (2) Epinow2 Pipeline - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
+
 # This GitHub Actions workflow builds a Docker image for the
 # cfa-epinow2-pipeline-docker project. It consists of two jobs:
 # build_image_dependencies and build_image.
@@ -22,14 +25,12 @@
 #
 #   Once the image is built, it is pushed to the corresponding registry.
 
-name: Run Epinow2 Pipeline
-run-name: Epinow2 Pipeline - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
 on:
   push:
     branches:
       - main
-      - jk-azure-readiness
+      - jk-azure-readiness # temporary
   workflow_dispatch:
 
 env:
