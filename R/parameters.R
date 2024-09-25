@@ -141,7 +141,7 @@ read_interval_pmf <- function(path,
       AND parameter = ?
       AND disease = ?
       AND start_date < ? :: DATE
-      AND (end_date > ? OR end_date IS NULL)
+      AND (CAST(end_date AS DATE) > ? :: DATE OR end_date IS NULL)
     "
   parameters <- list(
     path,
