@@ -120,7 +120,7 @@ jobs:
           VM_IMAGE_TAG: "canonical:0001-com-ubuntu-server-focal:20_04-lts"
           NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
           # TARGET_DEDICATED_NODES: "0" # This is overriden by Autoscale Formula
-          AUTO_SCALE_FORMULA: 
+          AUTO_SCALE_FORMULA:
           VM_SIZE: "standard_a4m_v2"
 
         # The call to the az cli that actually generates the pool
@@ -132,6 +132,6 @@ jobs:
           --target-dedicated-nodes ${{ env.TARGET_DEDICATED_NODES}} \
           --auto-scale-formula ${{ env.AUTOSCALE_FORMULA}}
           --vm-size ${{ env.VM_SIZE}}
-      
+
       - name: legacy_test
         run: az batch pool create --json-file ./cfa-epinow2-batch-pool-config.json
