@@ -41,7 +41,7 @@ env:
 jobs:
 
   # We now use a two-stage docker build (essentially), split across two dockerfiles.
-  # TODO: Only run this if necessary, will need conditional job syntax 
+  # TODO: Only run this if necessary, will need conditional job syntax
   # SEE also; ./.github/workflows/1-Build-Dependency-Image.yml
 
   Job01_build-image-dependencies:

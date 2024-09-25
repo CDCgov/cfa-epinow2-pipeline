@@ -36,7 +36,7 @@ jobs:
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package"),
             token = "${{ secrets.CODECOV_TOKEN }}"
           )
-        
+
       - name: Show testthat output
         if: always()
         run: |
