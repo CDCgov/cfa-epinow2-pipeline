@@ -17,3 +17,4 @@
 * Updated DESCRIPTION and added guidelines for package authorship
 * Set up README with explanation of purpose and scope
 * Removed `add.R` placeholder
+* Fix bugs in date casting caused by DuckDB v1.1.1 release
