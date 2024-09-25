@@ -55,13 +55,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Check cache
-        uses: actions/cache@v3
-        id: cache
-        with:
-          key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}
-          path:
-            ./DESCRIPTION
+      # - name: Check cache
+      #   uses: actions/cache@v3
+      #   id: cache
+      #   with:
+      #     key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}
+      #     path:
+      #       ./DESCRIPTION
 
       - name: Login to the Container Registry
         uses: docker/login-action@v3
