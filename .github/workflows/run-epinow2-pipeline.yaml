@@ -22,7 +22,7 @@
 #
 #   Once the image is built, it is pushed to the corresponding registry.
 
-name: Build and Push Docker image
+name: Run Epinow2 Pipeline
 
 on:
   push:
@@ -37,19 +37,11 @@ env:
   IMAGE_NAME: cfa-epinow2-pipeline
 
 jobs:
-  build_image_dependencies:
+  Job01_build-image-dependencies:
     runs-on: cfa-cdcgov
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      # - name: Check cache
-      #   uses: actions/cache@v3
-      #   id: cache
-      #   with:
-      #     key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}
-      #     path:
-      #       ./DESCRIPTION
 
       - name: Login to the Container Registry
         uses: docker/login-action@v3
@@ -57,8 +49,6 @@ jobs:
           registry: "cfaprdbatchcr.azurecr.io"
           username: "cfaprdbatchcr"
           password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
-
-      # if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -68,9 +58,10 @@ jobs:
             ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:latest
             ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:${{ github.sha }}
           file: ./Dockerfile-dependencies
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-  build_image:
-    needs: build_image_dependencies
+  Job02_build-model-image:
     runs-on: cfa-cdcgov
     steps:
 
@@ -89,11 +80,13 @@ jobs:
             ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
             ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           file: ./Dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-  create-and-launch-batch-pools:
+  Job03_create-and-launch-batch-pools:
     runs-on: cfa-cdcgov
     needs:
-      - build_image
+      - Job02_build-model-image
 
     permissions:
       contents: read
@@ -111,44 +104,34 @@ jobs:
         # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
           creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
-      - name: Download Configuration Tomls from cfadatalakeprd/cfapredict
-        id: download_config_tomls
-        run: |
-          rm -rf ./ci_config_tomls/
-          az storage blob download-batch \
-            --source https://cfadatalakeprd.blob.core.windows.net/cfapredict/ \
-            --pattern "./ci_config_tomls/*" \
-            --destination ./ \
-            --auth-mode "login"
+      # - name: Delete Existing Batch Pool
+      #   id: delete_existing_batch_pool
+      #   run: |
 
-      - name: Delete Existing Batch Pool
-        id: delete_existing_batch_pool
-        run: |
+      #     export pool_id="cfa-epinow2-pipeline-ci"
 
-          export pool_id="cfa-epinow2-pipeline-ci"
+      #     # Check if the batch pool exists
+      #     EPINOW2_POOL_EXISTS=$(az batch pool show \
+      #       --account-name "cfaprdba" \
+      #       --account-endpoint "https://cfaprdba.eastus.batch.azure.com" \
+      #       --pool-id "$pool_id" \
+      #       --query "id" --output tsv 2>/dev/null)
 
-          # Check if the batch pool exists
-          EPINOW2_POOL_EXISTS=$(az batch pool show \
-            --account-name "cfaprdba" \
-            --account-endpoint "https://cfaprdba.eastus.batch.azure.com" \
-            --pool-id "$pool_id" \
-            --query "id" --output tsv 2>/dev/null)
-
-          if [ -z "$EPINOW2_POOL_EXISTS" ]; then
-              echo -e "Batch pool $pool_id does not exist."
-          else
-              echo -e "Batch pool $pool_id exists. Deleting it now..."
-              az batch pool delete \
-                --account-name cfaprdba \
-                --account-endpoint https://cfaprdba.eastus.batch.azure.com \
-                --pool-id "$pool_id" \
-                --yes
-              echo "Batch pool $pool_id has been deleted."
-          fi
+      #     if [ -z "$EPINOW2_POOL_EXISTS" ]; then
+      #         echo -e "Batch pool $pool_id does not exist."
+      #     else
+      #         echo -e "Batch pool $pool_id exists. Deleting it now..."
+      #         az batch pool delete \
+      #           --account-name cfaprdba \
+      #           --account-endpoint https://cfaprdba.eastus.batch.azure.com \
+      #           --pool-id "$pool_id" \
+      #           --yes
+      #         echo "Batch pool $pool_id has been deleted."
+      #     fi
 
       - name: Create cfa-epinow2-pipeline Pools
         id: create_nhsn_nssp_pools
-        run: |
+        run: 
           echo 'hello world'
 
 
