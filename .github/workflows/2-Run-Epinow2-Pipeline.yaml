@@ -44,28 +44,28 @@ jobs:
   # TODO: Only run this if necessary, will need conditional job syntax
   # SEE also; ./.github/workflows/1-Build-Dependency-Image.yml
 
-  Job01_build-image-dependencies:
-    runs-on: cfa-cdcgov
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  # Job01_build-image-dependencies:
+  #   runs-on: cfa-cdcgov
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
 
-      - name: Login to the Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: "cfaprdbatchcr.azurecr.io"
-          username: "cfaprdbatchcr"
-          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+  #     - name: Login to the Container Registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: "cfaprdbatchcr.azurecr.io"
+  #         username: "cfaprdbatchcr"
+  #         password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
 
-      - name: Build and push dependencies image # first stage
-        id: build_and_push_dependencies_image
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: |
-            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:latest
-            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:${{ github.sha }}
-          file: ./Dockerfile-dependencies # first stage Dockerfile
+  #     - name: Build and push dependencies image # first stage
+  #       id: build_and_push_dependencies_image
+  #       uses: docker/build-push-action@v6
+  #       with:
+  #         push: true
+  #         tags: |
+  #           ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:latest
+  #           ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:${{ github.sha }}
+  #         file: ./Dockerfile-dependencies # first stage Dockerfile
 
 
   Job02_build-model-image:
