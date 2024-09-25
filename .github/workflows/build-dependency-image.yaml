@@ -35,11 +35,11 @@ on:
 
   pull_request:
     branches:
-      - main    
+      - main
     paths:
       - "./Dockerfile-dependencies" # the dockerfile this workflow builds from
       - "./.github/workflows/build-dependency-image.yaml" # this workflow
-      
+
   workflow_dispatch:
 
 env:

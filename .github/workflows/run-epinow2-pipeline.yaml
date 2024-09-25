@@ -131,7 +131,5 @@ jobs:
 
       - name: Create cfa-epinow2-pipeline Pools
         id: create_nhsn_nssp_pools
-        run: 
+        run:
           echo 'hello world'
-
-
