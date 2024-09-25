@@ -71,9 +71,9 @@ read_data <- function(data_path,
     WHERE 1=1
       AND disease = ?
       AND metric = 'count_ed_visits'
-      AND reference_date >= ?
-      AND reference_date <= ?
-      AND report_date = ?
+      AND reference_date >= ? :: DATE
+      AND reference_date <= ? :: DATE
+      AND report_date = ? :: DATE
     GROUP BY reference_date, report_date, disease
     ORDER BY reference_date
    "
@@ -90,9 +90,9 @@ read_data <- function(data_path,
   WHERE 1=1
     AND disease = ?
     AND metric = 'count_ed_visits'
-    AND reference_date >= ?
-    AND reference_date <= ?
-    AND report_date = ?
+    AND reference_date >= ? :: DATE
+    AND reference_date <= ? :: DATE
+    AND report_date = ? :: DATE
     AND geo_value = ?
   GROUP BY geo_value, reference_date, report_date, disease
   ORDER BY reference_date
