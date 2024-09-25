@@ -23,6 +23,7 @@
 #   Once the image is built, it is pushed to the corresponding registry.
 
 name: Build Dependencies Container Image
+run-name: Dependencies Image Build - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
 on:
   push:

@@ -23,6 +23,7 @@
 #   Once the image is built, it is pushed to the corresponding registry.
 
 name: Run Epinow2 Pipeline
+run-name: Epinow2 Pipeline - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
 on:
   push:
