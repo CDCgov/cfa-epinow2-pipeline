@@ -102,7 +102,7 @@ jobs:
           az batch account login \
           --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
           --name "${{ env.BATCH_ACCOUNT }}" \
-          
+
           az batch pool create \
           --account-endpoint "${{ env.BATCH_ENDPOINT }}" \
           --id "${{ env.POOL_ID }}" \
