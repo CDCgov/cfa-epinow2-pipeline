@@ -121,13 +121,13 @@ jobs:
         # The call to the az cli that actually generates the pool
         run: |
           az batch pool create \
-          --id ${{ env.POOL_ID }} \
-          --image ${{ env.VM_IMAGE_TAG }} \
-          --node-agent-sku-id ${{ env.NODE_AGENT_SKU_ID }} \
-          --auto-scale-formula ${{ env.AUTO_SCALE_FORMULA }} \
-          --vm-size ${{ env.VM_SIZE }} \
-          --account-name ${{ env.BATCH_ACCOUNT }}
-          --account-endpoint ${{ env.BATCH_ENDPOINT }}
+          --id "${{ env.POOL_ID }}" \
+          --image "${{ env.VM_IMAGE_TAG }}" \
+          --node-agent-sku-id "${{ env.NODE_AGENT_SKU_ID }}" \
+          --auto-scale-formula "${{ env.AUTO_SCALE_FORMULA }}" \
+          --vm-size "${{ env.VM_SIZE }}" \
+          --account-name "${{ env.BATCH_ACCOUNT }}" \
+          --account-endpoint "${{ env.BATCH_ENDPOINT }}"
 
           # Let's get this var for the next step too
           echo "POOL_ID=${{ env.POOL_ID}}" >> $GITHUB_ENV
