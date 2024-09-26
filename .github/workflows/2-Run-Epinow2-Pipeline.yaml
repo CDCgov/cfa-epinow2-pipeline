@@ -40,35 +40,7 @@ env:
 
 jobs:
 
-  # We now use a two-stage docker build (essentially), split across two dockerfiles.
-  # TODO: Only run this if necessary, will need conditional job syntax
-  # SEE also; ./.github/workflows/1-Build-Dependency-Image.yml
-
-  # Job01_build-image-dependencies:
-  #   runs-on: cfa-cdcgov
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-
-  #     - name: Login to the Container Registry
-  #       uses: docker/login-action@v3
-  #       with:
-  #         registry: "cfaprdbatchcr.azurecr.io"
-  #         username: "cfaprdbatchcr"
-  #         password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
-
-  #     - name: Build and push dependencies image # first stage
-  #       id: build_and_push_dependencies_image
-  #       uses: docker/build-push-action@v6
-  #       with:
-  #         push: true
-  #         tags: |
-  #           ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:latest
-  #           ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:${{ github.sha }}
-  #         file: ./Dockerfile-dependencies # first stage Dockerfile
-
-
-  Job02_build-model-image:
+  _01_build-model-image:
     runs-on: cfa-cdcgov
     steps:
 
@@ -79,17 +51,18 @@ jobs:
           username: "cfaprdbatchcr"
           password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
 
-      - name: Build and push model pipeline image for Azure batch # second stage, the actual payload
-        id: build_and_push_model_image
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: |
-            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          file: ./Dockerfile # second stage Dockerfile
+      # Comment out if you want to just test the pool creation without waiting for build and push
+      # - name: Build and push model pipeline image for Azure batch # second stage, the actual payload
+      #   id: build_and_push_model_image
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     push: true
+      #     tags: |
+      #       ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
+      #       ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      #     file: ./Dockerfile # second stage Dockerfile
 
-  Job03_create-batch-pool-and-submit-jobs:
+  _02_create-batch-pool-and-submit-jobs:
     runs-on: cfa-cdcgov
     needs:
       - Job02_build-model-image
@@ -130,7 +103,8 @@ jobs:
              // Get pending tasks for the past 15 minutes.
              $samples = $ActiveTasks.GetSamplePercent(TimeInterval_Minute * 15);
              
-             // If we have fewer than 70 percent data points, we use the last sample point, otherwise we use the maximum of last sample point and the history average.
+             // If we have fewer than 70 percent data points, we use the last sample point, 
+             // otherwise we use the maximum of last sample point and the history average.
              $tasks = $samples < 70 ? max(0, $ActiveTasks.GetSample(1)) :
              max( $ActiveTasks.GetSample(1), avg($ActiveTasks.GetSample(TimeInterval_Minute * 15)));
              
@@ -149,8 +123,8 @@ jobs:
           az batch pool create \
           --id ${{ env.POOL_ID }} \
           --image ${{ env.VM_IMAGE_TAG }} \
-          --node-agent-sku-id ${{ env.NODE_AGENT_SKU_ID}} \
-          --auto-scale-formula ${{ env.AUTOSCALE_FORMULA}} \
+          --node-agent-sku-id ${{ env.NODE_AGENT_SKU_ID }} \
+          --auto-scale-formula ${{ env.AUTO_SCALE_FORMULA }} \
           --vm-size ${{ env.VM_SIZE }} \
           --account-name ${{ env.BATCH_ACCOUNT }}
           --account-endpoint ${{ env.BATCH_ENDPOINT }}
