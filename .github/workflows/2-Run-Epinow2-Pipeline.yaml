@@ -65,7 +65,7 @@ jobs:
   _02_create-batch-pool-and-submit-jobs:
     runs-on: cfa-cdcgov
     needs:
-      - Job02_build-model-image
+      - _01_build-model-image
 
     permissions:
       contents: read
