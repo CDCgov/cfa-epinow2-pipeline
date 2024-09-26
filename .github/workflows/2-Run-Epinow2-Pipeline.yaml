@@ -95,20 +95,27 @@ jobs:
           VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
           NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
           VM_SIZE:           "standard_a4m_v2"
+          RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
 
         # The call to the az cli that actually generates the pool
         run: |
+          az batch account login \
+          --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
+          --name "${{ env.BATCH_ACCOUNT }}" \
+          
           az batch pool create \
+          --account-endpoint "${{ env.BATCH_ENDPOINT }}" \
           --id "${{ env.POOL_ID }}" \
           --image "${{ env.VM_IMAGE_TAG }}" \
           --node-agent-sku-id "${{ env.NODE_AGENT_SKU_ID }}" \
-          --auto-scale \
-          --auto-scale-formula "$(cat './batch-autoscale-formula.txt')" \
           --vm-size "${{ env.VM_SIZE }}" \
-          --account-name "${{ env.BATCH_ACCOUNT }}" \
-          --account-endpoint "${{ env.BATCH_ENDPOINT }}"
 
-          # Let's get this var for the next step too
+
+          az batch pool autoscale enable \
+          --pool-id ${{ env.POOL_ID }} \
+          --auto-scale-formula "$(cat './batch-autoscale-formula.txt')"
+
+          # Let's get this POOL_ID var for the next step too
           echo "POOL_ID=${{ env.POOL_ID}}" >> $GITHUB_ENV
 
       # - name: legacy_test
