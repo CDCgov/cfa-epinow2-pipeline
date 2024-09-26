@@ -126,4 +126,4 @@ jobs:
       - name: Submit azure batch job
         id: submit_batch_job
         run: |
-          az batch job create --pool-id ${{ github.env.POOL_ID }}
+          az batch job create --pool-id $POOL_ID 
