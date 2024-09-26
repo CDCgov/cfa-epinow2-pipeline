@@ -1,5 +1,5 @@
 name: Run Epinow2 Pipeline
-run-name: (2) Epinow2 Pipeline - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
+run-name: (2) Pipeline - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
 # This GitHub Actions workflow builds a Docker image for the
 # cfa-epinow2-pipeline-docker project. It consists of two jobs:
@@ -102,7 +102,7 @@ jobs:
           --id "${{ env.POOL_ID }}" \
           --image "${{ env.VM_IMAGE_TAG }}" \
           --node-agent-sku-id "${{ env.NODE_AGENT_SKU_ID }}" \
-          --auto-scale-formula "$(cat './batch-autoscale-formula.txt')"
+          --auto-scale-formula "$(cat './batch-autoscale-formula.txt')" \
           --vm-size "${{ env.VM_SIZE }}" \
           --account-name "${{ env.BATCH_ACCOUNT }}" \
           --account-endpoint "${{ env.BATCH_ENDPOINT }}"
