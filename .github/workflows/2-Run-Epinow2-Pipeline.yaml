@@ -41,7 +41,7 @@ env:
 jobs:
 
   _01_build-model-image:
-    runs-on: cfa-cdcgov # 
+    runs-on: cfa-cdcgov #
     steps:
 
       - name: Login to the Container Registry
@@ -102,8 +102,8 @@ jobs:
 
              // Get pending tasks for the past 15 minutes.
              $samples = $ActiveTasks.GetSamplePercent(TimeInterval_Minute * 15);
-             
-             // If we have fewer than 70 percent data points, we use the last sample point, 
+
+             // If we have fewer than 70 percent data points, we use the last sample point,
              // otherwise we use the maximum of last sample point and the history average.
              $tasks = $samples < 70 ? max(0, $ActiveTasks.GetSample(1)) :
              max( $ActiveTasks.GetSample(1), avg($ActiveTasks.GetSample(TimeInterval_Minute * 15)));
@@ -141,5 +141,3 @@ jobs:
         id: submit_batch_job
         run: |
           az batch job create --pool-id ${{ github.env.POOL_ID }}
-
-
