@@ -102,6 +102,7 @@ jobs:
           --id "${{ env.POOL_ID }}" \
           --image "${{ env.VM_IMAGE_TAG }}" \
           --node-agent-sku-id "${{ env.NODE_AGENT_SKU_ID }}" \
+          --auto-scale \
           --auto-scale-formula "$(cat './batch-autoscale-formula.txt')" \
           --vm-size "${{ env.VM_SIZE }}" \
           --account-name "${{ env.BATCH_ACCOUNT }}" \
