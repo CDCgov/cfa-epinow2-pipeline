@@ -133,8 +133,8 @@ jobs:
         id: submit_batch_job
         env:
           POOL_ID: $POOL_ID
-          BATCH_JOB_ID: cfa-epinow2-pipeline-job-${{ env.SHORT_SHA }}
+          BATCH_JOB_ID: "cfa-epinow2-pipeline-job-${{ env.SHORT_SHA }}"
         run: |
           az batch job create \
-          --pool-id ${{ env.POOL_ID }} \
-          --id ${{ env.BATCH_JOB_ID }}
+          --pool-id "${{ env.POOL_ID }}" \
+          --id "${{ env.BATCH_JOB_ID }}"
