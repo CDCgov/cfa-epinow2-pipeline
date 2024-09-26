@@ -83,19 +83,26 @@ jobs:
         # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
           creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
+
+      - name: Get Github Short sha
+        run: |
+          shortSHA=$(git rev-parse --short ${{ github.sha }})
+          echo "SHORT_SHA=$shortSHA" >> $GITHUB_ENV
+
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
 
         # Every Azure Batch Pool parameter can simply go here,
         # no python module or config toml necessary
         env:
-          POOL_ID:           "cfa-epinow2-${{ github.sha }}" # version the pools with the github sha
+          POOL_ID:           "cfa-epinow2-${{ env.SHORT_SHA }}" # version the pools with the github sha
           BATCH_ACCOUNT:     "cfaprdba"
           BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
           VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
           NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
           VM_SIZE:           "standard_a4m_v2"
           RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
+
 
         # The call to the az cli that actually generates the pool
         run: |
@@ -109,7 +116,6 @@ jobs:
           --image "${{ env.VM_IMAGE_TAG }}" \
           --node-agent-sku-id "${{ env.NODE_AGENT_SKU_ID }}" \
           --vm-size "${{ env.VM_SIZE }}" \
-
 
           az batch pool autoscale enable \
           --pool-id ${{ env.POOL_ID }} \
@@ -125,5 +131,10 @@ jobs:
 
       - name: Submit azure batch job
         id: submit_batch_job
+        env:
+          POOL_ID: $POOL_ID
+          BATCH_JOB_ID: cfa-epinow2-pipeline-job-${{ env.SHORT_SHA }}
         run: |
-          az batch job create --pool-id $POOL_ID 
+          az batch job create \
+          --pool-id ${{ env.POOL_ID }} \
+          --id ${{ env.BATCH_JOB_ID }}
