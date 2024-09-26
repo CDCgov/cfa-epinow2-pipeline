@@ -52,15 +52,15 @@ jobs:
           password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
 
       # Comment out if you want to just test the pool creation without waiting for build and push
-      # - name: Build and push model pipeline image for Azure batch # second stage, the actual payload
-      #   id: build_and_push_model_image
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     push: true
-      #     tags: |
-      #       ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
-      #       ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-      #     file: ./Dockerfile # second stage Dockerfile
+      - name: Build and push model pipeline image for Azure batch # second stage, the actual payload
+        id: build_and_push_model_image
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: |
+            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          file: ./Dockerfile # second stage Dockerfile
 
   _02_create-batch-pool-and-submit-jobs:
     runs-on: cfa-cdcgov
@@ -129,12 +129,12 @@ jobs:
       #     az batch pool create --json-file ./cfa-epinow2-batch-pool-config.json
 
 
-      - name: Submit azure batch job
-        id: submit_batch_job
-        env:
-          POOL_ID: $POOL_ID
-          BATCH_JOB_ID: "cfa-epinow2-pipeline-job-${{ env.SHORT_SHA }}"
-        run: |
-          az batch job create \
-          --pool-id "${{ env.POOL_ID }}" \
-          --id "${{ env.BATCH_JOB_ID }}"
+      # - name: Submit azure batch job
+      #   id: submit_batch_job
+      #   env:
+      #     POOL_ID: "$POOL_ID"
+      #     BATCH_JOB_ID: "cfa-epinow2-pipeline-job-${{ env.SHORT_SHA }}"
+      #   run: |
+      #     az batch job create \
+      #     --pool-id "${{ env.POOL_ID }}" \
+      #     --id "${{ env.BATCH_JOB_ID }}"
