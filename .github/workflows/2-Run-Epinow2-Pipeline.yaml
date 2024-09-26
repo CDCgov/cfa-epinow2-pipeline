@@ -41,7 +41,7 @@ env:
 jobs:
 
   _01_build-model-image:
-    runs-on: cfa-cdcgov
+    runs-on: cfa-cdcgov # 
     steps:
 
       - name: Login to the Container Registry
