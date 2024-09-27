@@ -380,3 +380,7 @@ docs/site/
 # applications that require a static environment.
 #Manifest.toml
 docs
+
+# cfa-epinow2-pool-config.json
+# for now... will have to gpg encrypt
+cfa-epinow2-batch-pool-config.json
