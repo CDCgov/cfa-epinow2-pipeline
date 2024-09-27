@@ -1,9 +1,8 @@
 name: Build Dependencies Container Image
 run-name: (1) Dependencies Image Build - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
-# This GitHub Actions workflow builds a Docker image for the
-# cfa-epinow2-pipeline-docker project. It consists of two jobs:
-# build_image_dependencies and build_image.
+# This GitHub Actions workflow builds a Dependencies Docker image for the
+# cfa-epinow2-pipeline-docker project. 
 #
 # - The `build_image_dependencies` job carries out the first part of a
 #   multi-stage build. It downloads and installs all the dependencies
@@ -15,21 +14,15 @@ run-name: (1) Dependencies Image Build - ${{ github.event.head_commit.message }}
 #   The process is cached to avoid rebuilding the image if the dependencies
 #   have not changed. This is by hashing the `DESCRIPTION` file and the
 #   `Dockerfile-dependencies` file.
-#
-# - The build_image job builds the final image using the `Dockerfile` file.
-#   It uses the image built in the previous job as a base image.
-#
-#   During the build process, the package is installed and built. Furthermore
-#   the package is checked using `R CMD check` to ensure that it is working
-#   correctly.
-#
-#   Once the image is built, it is pushed to the corresponding registry.
+
+# - This built docker image is then referenced by the simply named 'Dockerfile', built in: 
+#     - "2_pre-Test-Model-Image-Build" and 
+#     - "2-Run-Epinow2-Pipeline.yaml"
 
 on:
   push:
     branches:
       - main
-      - jk-azure-readiness # temporary
     paths:
       - "./Dockerfile-dependencies" # the dockerfile this workflow builds from
       - "./.github/workflows/build-dependency-image.yaml" # this workflow
@@ -55,13 +48,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Check cache
-      #   uses: actions/cache@v3
-      #   id: cache
-      #   with:
-      #     key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}
-      #     path:
-      #       ./DESCRIPTION
+      - name: Check cache
+        uses: actions/cache@v3
+        id: cache
+        with:
+          key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}
+          path:
+            ./DESCRIPTION
 
       - name: Login to the Container Registry
         uses: docker/login-action@v3
@@ -70,9 +63,8 @@ jobs:
           username: "cfaprdbatchcr"
           password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
 
-      # if: steps.cache.outputs.cache-hit != 'true'
-
       - name: Build and push
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: docker/build-push-action@v6
         with:
           push: true
