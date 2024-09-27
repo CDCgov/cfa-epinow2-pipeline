@@ -6,7 +6,7 @@ run-name: (1) Dependencies Image Build - ${{ github.event.head_commit.message }}
 # build_image_dependencies and build_image.
 #
 # - The `build_image_dependencies` job carries out the first part of a
-#   multi-stage build. It downloads and install all the dependencies
+#   multi-stage build. It downloads and installs all the dependencies
 #   listed in the `DESCRIPTION` file. It uses the `Dockerfile-dependencies`
 #   file to build the image.
 #
