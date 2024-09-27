@@ -2,7 +2,7 @@ name: Build Dependencies Container Image
 run-name: (1) Dependencies Image Build - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
 # This GitHub Actions workflow builds a Dependencies Docker image for the
-# cfa-epinow2-pipeline-docker project. 
+# cfa-epinow2-pipeline-docker project.
 #
 # - The `build_image_dependencies` job carries out the first part of a
 #   multi-stage build. It downloads and installs all the dependencies
@@ -15,8 +15,8 @@ run-name: (1) Dependencies Image Build - ${{ github.event.head_commit.message }}
 #   have not changed. This is by hashing the `DESCRIPTION` file and the
 #   `Dockerfile-dependencies` file.
 
-# - This built docker image is then referenced by the simply named 'Dockerfile', built in: 
-#     - "2_pre-Test-Model-Image-Build" and 
+# - This built docker image is then referenced by the simply named 'Dockerfile', built in:
+#     - "2_pre-Test-Model-Image-Build" and
 #     - "2-Run-Epinow2-Pipeline.yaml"
 
 on:

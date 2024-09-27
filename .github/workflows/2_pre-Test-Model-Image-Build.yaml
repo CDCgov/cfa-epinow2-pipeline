@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
   schedule:
     # Tuesdays at noon GMT time, 24 hours before the prod container is built and deployed
-    - cron: "0 12 * * 2" 
+    - cron: "0 12 * * 2"
 
 env:
   # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
@@ -21,7 +21,7 @@ env:
 jobs:
 
   _01_build-model-image:
-    runs-on: cfa-cdcgov 
+    runs-on: cfa-cdcgov
     steps:
 
       - name: Login to the Container Registry
@@ -39,4 +39,4 @@ jobs:
           tags: |
             ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:buildtest-latest
             ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:buildtest-${{ github.sha }}
-          file: ./Dockerfile 
+          file: ./Dockerfile
