@@ -2,7 +2,7 @@ name: Run Epinow2 Pipeline
 run-name: (2) Pipeline - "${{ github.event.head_commit.message }}" - ${{ github.ref_name }}
 
 # This GitHub Actions workflow builds a Docker image for the
-# cfa-epinow2-pipeline-docker project. 
+# cfa-epinow2-pipeline-docker project.
 #
 # - The build_image job builds the final image using the `Dockerfile` file.
 #   It uses the image built in "1-Build-Dependencies-Image.yaml" as a base image.
