@@ -1,4 +1,6 @@
-name: Git Checks
+name: Block Fix-up (Git Check)
+run-name: (5) Block Fix-up / Git Check - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
+
 
 on: [pull_request]
 

@@ -1,4 +1,8 @@
+# All PRs into main MUST be deliberately labelled in the NEWS.md with a succint but informative entry
+# describing the changes made - this workflow checks to make sure that this has been done.
+
 name: Check NEWS.md Update
+run-name: (3) Check News.md for Compliance - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
 on:
   pull_request:
