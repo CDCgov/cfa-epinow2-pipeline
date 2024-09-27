@@ -89,7 +89,7 @@ jobs:
           POOL_ID:           "cfa-epinow2-${{ env.SHORT_SHA }}" # version the pools with the github sha
           BATCH_ACCOUNT:     "cfaprdba"
           BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
-          VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
+          VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:24_04-lts"
           NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
           VM_SIZE:           "standard_a4m_v2"
           RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
@@ -114,18 +114,3 @@ jobs:
 
           # Let's get this POOL_ID var for the next step too
           echo "POOL_ID=${{ env.POOL_ID}}" >> $GITHUB_ENV
-
-      # - name: legacy_test
-      #   run: |
-      #     az batch pool create --json-file ./cfa-epinow2-batch-pool-config.json
-
-
-      # - name: Submit azure batch job
-      #   id: submit_batch_job
-      #   env:
-      #     POOL_ID: "$POOL_ID"
-      #     BATCH_JOB_ID: "cfa-epinow2-pipeline-job-${{ env.SHORT_SHA }}"
-      #   run: |
-      #     az batch job create \
-      #     --pool-id "${{ env.POOL_ID }}" \
-      #     --id "${{ env.BATCH_JOB_ID }}"
