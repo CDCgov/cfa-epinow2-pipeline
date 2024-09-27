@@ -30,8 +30,12 @@ on:
   push:
     branches:
       - main
-      - jk-azure-readiness # temporary
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * 3"
 
 env:
   # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
