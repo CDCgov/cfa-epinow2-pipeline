@@ -7,6 +7,7 @@ on:
     branches: [main]
 
 name: test-coverage
+run-name: (7) Test Coverage - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
 jobs:
   test-coverage:
@@ -27,6 +28,7 @@ jobs:
           needs: coverage
 
       - name: Test coverage
+        shell: Rscript {0}
         run: |
           covr::codecov(
             quiet = FALSE,
@@ -34,7 +36,6 @@ jobs:
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package"),
             token = "${{ secrets.CODECOV_TOKEN }}"
           )
-        shell: Rscript {0}
 
       - name: Show testthat output
         if: always()

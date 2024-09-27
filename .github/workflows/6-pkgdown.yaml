@@ -10,6 +10,7 @@ on:
   workflow_dispatch:
 
 name: pkgdown
+run-name: (6) pkgdown - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
 jobs:
   pkgdown:
