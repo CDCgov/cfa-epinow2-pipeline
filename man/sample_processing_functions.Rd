@@ -6,12 +6,14 @@
 \alias{process_quantiles}
 \title{Process posterior samples from a Stan fit object (raw draws).}
 \usage{
-process_samples(fit)
+process_samples(fit, geo_value, model, disease)
 
-process_quantiles(fit)
+process_quantiles(fit, geo_value, model, disease)
 }
 \arguments{
 \item{fit}{An EpiNow2 fit object with posterior estimates.}
+
+\item{disease, geo_value, model}{Metadata for downstream processing.}
 }
 \value{
 A data.table of posterior draws or quantiles, merged and processed.

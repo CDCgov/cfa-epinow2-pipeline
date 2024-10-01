@@ -4,7 +4,7 @@
 \alias{extract_diagnostics}
 \title{Extract diagnostic metrics from model fit and data}
 \usage{
-extract_diagnostics(fit, data, job_id, task_id)
+extract_diagnostics(fit, data, job_id, task_id, disease, geo_value, model)
 }
 \arguments{
 \item{fit}{A list containing the model fit object from \code{epinow2}, which
@@ -15,6 +15,8 @@ includes \code{estimates$fit}.}
 \item{job_id}{A unique identifier for the job or task being processed.}
 
 \item{task_id}{A unique identifier for the task being performed.}
+
+\item{disease, geo_value, model}{Metadata for downstream processing.}
 }
 \value{
 A \code{data.frame} containing the extracted diagnostic metrics. The
@@ -26,6 +28,7 @@ data frame includes the following columns:
 \item \code{disease}: The disease/pathogen being analyzed.
 \item \code{job_id}: The unique identifier for the job.
 \item \code{task_id}: The unique identifier for the task.
+\item \code{disease,geo_value,model}: Metadata for downstream processing.
 }
 }
 \description{

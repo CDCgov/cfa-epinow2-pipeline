@@ -45,12 +45,12 @@ test_that("write_model_outputs writes files and directories correctly", {
     )
     expect_true(file.exists(summarized_file))
 
-    # Check if model RDS file was written
+    # Check if model rds file was written
     model_file <- file.path(
       job_id,
       "tasks",
       task_id,
-      "model.RDS"
+      "model.rds"
     )
     expect_true(file.exists(model_file))
 
@@ -122,10 +122,10 @@ test_that("write_output_dir_structure generates dirs", {
 
 test_that("process_quantiles works as expected", {
   # Load the sample fit object
-  fit <- readRDS(test_path("data", "sample_fit.RDS"))
+  fit <- readRDS(test_path("data", "sample_fit.rds"))
 
   # Run the function on the fit object
-  result <- process_quantiles(fit)
+  result <- process_quantiles(fit, "test_geo", "test_model", "test_disease")
 
   # Test 1: Check if the result is a data.table
   expect_true(
@@ -135,9 +135,18 @@ test_that("process_quantiles works as expected", {
 
   # Test 2: Check if the necessary columns exist in the result
   expected_columns <- c(
-    "time", "_variable", "_value",
-    "_lower", "_upper", "_width",
-    "_point", "_interval", "reference_date"
+    "time",
+    "_variable",
+    "value",
+    "_lower",
+    "_upper",
+    "_width",
+    "_point",
+    "_interval",
+    "reference_date",
+    "geo_value",
+    "model",
+    "disease"
   )
   expect_equal(
     colnames(result), expected_columns
@@ -187,10 +196,10 @@ test_that("process_quantiles works as expected", {
 
 test_that("process_samples works as expected", {
   # Load the sample fit object
-  fit <- readRDS(test_path("data", "sample_fit.RDS"))
+  fit <- readRDS(test_path("data", "sample_fit.rds"))
 
   # Run the function on the fit object
-  result <- process_samples(fit)
+  result <- process_samples(fit, "test_geo", "test_model", "test_disease")
 
   # Test 1: Check if the result is a data.table
   expect_true(
@@ -200,9 +209,16 @@ test_that("process_samples works as expected", {
 
   # Test 2: Check if the necessary columns exist in the result
   expected_columns <- c(
-    "time", "_variable", "_chain",
-    "_iteration", "_draw", "_value",
-    "reference_date"
+    "time",
+    "_variable",
+    "_chain",
+    "_iteration",
+    "_draw",
+    "value",
+    "reference_date",
+    "geo_value",
+    "model",
+    "disease"
   )
   expect_equal(
     colnames(result), expected_columns

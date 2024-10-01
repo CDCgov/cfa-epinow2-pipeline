@@ -12,7 +12,7 @@
 #' @param data A data frame containing the input data used in the model fit.
 #' @param job_id A unique identifier for the job or task being processed.
 #' @param task_id A unique identifier for the task being performed.
-#'
+#' @param disease,geo_value,model Metadata for downstream processing.
 #'
 #' @return A \code{data.frame} containing the extracted diagnostic metrics. The
 #' data frame includes the following columns:
@@ -23,6 +23,7 @@
 #'   \item \code{disease}: The disease/pathogen being analyzed.
 #'   \item \code{job_id}: The unique identifier for the job.
 #'   \item \code{task_id}: The unique identifier for the task.
+#'   \item \code{disease,geo_value,model}: Metadata for downstream processing.
 #' }
 #'
 #' @details
@@ -43,7 +44,13 @@
 #'         any diagnostic thresholds are exceeded.
 #' }
 #' @export
-extract_diagnostics <- function(fit, data, job_id, task_id) {
+extract_diagnostics <- function(fit,
+                                data,
+                                job_id,
+                                task_id,
+                                disease,
+                                geo_value,
+                                model) {
   low_case_count <- low_case_count_diagnostic(data)
 
   epinow2_diagnostics <- rstan::get_sampler_params(fit$estimates$fit,
@@ -94,7 +101,10 @@ extract_diagnostics <- function(fit, data, job_id, task_id) {
     diagnostic = diagnostic_names,
     value = diagnostic_values,
     job_id = job_id,
-    task_id = task_id
+    task_id = task_id,
+    disease = disease,
+    geo_value = geo_value,
+    model = model
   )
 }
 

@@ -53,7 +53,7 @@ write_model_outputs <- function(
         job_id,
         "tasks",
         task_id,
-        "model.RDS"
+        "model.rds"
       )
       saveRDS(fit, model_path)
       cli::cli_alert_success("Wrote model to {.path {model_path}}")
@@ -193,7 +193,12 @@ extract_draws_from_fit <- function(fit) {
 #' @return A data.table with merged posterior draws and standardized parameter
 #' names.
 #' @noRd
-post_process_and_merge <- function(draws, fact_table) {
+post_process_and_merge <- function(
+    draws,
+    fact_table,
+    geo_value,
+    model,
+    disease) {
   # Step 1: Left join the date-time-parameter map onto the Stan draws
   merged_dt <- merge(
     draws,
@@ -218,12 +223,17 @@ post_process_and_merge <- function(draws, fact_table) {
       ".point", ".interval", "date", ".iteration"
     ),
     new = c(
-      "_draw", "_chain", "_variable", "_value", "_lower", "_upper", "_width",
+      "_draw", "_chain", "_variable", "value", "_lower", "_upper", "_width",
       "_point", "_interval", "reference_date", "_iteration"
     ),
     # If using summaries, skip draws-specific names
     skip_absent = TRUE
   )
+
+  # Metadata for downstream querying without path parsing or joins
+  data.table::set(merged_dt, j = "geo_value", value = factor(geo_value))
+  data.table::set(merged_dt, j = "model", value = factor(model))
+  data.table::set(merged_dt, j = "disease", value = factor(disease))
 
   return(merged_dt)
 }
@@ -236,6 +246,7 @@ post_process_and_merge <- function(draws, fact_table) {
 #' returned in `{tidybayes}` format.
 #'
 #' @param fit An EpiNow2 fit object with posterior estimates.
+#' @param disease,geo_value,model Metadata for downstream processing.
 #'
 #' @return A data.table of posterior draws or quantiles, merged and processed.
 #'
@@ -244,17 +255,21 @@ NULL
 
 #' @rdname sample_processing_functions
 #' @export
-process_samples <- function(fit) {
+process_samples <- function(fit, geo_value, model, disease) {
   draws_list <- extract_draws_from_fit(fit)
   raw_processed_output <- post_process_and_merge(
-    draws_list$stan_draws, draws_list$fact_table
+    draws_list$stan_draws,
+    draws_list$fact_table,
+    geo_value,
+    model,
+    disease
   )
   return(raw_processed_output)
 }
 
 #' @rdname sample_processing_functions
 #' @export
-process_quantiles <- function(fit) {
+process_quantiles <- function(fit, geo_value, model, disease) {
   # Step 1: Extract the draws
   draws_list <- extract_draws_from_fit(fit)
 
@@ -268,7 +283,13 @@ process_quantiles <- function(fit) {
     data.table::as.data.table()
 
   # Step 3: Post-process summarized draws
-  post_process_and_merge(summarized_draws, draws_list$fact_table)
+  post_process_and_merge(
+    summarized_draws,
+    draws_list$fact_table,
+    geo_value,
+    model,
+    disease
+  )
 }
 
 write_parquet <- function(data, path) {

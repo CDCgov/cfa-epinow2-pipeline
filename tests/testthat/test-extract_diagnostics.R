@@ -14,7 +14,7 @@ test_that("Fitted model extracts diagnostics", {
     params = list(data_path)
   )
   DBI::dbDisconnect(con)
-  fit_path <- test_path("data", "sample_fit.RDS")
+  fit_path <- test_path("data", "sample_fit.rds")
   fit <- readRDS(fit_path)
 
   # Expected diagnostics
@@ -37,9 +37,20 @@ test_that("Fitted model extracts diagnostics", {
     ),
     job_id = rep("test", 6),
     task_id = rep("test", 6),
+    disease = rep("test", 6),
+    geo_value = rep("test", 6),
+    model = rep("test", 6),
     stringsAsFactors = FALSE
   )
-  actual <- extract_diagnostics(fit, data, "test", "test")
+  actual <- extract_diagnostics(
+    fit,
+    data,
+    "test",
+    "test",
+    "test",
+    "test",
+    "test"
+  )
 
   testthat::expect_equal(
     actual,

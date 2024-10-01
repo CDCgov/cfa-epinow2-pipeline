@@ -39,18 +39,20 @@ This package implements functions for:
 
 ## Output format
 
+Outputs are stored in a s
+
 ```bash
 output/
-├── job_<job_id>/
+├── <job_id>/
 │   ├── raw_samples/
 │   │   ├── raw_samples_task_<task_id>.parquet
 │   ├── summarized_quantiles/
 │   │   ├── summarized_quantiles_task_<task_id>.parquet
 │   ├── tasks/
-│   │   ├── task_<task_id>/
+│   │   ├── <task_id>/
 │   │   │   ├── model.stan
 │   │   │   ├── metadata.json
-│   │   │   ├── task.log
+│   │   │   ├── logs.txt
 │   │   │   └── error.log
 │   ├── job_metadata.json
 ```
