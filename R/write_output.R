@@ -155,7 +155,7 @@ extract_draws_from_fit <- function(fit) {
   # (their differences are the nowcast correction + error structure).
   # Get the dates for `obs_reports` by pulling out the `imputed_reports`
   # dates and update the associated variable name in-place. Bind it back
-  # to the original fact table to have all desired variable-date combinations.  
+  # to the original fact table to have all desired variable-date combinations.
   data.table::set(obs_fact_table, j = "parameter", value = factor(
     obs_fact_table[["parameter"]],
     levels = c("imputed_reports"),
