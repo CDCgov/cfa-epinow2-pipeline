@@ -141,17 +141,22 @@ extract_diagnostics <- function(fit,
 #' two weeks in the dataset had fewer than 10 cases per week.
 #' @export
 low_case_count_diagnostic <- function(df) {
+  cli::cli_alert_info("Calculating low case count diagnostic")
   # Get the dates in the last and second-to-last weeks
   last_date <- as.Date(max(df[["reference_date"]], na.rm = TRUE))
   # Create week sequences explicitly in case of missingness
+  ult_week_min <- last_date - 6
+  ult_week_max <- last_date
+  pen_week_min <- last_date - 13
+  pen_week_max <- last_date - 7
   ultimate_week_dates <- seq.Date(
-    from = last_date - 6,
-    to = last_date,
+    from = ult_week_min,
+    to = ult_week_max,
     by = "day"
   )
   penultimate_week_dates <- seq.Date(
-    from = last_date - 13,
-    to = last_date - 7,
+    from = pen_week_min,
+    to = pen_week_max,
     by = "day"
   )
 
@@ -169,6 +174,19 @@ low_case_count_diagnostic <- function(df) {
     ],
     na.rm = TRUE
   )
+
+
+  cli::cli_alert_info(c(
+    "Ultimate week spans {format(ult_week_min, '%a, %Y-%m-%d')} ",
+    "to {format(ult_week_max, '%a, %Y-%m-%d')} with ",
+    "count {.val {ultimate_week_count}}"
+  ))
+  cli::cli_alert_info(c(
+    "Penultimate week spans ",
+    "{format(pen_week_min, '%a, %Y-%m-%d')} to ",
+    "{format(pen_week_max, '%a, %Y-%m-%d')} with ",
+    "count {.val {penultimate_week_count}}"
+  ))
 
   any(
     ultimate_week_count < 10,
