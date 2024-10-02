@@ -33,7 +33,7 @@ jobs:
       - name: Figure out tag (latest if push to main, otherwise pr-<number>)
         id: image-tag
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "tag=pr-${{ github.event.number }}" >> $GITHUB_OUTPUT
           else
             echo "tag=latest" >> $GITHUB_OUTPUT
