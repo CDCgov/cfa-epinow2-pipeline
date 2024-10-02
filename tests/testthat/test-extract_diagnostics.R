@@ -22,8 +22,10 @@ test_that("Fitted model extracts diagnostics", {
     diagnostic = c(
       "mean_accept_stat",
       "p_divergent",
+      "n_divergent",
       "p_max_treedepth",
       "p_high_rhat",
+      "n_high_rhat",
       "diagnostic_flag",
       "low_case_count_flag"
     ),
@@ -33,13 +35,15 @@ test_that("Fitted model extracts diagnostics", {
       0.00000000,
       0.00000000,
       0.00000000,
+      0.00000000,
+      0.00000000,
       0.00000000
     ),
-    job_id = rep("test", 6),
-    task_id = rep("test", 6),
-    disease = rep("test", 6),
-    geo_value = rep("test", 6),
-    model = rep("test", 6),
+    job_id = rep("test", 8),
+    task_id = rep("test", 8),
+    disease = rep("test", 8),
+    geo_value = rep("test", 8),
+    model = rep("test", 8),
     stringsAsFactors = FALSE
   )
   actual <- extract_diagnostics(

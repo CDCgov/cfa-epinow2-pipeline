@@ -7,11 +7,10 @@
 #' These diagnostics are then flagged if they exceed specific thresholds,
 #' and the results are returned as a data frame.
 #'
-#' @param fit A list containing the model fit object from `EpiNow2`, which
-#'            includes `estimates$fit`.
+#' @param fit The model fit object from `EpiNow2`
 #' @param data A data frame containing the input data used in the model fit.
-#' @param job_id A unique identifier for the job or task being processed.
-#' @param task_id A unique identifier for the task being performed.
+#' @param job_id A unique identifier for the job
+#' @param task_id A unique identifier for the task
 #' @param disease,geo_value,model Metadata for downstream processing.
 #'
 #' @return A \code{data.frame} containing the extracted diagnostic metrics. The
@@ -19,8 +18,6 @@
 #' \itemize{
 #'   \item \code{diagnostic}: The name of the diagnostic metric.
 #'   \item \code{value}: The value of the diagnostic metric.
-#'   \item \code{state}: The state for which the model was run.
-#'   \item \code{disease}: The disease/pathogen being analyzed.
 #'   \item \code{job_id}: The unique identifier for the job.
 #'   \item \code{task_id}: The unique identifier for the task.
 #'   \item \code{disease,geo_value,model}: Metadata for downstream processing.
@@ -31,17 +28,23 @@
 #' \itemize{
 #'   \item \code{mean_accept_stat}: The average acceptance statistic across
 #'         all chains.
-#'   \item \code{p_divergent}: The proportion of divergent transitions across
+#'   \item \code{p_divergent}: The *proportion* of divergent transitions across
+#'         all samples.
+#'   \item \code{n_divergent}: The *number* of divergent transitions across
 #'         all samples.
 #'   \item \code{p_max_treedepth}: The proportion of samples that hit the
 #'         maximum tree depth.
-#'   \item \code{p_high_rhat}: The proportion of parameters with Rhat values
+#'   \item \code{p_high_rhat}: The *proportion* of parameters with Rhat values
+#'         greater than 1.05, indicating potential convergence issues.
+#'   \item \code{n_high_rhat}: The *number* of parameters with Rhat values
 #'         greater than 1.05, indicating potential convergence issues.
 #'   \item \code{low_case_count_flag}: A flag indicating if there are low case
 #'         counts in the data. See \code{low_case_count_diagnostic()} for more
 #'         information on this diagnostic.
 #'   \item \code{epinow2_diagnostic_flag}: A combined flag that indicates if
-#'         any diagnostic thresholds are exceeded.
+#'         any diagnostic thresholds are exceeded. The diagnostic thresholds
+#'         (1) mean_accept_stat < 0.1, (2) p_divergent > 0.0075, (3)
+#'         p_max_treedepth > 0.05, and (4) p_high_rhat > 0.0075.
 #' }
 #' @export
 extract_diagnostics <- function(fit,
@@ -63,6 +66,10 @@ extract_diagnostics <- function(fit,
     rstan::get_divergent_iterations(fit$estimates$fit),
     na.rm = TRUE
   )
+  n_divergent <- sum(
+    rstan::get_divergent_iterations(fit$estimates$fit),
+    na.rm = TRUE
+  )
   p_max_treedepth <- mean(
     rstan::get_max_treedepth_iterations(fit$estimates$fit),
     na.rm = TRUE
@@ -71,6 +78,11 @@ extract_diagnostics <- function(fit,
     rstan::summary(fit$estimates$fit)$summary[, "Rhat"] > 1.05,
     na.rm = TRUE
   )
+  n_high_rhat <- sum(
+    rstan::summary(fit$estimates$fit)$summary[, "Rhat"] > 1.05,
+    na.rm = TRUE
+  )
+
 
   # Combine all diagnostic flags into one flag
   diagnostic_flag <- any(
@@ -83,16 +95,20 @@ extract_diagnostics <- function(fit,
   diagnostic_names <- c(
     "mean_accept_stat",
     "p_divergent",
+    "n_divergent",
     "p_max_treedepth",
     "p_high_rhat",
+    "n_high_rhat",
     "diagnostic_flag",
     "low_case_count_flag"
   )
   diagnostic_values <- c(
     mean_accept_stat,
     p_divergent,
+    n_divergent,
     p_max_treedepth,
     p_high_rhat,
+    n_high_rhat,
     diagnostic_flag,
     low_case_count
   )

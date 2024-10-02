@@ -7,14 +7,13 @@
 extract_diagnostics(fit, data, job_id, task_id, disease, geo_value, model)
 }
 \arguments{
-\item{fit}{A list containing the model fit object from \code{epinow2}, which
-includes \code{estimates$fit}.}
+\item{fit}{The model fit object from \code{EpiNow2}}
 
 \item{data}{A data frame containing the input data used in the model fit.}
 
-\item{job_id}{A unique identifier for the job or task being processed.}
+\item{job_id}{A unique identifier for the job}
 
-\item{task_id}{A unique identifier for the task being performed.}
+\item{task_id}{A unique identifier for the task}
 
 \item{disease, geo_value, model}{Metadata for downstream processing.}
 }
@@ -24,15 +23,13 @@ data frame includes the following columns:
 \itemize{
 \item \code{diagnostic}: The name of the diagnostic metric.
 \item \code{value}: The value of the diagnostic metric.
-\item \code{state}: The state for which the model was run.
-\item \code{disease}: The disease/pathogen being analyzed.
 \item \code{job_id}: The unique identifier for the job.
 \item \code{task_id}: The unique identifier for the task.
 \item \code{disease,geo_value,model}: Metadata for downstream processing.
 }
 }
 \description{
-This function extracts various diagnostic metrics from a fitted \code{epinow2}
+This function extracts various diagnostic metrics from a fitted \code{EpiNow2}
 model and provided data. It checks for low case counts and computes
 diagnostics from the fitted model, including the mean acceptance
 statistic, divergent transitions, maximum tree depth, and Rhat values.
@@ -44,16 +41,22 @@ The following diagnostics are calculated:
 \itemize{
 \item \code{mean_accept_stat}: The average acceptance statistic across
 all chains.
-\item \code{p_divergent}: The proportion of divergent transitions across
+\item \code{p_divergent}: The \emph{proportion} of divergent transitions across
+all samples.
+\item \code{n_divergent}: The \emph{number} of divergent transitions across
 all samples.
 \item \code{p_max_treedepth}: The proportion of samples that hit the
 maximum tree depth.
-\item \code{p_high_rhat}: The proportion of parameters with Rhat values
+\item \code{p_high_rhat}: The \emph{proportion} of parameters with Rhat values
+greater than 1.05, indicating potential convergence issues.
+\item \code{n_high_rhat}: The \emph{number} of parameters with Rhat values
 greater than 1.05, indicating potential convergence issues.
 \item \code{low_case_count_flag}: A flag indicating if there are low case
 counts in the data. See \code{low_case_count_diagnostic()} for more
 information on this diagnostic.
 \item \code{epinow2_diagnostic_flag}: A combined flag that indicates if
-any diagnostic thresholds are exceeded.
+any diagnostic thresholds are exceeded. The diagnostic thresholds
+(1) mean_accept_stat < 0.1, (2) p_divergent > 0.0075, (3)
+p_max_treedepth > 0.05, and (4) p_high_rhat > 0.0075.
 }
 }
