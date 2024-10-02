@@ -1,13 +1,13 @@
 #' Extract diagnostic metrics from model fit and data
 #'
-#' This function extracts various diagnostic metrics from a fitted `epinow2`
+#' This function extracts various diagnostic metrics from a fitted `EpiNow2`
 #' model and provided data. It checks for low case counts and computes
 #' diagnostics from the fitted model, including the mean acceptance
 #' statistic, divergent transitions, maximum tree depth, and Rhat values.
 #' These diagnostics are then flagged if they exceed specific thresholds,
 #' and the results are returned as a data frame.
 #'
-#' @param fit A list containing the model fit object from `epinow2`, which
+#' @param fit A list containing the model fit object from `EpiNow2`, which
 #'            includes `estimates$fit`.
 #' @param data A data frame containing the input data used in the model fit.
 #' @param job_id A unique identifier for the job or task being processed.
