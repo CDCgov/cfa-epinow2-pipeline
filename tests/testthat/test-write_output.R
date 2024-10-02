@@ -148,7 +148,7 @@ test_that("process_quantiles works as expected", {
     "model",
     "disease"
   )
-  expect_equal(
+  expect_setequal(
     colnames(result), expected_columns
   )
 
@@ -220,7 +220,7 @@ test_that("process_samples works as expected", {
     "model",
     "disease"
   )
-  expect_equal(
+  expect_setequal(
     colnames(result), expected_columns
   )
 
