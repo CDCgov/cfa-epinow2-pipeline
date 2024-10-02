@@ -131,7 +131,7 @@ read_interval_pmf <- function(path,
   rlang::arg_match(disease)
 
   as_of_date <- stringify_date(as_of_date)
-  cli::cli_alert_info("Reading {.arg right_truncation} from {.path {path}}")
+  cli::cli_alert_info("Reading {.arg {parameter}} from {.path {path}}")
   if (!file.exists(path)) {
     cli::cli_abort("File {.path {path}} does not exist",
       class = "file_not_found"
