@@ -87,7 +87,7 @@ extract_diagnostics <- function(fit,
   # Combine all diagnostic flags into one flag
   diagnostic_flag <- any(
     mean_accept_stat < 0.1,
-    p_divergent > 0.0075,
+    p_divergent > 0.0075, # 0.0075 = 15 in 2000 samples are divergent
     p_max_treedepth > 0.05,
     p_high_rhat > 0.0075
   )
