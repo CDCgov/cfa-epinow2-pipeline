@@ -46,7 +46,6 @@ write_model_outputs <- function(
       write_parquet(summaries, summaries_path)
       cli::cli_alert_success("Wrote summaries to {.path {summaries_path}}")
 
-
       # Write EpiNow2 model
       model_path <- file.path(
         output_dir,
@@ -57,7 +56,6 @@ write_model_outputs <- function(
       )
       saveRDS(fit, model_path)
       cli::cli_alert_success("Wrote model to {.path {model_path}}")
-
 
       # Write model run metadata
       metadata_path <- file.path(
