@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: branch-name
-      
+
       - name: Figure out tag (either latest if it is main or the branch name)
         id: image-tag
         run: |
