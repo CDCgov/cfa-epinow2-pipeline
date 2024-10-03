@@ -30,13 +30,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Figure out tag (latest if push to main, otherwise pr-<number>)
+
+      # From: https://stackoverflow.com/a/58035262/2097171
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: branch-name
+      
+      - name: Figure out tag (either latest if it is main or the branch name)
         id: image-tag
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "tag=pr-${{ github.event.number }}" >> $GITHUB_OUTPUT
-          else
+          if [ "${{ steps.branch-name.outputs.branch }}" = "main" ]; then
             echo "tag=latest" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Check cache

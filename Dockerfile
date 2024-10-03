@@ -1,5 +1,5 @@
 # Adding arguments
-ARG TAG=latest
+ARG TAG=dev
 
 # This requires access to the Azure Container Registry
 FROM cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:${TAG}
