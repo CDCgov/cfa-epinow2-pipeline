@@ -1,0 +1,154 @@
+name: Test Model Image Build
+run-name: (2_pre) Test Model Image - "${{ github.event.head_commit.message }}"
+
+# This GitHub Actions workflow builds a Docker image for the
+# cfa-epinow2-pipeline-docker project. In-container tests can be added here.
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
+  REGISTRY: cfaprdbatchcr.azurecr.io
+  IMAGE_NAME: cfa-epinow2-pipeline
+
+jobs:
+
+  Job01-build_image_dependencies:
+    runs-on: cfa-cdcgov # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
+
+    outputs:
+      tag: ${{ steps.image-tag.outputs.tag }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
+      # From: https://stackoverflow.com/a/58035262/2097171
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: branch-name
+
+      - name: Figure out tag (either latest if it is main or the branch name)
+        id: image-tag
+        run: |
+          if [ "${{ steps.branch-name.outputs.branch }}" = "main" ]; then
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check cache for base image
+        uses: actions/cache@v4
+        id: cache
+        with:
+          key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}-${{ steps.image-tag.outputs.tag }}
+          lookup-only: true
+          path:
+            ./DESCRIPTION
+
+      - name: Login to the Container Registry
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: "cfaprdbatchcr.azurecr.io"
+          username: "cfaprdbatchcr"
+          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+
+      - name: Build and push
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: |
+            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}
+          file: ./Dockerfile-dependencies
+
+  _01_build-model-image:
+    needs: Job01-build_image_dependencies
+    runs-on: cfa-cdcgov
+
+    outputs:
+      tag: ${{ needs.Job01-build_image_dependencies.outputs.tag }}
+
+    steps:
+
+      - name: Login to the Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: "cfaprdbatchcr.azurecr.io"
+          username: "cfaprdbatchcr"
+          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+
+      - name: Build and push model pipeline image for Azure batch
+        id: build_and_push_model_image
+        uses: docker/build-push-action@v6
+        with:
+          push: true # This can be toggled manually for tweaking.
+          tags: |
+            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:test-${{ needs.Job01-build_image_dependencies.outputs.tag }}
+          file: ./Dockerfile
+          build-args: |
+            TAG=${{ needs.Job01-build_image_dependencies.outputs.tag }}
+
+  _02_create-batch-pool-and-submit-jobs:
+    runs-on: cfa-cdcgov
+    needs: _01_build-model-image
+
+    permissions:
+      contents: read
+      packages: write
+
+    env:
+      TAG: ${{ needs._01_build-model-image.outputs.tag }}
+
+    steps:
+      - name: Checkout Repo
+        id: checkout_repo
+        uses: actions/checkout@v4
+
+      - name: Login to Azure with NNH Service Principal
+        id: azure_login_2
+        uses: azure/login@v2
+        with:
+        # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
+          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+
+      - name: Create cfa-epinow2-pipeline Pool
+        id: create_batch_pool
+
+        # Every Azure Batch Pool parameter can simply go here,
+        # no python module or config toml necessary
+        env:
+          POOL_ID:           "cfa-epinow2-${{ env.TAG }}"
+          BATCH_ACCOUNT:     "cfaprdba"
+          BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
+          VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
+          NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
+          VM_SIZE:           "standard_a4m_v2"
+          RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
+
+        # The call to the az cli that actually generates the pool
+        run: |
+          az batch account login \
+          --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
+          --name "${{ env.BATCH_ACCOUNT }}" \
+
+          az batch pool create \
+          --account-endpoint "${{ env.BATCH_ENDPOINT }}" \
+          --id "${{ env.POOL_ID }}" \
+          --image "${{ env.VM_IMAGE_TAG }}" \
+          --node-agent-sku-id "${{ env.NODE_AGENT_SKU_ID }}" \
+          --vm-size "${{ env.VM_SIZE }}" \
+
+          az batch pool autoscale enable \
+          --pool-id ${{ env.POOL_ID }} \
+          --auto-scale-formula "$(cat './batch-autoscale-formula.txt')"
+
+          # Let's get this POOL_ID var for the next step too
+          echo "POOL_ID=${{ env.POOL_ID}}" >> $GITHUB_ENV
