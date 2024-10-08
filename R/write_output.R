@@ -94,29 +94,18 @@ write_model_outputs <- function(
 #' @return The path to the base output directory (invisible).
 #' @export
 write_output_dir_structure <- function(output_dir, job_id, task_id) {
-  # Top level
-  dir.create(output_dir,
-    showWarnings = FALSE
-  )
-  # Second level
-  dir.create(file.path(output_dir, job_id),
-    showWarnings = FALSE
-  )
-  # Third level
-  dir.create(file.path(output_dir, job_id, "tasks"),
-    showWarnings = FALSE
-  )
-  dir.create(file.path(output_dir, job_id, "samples"),
-    showWarnings = FALSE
-  )
-  dir.create(file.path(output_dir, job_id, "summaries"),
-    showWarnings = FALSE
+  # Define the directory structure
+  dirs <- c(
+    output_dir,
+    file.path(output_dir, job_id),
+    file.path(output_dir, job_id, "tasks"),
+    file.path(output_dir, job_id, "samples"),
+    file.path(output_dir, job_id, "summaries"),
+    file.path(output_dir, job_id, "tasks", task_id)
   )
 
-  # Fourth level
-  dir.create(file.path(output_dir, job_id, "tasks", task_id),
-    showWarnings = FALSE
-  )
+  # Create directories
+  lapply(dirs, dir.create, showWarnings = FALSE)
 
   invisible(output_dir)
 }
