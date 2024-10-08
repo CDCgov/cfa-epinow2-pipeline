@@ -144,6 +144,9 @@ extract_draws_from_fit <- function(fit) {
   #
   # The dates for `obs_reports` are the same as for `imputed_reports`
   # (their differences are the nowcast correction + error structure).
+  # From Sam: imputed reports have error and are corrected for right-truncation
+  # (a posterior pred of the final observed value). Obs reports is the
+  # expected value actually observed in real time but without obs error.
   # Get the dates for `obs_reports` by pulling out the `imputed_reports`
   # dates and update the associated variable name in-place. Bind it back
   # to the original fact table to have all desired variable-date combinations.
