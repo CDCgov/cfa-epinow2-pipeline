@@ -159,7 +159,7 @@ test_that("process_quantiles works as expected", {
   )
 
   # Test 3: Check if the result contains the correct number of rows
-  expected_num_rows <- 40 # Replace with actual expected value
+  expected_num_rows <- 50
   expect_equal(nrow(result), expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
   )
@@ -167,9 +167,10 @@ test_that("process_quantiles works as expected", {
   # Test 4: Check if the `parameter` column contains the expected values
   expected_parameters <- c(
     "Rt",
+    "expected_nowcast_cases",
+    "expected_obs_cases",
     "growth_rate",
-    "latent_cases",
-    "obs_cases"
+    "pp_nowcast_cases"
   )
   unique_parameters <- sort(unique(as.character(result[["_variable"]])))
   expect_equal(
@@ -231,7 +232,7 @@ test_that("process_samples works as expected", {
   )
 
   # Test 3: Check if the result contains the correct number of rows
-  expected_num_rows <- 2000 # Replace with actual expected value
+  expected_num_rows <- 2500 # Replace with actual expected value
   expect_equal(nrow(result), expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
   )
@@ -239,9 +240,10 @@ test_that("process_samples works as expected", {
   # Test 4: Check if the `parameter` column contains the expected values
   expected_parameters <- c(
     "Rt",
+    "expected_nowcast_cases",
+    "expected_obs_cases",
     "growth_rate",
-    "latent_cases",
-    "obs_cases"
+    "pp_nowcast_cases"
   )
   unique_parameters <- sort(unique(as.character(result[["_variable"]])))
   expect_equal(

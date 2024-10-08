@@ -138,6 +138,8 @@ extract_draws_from_fit <- function(fit) {
   obs_fact_table <- fact_table[
     fact_table[["parameter"]] == "imputed_reports",
   ]
+  reports_fact_table <- data.table::copy(obs_fact_table)
+
   # The EpiNow2 summary table has the variable `imputed_reports`
   # for nowcast-corrected cases, but not `obs_reports` for right-
   # truncated cases to compare to the observed data. We want both.
@@ -155,9 +157,19 @@ extract_draws_from_fit <- function(fit) {
     levels = c("imputed_reports"),
     labels = c("obs_reports")
   ))
+  data.table::set(reports_fact_table, j = "parameter", value = factor(
+    reports_fact_table[["parameter"]],
+    levels = c("imputed_reports"),
+    labels = c("reports")
+  ))
+
 
   # Combine original fact_table with new 'obs_reports' rows
-  fact_table <- rbind(fact_table, obs_fact_table, fill = TRUE)
+  fact_table <- rbind(fact_table,
+    obs_fact_table,
+    reports_fact_table,
+    fill = TRUE
+  )
   data.table::setnames(
     fact_table,
     old = c("parameter"),
