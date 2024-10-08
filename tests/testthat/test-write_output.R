@@ -125,7 +125,13 @@ test_that("process_quantiles works as expected", {
   fit <- readRDS(test_path("data", "sample_fit.rds"))
 
   # Run the function on the fit object
-  result <- process_quantiles(fit, "test_geo", "test_model", "test_disease")
+  result <- process_quantiles(
+    fit,
+    "test_geo",
+    "test_model",
+    "test_disease",
+    c(0.5, 0.95)
+  )
 
   # Test 1: Check if the result is a data.table
   expect_true(

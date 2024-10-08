@@ -243,6 +243,7 @@ post_process_and_merge <- function(
 #'
 #' @param fit An EpiNow2 fit object with posterior estimates.
 #' @param disease,geo_value,model Metadata for downstream processing.
+#' @param quantiles A vector of quantiles to base to [tidybayes::median_qi()]
 #'
 #' @return A data.table of posterior draws or quantiles, merged and processed.
 #'
@@ -265,7 +266,12 @@ process_samples <- function(fit, geo_value, model, disease) {
 
 #' @rdname sample_processing_functions
 #' @export
-process_quantiles <- function(fit, geo_value, model, disease) {
+process_quantiles <- function(
+    fit,
+    geo_value,
+    model,
+    disease,
+    quantiles) {
   # Step 1: Extract the draws
   draws_list <- extract_draws_from_fit(fit)
 
@@ -274,7 +280,7 @@ process_quantiles <- function(fit, geo_value, model, disease) {
   summarized_draws <- draws_list$stan_draws |>
     dplyr::group_by(.variable, time) |>
     tidybayes::median_qi(
-      .width = c(0.5, 0.95),
+      .width = quantiles,
     ) |>
     data.table::as.data.table()
 
