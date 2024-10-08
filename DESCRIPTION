@@ -27,10 +27,17 @@ Imports:
     AzureRMR,
     AzureStor,
     cli,
+    data.table,
     DBI,
+    dplyr,
     duckdb,
     EpiNow2 (>= 1.4.0),
-    rlang
+    jsonlite,
+    rlang,
+    rstan,
+    tidybayes
+Additional_repositories:
+    https://stan-dev.r-universe.dev
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
 Imports:
     cli,
@@ -38,5 +45,5 @@ Imports:
     jsonvalidate,
     rlang
 Depends:
-    R (>= 2.10)
+    R (>= 3.50)
 LazyData: true

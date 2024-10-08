@@ -197,6 +197,71 @@ An object containing options for the Stan HMC algorithm.
 
 **Note**: All date strings should follow the `YYYY-MM-DD` format to ensure consistency and proper parsing.
 
+## Output format
+
+The end goals of this package is to standardize the raw outputs from EpiNow2 into samples and summaries tables, and to write those standardized outputs, along with relevant metadata, logs, etc. to a standard directory structure. Once in CFA's standard format, the outputs can be passed into a separate pipeline that handles post-processing (e.g. plotting, scoring, analysis) of Rt estimates from several different Rt estimation models.
+
+### Directories
+
+The nested partitioning structure of the outputs is designed to facilitate both automated processes and manual investigation: files are organized by job and task IDs, allowing for efficient file operations using glob patterns, while also maintaining a clear hierarchy that aids human users in navigating to specific results or logs. Files meant primarily for machine-readable consumption (i.e., draws, summaries, diagnostics) are structured together to make globbing easier. Files meant primarily for human investigation (i.e., logs, model fit object) are grouped together by task to facilitate manual workflows.
+In this workflow, task IDs correspond to location specific model runs (which are independent of one another) and the jobid refers to a unique model run and disease. For example, a production job should contain task IDs for each of the 50 states and the US, but a job submitted for testing or experimentation might contain a smaller number of tasks/locations.
+
+```bash
+<output>/
+├── job_<job_id>/
+│   ├── raw_samples/
+│   │   ├── samples_<task_id>.parquet
+│   ├── summarized_quantiles/
+│   │   ├── summarized_<task_id>.parquet
+│   ├── diagnostics/
+│   │   ├── diagnostics_<task_id>.parquet
+│   ├── tasks/
+│   │   ├── task_<task_id>/
+│   │   │   ├── model.rds
+│   │   │   ├── metadata.json
+│   │   │   ├── stdout.log
+│   │   │   └── stderr.log
+│   ├── job_metadata.json
+```
+
+`<output>/`: The base output directory. This could, for example, be `/` in a Docker container or dedicated output directory.
+- `job_<job_id>/`: A directory named after the specific job identifier, containing all outputs related to that job. All tasks within a job share this same top-level directory.
+  - `raw_samples/`: A subdirectory within each job folder that holds the raw sample files from all tasks in the job. Task-specific *draws* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+    - `samples_<task_id>.parquet`: A file containing raw samples from the model, associated with a particular task identifier. This file has columns `job_id`, `task_id`, `geo_value`, `disease`, `model`, `_draw`, `_chain`, `_iteration`, `_variable`, `value`, and `reference_date`. These variables follow the [{tidybayes}](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
+  - `summarized_quantiles/`: A subdirectory for storing summarized quantile data. Task-specific *summarized* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+    - `summarized_<task_id>.parquet`: A file with summarized quantiles relevant to a specific task identifier.  This file has columns `job_id`, `task_id`, `geo_value`, `disease`, `model`, `value`, `_lower`, `_upper`, `_width`, `_point`, `_interval`, and `reference_date`. These variables follow the [{tidybayes}](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
+  - `diagnostics/`: A subdirectory for storing model fit diagnostics. Task-specific *diagnostic* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+    - `diagnostic_<task_id>.parquet`: A file with diagnostics relevant to a specific task identifier.  This file has columns `diagnostic`, `value`, `job_id`, `task_id`, `geo_value`, `disease`, and `model`.
+  - `tasks/`: This directory contains subdirectories for each task within a job. These are files that are less likely to require globbing from the data lake than manual investigation, so are stored togehter.
+    - `task_<task_id>/`: Each task has its own folder identified by the task ID, which includes several files:
+      - `model.rds`: An RDS file storing the EpiNow2 model object fit to the data.
+      - `metadata.json`: A JSON file containing additional metadata about the model run for this task.
+      - `stdout.log`: A log file capturing standard output from the model run process.
+      - `stderr.log`: A log file capturing standard error output from the model run process.
+- `job_metadata.json`: A JSON file located in the root of each job's directory, providing metadata about the entire job.
+
+### Model-estimated quantities
+
+EpiNow2 estimates the incident cases $\hat y_{td}$ for timepoint $t \in \{1, ..., T\}$ and delay $d \in \{1, ..., D\}$ where $D \le T$. In the single vintage we're providing to EpiNow2, the delay $d$ moves inversely to timepoints, so $d = T - t + 1$.
+
+The observed data vector of length $T$ is $y_{td} \in W$. We supply a nowcasting correction PMF $\nu$ for the last $D$ timepoints where $\nu_d \in [0, 1],$ and $\sum_{d=1}^D\nu_d = 1$. We also have some priors $\Theta$.
+
+We use EpiNow2's generative model $f(y, \nu, \Theta)$.
+
+EpiNow2 is a forward model that produces an expected nowcasted case count for each $t$ and $d$ pair: $\hat \gamma_{td}$.
+ It applies the nowcasting correction $\nu$ to the last $D$ timepoints of $\hat \gamma$ to produce the expected right-truncated case count $\hat y$. Note that these _expected_ case counts (with and without right-truncation) don't have observation noise included.
+
+We can apply negative binomial observation noise using EpiNow2's estimate of the negative binomial overdispersion parameter $\hat \phi$ and the expected case counts. The posterior predictive distributions of nowcasted case counts is $\tilde \gamma \sim \text{NB}(\hat \gamma, \hat \phi)$. The posterior predicted right-truncated case count is $\tilde y \sim \text{NB}(\hat y, \hat \phi)$.
+
+We can get 3 of these 4 quantities pre-generated from the returned EpiNow2 Stan model:
+
+- $\hat \gamma$: The expected nowcasted case count is `reports[t]`
+- $\hat y$: The expected right-truncated case count is `obs_reports[t]`
+- $\tilde \gamma$: The posterior-predicted nowcasted case count is `imputed_reports[t]`
+- $\tilde y$: The posterior-predicted right-truncated case count isn't returned by EpiNow2.
+
+We also save the $R_t$ estimate at time $t$ and the intrinsic growth rate at time $t$.
+
 ## Project Admin
 
 - @zsusswein

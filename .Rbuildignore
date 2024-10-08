@@ -1,6 +1,7 @@
 ^CONTRIBUTING.md$
 ^DISCLAIMER.md$
 ^Dockerfile$
+^Dockerfile-dependencies$
 ^LICENSE.md$
 ^Makefile$
 ^\.github$
@@ -10,6 +11,7 @@
 ^\.vscode$
 ^\.vscode$
 ^_pkgdown\.yml$
+^batch-autoscale-formula.txt$
 ^code-of-conduct.md$
 ^codecov\.yml$
 ^data-raw$
