@@ -131,6 +131,10 @@ extract_draws_from_fit <- function(fit) {
   fact_table <- stats::na.omit(unique(fact_table))
 
   # Step 1.1: Add corresponding 'obs_cases' rows for 'latent_cases' dates
+  # Some of the `*_reports` parameters are indexed from time 1, ..., T and some
+  # go to time T + forecast horizon. `imputed_reports` goes out to T + forecast
+  # horizon so we can do a downstream join and that will save only up to the max
+  # timepoint for that parameter.
   obs_fact_table <- fact_table[
     fact_table[["parameter"]] == "imputed_reports",
   ]
@@ -167,6 +171,7 @@ extract_draws_from_fit <- function(fit) {
   imputed_reports <- obs_reports <- R <- r <- time <- NULL # nolint
   stan_draws <- tidybayes::gather_draws(
     stanfit,
+    reports[time],
     imputed_reports[time],
     obs_reports[time],
     R[time],
@@ -207,8 +212,20 @@ post_process_and_merge <- function(
   # Step 2: Standardize parameter names
   data.table::set(merged_dt, j = ".variable", value = factor(
     merged_dt[[".variable"]],
-    levels = c("imputed_reports", "obs_reports", "R", "r"),
-    labels = c("latent_cases", "obs_cases", "Rt", "growth_rate")
+    levels = c(
+      "reports",
+      "imputed_reports",
+      "obs_reports",
+      "R",
+      "r"
+    ),
+    labels = c(
+      "expected_nowcast_cases",
+      "pp_nowcast_cases",
+      "expected_obs_cases",
+      "Rt",
+      "growth_rate"
+    )
   ))
 
   # Step 3: Rename columns as necessary
