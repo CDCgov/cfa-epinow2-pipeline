@@ -1,3 +1,5 @@
+NEWS.md merge=union
+
 # Normal text let sit to auto
 *.htm text
 *.html text

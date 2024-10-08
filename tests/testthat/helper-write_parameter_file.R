@@ -6,6 +6,7 @@ write_sample_parameters_file <- function(value,
                                          parameter,
                                          start_date,
                                          end_date) {
+  Sys.sleep(0.05)
   df <- data.frame(
     start_date = as.Date(start_date),
     geo_value = state,
@@ -16,6 +17,7 @@ write_sample_parameters_file <- function(value,
   )
 
   con <- DBI::dbConnect(duckdb::duckdb())
+  on.exit(DBI::dbDisconnect(con))
 
   duckdb::duckdb_register(con, "test_table", df)
   # This is bad practice but `dbBind()` doesn't allow us to parameterize COPY
@@ -24,7 +26,6 @@ write_sample_parameters_file <- function(value,
   # guard against a SQL injection attack.
   query <- paste0("COPY (SELECT * FROM test_table) TO '", path, "'")
   DBI::dbExecute(con, query)
-  DBI::dbDisconnect(con)
 
   invisible(path)
 }
