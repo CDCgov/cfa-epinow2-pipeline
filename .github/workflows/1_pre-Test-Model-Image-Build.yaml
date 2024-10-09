@@ -152,8 +152,11 @@ jobs:
           # and
           # https://learn.microsoft.com/en-us/cli/azure/batch/pool?view=azure-cli-latest#az-batch-pool-show
 
-          echo "pool-exists=$(az batch pool list \
-            --filter \"(id eq '${{ env.POOL_ID }}')\")" >> $GITHUB__OUTPUT
+          az batch pool list \
+            --filter "(id eq '${{ env.POOL_ID }}')" > pool-list-${{ github.sha }}
+
+          echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
+            $GITHUB_OUTPUT
 
 
       - name: Create cfa-epinow2-pipeline Pool
