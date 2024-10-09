@@ -155,7 +155,7 @@ jobs:
           az batch pool list \
             --output json \
             --filter "(id eq '${{ env.POOL_ID }}')" \
-            --query "[].allocationState" \ >
+            --query "[].allocationState" > \
             pool-list-${{ github.sha }}
 
           cat pool-list-${{ github.sha }}
