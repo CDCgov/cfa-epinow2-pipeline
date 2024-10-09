@@ -27,6 +27,12 @@ jobs:
 
     steps:
 
+      #########################################################################
+      # Retrieving the commit message
+      # We need to ensure we are checking out the commit sha that triggered the
+      # workflow, not the PR's head sha. This is because the PR's head sha may
+      # be a merge commit, which will not have the commit message we need.
+      #########################################################################
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -45,6 +51,10 @@ jobs:
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: branch-name
 
+      #########################################################################
+      # Getting the tag
+      # The tag will be used for both the docker image and the batch pool
+      #########################################################################
       - name: Figure out tag (either latest if it is main or the branch name)
         id: image-tag
         run: |
@@ -146,6 +156,12 @@ jobs:
         # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
           creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
+      #########################################################################
+      # Checking if the pool exists
+      # This is done via az batch pool list. If there is no pool matching the
+      # pool id (which is a function of the tag, i.e., branch name), then we
+      # pool-exists will be ''.
+      #########################################################################
       - name: Check if pool exists
         id: check_pool_id
         run: |
@@ -166,8 +182,9 @@ jobs:
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
 
-        # This is a conditional step that will only run if the pool does not exist
-        if: ${{ steps.check_pool_id.outputs.pool-exists == '' }}
+        # This is a conditional step that will only run if the pool does not
+        # exist
+        if: ${{ steps.check_pool_id.outputs.pool-exists == '' && !contains( env.COMMIT_MSG, '[delete pool]' )}}
 
         # The call to the az cli that actually generates the pool
         run: |
@@ -189,6 +206,11 @@ jobs:
           # Let's get this POOL_ID var for the next step too
           echo "POOL_ID=${{ env.POOL_ID}}" >> $GITHUB_ENV
 
+
+      #########################################################################
+      # Deleting the pool only if (a) it exists and (b) the commit message
+      # contains '[delete pool]'.
+      #########################################################################
       - name: Delete the pool
         if: ${{ steps.check_pool_id.outputs.pool-exists != '' && contains( env.COMMIT_MSG, '[delete pool]' )}}
         run: |
