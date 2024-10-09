@@ -149,7 +149,6 @@ jobs:
       - name: Check if pool exists
         id: check_pool_id
         run: |
-          echo "The commit message was: ${{ env.COMMIT_MSG }}"
 
           az batch account login \
             --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
@@ -160,8 +159,6 @@ jobs:
             --filter "(id eq '${{ env.POOL_ID }}')" \
             --query "[].[id, allocationState, creationTime]" > \
             pool-list-${{ github.sha }}
-
-          cat pool-list-${{ github.sha }}
 
           echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
             $GITHUB_OUTPUT
