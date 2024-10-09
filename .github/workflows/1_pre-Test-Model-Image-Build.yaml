@@ -155,6 +155,8 @@ jobs:
           az batch pool list \
             --filter "(id eq '${{ env.POOL_ID }}')" > pool-list-${{ github.sha }}
 
+          cat pool-list-${{ github.sha }}
+
           echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
             $GITHUB_OUTPUT
 
