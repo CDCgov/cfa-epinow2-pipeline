@@ -179,27 +179,12 @@ jobs:
           echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
             $GITHUB_OUTPUT
 
-      #########################################################################
-      # Pre-cleaning the pool only if (a) it exists and (b) the commit message
-      # does contain '[re-build pool]'.
-      #########################################################################
-      - name: Pre-clean the pool
-        if : ${{ steps.check_pool_id.outputs.pool-exists != '' && contains( env.COMMIT_MSG, '[re-build pool]' ) }}
-        run: |
-          az batch account login \
-            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-            --name "${{ env.BATCH_ACCOUNT }}"
-
-          az batch pool delete \
-            --pool-id ${{ env.POOL_ID }} \
-            --yes
-
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
 
         # This is a conditional step that will only run if the pool does not
         # exist
-        if: ${{ steps.check_pool_id.outputs.pool-exists == '' || contains( env.COMMIT_MSG, '[re-build pool]' ) }}
+        if: ${{ steps.check_pool_id.outputs.pool-exists == '' }}
 
         # The call to the az cli that actually generates the pool
         run: |
