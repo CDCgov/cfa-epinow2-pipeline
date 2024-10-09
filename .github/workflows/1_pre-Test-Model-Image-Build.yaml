@@ -219,7 +219,7 @@ jobs:
           --auto-scale-formula "$(cat './batch-autoscale-formula.txt')"
 
           # Let's get this POOL_ID var for the next step too
-          echo "POOL_ID=${{ env.POOL_ID}}" >> $GITHUB_ENV
+          echo "pool-created=yes" >> $GITHUB_OUTPUT
 
 
       #########################################################################
@@ -227,7 +227,7 @@ jobs:
       # contains '[delete pool]'.
       #########################################################################
       - name: Delete the pool
-        if: ${{ steps.check_pool_id.outputs.pool-exists != '' && contains( env.COMMIT_MSG, '[delete pool]' )}}
+        if: ${{ (steps.check_pool_id.outputs.pool-exists != '' || steps.create_batch_pool.outputs.pool-created == 'yes' ) && contains( env.COMMIT_MSG, '[delete pool]' )}}
         run: |
           az batch account login \
             --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
