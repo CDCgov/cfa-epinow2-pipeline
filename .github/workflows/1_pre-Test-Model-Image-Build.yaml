@@ -145,13 +145,6 @@ jobs:
             --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
             --name "${{ env.BATCH_ACCOUNT }}"
 
-          # Documentation about Pool list
-          # https://learn.microsoft.com/en-us/rest/api/batchservice/pool/list?view=rest-batchservice-2023-11-01&tabs=HTTP
-          # and
-          # https://learn.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-pools
-          # and
-          # https://learn.microsoft.com/en-us/cli/azure/batch/pool?view=azure-cli-latest#az-batch-pool-show
-
           az batch pool list \
             --output tsv \
             --filter "(id eq '${{ env.POOL_ID }}')" \
@@ -189,3 +182,14 @@ jobs:
 
           # Let's get this POOL_ID var for the next step too
           echo "POOL_ID=${{ env.POOL_ID}}" >> $GITHUB_ENV
+
+      - name: Delete the pool
+        if: ${{ steps.check_pool_id.outputs.pool-exists != ''  && contains( env.COMMIT_MSG, '[delete pool]' )}}
+        run: |
+          az batch account login \
+            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
+            --name "${{ env.BATCH_ACCOUNT }}"
+
+          az batch pool delete \
+            --pool-id ${{ env.POOL_ID }} \
+            --yes
