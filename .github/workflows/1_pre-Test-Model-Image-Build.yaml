@@ -155,7 +155,7 @@ jobs:
           az batch pool list \
             --output tsv \
             --filter "(id eq '${{ env.POOL_ID }}')" \
-            --query "[].allocationState" > \
+            --query "[].[id, allocationState, creationTime]" > \
             pool-list-${{ github.sha }}
 
           cat pool-list-${{ github.sha }}
@@ -168,7 +168,7 @@ jobs:
         id: create_batch_pool
 
         # This is a conditional step that will only run if the pool does not exist
-        if: ${{ steps.check_pool_id.outputs.pool-exists == '[]' }}
+        if: ${{ steps.check_pool_id.outputs.pool-exists == '' }}
 
         # The call to the az cli that actually generates the pool
         run: |
