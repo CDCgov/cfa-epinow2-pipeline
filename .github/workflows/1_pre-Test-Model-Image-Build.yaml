@@ -152,15 +152,15 @@ jobs:
           # and
           # https://learn.microsoft.com/en-us/cli/azure/batch/pool?view=azure-cli-latest#az-batch-pool-show
 
-          az batch pool list \
-            --filter "(id eq '${{ env.POOL_ID }}')"
+          echo "pool-exists=$(az batch pool list \
+            --filter \"(id eq '${{ env.POOL_ID }}')\")" >> $GITHUB__OUTPUT
+
 
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
 
-        # This is a conditional step that will only run if the commit message
-        # does not contain '[skip pool create]'
-        if: ${{ !contains( env.COMMIT_MSG, '[skip pool create]' ) }}
+        # This is a conditional step that will only run if the pool does not exist
+        if: ${{ steps.check_pool_id.outputs.pool-exists == '[]' }}
 
         # The call to the az cli that actually generates the pool
         run: |
