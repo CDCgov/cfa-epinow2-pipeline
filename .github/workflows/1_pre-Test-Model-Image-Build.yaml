@@ -22,6 +22,7 @@ jobs:
 
     outputs:
       tag: ${{ steps.image-tag.outputs.tag }}
+      commit-msg: ${{ steps.image-tag.outputs.commit-msg }}
 
     steps:
       - name: Checkout code
@@ -42,6 +43,7 @@ jobs:
           else
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
+          echo "commit-msg=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
 
       - name: Check cache for base image
         uses: actions/cache@v4
@@ -75,6 +77,7 @@ jobs:
 
     outputs:
       tag: ${{ needs.Job01-build_image_dependencies.outputs.tag }}
+      commit-msg: ${{ needs.Job01-build_image_dependencies.outputs.commit-msg }}
 
     steps:
 
@@ -106,6 +109,16 @@ jobs:
 
     env:
       TAG: ${{ needs._01_build-model-image.outputs.tag }}
+      COMMIT_MSG: ${{ needs._01_build-model-image.outputs.commit-msg }}
+      # Every Azure Batch Pool parameter can simply go here,
+      # no python module or config toml necessary
+      POOL_ID: "cfa-epinow2-${{ needs._01_build-model-image.outputs.tag }}"
+      BATCH_ACCOUNT:     "cfaprdba"
+      BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
+      VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
+      NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
+      VM_SIZE:           "standard_a4m_v2"
+      RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
 
     steps:
       - name: Checkout Repo
@@ -119,19 +132,28 @@ jobs:
         # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
           creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
+      - name: Check if pool exists
+        id: check_pool_id
+        run: |
+          az batch account login \
+            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
+            --name "${{ env.BATCH_ACCOUNT }}"
+
+          # Documentation about Pool list
+          # https://learn.microsoft.com/en-us/rest/api/batchservice/pool/list?view=rest-batchservice-2023-11-01&tabs=HTTP
+          # and
+          # https://learn.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-pools
+          # and
+          # https://learn.microsoft.com/en-us/cli/azure/batch/pool?view=azure-cli-latest#az-batch-pool-show
+          az batch pool show \
+            --pool-id "${{ env.POOL_ID }}"
+
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
 
-        # Every Azure Batch Pool parameter can simply go here,
-        # no python module or config toml necessary
-        env:
-          POOL_ID:           "cfa-epinow2-${{ env.TAG }}"
-          BATCH_ACCOUNT:     "cfaprdba"
-          BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
-          VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
-          NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
-          VM_SIZE:           "standard_a4m_v2"
-          RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
+        # This is a conditional step that will only run if the commit message
+        # does not contain '[skip pool create]'
+        if: ${{ !contains( env.COMMIT_MSG, '[skip pool create]' ) }}
 
         # The call to the az cli that actually generates the pool
         run: |
