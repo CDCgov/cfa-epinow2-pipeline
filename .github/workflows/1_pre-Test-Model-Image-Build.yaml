@@ -203,9 +203,6 @@ jobs:
             --pool-id ${{ env.POOL_ID }} \
             --auto-scale-formula "$(cat './batch-autoscale-formula.txt')"
 
-          # Let's get this POOL_ID var for the next step too
-          echo "pool-created=yes" >> $GITHUB_OUTPUT
-
 
       #########################################################################
       # Deleting the pool only if (a) it exists and (b) the commit message
