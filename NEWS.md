@@ -1,4 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
+
+* Checks if batch pool exists. Pools named after branches. Also allows for deletion via commit message.
 * Merges workflows 1 and 2 into a single workflow.
 * Now uses CFA Azure ACR and images in the workflows and Dockerfiles, etc.
 * Added Docker image with all the requirements to build the package.
