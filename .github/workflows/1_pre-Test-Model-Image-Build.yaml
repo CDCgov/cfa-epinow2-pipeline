@@ -141,6 +141,8 @@ jobs:
       - name: Check if pool exists
         id: check_pool_id
         run: |
+          echo "The commit message was: ${{ env.COMMIT_MSG }}"
+
           az batch account login \
             --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
             --name "${{ env.BATCH_ACCOUNT }}"
@@ -155,7 +157,6 @@ jobs:
 
           echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
             $GITHUB_OUTPUT
-
 
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
@@ -184,7 +185,7 @@ jobs:
           echo "POOL_ID=${{ env.POOL_ID}}" >> $GITHUB_ENV
 
       - name: Delete the pool
-        if: ${{ steps.check_pool_id.outputs.pool-exists != ''  && contains( env.COMMIT_MSG, '[delete pool]' )}}
+        if: ${{ steps.check_pool_id.outputs.pool-exists != '' && contains( env.COMMIT_MSG, '[delete pool]' )}}
         run: |
           az batch account login \
             --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
