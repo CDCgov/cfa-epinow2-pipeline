@@ -153,7 +153,7 @@ jobs:
           # https://learn.microsoft.com/en-us/cli/azure/batch/pool?view=azure-cli-latest#az-batch-pool-show
 
           az batch pool list \
-            --filter "id == ${{ env.POOL_ID }})"
+            --filter "(id eq '${{ env.POOL_ID }}')"
 
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
