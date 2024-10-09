@@ -19,6 +19,7 @@ jobs:
 
   Job01-build_image_dependencies:
     runs-on: cfa-cdcgov # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
+    name: Build dependencies image
 
     outputs:
       tag: ${{ steps.image-tag.outputs.tag }}
@@ -72,6 +73,9 @@ jobs:
           file: ./Dockerfile-dependencies
 
   _01_build-model-image:
+
+    name: Build pipeline image
+
     needs: Job01-build_image_dependencies
     runs-on: cfa-cdcgov
 
@@ -100,6 +104,8 @@ jobs:
             TAG=${{ needs.Job01-build_image_dependencies.outputs.tag }}
 
   _02_create-batch-pool-and-submit-jobs:
+
+    name: Create Batch Pool and Submit Jobs
     runs-on: cfa-cdcgov
     needs: _01_build-model-image
 
@@ -145,8 +151,9 @@ jobs:
           # https://learn.microsoft.com/en-us/rest/api/batchservice/odata-filters-in-batch#list-pools
           # and
           # https://learn.microsoft.com/en-us/cli/azure/batch/pool?view=azure-cli-latest#az-batch-pool-show
-          az batch pool show \
-            --pool-id "${{ env.POOL_ID }}"
+
+          az batch pool list \
+            --filter "id == ${{ env.POOL_ID }})"
 
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
