@@ -153,9 +153,10 @@ jobs:
           # https://learn.microsoft.com/en-us/cli/azure/batch/pool?view=azure-cli-latest#az-batch-pool-show
 
           az batch pool list \
-            --select allocationState \
             --output json \
-            --filter "(id eq '${{ env.POOL_ID }}')" > pool-list-${{ github.sha }}
+            --filter "(id eq '${{ env.POOL_ID }}')" \
+            --query "[].allocationState" \ >
+            pool-list-${{ github.sha }}
 
           cat pool-list-${{ github.sha }}
 
