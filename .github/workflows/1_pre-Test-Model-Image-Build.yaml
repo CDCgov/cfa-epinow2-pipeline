@@ -153,7 +153,7 @@ jobs:
           # https://learn.microsoft.com/en-us/cli/azure/batch/pool?view=azure-cli-latest#az-batch-pool-show
 
           az batch pool list \
-            --output json \
+            --output tsv \
             --filter "(id eq '${{ env.POOL_ID }}')" \
             --query "[].allocationState" > \
             pool-list-${{ github.sha }}
