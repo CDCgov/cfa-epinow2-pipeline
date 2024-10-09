@@ -199,7 +199,7 @@ jobs:
 
         # This is a conditional step that will only run if the pool does not
         # exist
-        if: ${{ steps.check_pool_id.outputs.pool-exists == '' }}
+        if: ${{ steps.check_pool_id.outputs.pool-exists == '' || contains( env.COMMIT_MSG, '[re-build pool]' ) }}
 
         # The call to the az cli that actually generates the pool
         run: |
