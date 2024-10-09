@@ -26,9 +26,11 @@ jobs:
       commit-msg: ${{ steps.image-tag.outputs.commit-msg }}
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
-
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
@@ -45,6 +47,9 @@ jobs:
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
           echo "commit-msg=$(git log -1 --pretty=%s HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Getting commit message
+        uses: actions/checkout@v4
 
       - name: Check cache for base image
         uses: actions/cache@v4
