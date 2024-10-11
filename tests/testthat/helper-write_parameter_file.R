@@ -6,14 +6,15 @@ write_sample_parameters_file <- function(value,
                                          parameter,
                                          start_date,
                                          end_date,
+                                         geo_value,
                                          reference_date) {
   Sys.sleep(0.05)
   df <- data.frame(
     start_date = as.Date(start_date),
-    geo_value = state,
     disease = disease,
     parameter = parameter,
     end_date = end_date,
+    geo_value = geo_value,
     value = I(list(value)),
     reference_date = reference_date
   )

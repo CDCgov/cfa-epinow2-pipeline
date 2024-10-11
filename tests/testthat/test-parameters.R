@@ -3,6 +3,7 @@ test_that("Can read all params on happy path", {
   start_date <- as.Date("2023-01-01")
   reference_date <- as.Date("2022-12-01")
   disease <- "COVID-19"
+  group <- "test_geo"
 
   withr::with_tempdir({
     write_sample_parameters_file(
@@ -10,9 +11,9 @@ test_that("Can read all params on happy path", {
       parameter = "generation_interval",
       path = "generation_interval.parquet",
       disease = disease,
-      state = NA,
       start_date = start_date,
       end_date = NA,
+      geo_value = NA,
       reference_date = NA
     )
     write_sample_parameters_file(
@@ -20,9 +21,9 @@ test_that("Can read all params on happy path", {
       parameter = "delay",
       path = "delay_interval.parquet",
       disease = disease,
-      state = NA,
       start_date = start_date,
       end_date = NA,
+      geo_value = NA,
       reference_date = NA
     )
     write_sample_parameters_file(
@@ -30,9 +31,9 @@ test_that("Can read all params on happy path", {
       parameter = "right_truncation",
       path = "right_truncation.parquet",
       disease = disease,
-      state = "test",
       start_date = start_date,
       end_date = NA,
+      geo_value = group,
       reference_date = reference_date
     )
 
@@ -43,7 +44,7 @@ test_that("Can read all params on happy path", {
       right_truncation_path = "right_truncation.parquet",
       disease = "COVID-19",
       as_of_date = start_date + 1,
-      group = "test",
+      group = group,
       report_date = reference_date
     )
   })
@@ -71,9 +72,9 @@ test_that("Can skip params on happy path", {
       parameter = "generation_interval",
       path = "generation_interval.parquet",
       disease = disease,
-      state = NA,
       start_date = start_date,
       end_date = NA,
+      geo_value = NA,
       reference_date = NA
     )
     write_sample_parameters_file(
@@ -81,9 +82,9 @@ test_that("Can skip params on happy path", {
       parameter = "delay",
       path = "delay_interval.parquet",
       disease = disease,
-      state = NA,
       start_date = start_date,
       end_date = NA,
+      geo_value = NA,
       reference_date = NA
     )
     write_sample_parameters_file(
@@ -91,9 +92,9 @@ test_that("Can skip params on happy path", {
       parameter = "right_truncation",
       path = "right_truncation.parquet",
       disease = disease,
-      state = "test",
       start_date = start_date,
       end_date = NA,
+      geo_value = "test_geo",
       reference_date = reference_date
     )
 
@@ -132,11 +133,11 @@ test_that("Can read right-truncation on happy path", {
     write_sample_parameters_file(
       value = expected,
       path = path,
-      state = "test",
       disease = disease,
       parameter = parameter,
       start_date = start_date,
       end_date = NA,
+      geo_value = "test",
       reference_date = reference_date
     )
     actual <- read_interval_pmf(
@@ -157,12 +158,12 @@ test_that("Can read right-truncation on happy path", {
     write_sample_parameters_file(
       value = expected,
       path = path,
-      state = "test",
       disease = disease,
       parameter = parameter,
       param = parameter,
       start_date = start_date,
       end_date = NA,
+      geo_value = "test",
       reference_date = reference_date
     )
     actual <- read_interval_pmf(
@@ -171,6 +172,38 @@ test_that("Can read right-truncation on happy path", {
       disease = disease,
       as_of_date = start_date + 1,
       group = "test",
+      report_date = reference_date
+    )
+  })
+  expect_equal(actual, expected)
+})
+
+test_that("Can read right-truncation with no geo_value", {
+  expected <- c(0.8, 0.2)
+  path <- "test.parquet"
+  parameter <- "right_truncation"
+  start_date <- as.Date("2023-01-01")
+  reference_date <- as.Date("2022-12-01")
+
+  # COVID-19
+  disease <- "COVID-19"
+  withr::with_tempdir({
+    write_sample_parameters_file(
+      value = expected,
+      path = path,
+      disease = disease,
+      parameter = parameter,
+      start_date = start_date,
+      end_date = NA,
+      geo_value = NA,
+      reference_date = reference_date
+    )
+    actual <- read_interval_pmf(
+      path = path,
+      parameter = parameter,
+      disease = disease,
+      as_of_date = start_date + 1,
+      group = NA,
       report_date = reference_date
     )
   })
@@ -190,11 +223,11 @@ test_that("Invalid PMF errors", {
     write_sample_parameters_file(
       value = expected,
       path = path,
-      state = "test",
       disease = disease,
       parameter = parameter,
       param = parameter,
       start_date = start_date,
+      geo_value = "test",
       end_date = NA,
       reference_date = reference_date
     )
@@ -226,12 +259,12 @@ test_that("Can read delay on happy path", {
     write_sample_parameters_file(
       value = expected,
       path = path,
-      state = NA,
       disease = disease,
       parameter = parameter,
       param = parameter,
       start_date = start_date,
       end_date = NA,
+      geo_value = NA,
       reference_date = reference_date
     )
     actual <- read_interval_pmf(
@@ -243,19 +276,18 @@ test_that("Can read delay on happy path", {
   })
   expect_equal(actual, expected)
 
-
   # Influenza
   disease <- "Influenza"
   withr::with_tempdir({
     write_sample_parameters_file(
       value = expected,
       path = path,
-      state = NA,
       disease = disease,
       parameter = parameter,
       param = parameter,
       start_date = start_date,
       end_date = NA,
+      geo_value = NA,
       reference_date = reference_date
     )
     actual <- read_interval_pmf(
@@ -283,20 +315,21 @@ test_that("Not a PMF errors", {
     write_sample_parameters_file(
       value = expected,
       path = path,
-      state = NA,
       disease = disease,
       parameter = parameter,
       param = parameter,
       start_date = start_date,
       end_date = NA,
-      reference_date <- reference_date
+      geo_value = NA,
+      reference_date = reference_date
     )
     expect_error(
       read_interval_pmf(
         path = path,
         disease = disease,
         as_of_date = start_date + 1,
-        parameter = parameter
+        parameter = parameter,
+        group = NA
       ),
       class = "not_a_pmf"
     )
@@ -315,13 +348,13 @@ test_that("Invalid disease errors", {
     write_sample_parameters_file(
       value = expected,
       path = path,
-      state = "test",
       disease = disease,
       parameter = parameter,
       param = parameter,
       start_date = start_date,
       end_date = NA,
-      reference_date
+      geo_value = NA,
+      reference_date = reference_date
     )
 
     expect_error(
@@ -348,12 +381,12 @@ test_that("Invalid parameter errors", {
     write_sample_parameters_file(
       value = expected,
       path = path,
-      state = "test",
       disease = disease,
       parameter = parameter,
       param = parameter,
       start_date = start_date,
       end_date = NA,
+      geo_value = NA,
       reference_date = reference_date
     )
 
@@ -381,12 +414,12 @@ test_that("Return isn't exactly one errors", {
     write_sample_parameters_file(
       value = expected,
       path = path,
-      state = "test",
       disease = disease,
       parameter = parameter,
       param = parameter,
       start_date = start_date,
       end_date = NA,
+      geo_value = NA,
       reference_date = reference_date
     )
 
@@ -433,12 +466,12 @@ test_that("Invalid query throws wrapped error", {
     write_sample_parameters_file(
       value = expected,
       path = path,
-      state = NA,
       disease = disease,
       parameter = parameter,
       param = parameter,
       start_date = start_date,
       end_date = NA,
+      geo_value = NA,
       reference_date = reference_date
     )
 

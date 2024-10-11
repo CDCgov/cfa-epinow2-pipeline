@@ -162,7 +162,7 @@ read_interval_pmf <- function(path,
   # Handle state separately because can't use `=` for NULL comparison and
   # DBI::dbBind() can't parameterize a query after IS
   if (rlang::is_na(group) || rlang::is_null(group)) {
-    query <- paste(query, "AND geo_value IS NULL;")
+    query <- paste(query, "AND geo_value IS NULL")
   } else {
     query <- paste(query, "AND geo_value = ?")
     parameters <- c(parameters, list(group))
