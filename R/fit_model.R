@@ -160,7 +160,7 @@ format_right_truncation <- function(pmf, data) {
     # silently removed if length of the PMF was longer than the data,
     # effectively eliminating the right-truncation correction
 
-    trunc_len <- nrow(data) - 1
+    trunc_len <- nrow(data)
     cli::cli_warn(
       c(
         "Removing right-truncation PMF elements after {.val {trunc_len}}",
