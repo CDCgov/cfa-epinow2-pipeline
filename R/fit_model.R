@@ -160,10 +160,10 @@ format_right_truncation <- function(pmf, data) {
     # silently removed if length of the PMF was longer than the data,
     # effectively eliminating the right-truncation correction
 
-    trunc_idx <- nrow(data) - 1
+    trunc_len <- nrow(data) - 1
     cli::cli_warn(
       c(
-        "Removing right-truncation PMF elements after {.val {trunc_idx}}",
+        "Removing right-truncation PMF elements after {.val {trunc_len}}",
         "Right truncation PMF longer than the data",
         "PMF length: {.val {length(pmf)}}",
         "Data length: {.val {nrow(data)}}",
@@ -174,7 +174,7 @@ format_right_truncation <- function(pmf, data) {
     suppressWarnings({
       EpiNow2::trunc_opts(
         dist = EpiNow2::dist_spec(
-          pmf = pmf[seq_len(trunc_idx)]
+          pmf = pmf[seq_len(trunc_len)]
         )
       )
     })
