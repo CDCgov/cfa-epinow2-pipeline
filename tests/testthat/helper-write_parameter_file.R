@@ -5,7 +5,8 @@ write_sample_parameters_file <- function(value,
                                          disease,
                                          parameter,
                                          start_date,
-                                         end_date) {
+                                         end_date,
+                                         reference_date) {
   Sys.sleep(0.05)
   df <- data.frame(
     start_date = as.Date(start_date),
@@ -13,7 +14,8 @@ write_sample_parameters_file <- function(value,
     disease = disease,
     parameter = parameter,
     end_date = end_date,
-    value = I(list(value))
+    value = I(list(value)),
+    reference_date = reference_date
   )
 
   con <- DBI::dbConnect(duckdb::duckdb())

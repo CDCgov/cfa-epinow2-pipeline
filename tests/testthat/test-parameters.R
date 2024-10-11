@@ -1,6 +1,7 @@
 test_that("Can read all params on happy path", {
   expected <- c(0.8, 0.2)
   start_date <- as.Date("2023-01-01")
+  reference_date <- as.Date("2022-12-01")
   disease <- "COVID-19"
 
   withr::with_tempdir({
@@ -11,7 +12,8 @@ test_that("Can read all params on happy path", {
       disease = disease,
       state = NA,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = NA
     )
     write_sample_parameters_file(
       value = expected,
@@ -20,7 +22,8 @@ test_that("Can read all params on happy path", {
       disease = disease,
       state = NA,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = NA
     )
     write_sample_parameters_file(
       value = expected,
@@ -29,7 +32,8 @@ test_that("Can read all params on happy path", {
       disease = disease,
       state = "test",
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = reference_date
     )
 
 
@@ -39,7 +43,8 @@ test_that("Can read all params on happy path", {
       right_truncation_path = "right_truncation.parquet",
       disease = "COVID-19",
       as_of_date = start_date + 1,
-      group = "test"
+      group = "test",
+      report_date = reference_date
     )
   })
 
@@ -58,6 +63,7 @@ test_that("Can skip params on happy path", {
   expected <- c(0.8, 0.2)
   start_date <- as.Date("2023-01-01")
   disease <- "COVID-19"
+  reference_date <- as.Date("2022-12-01")
 
   withr::with_tempdir({
     write_sample_parameters_file(
@@ -67,7 +73,8 @@ test_that("Can skip params on happy path", {
       disease = disease,
       state = NA,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = NA
     )
     write_sample_parameters_file(
       value = expected,
@@ -76,7 +83,8 @@ test_that("Can skip params on happy path", {
       disease = disease,
       state = NA,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = NA
     )
     write_sample_parameters_file(
       value = expected,
@@ -85,7 +93,8 @@ test_that("Can skip params on happy path", {
       disease = disease,
       state = "test",
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = reference_date
     )
 
 
@@ -115,6 +124,7 @@ test_that("Can read right-truncation on happy path", {
   path <- "test.parquet"
   parameter <- "right_truncation"
   start_date <- as.Date("2023-01-01")
+  reference_date <- as.Date("2022-12-01")
 
   # COVID-19
   disease <- "COVID-19"
@@ -126,14 +136,16 @@ test_that("Can read right-truncation on happy path", {
       disease = disease,
       parameter = parameter,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = reference_date
     )
     actual <- read_interval_pmf(
       path = path,
       parameter = parameter,
       disease = disease,
       as_of_date = start_date + 1,
-      group = "test"
+      group = "test",
+      report_date = reference_date
     )
   })
   expect_equal(actual, expected)
@@ -150,14 +162,16 @@ test_that("Can read right-truncation on happy path", {
       parameter = parameter,
       param = parameter,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = reference_date
     )
     actual <- read_interval_pmf(
       path = path,
       parameter = parameter,
       disease = disease,
       as_of_date = start_date + 1,
-      group = "test"
+      group = "test",
+      report_date = reference_date
     )
   })
   expect_equal(actual, expected)
@@ -168,6 +182,7 @@ test_that("Invalid PMF errors", {
   path <- "test.parquet"
   parameter <- "right_truncation"
   start_date <- as.Date("2023-01-01")
+  reference_date <- as.Date("2022-12-01")
 
   # COVID-19
   disease <- "COVID-19"
@@ -180,7 +195,8 @@ test_that("Invalid PMF errors", {
       parameter = parameter,
       param = parameter,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = reference_date
     )
     expect_error(
       read_interval_pmf(
@@ -188,7 +204,8 @@ test_that("Invalid PMF errors", {
         parameter = parameter,
         disease = disease,
         as_of_date = start_date + 1,
-        group = "test"
+        group = "test",
+        report_date = reference_date
       ),
       class = "invalid_pmf"
     )
@@ -201,6 +218,7 @@ test_that("Can read delay on happy path", {
   path <- "test.parquet"
   parameter <- "delay"
   start_date <- as.Date("2023-01-01")
+  reference_date <- NA
 
   # COVID-19
   disease <- "COVID-19"
@@ -213,7 +231,8 @@ test_that("Can read delay on happy path", {
       parameter = parameter,
       param = parameter,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = reference_date
     )
     actual <- read_interval_pmf(
       path = path,
@@ -236,13 +255,15 @@ test_that("Can read delay on happy path", {
       parameter = parameter,
       param = parameter,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = reference_date
     )
     actual <- read_interval_pmf(
       path = path,
       disease = disease,
       as_of_date = start_date + 1,
-      parameter = parameter
+      parameter = parameter,
+      report_date = reference_date
     )
   })
   expect_equal(actual, expected)
@@ -254,6 +275,7 @@ test_that("Not a PMF errors", {
   path <- "test.parquet"
   parameter <- "delay"
   start_date <- as.Date("2023-01-01")
+  reference_date <- NA
 
   # COVID-19
   disease <- "COVID-19"
@@ -266,7 +288,8 @@ test_that("Not a PMF errors", {
       parameter = parameter,
       param = parameter,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date <- reference_date
     )
     expect_error(
       read_interval_pmf(
@@ -286,6 +309,7 @@ test_that("Invalid disease errors", {
   parameter <- "delay"
   start_date <- as.Date("2023-01-01")
   disease <- "not_a_valid_disease"
+  reference_date <- NA
 
   withr::with_tempdir({
     write_sample_parameters_file(
@@ -296,7 +320,8 @@ test_that("Invalid disease errors", {
       parameter = parameter,
       param = parameter,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date
     )
 
     expect_error(
@@ -317,6 +342,7 @@ test_that("Invalid parameter errors", {
   parameter <- "not_a_valid_parameter"
   start_date <- as.Date("2023-01-01")
   disease <- "COVID-19"
+  reference_date <- NA
 
   withr::with_tempdir({
     write_sample_parameters_file(
@@ -327,7 +353,8 @@ test_that("Invalid parameter errors", {
       parameter = parameter,
       param = parameter,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = reference_date
     )
 
     expect_error(
@@ -348,6 +375,7 @@ test_that("Return isn't exactly one errors", {
   parameter <- "delay"
   start_date <- as.Date("2023-01-01")
   disease <- "COVID-19"
+  reference_date <- NA
 
   withr::with_tempdir({
     write_sample_parameters_file(
@@ -358,7 +386,8 @@ test_that("Return isn't exactly one errors", {
       parameter = parameter,
       param = parameter,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = reference_date
     )
 
     # Date too early
@@ -398,6 +427,7 @@ test_that("Invalid query throws wrapped error", {
   parameter <- "delay"
   start_date <- as.Date("2023-01-01")
   disease <- "COVID-19"
+  reference_date <- NA
 
   withr::with_tempdir({
     write_sample_parameters_file(
@@ -408,7 +438,8 @@ test_that("Invalid query throws wrapped error", {
       parameter = parameter,
       param = parameter,
       start_date = start_date,
-      end_date = NA
+      end_date = NA,
+      reference_date = reference_date
     )
 
     expect_error(
@@ -421,4 +452,30 @@ test_that("Invalid query throws wrapped error", {
       class = "wrapped_error"
     )
   })
+})
+
+test_that("NULL `reference_date` prints in output", {
+  pmf_df <- data.frame(
+    value = I(list(c(0.8, 0.1, 0.1))),
+    reference_date = NA
+  )
+  parameter <- "right_truncation"
+  disease <- "test_disease"
+  as_of_date <- as.Date("2023-01-01")
+  group <- "test_group"
+  report_date <- as.Date("2023-01-15")
+  path <- "test/path/to/file.ext"
+
+  expect_snapshot(
+    pmf <- check_returned_pmf(
+      pmf_df = pmf_df,
+      parameter = parameter,
+      disease = disease,
+      as_of_date = as_of_date,
+      group = group,
+      report_date = report_date,
+      path = path
+    )
+  )
+  expect_equal(pmf, pmf_df[["value"]][[1]])
 })

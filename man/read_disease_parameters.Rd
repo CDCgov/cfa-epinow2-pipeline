@@ -10,7 +10,8 @@ read_disease_parameters(
   right_truncation_path,
   disease,
   as_of_date,
-  group
+  group,
+  report_date
 )
 }
 \arguments{
@@ -25,8 +26,18 @@ date. Set for the current date for the most up-to-to date version of the
 parameters and set to an earlier date to use parameters from an earlier
 time period.}
 
-\item{group}{Used only for parameters with a state-level estimate (i.e., only
-right-truncation). The two-letter uppercase state abbreviation.}
+\item{group}{An optional parameter to subset the query to a parameter with a
+particular two-letter state abbrevation. Right now, the only parameter with
+state-specific estimates is \code{right_truncation}.}
+
+\item{report_date}{An optional parameter to subset the query to a parameter
+on or before a particular \code{report_date}. Right now, the only parameter with
+report date-specific estimates is \code{right_truncation}. Note that this
+is similar to, but different from \code{as_of_date}. The \code{report_date} is used
+to select the particular value of a time-varying estimate. This estimate
+may itself be regenerated over time (e.g., as new data becomes available or
+with a methodological update). We can pull the estimate for date
+\code{report_date} as generated on date \code{as_of_date}.}
 }
 \value{
 A named list with three PMFs. The list elements are named
