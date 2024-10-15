@@ -114,6 +114,41 @@ The project has multiple GitHub Actions workflows to automate the CI/CD process.
 
 Both container tags and pool ids are based on the branch name, making it compatible to having multiple pipelines running simultaneously.
 
+
+```mermaid
+flowchart LR
+
+  START((Start))---DEPS_CACHED
+
+  DEPS_CACHED{Deps<br>cached?}---|No|DEPS
+  DEPS_CACHED---|Yes|IMG
+
+  subgraph DEPS[Job01-build_image_dependencies]
+    direction TB
+    Dockerfile-dependencies---|Generates|DEPS_IMAGE[Dependencies<br>Image]
+  end
+
+  DEPS---IMG
+
+  subgraph IMG[_01_build-model-image]
+    direction TB
+    Dockerfile---|Generates|PKG_IMG[Package<br>Image]
+  end
+
+  IMG---POOL
+
+  subgraph POOL[_02_create-batch-pool-and-submit-jobs]
+    direction TB
+
+    POOL_EXISTS{Is the pool<br>up?}
+    POOL_EXISTS---|No|CREATE_POOL[Create the pool]
+    POOL_EXISTS---|Yes|DELETE_POOL{Commit includes<br>'delete pool'}
+    DELETE_POOL---END_POOL((End))
+    CREATE_POOL---END_POOL
+
+  end
+```
+
 ## Project Admin
 
 - @zsusswein
