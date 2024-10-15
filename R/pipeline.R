@@ -19,17 +19,16 @@ run_pipeline <- function(config_path,
     "tasks",
     config[["task_id"]]
   )
-  stdout_log <- file(file.path(logfile_path, "stdout.txt"), open = "wt")
-  stderr_log <- file(file.path(logfile_path, "stderr.txt"), open = "wt")
+  logfile_connection <- file(file.path(logfile_path, "logs.txt"), open = "wt")
   sink(
-    stdout_log,
+    logfile_connection,
     type = "output",
     append = TRUE,
     # Send output to logs and to console
     split = TRUE
   )
   sink(
-    stdout_log,
+    logfile_connection,
     type = "message",
     append = TRUE
   )
@@ -49,6 +48,8 @@ run_pipeline <- function(config_path,
   if (!rlang::is_null(config[["exclusions"]][["path"]])) {
     exclusions_df <- read_exclusions(config[["exclusions"]][["path"]])
     cases_df <- apply_exclusions(cases_df, exclusions_df)
+  } else {
+    cli::cli_alert("No exclusions file provided. Skipping exclusions")
   }
 
   params <- read_disease_parameters(
@@ -106,11 +107,12 @@ run_pipeline <- function(config_path,
     output_dir = output_dir,
     job_id = config[["job_id"]],
     task_id = config[["task_id"]],
+    # TODO: metadata
     metadata = list()
   )
 
 
-  # End logging. One for stdout and one for stderr.
-  sink(file = NULL)
+  cli::cli_alert_info("Finishing run at {Sys.time()}")
+  # End logging
   sink(file = NULL)
 }

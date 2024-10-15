@@ -75,7 +75,16 @@ fit_model <- function(
         rt = rt,
         gp = gp,
         stan = stan,
-        verbose = interactive()
+        verbose = TRUE,
+        # Dump logs to console to be caught by pipeline's logging instead of
+        # EpiNow2's default through futile.logger
+        logs = EpiNow2::setup_logging(
+          threshold = "INFO",
+          file = NULL,
+          mirror_to_console = TRUE,
+          name = "EpiNow2"
+        ),
+        filter_leading_zeros = FALSE,
       )
     }),
     # Downgrade model erroring out to a warning so we can catch and return
