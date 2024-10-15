@@ -24,3 +24,5 @@
 * Specify number of samples draws with `iter_sampling`
 * Fix NOTE from missing variable name used with NSE
 * Read from new parameters schema
+* Fix bugs in parameter reading from local test run
+* Fix bugs in parameter reading from local test run
