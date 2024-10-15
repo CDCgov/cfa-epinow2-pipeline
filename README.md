@@ -102,6 +102,18 @@ We can get 3 of these 4 quantities pre-generated from the returned EpiNow2 Stan 
 
 We also save the $R_t$ estimate at time $t$ and the intrinsic growth rate at time $t$.
 
+## Automation
+
+The project has multiple GitHub Actions workflows to automate the CI/CD process. Notably, the [`1_pre-Test-Model-Image-Build.yaml`](.github/workflows/1_pre-Test-Model-Image-Build.yaml) workflow executes jobs using a self-hosted runner, and serves as an entry point for starting the pipeline. The workflow has the following three jobs:
+
+- `Job01-build_image_dependencies`: Creates a container image with all the dependencies required to build the R package. This job is cached to speed up the process, so it only updates the image if the [`Dockerfile-dependencies`](Dockerfile-dependencies) or the [`DESCRIPTION`](DESCRIPTION) file changes. The image is pushed to the Azure container registry: `cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:[branch name]`.
+
+- `_01_build-model-image`: Using the previous image as a base, this job installs the R package and pushes the image to the Azure container registry: `cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:[branch name]`.
+
+- `_02_create-batch-pool-and-submit-jobs`: This final job creates a new Azure batch pool with id `cfa-epinow2-pool-[branch name]` if it doesn't already exist. Additionally, if the commit message contains the string "`[delete pool]`", the pool is deleted.
+
+Both container tags and pool ids are based on the branch name, making it compatible to having multiple pipelines running simultaneously.
+
 ## Project Admin
 
 - @zsusswein
