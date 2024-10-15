@@ -15,3 +15,12 @@ push:
 
 run:
 	$(CNTR_PROG) run -it --rm -v $(PWD):/mnt $(IMAGE_NAME)
+
+test:
+	Rscript -e "testthat::test_local()"
+
+document:
+	Rscript -e "roxygen2::roxygenize()"
+
+check:
+	Rscript -e "rcmdcheck::rcmdcheck()"

@@ -53,7 +53,7 @@ fit_model <- function(
     # and below as the R PRNG seed for EpiNow2 initialization
     seed = seed,
     warmup = sampler_opts[["iter_warmup"]],
-    samples = sampler_opts[["iter_samples"]],
+    samples = sampler_opts[["iter_sampling"]],
     control = list(
       adapt_delta = sampler_opts[["adapt_delta"]],
       max_treedepth = sampler_opts[["max_treedepth"]]
