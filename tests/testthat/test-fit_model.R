@@ -178,12 +178,11 @@ test_that("Right truncation longer than data throws error", {
   data <- data.frame(x = c(1, 2))
   right_truncation_pmf <- c(0.1, 0.2, 0.7)
 
-  expect_error(
+  expect_snapshot_warning(
     format_right_truncation(
       right_truncation_pmf,
       data
-    ),
-    class = "right_trunc_too_long"
+    )
   )
 })
 
