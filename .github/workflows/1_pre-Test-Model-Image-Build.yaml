@@ -19,14 +19,31 @@ jobs:
 
   Job01-build_image_dependencies:
     runs-on: cfa-cdcgov # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
+    name: Build dependencies image
 
     outputs:
       tag: ${{ steps.image-tag.outputs.tag }}
+      commit-msg: ${{ steps.commit-message.outputs.message }}
 
     steps:
+
+      #########################################################################
+      # Retrieving the commit message
+      # We need to ensure we are checking out the commit sha that triggered the
+      # workflow, not the PR's head sha. This is because the PR's head sha may
+      # be a merge commit, which will not have the commit message we need.
+      #########################################################################
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Getting the commit message
+        id: commit-message
+        run: echo "message=$(git log -1 --pretty=%s HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Checking out the latest (may be merge if PR)
+        uses: actions/checkout@v4
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
@@ -34,6 +51,10 @@ jobs:
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: branch-name
 
+      #########################################################################
+      # Getting the tag
+      # The tag will be used for both the docker image and the batch pool
+      #########################################################################
       - name: Figure out tag (either latest if it is main or the branch name)
         id: image-tag
         run: |
@@ -70,11 +91,15 @@ jobs:
           file: ./Dockerfile-dependencies
 
   _01_build-model-image:
+
+    name: Build pipeline image
+
     needs: Job01-build_image_dependencies
     runs-on: cfa-cdcgov
 
     outputs:
       tag: ${{ needs.Job01-build_image_dependencies.outputs.tag }}
+      commit-msg: ${{ needs.Job01-build_image_dependencies.outputs.commit-msg }}
 
     steps:
 
@@ -97,6 +122,8 @@ jobs:
             TAG=${{ needs.Job01-build_image_dependencies.outputs.tag }}
 
   _02_create-batch-pool-and-submit-jobs:
+
+    name: Create Batch Pool and Submit Jobs
     runs-on: cfa-cdcgov
     needs: _01_build-model-image
 
@@ -106,6 +133,16 @@ jobs:
 
     env:
       TAG: ${{ needs._01_build-model-image.outputs.tag }}
+      COMMIT_MSG: ${{ needs._01_build-model-image.outputs.commit-msg }}
+      # Every Azure Batch Pool parameter can simply go here,
+      # no python module or config toml necessary
+      POOL_ID: "cfa-epinow2-${{ needs._01_build-model-image.outputs.tag }}"
+      BATCH_ACCOUNT:     "cfaprdba"
+      BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
+      VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
+      NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
+      VM_SIZE:           "standard_a4m_v2"
+      RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
 
     steps:
       - name: Checkout Repo
@@ -119,36 +156,65 @@ jobs:
         # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
           creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
+      #########################################################################
+      # Checking if the pool exists
+      # This is done via az batch pool list. If there is no pool matching the
+      # pool id (which is a function of the tag, i.e., branch name), then we
+      # pool-exists will be ''.
+      #########################################################################
+      - name: Check if pool exists
+        id: check_pool_id
+        run: |
+
+          az batch account login \
+            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
+            --name "${{ env.BATCH_ACCOUNT }}"
+
+          az batch pool list \
+            --output tsv \
+            --filter "(id eq '${{ env.POOL_ID }}')" \
+            --query "[].[id, allocationState, creationTime]" > \
+            pool-list-${{ github.sha }}
+
+          echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
+            $GITHUB_OUTPUT
+
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
 
-        # Every Azure Batch Pool parameter can simply go here,
-        # no python module or config toml necessary
-        env:
-          POOL_ID:           "cfa-epinow2-${{ env.TAG }}"
-          BATCH_ACCOUNT:     "cfaprdba"
-          BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
-          VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
-          NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
-          VM_SIZE:           "standard_a4m_v2"
-          RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
+        # This is a conditional step that will only run if the pool does not
+        # exist
+        if: ${{ steps.check_pool_id.outputs.pool-exists == '' }}
 
         # The call to the az cli that actually generates the pool
         run: |
           az batch account login \
-          --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-          --name "${{ env.BATCH_ACCOUNT }}" \
+            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
+            --name "${{ env.BATCH_ACCOUNT }}"
 
           az batch pool create \
-          --account-endpoint "${{ env.BATCH_ENDPOINT }}" \
-          --id "${{ env.POOL_ID }}" \
-          --image "${{ env.VM_IMAGE_TAG }}" \
-          --node-agent-sku-id "${{ env.NODE_AGENT_SKU_ID }}" \
-          --vm-size "${{ env.VM_SIZE }}" \
+            --account-endpoint "${{ env.BATCH_ENDPOINT }}" \
+            --id "${{ env.POOL_ID }}" \
+            --image "${{ env.VM_IMAGE_TAG }}" \
+            --node-agent-sku-id "${{ env.NODE_AGENT_SKU_ID }}" \
+            --vm-size "${{ env.VM_SIZE }}"
 
           az batch pool autoscale enable \
-          --pool-id ${{ env.POOL_ID }} \
-          --auto-scale-formula "$(cat './batch-autoscale-formula.txt')"
+            --pool-id ${{ env.POOL_ID }} \
+            --auto-scale-formula "$(cat './batch-autoscale-formula.txt')"
 
-          # Let's get this POOL_ID var for the next step too
-          echo "POOL_ID=${{ env.POOL_ID}}" >> $GITHUB_ENV
+
+      #########################################################################
+      # Deleting the pool only if (a) it exists and (b) the commit message
+      # contains '[delete pool]'.
+      #########################################################################
+      - name: Delete the pool
+        if: ${{ (steps.check_pool_id.outputs.pool-exists != '' || steps.create_batch_pool.outputs.pool-created == 'yes' ) && contains( env.COMMIT_MSG, '[delete pool]' )}}
+        run: |
+          az batch account login \
+            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
+            --name "${{ env.BATCH_ACCOUNT }}"
+
+          az batch pool delete \
+            --pool-id ${{ env.POOL_ID }} \
+            --yes
