@@ -15,7 +15,7 @@ fetch_config(
 \arguments{
 \item{config_path}{The path to the config file, either in the local
 filesystem or with an Azure Blob Storage container. If
-\code{blob_storage_container} is specified, the the path is assumed to be within
+\code{blob_storage_container} is specified, the path is assumed to be within
 the specified container otherwise it is assumed to be in the local
 filesystem.}
 
@@ -37,7 +37,7 @@ This step is the first part of the modeling pipeline. It looks to Azure Blob
 and downloads the Rt model run's config to the local config (if
 \code{blob_storage_container} is specified), reads the config in from the
 filesystem, and validates that it matches expectations. If any of these steps
-fails, the pipeline fails with an informative error message. Note, however,
+fail, the pipeline fails with an informative error message. Note, however,
 that a failure in this initial step suggests that something fundamental is
 misspecified and the logs will likely not be preserved in a Blob Container if
 running in Azure.

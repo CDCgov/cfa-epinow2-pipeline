@@ -6,6 +6,11 @@
 * Added Docker image with all the requirements to build the package.
 * Bump pre-commit hooks
 * Fix bug in warning message for incomplete data read (h/t @damonbayer)
+* Merges workflows 1 and 2 into a single workflow.
+* Now uses CFA Azure ACR and images in the workflows and Dockerfiles, etc.
+* Added Docker image with all the requirements to build the package.
+* Bump pre-commit hooks
+* Fix bug in warning message for incomplete data read (h/t @damonbayer)
 * Fit EpiNow2 model using params and fixed seed
 * Removed `.vscode` folder from repo
 * Read and apply exclusions to case data
@@ -25,3 +30,9 @@
 * Write outputs to file
 * Specify number of samples draws with `iter_sampling`
 * Fix NOTE from missing variable name used with NSE
+* Fix bugs in date casting caused by DuckDB v1.1.1 release
+* Drop unused pre-commit hooks
+* Write outputs to file
+* Specify number of samples draws with `iter_sampling`
+* Fix NOTE from missing variable name used with NSE
+* Read from new parameters schema
