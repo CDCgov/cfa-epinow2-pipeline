@@ -183,7 +183,7 @@ extract_draws_from_fit <- function(fit) {
   # use NSE, so giving these a global binding. The standard dplyr hacks
   # (str2lang, .data prefix) didn't work here because it's not dplyr and we're
   # not accessing a dataframe.
-  imputed_reports <- obs_reports <- R <- r <- time <- NULL # nolint
+  imputed_reports <- obs_reports <- R <- r <- time <- reports <- NULL # nolint
   stan_draws <- tidybayes::gather_draws(
     stanfit,
     reports[time],

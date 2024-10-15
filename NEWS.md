@@ -22,3 +22,4 @@
 * Drop unused pre-commit hooks
 * Write outputs to file
 * Specify number of samples draws with `iter_sampling`
+* Fix NOTE from missing variable name used with NSE
