@@ -1,0 +1,32 @@
+
+{
+    "as_of_date": "2023-01-01",
+    "geo_value": "test",
+    "geo_type": "test",
+    "report_date": [
+        "01-01"
+    ],
+    "reference_date": [
+        "2023-01-01",
+        "2022-12-30",
+        "2022-12-29"
+    ],
+    "seed": "abc",
+    "horizon": 14,
+    "priors": {
+        "rt": {
+            "mean": 1.0,
+            "sd": 0.2
+        },
+        "gp": {
+            "alpha_sd": 0.01
+        }
+    },
+    "sampler_opts": {
+        "cores": 4,
+        "chains": 4,
+        "adapt_delta": 0.99,
+        "max_treedepth": 12,
+        "not_a_parameter": -12
+    }
+}

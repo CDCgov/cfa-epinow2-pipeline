@@ -1,6 +1,5 @@
 write_sample_parameters_file <- function(value,
                                          path,
-                                         state,
                                          param,
                                          disease,
                                          parameter,

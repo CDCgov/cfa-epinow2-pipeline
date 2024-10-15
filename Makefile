@@ -21,6 +21,8 @@ test:
 
 document:
 	Rscript -e "roxygen2::roxygenize()"
+	git add NAMESPACE
+	git add man/
 
 check:
 	Rscript -e "rcmdcheck::rcmdcheck()"

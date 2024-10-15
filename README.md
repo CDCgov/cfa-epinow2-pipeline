@@ -37,6 +37,231 @@ This package implements functions for:
 1. **Logging**: Steps in the pipeline have comprehensive R-style logging, with the the [cli](https://github.com/r-lib/cli) package
 1. **Metadata**: Extract comprehensive metadata on the model run and store alongside outputs
 
+## Configuration Specification
+
+This section provides a detailed description of the configuration parameters used in the application.
+They should be provided to the pipeline in JSON format, with all keys below _required_.
+
+### Overview
+
+The configuration is represented in JSON format as follows:
+
+```json
+{
+    "job_id": "6183da58-89bc-455f-8562-4f607257a876",
+    "task_id": "bc0c3eb3-7158-4631-a2a9-86b97357f97e",
+    "as_of_date": "2023-01-01",
+    "disease": "test",
+    "geo_value": ["test"],
+    "geo_type": "test",
+    "parameters": {
+       "path": "data/parameters.parquet",
+       "blob_storage_container": null
+    },
+    "data": {
+        "path": "gold/",
+        "blob_storage_container": null,
+        "report_date": [
+            "2023-01-01"
+        ],
+        "reference_date": [
+            "2023-01-01",
+            "2022-12-30",
+            "2022-12-29"
+        ]
+    },
+    "seed": 42,
+    "horizon": 14,
+    "priors": {
+        "rt": {
+            "mean": 1.0,
+            "sd": 0.2
+        },
+        "gp": {
+            "alpha_sd": 0.01
+        }
+    },
+    "sampler_opts": {
+        "cores": 4,
+        "chains": 4,
+        "adapt_delta": 0.99,
+        "max_treedepth": 12
+    }
+}
+```
+
+### Parameter Descriptions
+
+#### `job_id`
+
+- **Type**: `String`
+- **Description**: A unique identifier for the job.
+
+#### `task_id`
+
+- **Type**: `String`
+- **Description**: A unique identifier for the task within the job. See [Azure Batch for documentation](https://learn.microsoft.com/en-us/azure/batch/jobs-and-tasks) of the task vs. job abstraction.
+
+#### `as_of_date`
+
+- **Type**: `String` (Date in `YYYY-MM-DD` format)
+- **Description**: Use the parameters that were used in production on this date. Set for the current date for the most up-to-to date version of the parameters and set to an earlier date to use parameters from an earlier time period.
+
+#### `disease`
+
+- **Type**: `String`
+- **Description**: The name of the disease being modeled. One of `COVID-19`, `Influenza`, or `test`.
+
+#### `geo_value`
+
+- **Type**: `Array[String]`
+- **Description**: A [FIPS Alpha code](https://en.wikipedia.org/wiki/Federal_Information_Processing_Standard_state_code) identifying a state or territory. This code is the standard uppercase two-letter state abbreviation. It can also be `US` for an aggregate national estimate.
+
+#### `geo_type`
+
+- **Type**: `String`
+- **Description**: The type of geographical area (e.g., `"state"`, `"county"`).
+
+#### `parameters`
+
+An object containing paths to parameter files.
+
+- **`path`**
+  - **Type**: `String`
+  - **Description**: File path to the parameters file in Parquet format.
+- **`blob_storage_container`**
+  - **Type**: `String` or `null`
+  - **Description**: Name of the blob storage container, if applicable.
+
+#### `data`
+
+An object containing data paths and dates.
+
+- **`path`**
+  - **Type**: `String`
+  - **Description**: Directory path to the data files.
+- **`blob_storage_container`**
+  - **Type**: `String` or `null`
+  - **Description**: Name of the blob storage container, if applicable.
+- **`report_date`**
+  - **Type**: `Array[String]` (Dates in `YYYY-MM-DD` format)
+  - **Description**: List of report dates to include.
+- **`reference_date`**
+  - **Type**: `Array[String]` (Dates in `YYYY-MM-DD` format)
+  - **Description**: List of reference dates to include.
+
+#### `seed`
+
+- **Type**: `Integer`
+- **Description**: Random seed for reproducibility.
+
+#### `horizon`
+
+- **Type**: `Integer`
+- **Description**: Forecast horizon in days. Must be a natural number.
+
+#### `priors`
+
+An object specifying prior distributions for model parameters. See the [EpiNow2](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html) model definition for more information.
+
+- **`rt`**: Prior settings for the reproduction number \( R_t \).
+  - **`mean`**
+    - **Type**: `Float`
+    - **Description**: Mean of the prior distribution for \( R_t \).
+  - **`sd`**
+    - **Type**: `Float`
+    - **Description**: Standard deviation of the prior distribution for \( R_t \).
+- **`gp`**: Prior settings for the latent Gaussian process of Rt.
+  - **`alpha_sd`**
+    - **Type**: `Float`
+    - **Description**: Standard deviation for the alpha parameter in the Gaussian process. A larger standard deviation implies more wiggliness in the Rt estimate.
+
+#### `sampler_opts`
+
+An object containing options for the Stan HMC algorithm.
+
+- **`cores`**
+  - **Type**: `Integer`
+  - **Description**: Number of CPU cores to utilize.
+- **`chains`**
+  - **Type**: `Integer`
+  - **Description**: Number of Markov chains to run. Should be greater than or equal to the number of cores.
+- **`adapt_delta`**
+  - **Type**: `Float`
+  - **Description**: Target acceptance probability for the sampler's adaptation phase.
+- **`max_treedepth`**
+  - **Type**: `Integer`
+  - **Description**: Log of the number of evaluations allowed before termination for non-convergence.
+
+---
+
+**Note**: All date strings should follow the `YYYY-MM-DD` format to ensure consistency and proper parsing.
+
+## Output format
+
+The end goals of this package is to standardize the raw outputs from EpiNow2 into samples and summaries tables, and to write those standardized outputs, along with relevant metadata, logs, etc. to a standard directory structure. Once in CFA's standard format, the outputs can be passed into a separate pipeline that handles post-processing (e.g. plotting, scoring, analysis) of Rt estimates from several different Rt estimation models.
+
+### Directories
+
+The nested partitioning structure of the outputs is designed to facilitate both automated processes and manual investigation: files are organized by job and task IDs, allowing for efficient file operations using glob patterns, while also maintaining a clear hierarchy that aids human users in navigating to specific results or logs. Files meant primarily for machine-readable consumption (i.e., draws, summaries, diagnostics) are structured together to make globbing easier. Files meant primarily for human investigation (i.e., logs, model fit object) are grouped together by task to facilitate manual workflows.
+In this workflow, task IDs correspond to location specific model runs (which are independent of one another) and the jobid refers to a unique model run and disease. For example, a production job should contain task IDs for each of the 50 states and the US, but a job submitted for testing or experimentation might contain a smaller number of tasks/locations.
+
+```bash
+<output>/
+├── job_<job_id>/
+│   ├── raw_samples/
+│   │   ├── samples_<task_id>.parquet
+│   ├── summarized_quantiles/
+│   │   ├── summarized_<task_id>.parquet
+│   ├── diagnostics/
+│   │   ├── diagnostics_<task_id>.parquet
+│   ├── tasks/
+│   │   ├── task_<task_id>/
+│   │   │   ├── model.rds
+│   │   │   ├── metadata.json
+│   │   │   ├── stdout.log
+│   │   │   └── stderr.log
+│   ├── job_metadata.json
+```
+
+`<output>/`: The base output directory. This could, for example, be `/` in a Docker container or dedicated output directory.
+- `job_<job_id>/`: A directory named after the specific job identifier, containing all outputs related to that job. All tasks within a job share this same top-level directory.
+  - `raw_samples/`: A subdirectory within each job folder that holds the raw sample files from all tasks in the job. Task-specific *draws* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+    - `samples_<task_id>.parquet`: A file containing raw samples from the model, associated with a particular task identifier. This file has columns `job_id`, `task_id`, `geo_value`, `disease`, `model`, `_draw`, `_chain`, `_iteration`, `_variable`, `value`, and `reference_date`. These variables follow the [{tidybayes}](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
+  - `summarized_quantiles/`: A subdirectory for storing summarized quantile data. Task-specific *summarized* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+    - `summarized_<task_id>.parquet`: A file with summarized quantiles relevant to a specific task identifier.  This file has columns `job_id`, `task_id`, `geo_value`, `disease`, `model`, `value`, `_lower`, `_upper`, `_width`, `_point`, `_interval`, and `reference_date`. These variables follow the [{tidybayes}](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
+  - `diagnostics/`: A subdirectory for storing model fit diagnostics. Task-specific *diagnostic* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+    - `diagnostic_<task_id>.parquet`: A file with diagnostics relevant to a specific task identifier.  This file has columns `diagnostic`, `value`, `job_id`, `task_id`, `geo_value`, `disease`, and `model`.
+  - `tasks/`: This directory contains subdirectories for each task within a job. These are files that are less likely to require globbing from the data lake than manual investigation, so are stored togehter.
+    - `task_<task_id>/`: Each task has its own folder identified by the task ID, which includes several files:
+      - `model.rds`: An RDS file storing the EpiNow2 model object fit to the data.
+      - `metadata.json`: A JSON file containing additional metadata about the model run for this task.
+      - `stdout.log`: A log file capturing standard output from the model run process.
+      - `stderr.log`: A log file capturing standard error output from the model run process.
+- `job_metadata.json`: A JSON file located in the root of each job's directory, providing metadata about the entire job.
+
+### Model-estimated quantities
+
+EpiNow2 estimates the incident cases $\hat y_{td}$ for timepoint $t \in \{1, ..., T\}$ and delay $d \in \{1, ..., D\}$ where $D \le T$. In the single vintage we're providing to EpiNow2, the delay $d$ moves inversely to timepoints, so $d = T - t + 1$.
+
+The observed data vector of length $T$ is $y_{td} \in W$. We supply a nowcasting correction PMF $\nu$ for the last $D$ timepoints where $\nu_d \in [0, 1],$ and $\sum_{d=1}^D\nu_d = 1$. We also have some priors $\Theta$.
+
+We use EpiNow2's generative model $f(y, \nu, \Theta)$.
+
+EpiNow2 is a forward model that produces an expected nowcasted case count for each $t$ and $d$ pair: $\hat \gamma_{td}$.
+ It applies the nowcasting correction $\nu$ to the last $D$ timepoints of $\hat \gamma$ to produce the expected right-truncated case count $\hat y$. Note that these _expected_ case counts (with and without right-truncation) don't have observation noise included.
+
+We can apply negative binomial observation noise using EpiNow2's estimate of the negative binomial overdispersion parameter $\hat \phi$ and the expected case counts. The posterior predictive distributions of nowcasted case counts is $\tilde \gamma \sim \text{NB}(\hat \gamma, \hat \phi)$. The posterior predicted right-truncated case count is $\tilde y \sim \text{NB}(\hat y, \hat \phi)$.
+
+We can get 3 of these 4 quantities pre-generated from the returned EpiNow2 Stan model:
+
+- $\hat \gamma$: The expected nowcasted case count is `reports[t]`
+- $\hat y$: The expected right-truncated case count is `obs_reports[t]`
+- $\tilde \gamma$: The posterior-predicted nowcasted case count is `imputed_reports[t]`
+- $\tilde y$: The posterior-predicted right-truncated case count isn't returned by EpiNow2.
+
+We also save the $R_t$ estimate at time $t$ and the intrinsic growth rate at time $t$.
+
 ## Output format
 
 The end goals of this package is to standardize the raw outputs from EpiNow2 into samples and summaries tables, and to write those standardized outputs, along with relevant metadata, logs, etc. to a standard directory structure. Once in CFA's standard format, the outputs can be passed into a separate pipeline that handles post-processing (e.g. plotting, scoring, analysis) of Rt estimates from several different Rt estimation models.

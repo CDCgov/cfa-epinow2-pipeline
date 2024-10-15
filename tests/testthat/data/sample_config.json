@@ -1,0 +1,41 @@
+{
+    "job_id": "6183da58-89bc-455f-8562-4f607257a876",
+    "task_id": "bc0c3eb3-7158-4631-a2a9-86b97357f97e",
+    "as_of_date": "2023-01-01",
+    "disease": "test",
+    "geo_value": ["test"],
+    "geo_type": "test",
+    "parameters": {
+       "path": "data/parameters.parquet",
+       "blob_storage_container": null
+    },
+    "data": {
+        "path": "gold/",
+        "blob_storage_container": null,
+        "report_date": [
+            "2023-01-01"
+        ],
+        "reference_date": [
+        "2023-01-01",
+        "2022-12-30",
+        "2022-12-29"
+        ]
+    },
+    "seed": 42,
+    "horizon": 14,
+    "priors": {
+        "rt": {
+            "mean": 1.0,
+            "sd": 0.2
+        },
+        "gp": {
+            "alpha_sd": 0.01
+        }
+    },
+    "sampler_opts": {
+        "cores": 4,
+        "chains": 4,
+        "adapt_delta": 0.99,
+        "max_treedepth": 12
+    }
+}

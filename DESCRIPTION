@@ -33,6 +33,7 @@ Imports:
     duckdb,
     EpiNow2 (>= 1.4.0),
     jsonlite,
+    jsonvalidate,
     rlang,
     rstan,
     tidybayes
