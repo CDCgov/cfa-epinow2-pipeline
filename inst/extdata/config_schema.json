@@ -39,7 +39,7 @@
                 "seed": {
                     "type": "integer"
                 },
-                "horizon": {
+                "horizon_days": {
                     "type": "integer"
                 },
                 "priors": {
