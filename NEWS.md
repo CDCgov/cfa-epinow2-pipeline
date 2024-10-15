@@ -23,3 +23,8 @@
 * Fix bugs in date casting caused by DuckDB v1.1.1 release
 * Drop unused pre-commit hooks
 * Write outputs to file
+* Specify number of samples draws with `iter_sampling`
+* Fix NOTE from missing variable name used with NSE
+* Read from new parameters schema
+* Fix bugs in parameter reading from local test run
+* Fix bugs in parameter reading from local test run

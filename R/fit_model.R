@@ -53,7 +53,7 @@ fit_model <- function(
     # and below as the R PRNG seed for EpiNow2 initialization
     seed = seed,
     warmup = sampler_opts[["iter_warmup"]],
-    samples = sampler_opts[["iter_samples"]],
+    samples = sampler_opts[["iter_sampling"]],
     control = list(
       adapt_delta = sampler_opts[["adapt_delta"]],
       max_treedepth = sampler_opts[["max_treedepth"]]
@@ -160,15 +160,24 @@ format_right_truncation <- function(pmf, data) {
     # silently removed if length of the PMF was longer than the data,
     # effectively eliminating the right-truncation correction
 
-    cli::cli_abort(
+    trunc_len <- nrow(data)
+    cli::cli_warn(
       c(
+        "Removing right-truncation PMF elements after {.val {trunc_len}}",
         "Right truncation PMF longer than the data",
         "PMF length: {.val {length(pmf)}}",
         "Data length: {.val {nrow(data)}}",
-        "PMF can only be up to length as the data"
+        "PMF can only be up to the length of the data"
       ),
       class = "right_trunc_too_long"
     )
+    suppressWarnings({
+      EpiNow2::trunc_opts(
+        dist = EpiNow2::dist_spec(
+          pmf = pmf[seq_len(trunc_len)]
+        )
+      )
+    })
   } else {
     suppressWarnings({
       EpiNow2::trunc_opts(

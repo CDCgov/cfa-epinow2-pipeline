@@ -9,8 +9,17 @@
 #'   date. Set for the current date for the most up-to-to date version of the
 #'   parameters and set to an earlier date to use parameters from an earlier
 #'   time period.
-#' @param group Used only for parameters with a state-level estimate (i.e., only
-#'   right-truncation). The two-letter uppercase state abbreviation.
+#' @param group An optional parameter to subset the query to a parameter with a
+#'   particular two-letter state abbrevation. Right now, the only parameter with
+#'   state-specific estimates is `right_truncation`.
+#' @param report_date An optional parameter to subset the query to a parameter
+#'   on or before a particular `report_date`. Right now, the only parameter with
+#'   report date-specific estimates is `right_truncation`. Note that this
+#'   is similar to, but different from `as_of_date`. The `report_date` is used
+#'   to select the particular value of a time-varying estimate. This estimate
+#'   may itself be regenerated over time (e.g., as new data becomes available or
+#'   with a methodological update). We can pull the estimate for date
+#'   `report_date` as generated on date `as_of_date`.
 #'
 #' @return A named list with three PMFs. The list elements are named
 #'   `generation_interval`, `delay_interval`, and `right_truncation`. If a path
@@ -27,7 +36,8 @@ read_disease_parameters <- function(
     right_truncation_path,
     disease,
     as_of_date,
-    group) {
+    group,
+    report_date) {
   generation_interval <- read_interval_pmf(
     path = generation_interval_path,
     disease = disease,
@@ -55,7 +65,8 @@ read_disease_parameters <- function(
       disease = disease,
       as_of_date = as_of_date,
       parameter = "right_truncation",
-      group = group
+      group = group,
+      report_date = report_date
     )
   } else {
     cli::cli_alert_warning(
@@ -99,12 +110,8 @@ path_is_specified <- function(path) {
 #' https://en.wikipedia.org/wiki/Slowly_changing_dimension#Type_2:_add_new_row
 #'
 #' @param path A path to a local file
-#' @param disease One of "COVID-19" or "Influenza"
-#' @param as_of_date The parameters "as of" the date of the model run
 #' @param parameter One of "generation interval", "delay", or "right-truncation
-#' @param group An optional parameter to subset the query to a parameter with a
-#'   particular two-letter state abbrevation. Right now, the only parameter with
-#'   state-specific estimates is `right-truncation`.
+#' @inheritParams read_disease_parameters
 #'
 #' @return A PMF vector
 #' @export
@@ -116,14 +123,15 @@ read_interval_pmf <- function(path,
                                 "delay",
                                 "right_truncation"
                               ),
-                              group = NA) {
+                              group = NA,
+                              report_date = NA) {
   ###################
   # Validate input
   rlang::arg_match(parameter)
   rlang::arg_match(disease)
 
   as_of_date <- stringify_date(as_of_date)
-  cli::cli_alert_info("Reading {.arg right_truncation} from {.path {path}}")
+  cli::cli_alert_info("Reading {.arg {parameter}} from {.path {path}}")
   if (!file.exists(path)) {
     cli::cli_abort("File {.path {path}} does not exist",
       class = "file_not_found"
@@ -135,7 +143,7 @@ read_interval_pmf <- function(path,
   # Prepare query
 
   query <- "
-    SELECT value
+    SELECT value, reference_date
     FROM read_parquet(?)
     WHERE 1=1
       AND parameter = ?
@@ -154,10 +162,19 @@ read_interval_pmf <- function(path,
   # Handle state separately because can't use `=` for NULL comparison and
   # DBI::dbBind() can't parameterize a query after IS
   if (rlang::is_na(group) || rlang::is_null(group)) {
-    query <- paste(query, "AND geo_value IS NULL;")
+    query <- paste(query, "AND geo_value IS NULL")
   } else {
     query <- paste(query, "AND geo_value = ?")
     parameters <- c(parameters, list(group))
+  }
+  if (parameter == "right_truncation") {
+    query <- paste(query, "AND (
+                             reference_date <= ? :: DATE
+                             OR reference_date IS NULL
+                           )
+                           ORDER BY reference_date DESC
+                           LIMIT 1")
+    parameters <- c(parameters, list(report_date))
   }
 
   ################
@@ -183,7 +200,41 @@ read_interval_pmf <- function(path,
   )
   DBI::dbDisconnect(con)
 
+  pmf <- check_returned_pmf(
+    pmf_df,
+    parameter,
+    disease,
+    as_of_date,
+    group,
+    report_date,
+    path
+  )
 
+  cli::cli_alert_success("{.arg {parameter}} loaded")
+
+  return(pmf)
+}
+
+#' Run validity checks on the PMF returned from the file
+#'
+#' We're treating this input as possibly invalid because it's from an
+#' external file. We're still updating the schema and process ands has
+#' been a frequent source of problems. We want to be alert to any
+#' unexpexted changes in schema or format.
+#'
+#' @param pmf_df A dataframe with columns `value` and `reference_date`.
+#' @inheritParams read_interval_pmf
+#'
+#' @return The unpacked `value` column, which is a valid PMF
+#' @noRd
+check_returned_pmf <- function(
+    pmf_df,
+    parameter,
+    disease,
+    as_of_date,
+    group,
+    report_date,
+    path) {
   ################
   # Validate loaded PMF
   if (nrow(pmf_df) != 1) {
@@ -200,6 +251,19 @@ read_interval_pmf <- function(path,
 
   pmf <- pmf_df[["value"]][[1]]
 
+  if (parameter == "right_truncation") {
+    right_trunc_date <- stringify_date(pmf_df[["reference_date"]][[1]])
+    if (rlang::is_null(right_trunc_date) || rlang::is_na(right_trunc_date)) {
+      right_trunc_date <- "NA"
+    }
+    max_ref_date <- stringify_date(report_date)
+    as_of_date <- stringify_date(as_of_date)
+    cli::cli_inform(c(
+      "Using right-truncation estimate for date {.val {right_trunc_date}}",
+      "Queried last available estimate from {.val {max_ref_date}} or earlier",
+      "Subject to parameters available as of {.val {as_of_date}}"
+    ))
+  }
   if ((length(pmf) < 1) || !rlang::is_bare_numeric(pmf)) {
     cli::cli_abort(
       c(
@@ -223,8 +287,6 @@ read_interval_pmf <- function(path,
       class = "invalid_pmf"
     )
   }
-
-  cli::cli_alert_success("{.arg {parameter}} loaded")
 
   return(pmf)
 }

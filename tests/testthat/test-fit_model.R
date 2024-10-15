@@ -39,7 +39,7 @@ test_that("Minimal model fit all params runs", {
     adapt_delta = 0.8,
     max_treedepth = 10,
     iter_warmup = 100,
-    iter_samples = 100
+    iter_sampling = 100
   )
 
   fit <- fit_model(
@@ -95,7 +95,7 @@ test_that("Minimal model fit with no right trunc or delay runs", {
     adapt_delta = 0.8,
     max_treedepth = 10,
     iter_warmup = 100,
-    iter_samples = 100
+    iter_sampling = 100
   )
 
   fit <- fit_model(
@@ -156,7 +156,7 @@ test_that("Bad params w/ failing fit issues warning and returns NA", {
     adapt_delta = 0.8,
     max_treedepth = 10,
     iter_warmup = -100,
-    iter_samples = 100
+    iter_sampling = 100
   )
 
   expect_warning(
@@ -178,12 +178,11 @@ test_that("Right truncation longer than data throws error", {
   data <- data.frame(x = c(1, 2))
   right_truncation_pmf <- c(0.1, 0.2, 0.7)
 
-  expect_error(
+  expect_snapshot_warning(
     format_right_truncation(
       right_truncation_pmf,
       data
-    ),
-    class = "right_trunc_too_long"
+    )
   )
 })
 
