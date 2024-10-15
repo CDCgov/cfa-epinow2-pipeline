@@ -44,7 +44,8 @@
 <span>  <span class="va">right_truncation_path</span>,</span>
 <span>  <span class="va">disease</span>,</span>
 <span>  <span class="va">as_of_date</span>,</span>
-<span>  <span class="va">group</span></span>
+<span>  <span class="va">group</span>,</span>
+<span>  <span class="va">report_date</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -70,8 +71,20 @@ time period.</p></dd>
 
 
 <dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
-<dd><p>Used only for parameters with a state-level estimate (i.e., only
-right-truncation). The two-letter uppercase state abbreviation.</p></dd>
+<dd><p>An optional parameter to subset the query to a parameter with a
+particular two-letter state abbrevation. Right now, the only parameter with
+state-specific estimates is <code>right_truncation</code>.</p></dd>
+
+
+<dt id="arg-report-date">report_date<a class="anchor" aria-label="anchor" href="#arg-report-date"></a></dt>
+<dd><p>An optional parameter to subset the query to a parameter
+on or before a particular <code>report_date</code>. Right now, the only parameter with
+report date-specific estimates is <code>right_truncation</code>. Note that this
+is similar to, but different from <code>as_of_date</code>. The <code>report_date</code> is used
+to select the particular value of a time-varying estimate. This estimate
+may itself be regenerated over time (e.g., as new data becomes available or
+with a methodological update). We can pull the estimate for date
+<code>report_date</code> as generated on date <code>as_of_date</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
