@@ -143,11 +143,11 @@
 <div class="section level2">
 <h2 id="automation">Automation<a class="anchor" aria-label="anchor" href="#automation"></a>
 </h2>
-<p>The project has multiple GitHub Actions workflows to automate the CI/CD process. Notably, the <a href=".github/workflows/1_pre-Test-Model-Image-Build.yaml"><code>1_pre-Test-Model-Image-Build.yaml</code></a> workflow executes jobs using a self-hosted runner, and serves as an entry point for starting the pipeline. The workflow has the following three jobs:</p>
+<p>The project has multiple GitHub Actions workflows to automate the CI/CD process. Notably, the <a href=".github/workflows/containers-and-az-pool.yaml"><code>containers-and-az-pool.yaml</code></a> workflow executes jobs using a self-hosted runner, and serves as an entry point for starting the pipeline. The workflow has the following three jobs:</p>
 <ul>
-<li><p><code>Job01-build_image_dependencies</code>: Creates a container image with all the dependencies required to build the R package. This job is cached to speed up the process, so it only updates the image if the <a href="Dockerfile-dependencies"><code>Dockerfile-dependencies</code></a> or the <a href="DESCRIPTION"><code>DESCRIPTION</code></a> file changes. The image is pushed to the Azure container registry: <code>cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:[branch name]</code>.</p></li>
-<li><p><code>_01_build-model-image</code>: Using the previous image as a base, this job installs the R package and pushes the image to the Azure container registry: <code>cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:[branch name]</code>.</p></li>
-<li><p><code>_02_create-batch-pool-and-submit-jobs</code>: This final job creates a new Azure batch pool with id <code>cfa-epinow2-pool-[branch name]</code> if it doesn’t already exist. Additionally, if the commit message contains the string “<code>[delete pool]</code>”, the pool is deleted.</p></li>
+<li><p><strong>Build dependencies image</strong> (<code>build-dependencies-image</code>): Creates a container image with all the dependencies required to build the R package. This job is cached to speed up the process, so it only updates the image if the <a href="Dockerfile-dependencies"><code>Dockerfile-dependencies</code></a> or the <a href="DESCRIPTION"><code>DESCRIPTION</code></a> file changes. The image is pushed to the Azure container registry: <code>cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:[branch name]</code>.</p></li>
+<li><p><strong>Build pipeline image</strong> (<code>build-pipeline-image</code>): Using the previous image as a base, this job installs the R package and pushes the image to the Azure container registry: <code>cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:[branch name]</code>.</p></li>
+<li><p><strong>Create Batch Pool and Submit Jobs</strong> (<code>batch-pool</code>): This final job creates a new Azure batch pool with id <code>cfa-epinow2-pool-[branch name]</code> if it doesn’t already exist. Additionally, if the commit message contains the string “<code>[delete pool]</code>”, the pool is deleted.</p></li>
 </ul>
 <p>Both container tags and pool ids are based on the branch name, making it compatible with having multiple pipelines running simultaneously.</p>
 <blockquote>
@@ -161,21 +161,21 @@ flowchart LR
   DEPS_CACHED{Deps&lt;br&gt;cached?}---|No|DEPS
   DEPS_CACHED---|Yes|IMG
 
-  subgraph DEPS[Job01-build_image_dependencies]
+  subgraph DEPS[Build dependencies image]
     direction TB
     Dockerfile-dependencies---|Generates|DEPS_IMAGE[Dependencies&lt;br&gt;Image]
   end
 
   DEPS---IMG
 
-  subgraph IMG[_01_build-model-image]
+  subgraph IMG[Build pipeline image]
     direction TB
     Dockerfile---|Generates|PKG_IMG[Package&lt;br&gt;Image]
   end
 
   IMG---POOL
 
-  subgraph POOL[_02_create-batch-pool-and-submit-jobs]
+  subgraph POOL[Create Batch Pool and Submit Jobs]
     direction TB
 
     POOL_EXISTS{Is the pool&lt;br&gt;up?}
