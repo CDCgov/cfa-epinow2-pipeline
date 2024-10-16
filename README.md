@@ -144,7 +144,7 @@ flowchart LR
 
     POOL_EXISTS{Is the pool<br>up?}
     POOL_EXISTS---|No|CREATE_POOL[Create the pool]
-    POOL_EXISTS---|Yes|DELETE_POOL{Commit includes<br>'delete pool'}
+    POOL_EXISTS---|Yes|DELETE_POOL{"`Does the commit message<br>include the tag<br>'_[delete pool]_'?`"}
     DELETE_POOL---END_POOL((End))
     CREATE_POOL---END_POOL
 
