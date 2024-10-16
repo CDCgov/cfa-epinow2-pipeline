@@ -112,7 +112,47 @@ The project has multiple GitHub Actions workflows to automate the CI/CD process.
 
 - `_02_create-batch-pool-and-submit-jobs`: This final job creates a new Azure batch pool with id `cfa-epinow2-pool-[branch name]` if it doesn't already exist. Additionally, if the commit message contains the string "`[delete pool]`", the pool is deleted.
 
-Both container tags and pool ids are based on the branch name, making it compatible to having multiple pipelines running simultaneously.
+Both container tags and pool ids are based on the branch name, making it compatible with having multiple pipelines running simultaneously.
+
+> [!IMPORTANT]
+> The CI will fail with branch names that are not valid tag names for containers. For more information, see the official Azure documentation [here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry).
+
+```mermaid
+
+flowchart LR
+
+  START((Start))---DEPS_CACHED
+
+  DEPS_CACHED{Deps<br>cached?}---|No|DEPS
+  DEPS_CACHED---|Yes|IMG
+
+  subgraph DEPS[Job01-build_image_dependencies]
+    direction TB
+    Dockerfile-dependencies---|Generates|DEPS_IMAGE[Dependencies<br>Image]
+  end
+
+  DEPS---IMG
+
+  subgraph IMG[_01_build-model-image]
+    direction TB
+    Dockerfile---|Generates|PKG_IMG[Package<br>Image]
+  end
+
+  IMG---POOL
+
+  subgraph POOL[_02_create-batch-pool-and-submit-jobs]
+    direction TB
+
+    POOL_EXISTS{Is the pool<br>up?}
+    POOL_EXISTS---|No|CREATE_POOL[Create the pool]
+    POOL_EXISTS---|Yes|SHOULD_DELETE_POOL{"`Does the commit message<br>include the phrase<br>'_[delete pool]_'?`"}
+    SHOULD_DELETE_POOL---|Yes|DELETE_POOL[Delete the pool]
+    SHOULD_DELETE_POOL---|No|END_POOL
+    DELETE_POOL---END_POOL((End))
+    CREATE_POOL---END_POOL
+
+  end
+```
 
 ## Project Admin
 
