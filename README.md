@@ -118,6 +118,7 @@ Both container tags and pool ids are based on the branch name, making it compati
 > The CI will fail with branch names that are not valid tag names for containers. For more information, see the official Azure documentation [here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry).
 
 ```mermaid
+
 flowchart LR
 
   START((Start))---DEPS_CACHED
@@ -144,7 +145,9 @@ flowchart LR
 
     POOL_EXISTS{Is the pool<br>up?}
     POOL_EXISTS---|No|CREATE_POOL[Create the pool]
-    POOL_EXISTS---|Yes|DELETE_POOL{"`Does the commit message<br>include the tag<br>'_[delete pool]_'?`"}
+    POOL_EXISTS---|Yes|SHOULD_DELETE_POOL{"`Does the commit message<br>include the phrase<br>'_[delete pool]_'?`"}
+    SHOULD_DELETE_POOL---|Yes|DELETE_POOL[Delete the pool]
+    SHOULD_DELETE_POOL---|No|END_POOL
     DELETE_POOL---END_POOL((End))
     CREATE_POOL---END_POOL
 
