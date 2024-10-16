@@ -6,8 +6,6 @@ on:
   workflow_dispatch:
 
 name: PR Commands
-run-name: (8) PR Commands - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
-
 
 jobs:
   document:

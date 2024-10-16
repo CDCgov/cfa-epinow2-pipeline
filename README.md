@@ -126,21 +126,21 @@ flowchart LR
   DEPS_CACHED{Deps<br>cached?}---|No|DEPS
   DEPS_CACHED---|Yes|IMG
 
-  subgraph DEPS[Job01-build_image_dependencies]
+  subgraph DEPS[Build dependencies image]
     direction TB
     Dockerfile-dependencies---|Generates|DEPS_IMAGE[Dependencies<br>Image]
   end
 
   DEPS---IMG
 
-  subgraph IMG[_01_build-model-image]
+  subgraph IMG[Build pipeline image]
     direction TB
     Dockerfile---|Generates|PKG_IMG[Package<br>Image]
   end
 
   IMG---POOL
 
-  subgraph POOL[_02_create-batch-pool-and-submit-jobs]
+  subgraph POOL[Create Batch Pool and Submit Jobs]
     direction TB
 
     POOL_EXISTS{Is the pool<br>up?}

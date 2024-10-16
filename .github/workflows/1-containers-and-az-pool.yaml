@@ -1,5 +1,4 @@
-name: Test Model Image Build
-run-name: (2_pre) Test Model Image - "${{ github.event.head_commit.message }}"
+name: Containers and Azure Pool
 
 # This GitHub Actions workflow builds a Docker image for the
 # cfa-epinow2-pipeline-docker project. In-container tests can be added here.
@@ -17,7 +16,7 @@ env:
 
 jobs:
 
-  Job01-build_image_dependencies:
+  build-dependencies-image:
     runs-on: cfa-cdcgov # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
     name: Build dependencies image
 
@@ -90,16 +89,16 @@ jobs:
             ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}
           file: ./Dockerfile-dependencies
 
-  _01_build-model-image:
+  build-pipeline-image:
 
     name: Build pipeline image
 
-    needs: Job01-build_image_dependencies
+    needs: build-dependencies-image
     runs-on: cfa-cdcgov
 
     outputs:
-      tag: ${{ needs.Job01-build_image_dependencies.outputs.tag }}
-      commit-msg: ${{ needs.Job01-build_image_dependencies.outputs.commit-msg }}
+      tag: ${{ needs.build-dependencies-image.outputs.tag }}
+      commit-msg: ${{ needs.build-dependencies-image.outputs.commit-msg }}
 
     steps:
 
@@ -116,27 +115,27 @@ jobs:
         with:
           push: true # This can be toggled manually for tweaking.
           tags: |
-            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:test-${{ needs.Job01-build_image_dependencies.outputs.tag }}
+            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:test-${{ needs.build-dependencies-image.outputs.tag }}
           file: ./Dockerfile
           build-args: |
-            TAG=${{ needs.Job01-build_image_dependencies.outputs.tag }}
+            TAG=${{ needs.build-dependencies-image.outputs.tag }}
 
-  _02_create-batch-pool-and-submit-jobs:
+  batch-pool:
 
     name: Create Batch Pool and Submit Jobs
     runs-on: cfa-cdcgov
-    needs: _01_build-model-image
+    needs: build-pipeline-image
 
     permissions:
       contents: read
       packages: write
 
     env:
-      TAG: ${{ needs._01_build-model-image.outputs.tag }}
-      COMMIT_MSG: ${{ needs._01_build-model-image.outputs.commit-msg }}
+      TAG: ${{ needs.build-pipeline-image.outputs.tag }}
+      COMMIT_MSG: ${{ needs.build-pipeline-image.outputs.commit-msg }}
       # Every Azure Batch Pool parameter can simply go here,
       # no python module or config toml necessary
-      POOL_ID: "cfa-epinow2-${{ needs._01_build-model-image.outputs.tag }}"
+      POOL_ID: "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
       BATCH_ACCOUNT:     "cfaprdba"
       BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
       VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
