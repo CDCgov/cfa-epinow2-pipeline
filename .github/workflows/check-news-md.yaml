@@ -2,7 +2,6 @@
 # describing the changes made - this workflow checks to make sure that this has been done.
 
 name: Check NEWS.md Update
-run-name: (3) Check News.md for Compliance - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
 
 on:
   pull_request:
@@ -11,6 +10,9 @@ on:
 
 jobs:
   check-news-md-modification:
+
+    name: Check NEWS.md modification
+
     runs-on: ubuntu-latest
 
     steps:

@@ -1,8 +1,7 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 
-name: R-CMD-check
-run-name: (4) R-CMD-check - ${{ github.event.head_commit.message }} - ${{ github.ref_name }}
+name: R CMD check
 
 on:
   pull_request:
