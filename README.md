@@ -112,7 +112,7 @@ The project has multiple GitHub Actions workflows to automate the CI/CD process.
 
 - `_02_create-batch-pool-and-submit-jobs`: This final job creates a new Azure batch pool with id `cfa-epinow2-pool-[branch name]` if it doesn't already exist. Additionally, if the commit message contains the string "`[delete pool]`", the pool is deleted.
 
-Both container tags and pool ids are based on the branch name, making it compatible with having multiple pipelines running simultaneously. 
+Both container tags and pool ids are based on the branch name, making it compatible with having multiple pipelines running simultaneously.
 
 > [!IMPORTANT]
 > The CI will fail with branch names that are not valid tag names for containers. For more information, see the official Azure documentation [here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry).
