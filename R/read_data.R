@@ -113,7 +113,12 @@ read_data <- function(data_path,
       cli::cli_abort(
         c(
           "Error fetching data from {.path {data_path}}",
-          "Using parameters {parameters}",
+          "Using parameters:",
+          "*" = "data_path: {.path {parameters[[1]]}}",
+          "*" = "mapped_disease: {.val {parameters[[2]]}}",
+          "*" = "min_reference_date: {.val {parameters[[3]]}}",
+          "*" = "max_reference_date: {.val {parameters[[4]]}}",
+          "*" = "report_date: {.val {parameters[[5]]}}",
           "Original error: {con}"
         ),
         class = "wrapped_invalid_query"
