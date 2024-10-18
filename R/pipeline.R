@@ -4,7 +4,9 @@ run_pipeline <- function(config_path,
                          blob_storage_container = NULL,
                          output_dir = "/") {
   # TODO: Add config reader here
-  config <- jsonlite::read_json("sample_config.json")
+  config <- jsonlite::read_json(config_path,
+    simplifyVector = TRUE
+  )
 
   write_output_dir_structure(
     output_dir = output_dir,
@@ -32,10 +34,38 @@ run_pipeline <- function(config_path,
     type = "message",
     append = TRUE
   )
+  on.exit(sink(file = NULL))
   cli::cli_alert_info("Starting run at {Sys.time()}")
   cli::cli_alert_info("Using job id {.field {config[['job_id']]}}")
   cli::cli_alert_info("Using task id {.field {config[['task_id']]}}")
 
+  pipeline_success <- rlang::try_fetch(
+    process_pipeline(config, output_dir),
+    error = function(con) {
+      cli::cli_warn("Pipeline run failed",
+        parent = con
+      )
+      FALSE
+    }
+  )
+
+
+
+
+
+  cli::cli_alert_info("Finishing run at {Sys.time()}")
+}
+
+#' Run model fitting process
+#'
+#' This part of the pipeline contains the meat of the logic. The logic in this
+#' piece of the pipeline run normally,
+#'
+#' @inheritParams run_pipeline
+#' @return TRUE for pipeline run success or throws an error as a side-effect
+#'  for failure of a step.
+#' @export
+process_pipeline <- function(config, output_dir) {
   cases_df <- read_data(
     data_path = config[["data"]][["path"]],
     disease = config[["disease"]],
@@ -76,7 +106,6 @@ run_pipeline <- function(config_path,
     priors = config[["priors"]],
     sampler_opts = config[["sampler_opts"]]
   )
-
   diagnostics <- extract_diagnostics(
     fit = fit,
     data = cases_df,
@@ -111,8 +140,5 @@ run_pipeline <- function(config_path,
     metadata = list()
   )
 
-
-  cli::cli_alert_info("Finishing run at {Sys.time()}")
-  # End logging
-  sink(file = NULL)
+  return(TRUE)
 }
