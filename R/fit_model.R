@@ -80,7 +80,6 @@ fit_model <- function(
         parent = cnd,
         class = "failing_fit"
       )
-      NA
     }
   )
 }
