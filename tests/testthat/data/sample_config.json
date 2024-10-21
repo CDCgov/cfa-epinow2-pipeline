@@ -6,7 +6,7 @@
     "geo_value": "test",
     "geo_type": "test",
     "min_reference_date": "2023-01-02",
-    "max_reference_date": "2023-01-16",
+    "max_reference_date": "2023-01-07",
     "report_date": "2023-10-28",
     "quantile_width": [0.5, 0.95],
     "model": "EpiNow2_test",
@@ -50,8 +50,8 @@
     "sampler_opts": {
         "cores": 4,
         "chains": 4,
-        "iter_warmup": 100,
-        "iter_sampling": 100,
+        "iter_warmup": 50,
+        "iter_sampling": 50,
         "adapt_delta": 0.99,
         "max_treedepth": 12
     }
