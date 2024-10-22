@@ -70,7 +70,7 @@ write_model_outputs <- function(
     },
     error = function(cnd) {
       # Downgrade erroring out to a warning so we can catch and log
-      cli::cli_warn(
+      cli::cli_abort(
         "Failure writing outputs",
         parent = cnd,
         class = "no_outputs"

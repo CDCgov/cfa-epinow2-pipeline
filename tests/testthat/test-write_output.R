@@ -94,16 +94,20 @@ test_that("write_model_outputs handles errors correctly", {
   # Create mock inputs
   mock_fit <- list(samples = 1:5)
   mock_metadata <- list(author = "Test", date = Sys.Date())
+  samples <- data.frame(x = 1)
+  summaries <- data.frame(y = 2)
 
   # Expect the function to raise a warning due to the invalid directory
   withr::with_tempdir({
-    expect_warning(
+    expect_error(
       write_model_outputs(
-        mock_fit,
-        invalid_output_dir,
-        "job_123",
-        "task_456",
-        mock_metadata
+        fit = mock_fit,
+        samples = samples,
+        summaries = summaries,
+        output_dir = invalid_output_dir,
+        job_id = "job_123",
+        task_id = "task_456",
+        metadata = mock_metadata
       ),
       class = "no_outputs"
     )

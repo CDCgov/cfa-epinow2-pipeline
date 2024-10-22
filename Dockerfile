@@ -9,10 +9,10 @@ COPY . pkg/
 
 # Install the full package while leaving the tar.gz file in the
 # container for later use.
-RUN R CMD build --no-build-vignettes pkg && \
+RUN R CMD build --no-build-vignettes --no-manual pkg && \
     R CMD INSTALL CFAEpiNow2Pipeline_*.tar.gz
 
 # Ensure the package is working properly
-RUN R CMD check CFAEpiNow2Pipeline_*.tar.gz
+RUN R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
 
 CMD ["bash"]
