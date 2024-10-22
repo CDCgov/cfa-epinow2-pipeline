@@ -48,8 +48,8 @@
         }
     },
     "sampler_opts": {
-        "cores": 4,
-        "chains": 4,
+        "cores": 1,
+        "chains": 1,
         "iter_warmup": 50,
         "iter_sampling": 50,
         "adapt_delta": 0.99,
