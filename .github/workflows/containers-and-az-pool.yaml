@@ -148,6 +148,36 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v4
 
+      # Example: https://learn.microsoft.com/en-us/rest/api/batchservice/pool/add?view=rest-batchservice-2024-07-01&viewFallbackFrom=rest-batchservice-2023-11-01&tabs=HTTP#add-a-virtualmachineconfiguration-pool-with-containers
+      - name: Writing out config file
+        run: |
+          cat <<EOF > pool-config-${{ github.sha }}.txt
+          {
+          "id": "${{ env.POOL_ID }}",
+          "vmSize": "${{ env.VM_SIZE }}",
+          "deploymentConfiguration": {
+            "virtualMachineConfiguration": {
+              "imageReference": {
+                  "publisher": "microsoft-azure-batch",
+                  "offer": "${{ env.VM_IMAGE_TAG }}",
+                  "sku": "20-04-lts",
+                  "version": "latest",
+              },
+              "nodeAgentSkuId": "${{ env.NODE_AGENT_SKU_ID }}",
+              "containerConfiguration": {
+                  "type": "dockercompatible",
+                  "containerImageNames": "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ env.TAG }}",
+                  "containerRegistries": [
+                      {
+                          "registryServer": "${{ env.REGISTRY }}",
+                          "userName": "cfaprdbatchcr",
+                          "password": ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+                      }
+                  ],
+              },
+          }
+          EOF
+
       - name: Login to Azure with NNH Service Principal
         id: azure_login_2
         uses: azure/login@v2
@@ -192,11 +222,7 @@ jobs:
             --name "${{ env.BATCH_ACCOUNT }}"
 
           az batch pool create \
-            --account-endpoint "${{ env.BATCH_ENDPOINT }}" \
-            --id "${{ env.POOL_ID }}" \
-            --image "${{ env.VM_IMAGE_TAG }}" \
-            --node-agent-sku-id "${{ env.NODE_AGENT_SKU_ID }}" \
-            --vm-size "${{ env.VM_SIZE }}"
+            --template pool-config-${{ github.sha }}.txt
 
           az batch pool autoscale enable \
             --pool-id ${{ env.POOL_ID }} \
