@@ -1,4 +1,71 @@
-#' Rt estimation model pipeline
+#' Run an Rt Estimation Model Pipeline
+#'
+#' This function runs a complete pipeline for fitting an Rt estimation model,
+#' using the `EpiNow2` model, based on a configuration file. The pipeline
+#' processes the model, logs its progress, and handles errors by logging
+#' warnings and setting the pipeline status. Output and logs are written to
+#' the specified directories. Additionally, support for uploading logs and
+#' outputs to a blob storage container is planned.
+#'
+#' @param config_path A string specifying the file path to the JSON
+#' configuration file. The configuration file should include at least `job_id`
+#' and `task_id` to manage the logging and task metadata.
+#' @param blob_storage_container Optional. The name of the blob storage
+#' container to which logs and outputs will be uploaded. If NULL, no upload
+#' will occur. (Planned feature, not currently implemented)
+#' @param output_dir A string specifying the directory where output, logs, and
+#' other pipeline artifacts will be saved. Defaults to the root directory ("/").
+#'
+#' @details
+#' The function reads the configuration from a JSON file and uses this to set
+#' up the job and task identifiers. It creates an output directory structure
+#' based on these IDs and starts logging the process in a file. The main
+#' pipeline process is handled by `process_pipeline()`, with errors caught and
+#' logged as warnings. The function will log the success or failure of the run.
+#'
+#' Logs are written to a file in the output directory, and console output is
+#' also mirrored in this log file. Error handling is in place to capture any
+#' issues during the pipeline execution and ensure they are logged
+#' appropriately.
+#'
+#' During the execution of the pipeline, the following output files are
+#' expected to be generated:
+#'
+#' - **Model Output**: An RDS file of the fitted model is saved in the
+#' task-specific directory (`model.rds`).
+#' - **Samples**: Parquet files containing the model's sample outputs are saved
+#' in a `samples` subdirectory, named using the `task_id` (e.g.,
+#' `task_id.parquet`).
+#' - **Summaries**: Parquet files summarizing the model's results are saved in
+#' a `summaries` subdirectory, also named using the `task_id` (e.g.,
+#' `task_id.parquet`).
+#' - **Logs**: A `logs.txt` file is generated in the task directory, capturing
+#' both console and error messages.
+#'
+#' The output directory structure will follow this format:
+#' ```
+#' <output_dir>/
+#' └── <job_id>/
+#'     ├── samples/
+#'     │   └── <task_id>.parquet
+#'     ├── summaries/
+#'     │   └── <task_id>.parquet
+#'     └── tasks/
+#'         └── <task_id>/
+#'             ├── model.rds
+#'             └── logs.txt
+#' ```
+#'
+#' @return The function does not return a value directly. However, the output
+#' directory will contain the following files:
+#' - Model RDS file (`model.rds`)
+#' - Sample output in Parquet format (`<task_id>.parquet` in the `samples/`
+#' directory)
+#' - Summary output in Parquet format (`<task_id>.parquet` in the `summaries/`
+#' directory)
+#' - Log file (`logs.txt`) in the task directory
+#'
+#' @rdname pipeline
 #' @export
 run_pipeline <- function(config_path,
                          blob_storage_container = NULL,
@@ -39,6 +106,10 @@ run_pipeline <- function(config_path,
   cli::cli_alert_info("Using job id {.field {config[['job_id']]}}")
   cli::cli_alert_info("Using task id {.field {config[['task_id']]}}")
 
+  # Errors within `process_pipeline()` are downgraded to warnings so
+  # they can be logged and stored in Blob. If there is an error,
+  # `pipeline_success` is set to false, which will be stored in the
+  # metadata in the next PR.
   pipeline_success <- rlang::try_fetch(
     process_pipeline(config, output_dir),
     error = function(con) {
@@ -49,21 +120,25 @@ run_pipeline <- function(config_path,
     }
   )
 
-
-
-
-
+  # TODO: Move metadata to outer wrapper
   cli::cli_alert_info("Finishing run at {Sys.time()}")
 }
 
-#' Run model fitting process
+#' Run the Model Fitting Process
 #'
-#' This part of the pipeline contains the meat of the logic. The logic in this
-#' piece of the pipeline run normally,
+#' @param config A list containing configuration settings for the pipeline,
+#' including paths to data, exclusions, disease parameters, model settings,
+#' and other necessary inputs.
 #'
-#' @inheritParams run_pipeline
-#' @return TRUE for pipeline run success or throws an error as a side-effect
-#'  for failure of a step.
+#' @details
+#' This function performs the core model fitting process within the Rt
+#' estimation pipeline, including reading data, applying exclusions, fitting
+#' the model, and writing outputs such as model samples, summaries, and logs.
+#'
+#' @return Returns `TRUE` on success. Errors are caught by the outer pipeline
+#' logic and logged accordingly.
+#'
+#' @rdname pipeline
 #' @export
 process_pipeline <- function(config, output_dir) {
   cases_df <- read_data(
