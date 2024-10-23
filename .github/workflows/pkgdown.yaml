@@ -21,6 +21,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
@@ -38,6 +39,20 @@ jobs:
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
+
+      - name: Save artifact
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pkgdown-site
+          retention-days: 7
+
+      - name: Post to PR
+        uses: CDCgov/cfa-actions/post-artifact@v1.0.0
+        if: ${{ github.event_name == 'pull_request' }}
+        with:
+          artifact-name: pkgdown-site
+          gh-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
