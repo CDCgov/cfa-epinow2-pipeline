@@ -45,6 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pkgdown-site
+          path: ./docs
           retention-days: 7
 
       - name: Post to PR
