@@ -208,6 +208,10 @@ jobs:
           echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
             $GITHUB_OUTPUT
 
+      - name: Installing Azure CLI extensions
+        run: |
+          az extension add -n azure-batch-cli-extensions
+
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
 
