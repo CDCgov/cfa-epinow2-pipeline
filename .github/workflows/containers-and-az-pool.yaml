@@ -153,28 +153,30 @@ jobs:
         run: |
           cat <<EOF > pool-config-${{ github.sha }}.txt
           {
-          "id": "${{ env.POOL_ID }}",
-          "vmSize": "${{ env.VM_SIZE }}",
-          "deploymentConfiguration": {
-            "virtualMachineConfiguration": {
-              "imageReference": {
-                  "publisher": "microsoft-azure-batch",
-                  "offer": "${{ env.VM_IMAGE_TAG }}",
-                  "sku": "20-04-lts",
-                  "version": "latest",
-              },
-              "nodeAgentSkuId": "${{ env.NODE_AGENT_SKU_ID }}",
-              "containerConfiguration": {
-                  "type": "dockercompatible",
-                  "containerImageNames": "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ env.TAG }}",
-                  "containerRegistries": [
-                      {
-                          "registryServer": "${{ env.REGISTRY }}",
-                          "userName": "cfaprdbatchcr",
-                          "password": "${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}"
+              "id": "${{ env.POOL_ID }}",
+              "vmSize": "${{ env.VM_SIZE }}",
+              "deploymentConfiguration": {
+                  "virtualMachineConfiguration": {
+                      "imageReference": {
+                          "publisher": "microsoft-azure-batch",
+                          "offer": "${{ env.VM_IMAGE_TAG }}",
+                          "sku": "20-04-lts",
+                          "version": "latest"
+                      },
+                      "nodeAgentSkuId": "${{ env.NODE_AGENT_SKU_ID }}",
+                      "containerConfiguration": {
+                          "type": "dockercompatible",
+                          "containerImageNames": "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ env.TAG }}",
+                          "containerRegistries": [
+                              {
+                                  "registryServer": "${{ env.REGISTRY }}",
+                                  "userName": "cfaprdbatchcr",
+                                  "password": "${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}"
+                              }
+                          ]
                       }
-                  ],
-              },
+                  }
+              }
           }
           EOF
 
