@@ -149,31 +149,39 @@ jobs:
         uses: actions/checkout@v4
 
       # Example: https://learn.microsoft.com/en-us/rest/api/batchservice/pool/add?view=rest-batchservice-2024-07-01&viewFallbackFrom=rest-batchservice-2023-11-01&tabs=HTTP#add-a-virtualmachineconfiguration-pool-with-containers
+      # Another example:
+      # https://github.com/Azure/azure-batch-cli-extensions/blob/cfd9439f93f319113ad221d81625e8fc7b32239b/samples/hello-world/create-pool-and-job/pool.json
       - name: Writing out config file
         run: |
           cat <<EOF > pool-config-${{ github.sha }}.txt
           {
-              "id": "${{ env.POOL_ID }}",
-              "vmSize": "${{ env.VM_SIZE }}",
-              "deploymentConfiguration": {
-                  "virtualMachineConfiguration": {
-                      "imageReference": {
-                          "publisher": "microsoft-azure-batch",
-                          "offer": "${{ env.VM_IMAGE_TAG }}",
-                          "sku": "20-04-lts",
-                          "version": "latest"
-                      },
-                      "nodeAgentSkuId": "${{ env.NODE_AGENT_SKU_ID }}",
-                      "containerConfiguration": {
-                          "type": "dockercompatible",
-                          "containerImageNames": "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ env.TAG }}",
-                          "containerRegistries": [
-                              {
-                                  "registryServer": "${{ env.REGISTRY }}",
-                                  "userName": "cfaprdbatchcr",
-                                  "password": "${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}"
+              "pool": {
+                  "type": "Microsoft.Batch/batchAccounts/pools",
+                  "apiVersion": "2022-06-01",
+                  "properties": {
+                      "id": "${{ env.POOL_ID }}",
+                      "vmSize": "${{ env.VM_SIZE }}",
+                      "deploymentConfiguration": {
+                          "virtualMachineConfiguration": {
+                              "imageReference": {
+                                  "publisher": "microsoft-azure-batch",
+                                  "offer": "${{ env.VM_IMAGE_TAG }}",
+                                  "sku": "20-04-lts",
+                                  "version": "latest"
+                              },
+                              "nodeAgentSkuId": "${{ env.NODE_AGENT_SKU_ID }}",
+                              "containerConfiguration": {
+                                  "type": "dockercompatible",
+                                  "containerImageNames": "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ env.TAG }}",
+                                  "containerRegistries": [
+                                      {
+                                          "registryServer": "${{ env.REGISTRY }}",
+                                          "userName": "cfaprdbatchcr",
+                                          "password": "${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}"
+                                      }
+                                  ]
                               }
-                          ]
+                          }
                       }
                   }
               }
