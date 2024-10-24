@@ -18,7 +18,7 @@
 #' @param data_path The path to the local file. This could contain a glob and
 #'   must be in parquet format.
 #' @param disease One of "COVID-19" or "Influenza"
-#' @param state_abb A two-letter uppercase abbreviation
+#' @param state_abb A two-letter uppercase abbreviation. "US" is also an option
 #' @param report_date The desired single report date
 #' @param max_reference_date,min_reference_date The first and last reference
 #'   dates, inclusive, of the timeseries
