@@ -64,7 +64,7 @@ In this workflow, task IDs correspond to location specific model runs (which are
 │   ├── job_metadata.json
 ```
 
-`<output>/`: The base output directory. This could, for example, be `/` in a Docker container or dedicated output directory.
+- `<output>/`: The base output directory. This could, for example, be `/` in a Docker container or dedicated output directory.
 - `job_<job_id>/`: A directory named after the specific job identifier, containing all outputs related to that job. All tasks within a job share this same top-level directory.
   - `raw_samples/`: A subdirectory within each job folder that holds the raw sample files from all tasks in the job. Task-specific *draws* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
     - `samples_<task_id>.parquet`: A file containing raw samples from the model, associated with a particular task identifier. This file has columns `job_id`, `task_id`, `geo_value`, `disease`, `model`, `_draw`, `_chain`, `_iteration`, `_variable`, `value`, and `reference_date`. These variables follow the [{tidybayes}](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
