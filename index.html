@@ -113,7 +113,56 @@
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="ex">│</span>   │   │   ├── stdout.log</span>
 <span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="ex">│</span>   │   │   └── stderr.log</span>
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="ex">│</span>   ├── job_metadata.json</span></code></pre></div>
-<p><code>&lt;output&gt;/</code>: The base output directory. This could, for example, be <code>/</code> in a Docker container or dedicated output directory. - <code>job_&lt;job_id&gt;/</code>: A directory named after the specific job identifier, containing all outputs related to that job. All tasks within a job share this same top-level directory. - <code>raw_samples/</code>: A subdirectory within each job folder that holds the raw sample files from all tasks in the job. Task-specific <em>draws</em> output files all live together in this directory to enable easy globbing over task-partitioned outputs. - <code>samples_&lt;task_id&gt;.parquet</code>: A file containing raw samples from the model, associated with a particular task identifier. This file has columns <code>job_id</code>, <code>task_id</code>, <code>geo_value</code>, <code>disease</code>, <code>model</code>, <code>_draw</code>, <code>_chain</code>, <code>_iteration</code>, <code>_variable</code>, <code>value</code>, and <code>reference_date</code>. These variables follow the <a href="https://mjskay.github.io/tidybayes/articles/tidybayes.html" class="external-link">{tidybayes}</a> specification. - <code>summarized_quantiles/</code>: A subdirectory for storing summarized quantile data. Task-specific <em>summarized</em> output files all live together in this directory to enable easy globbing over task-partitioned outputs. - <code>summarized_&lt;task_id&gt;.parquet</code>: A file with summarized quantiles relevant to a specific task identifier. This file has columns <code>job_id</code>, <code>task_id</code>, <code>geo_value</code>, <code>disease</code>, <code>model</code>, <code>value</code>, <code>_lower</code>, <code>_upper</code>, <code>_width</code>, <code>_point</code>, <code>_interval</code>, and <code>reference_date</code>. These variables follow the <a href="https://mjskay.github.io/tidybayes/articles/tidybayes.html" class="external-link">{tidybayes}</a> specification. - <code>diagnostics/</code>: A subdirectory for storing model fit diagnostics. Task-specific <em>diagnostic</em> output files all live together in this directory to enable easy globbing over task-partitioned outputs. - <code>diagnostic_&lt;task_id&gt;.parquet</code>: A file with diagnostics relevant to a specific task identifier. This file has columns <code>diagnostic</code>, <code>value</code>, <code>job_id</code>, <code>task_id</code>, <code>geo_value</code>, <code>disease</code>, and <code>model</code>. - <code>tasks/</code>: This directory contains subdirectories for each task within a job. These are files that are less likely to require globbing from the data lake than manual investigation, so are stored togehter. - <code>task_&lt;task_id&gt;/</code>: Each task has its own folder identified by the task ID, which includes several files: - <code>model.rds</code>: An RDS file storing the EpiNow2 model object fit to the data. - <code>metadata.json</code>: A JSON file containing additional metadata about the model run for this task. - <code>stdout.log</code>: A log file capturing standard output from the model run process. - <code>stderr.log</code>: A log file capturing standard error output from the model run process. - <code>job_metadata.json</code>: A JSON file located in the root of each job’s directory, providing metadata about the entire job.</p>
+<ul>
+<li>
+<code>&lt;output&gt;/</code>: The base output directory. This could, for example, be <code>/</code> in a Docker container or dedicated output directory.</li>
+<li>
+<code>job_&lt;job_id&gt;/</code>: A directory named after the specific job identifier, containing all outputs related to that job. All tasks within a job share this same top-level directory.
+<ul>
+<li>
+<code>raw_samples/</code>: A subdirectory within each job folder that holds the raw sample files from all tasks in the job. Task-specific <em>draws</em> output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+<ul>
+<li>
+<code>samples_&lt;task_id&gt;.parquet</code>: A file containing raw samples from the model, associated with a particular task identifier. This file has columns <code>job_id</code>, <code>task_id</code>, <code>geo_value</code>, <code>disease</code>, <code>model</code>, <code>_draw</code>, <code>_chain</code>, <code>_iteration</code>, <code>_variable</code>, <code>value</code>, and <code>reference_date</code>. These variables follow the <a href="https://mjskay.github.io/tidybayes/articles/tidybayes.html" class="external-link">{tidybayes}</a> specification.</li>
+</ul>
+</li>
+<li>
+<code>summarized_quantiles/</code>: A subdirectory for storing summarized quantile data. Task-specific <em>summarized</em> output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+<ul>
+<li>
+<code>summarized_&lt;task_id&gt;.parquet</code>: A file with summarized quantiles relevant to a specific task identifier. This file has columns <code>job_id</code>, <code>task_id</code>, <code>geo_value</code>, <code>disease</code>, <code>model</code>, <code>value</code>, <code>_lower</code>, <code>_upper</code>, <code>_width</code>, <code>_point</code>, <code>_interval</code>, and <code>reference_date</code>. These variables follow the <a href="https://mjskay.github.io/tidybayes/articles/tidybayes.html" class="external-link">{tidybayes}</a> specification.</li>
+</ul>
+</li>
+<li>
+<code>diagnostics/</code>: A subdirectory for storing model fit diagnostics. Task-specific <em>diagnostic</em> output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+<ul>
+<li>
+<code>diagnostic_&lt;task_id&gt;.parquet</code>: A file with diagnostics relevant to a specific task identifier. This file has columns <code>diagnostic</code>, <code>value</code>, <code>job_id</code>, <code>task_id</code>, <code>geo_value</code>, <code>disease</code>, and <code>model</code>.</li>
+</ul>
+</li>
+<li>
+<code>tasks/</code>: This directory contains subdirectories for each task within a job. These are files that are less likely to require globbing from the data lake than manual investigation, so are stored togehter.
+<ul>
+<li>
+<code>task_&lt;task_id&gt;/</code>: Each task has its own folder identified by the task ID, which includes several files:
+<ul>
+<li>
+<code>model.rds</code>: An RDS file storing the EpiNow2 model object fit to the data.</li>
+<li>
+<code>metadata.json</code>: A JSON file containing additional metadata about the model run for this task.</li>
+<li>
+<code>stdout.log</code>: A log file capturing standard output from the model run process.</li>
+<li>
+<code>stderr.log</code>: A log file capturing standard error output from the model run process.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<code>job_metadata.json</code>: A JSON file located in the root of each job’s directory, providing metadata about the entire job.</li>
+</ul>
 </div>
 <div class="section level3">
 <h3 id="model-estimated-quantities">Model-estimated quantities<a class="anchor" aria-label="anchor" href="#model-estimated-quantities"></a>
