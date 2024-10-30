@@ -148,44 +148,38 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v4
 
-      # Example: https://learn.microsoft.com/en-us/rest/api/batchservice/pool/add?view=rest-batchservice-2024-07-01&viewFallbackFrom=rest-batchservice-2023-11-01&tabs=HTTP#add-a-virtualmachineconfiguration-pool-with-containers
-      # Another example:
-      # https://github.com/Azure/azure-batch-cli-extensions/blob/cfd9439f93f319113ad221d81625e8fc7b32239b/samples/hello-world/create-pool-and-job/pool.json
       - name: Writing out config file
         run: |
           cat <<EOF > pool-config-${{ github.sha }}.txt
-          {
-              "pool": {
-                  "type": "Microsoft.Batch/batchAccounts/pools",
-                  "apiVersion": "2022-06-01",
-                  "properties": {
-                      "id": "${{ env.POOL_ID }}",
-                      "vmSize": "${{ env.VM_SIZE }}",
-                      "deploymentConfiguration": {
-                          "virtualMachineConfiguration": {
-                              "imageReference": {
-                                  "publisher": "microsoft-azure-batch",
-                                  "offer": "${{ env.VM_IMAGE_TAG }}",
-                                  "sku": "20-04-lts",
-                                  "version": "latest"
-                              },
-                              "nodeAgentSkuId": "${{ env.NODE_AGENT_SKU_ID }}",
-                              "containerConfiguration": {
-                                  "type": "dockercompatible",
-                                  "containerImageNames": "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ env.TAG }}",
-                                  "containerRegistries": [
-                                      {
-                                          "registryServer": "${{ env.REGISTRY }}",
-                                          "userName": "cfaprdbatchcr",
-                                          "password": "${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}"
-                                      }
-                                  ]
-                              }
-                          }
-                      }
-                  }
-              }
-          }
+          [Authentication]
+          vault_url =
+          keyvault_url =
+          tenant_id =
+          application_id =
+          subscription_id =
+          user_assigned_identity =
+          client_id =
+          participant_id =
+          subnet_id =
+          resource_group =
+
+          [Storage]
+          storage_account_url =
+          storage_account_name =
+          user_assigned_identity =
+
+          [Container]
+          container_registry_url = "https://${{ env.REGISTRY }}"
+          container_registry_username = cfaprdbatchcr
+          container_registry_password = ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+          container_registry_server = ${{ env.REGISTRY }}
+
+          [Batch]
+          pool_vm_size = ${{ env.VM_SIZE }}
+          pool_id = ${{ env.POOL_ID }}
+          batch_account_name =
+
+
           EOF
 
       - name: Login to Azure with NNH Service Principal
@@ -218,10 +212,6 @@ jobs:
           echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
             $GITHUB_OUTPUT
 
-      - name: Installing Azure CLI extensions
-        run: |
-          az extension add -n azure-batch-cli-extensions
-
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
 
@@ -231,16 +221,9 @@ jobs:
 
         # The call to the az cli that actually generates the pool
         run: |
-          az batch account login \
-            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-            --name "${{ env.BATCH_ACCOUNT }}"
-
-          az batch pool create \
-            --template pool-config-${{ github.sha }}.txt
-
-          az batch pool autoscale enable \
-            --pool-id ${{ env.POOL_ID }} \
-            --auto-scale-formula "$(cat './batch-autoscale-formula.txt')"
+          # Running the python script azure/pool.py passing the config file
+          # as an argument
+          python3 azure/pool.py pool-config-${{ github.sha }}.txt
 
 
       #########################################################################
