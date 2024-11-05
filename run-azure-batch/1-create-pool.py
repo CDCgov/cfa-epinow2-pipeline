@@ -48,7 +48,7 @@ if __name__ == "__main__":
     sp_secret = secret_client.get_secret(
         config["Authentication"]["vault_sp_secret_id"]
     ).value
-    
+
     # Get Service Principal credential from key vault
     sp_credential = ClientSecretCredential(
         tenant_id=config["Authentication"]["tenant_id"],
