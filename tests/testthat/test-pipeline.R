@@ -4,7 +4,7 @@ test_that("Pipeline run produces expected outputs", {
   config <- jsonlite::read_json(config_path)
   # Read from locally
   blob_storage_container <- NULL
-  output_dir <- "end_to_end_test"
+  output_dir <- "pipeline_test"
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
@@ -60,7 +60,7 @@ test_that("Process pipeline produces expected outputs and returns success", {
   config_path <- test_path("data", "sample_config.json")
   config <- jsonlite::read_json(config_path)
   # Read from locally
-  output_dir <- "end_to_end_test"
+  output_dir <- "pipeline_test"
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
