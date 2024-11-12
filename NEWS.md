@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Add inner pipeline responsible for running the business logic
 * Re-organizing GitHub workflows.
 * Checks if batch pool exists. Pools are named after branches. Also allows for deletion via commit message.
 * Merges workflows 1 and 2 into a single workflow.
