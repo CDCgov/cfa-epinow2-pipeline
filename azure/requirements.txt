@@ -1,6 +1,11 @@
-azure-identity
-azure-keyvault
-azure-storage-blob
-azure-mgmt-batch
-azure-core
-toml
+azure-common==1.1.28
+azure-core==1.32.0
+azure-identity==1.19.0
+azure-keyvault==4.2.0
+azure-keyvault-certificates==4.9.0
+azure-keyvault-keys==4.10.0
+azure-keyvault-secrets==4.9.0
+azure-mgmt-batch==18.0.0
+azure-mgmt-core==1.5.0
+azure-storage-blob==12.24.0
+toml==0.10.2
