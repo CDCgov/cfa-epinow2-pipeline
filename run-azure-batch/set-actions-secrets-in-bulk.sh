@@ -13,8 +13,8 @@ az login --identity # use --use-device-code if your VM managed identity isn't ye
 
 echo -e ""
 
-# path to blob
-path_to_secrets_blob="cfapredict/NNH/NHSN/Rt/cfa-epinow2-pipeline.env"
+# path to secrets blob
+path_to_secrets_blob="${1:-'cfapredict/NNH/NHSN/Rt/cfa-epinow2-pipeline.env'}"
 
 sleep 1
 
