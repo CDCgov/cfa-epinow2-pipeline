@@ -169,7 +169,7 @@ jobs:
           user_assigned_identity = "${{ secrets.BATCH_USER_ASSIGNED_IDENTITY}}"
 
           [Container]
-          container_registry_url = ""https://${{ env.REGISTRY }}""
+          container_registry_url = "https://${{ env.REGISTRY }}"
           container_registry_username = "cfaprdbatchcr"
           container_registry_password = "${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}"
           container_registry_server = "${{ env.REGISTRY }}"
