@@ -114,20 +114,14 @@ if __name__ == "__main__":
                         "password": config["Container"]["container_registry_password"],
                         "registryServer": config["Container"][
                             "container_registry_server"
-                        ],
-                        # "registryServer": config["Container"]["container_registry_url"],
-                        # "identityReference": {
-                        #     "resourceId": config["Authentication"][
-                        #         "user_assigned_identity"
-                        #     ]
-                        # },
+                        ]
                     }
                 ],
             },
         }
     }
 
-    # Mount configuration
+    # Blob Storage Mount configuration
     mount_config = [
         {
             "azureBlobFileSystemConfiguration": {
@@ -200,6 +194,7 @@ if __name__ == "__main__":
             parameters=pool_parameters,
         )
         print(f"Pool {pool_id!r} created")
+
     except HttpResponseError as error:
         if "PropertyCannotBeUpdated" in error.message:
             print(f"Pool {pool_id!r} already exists")

@@ -120,11 +120,15 @@ jobs:
           build-args: |
             TAG=${{ needs.build-dependencies-image.outputs.tag }}
 
-  batch-pool:
+  configure-batch-pool:
 
     name: Create Batch Pool and Submit Jobs
     runs-on: cfa-cdcgov
     needs: build-pipeline-image
+
+    # EXPERIMENTAL: running all python code in a versioned uv container
+    # python: python3.13-bookworm-slim
+    container: ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 
     permissions:
       contents: read
@@ -133,8 +137,6 @@ jobs:
     env:
       TAG: ${{ needs.build-pipeline-image.outputs.tag }}
       COMMIT_MSG: ${{ needs.build-pipeline-image.outputs.commit-msg }}
-      # Every Azure Batch Pool parameter can simply go here,
-      # no python module or config toml necessary
       POOL_ID: "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
       BATCH_ACCOUNT:     "cfaprdba"
       BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
@@ -142,6 +144,7 @@ jobs:
       NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
       VM_SIZE:           "standard_a4m_v2"
       RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
+
 
     steps:
       - name: Checkout Repo
@@ -164,9 +167,9 @@ jobs:
           resource_group =
 
           [Storage]
-          storage_account_url =
+          storage_account_url = 
           storage_account_name =
-          user_assigned_identity =
+          user_assigned_identity = "${{ secrets.BATCH_USER_ASSIGNED_IDENTITY }}"
 
           [Container]
           container_registry_url = "https://${{ env.REGISTRY }}"
@@ -177,7 +180,7 @@ jobs:
           [Batch]
           pool_vm_size = ${{ env.VM_SIZE }}
           pool_id = ${{ env.POOL_ID }}
-          batch_account_name =
+          batch_account_name = 
 
 
           EOF
@@ -219,11 +222,10 @@ jobs:
         # exist
         if: ${{ steps.check_pool_id.outputs.pool-exists == '' }}
 
-        # The call to the az cli that actually generates the pool
         run: |
           # Running the python script azure/pool.py passing the config file
           # as an argument
-          python3 azure/pool.py pool-config-${{ github.sha }}.txt
+          uv run run-azure-batch/1-create-pool.py pool-config-${{ github.sha }}.txt
 
 
       #########################################################################
