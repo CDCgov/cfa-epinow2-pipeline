@@ -152,32 +152,31 @@ jobs:
         run: |
           cat <<EOF > pool-config-${{ github.sha }}.txt
           [Authentication]
-          vault_url =
-          keyvault_url =
-          tenant_id =
-          application_id =
-          subscription_id =
-          user_assigned_identity =
-          client_id =
-          participant_id =
-          subnet_id =
-          resource_group =
+          keyvault_url = "${{ secrets.CFA_PREDICT_VAULT_URL }}"
+          tenant_id = "${{ secrets.TENANT_ID }}"
+          application_id = "${{ secrets.EDAV_CFA_PREDICT_NNHT_SP_APP_ID}}"
+          subscription_id = "${{ secrets.SUBSCRIPTION_ID}}"
+          user_assigned_identity = "${{ secrets. BATCH_USER_ASSIGNED_IDENTITY }}"
+          client_id = "${{ secrets.AZURE_BATCH_ACCOUNT_CLIENT_ID}}"
+          principal_id = "${{ secrets.PRINCIPAL_ID }}"
+          subnet_id = "${{ secrets.SUBNET_ID }}"
+          resource_group = "${{ secrets.PRD_RESOURCE_GROUP }}"
 
           [Storage]
-          storage_account_url =
-          storage_account_name =
-          user_assigned_identity =
+          storage_account_url = "${{ secrets.STORAGE_ACCOUNT_URL }}"
+          storage_account_name = "${{ secrets.STORAGE_ACCOUNT_NAME}}"
+          user_assigned_identity = "${{ secrets.BATCH_USER_ASSIGNED_IDENTITY}}"
 
           [Container]
-          container_registry_url = "https://${{ env.REGISTRY }}"
-          container_registry_username = cfaprdbatchcr
-          container_registry_password = ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
-          container_registry_server = ${{ env.REGISTRY }}
+          container_registry_url = ""https://${{ env.REGISTRY }}""
+          container_registry_username = "cfaprdbatchcr"
+          container_registry_password = "${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}"
+          container_registry_server = "${{ env.REGISTRY }}"
 
           [Batch]
-          pool_vm_size = ${{ env.VM_SIZE }}
-          pool_id = ${{ env.POOL_ID }}
-          batch_account_name =
+          pool_vm_size = "${{ env.VM_SIZE }}"
+          pool_id = "${{ env.POOL_ID }}"
+          batch_account_name = "${{ secrets.BATCH_ACCOUNT_NAME}}"
 
 
           EOF
