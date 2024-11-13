@@ -34,8 +34,15 @@ def get_autoscale_formula():
 if __name__ == "__main__":
     start_time = datetime.datetime.now()
 
-    # Load configuration
-    config = toml.load("run_azure_batch/configuration.toml")
+    # Reading a configuration file from the command line
+    if len(sys.argv) > 1:
+        config_file = sys.argv[1]
+        config = toml.load(config_file)
+    else:
+        config = toml.load("run_azure_batch/configuration.toml")
+
+    # # Load configuration
+    # config = toml.load("run_azure_batch/configuration.toml")
 
     # Get credential
     # First use user credential to access the key vault
