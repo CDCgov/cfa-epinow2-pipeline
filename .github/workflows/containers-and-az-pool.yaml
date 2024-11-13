@@ -222,6 +222,7 @@ jobs:
         run: |
           # Running the python script azure/pool.py passing the config file
           # as an argument
+          pip3 install toml azure
           python3 azure/pool.py pool-config-${{ github.sha }}.txt
 
 
