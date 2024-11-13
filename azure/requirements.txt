@@ -1,0 +1,6 @@
+azure-identity
+azure-keyvault
+azure-storage-blob
+azure-mgmt-batch
+azure-core
+toml
