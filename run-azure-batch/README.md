@@ -2,4 +2,4 @@
 
 The CFA Epinow2 Pipeline relies on Azure Batch to execute its workloads.
 
-This is under construction. 
+This is under construction.
