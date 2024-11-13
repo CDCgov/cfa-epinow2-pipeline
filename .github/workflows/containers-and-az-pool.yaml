@@ -125,6 +125,7 @@ jobs:
     name: Create Batch Pool and Submit Jobs
     runs-on: cfa-cdcgov
     needs: build-pipeline-image
+    container: python:3.12
 
     permissions:
       contents: read
