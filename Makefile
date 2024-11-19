@@ -10,7 +10,7 @@ endif
 IMAGE_NAME=cfa-epinow2-pipeline
 
 deps:
-	$(CNTR_PROG) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies 
+	$(CNTR_PROG) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
 
 build:
 	$(CNTR_PROG) build -t $(REGISTRY)$(IMAGE_NAME):$(TAG) \
