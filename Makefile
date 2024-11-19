@@ -3,18 +3,28 @@ ifndef CNTR_PROG
 	CNTR_PROG = podman
 endif
 
-CNTR_USER=gvegayon
-IMAGE_NAME=cfa-epinow2-pipeline-dependencies:latest
+ifndef TAG
+	TAG = local
+endif
+
+IMAGE_NAME=cfa-epinow2-pipeline
+
+deps:
+	$(CNTR_PROG) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies 
 
 build:
-	$(CNTR_PROG) build -t $(IMAGE_NAME) -f Dockerfile-dependencies . && \
-	$(CNTR_PROG) tag $(IMAGE_NAME) $(CNTR_USER)/$(IMAGE_NAME)
+	$(CNTR_PROG) build -t $(REGISTRY)$(IMAGE_NAME):$(TAG) \
+		--build-arg TAG=$(TAG) -f Dockerfile
+
+tag:
+	$(CNTR_PROG) tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
+
+interactive:
+	$(CNTR_PROG) run -v$(PWD):/cfa-epinow2-pipeline -it --rm $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 push:
-	$(CNTR_PROG) push $(CNTR_USER)/$(IMAGE_NAME)
+	$(CNTR_PROG) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
-run:
-	$(CNTR_PROG) run -it --rm -v $(PWD):/mnt $(IMAGE_NAME)
 
 test:
 	Rscript -e "testthat::test_local()"

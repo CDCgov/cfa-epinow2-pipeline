@@ -154,6 +154,42 @@ flowchart LR
   end
 ```
 
+## Container images
+
+The project includes container images for running the pipelines. Particularly, the GitHub Action workflow located in [.github/workflows/containers-and-az-pool.yaml](.github/workflows/containers-and-az-pool.yaml) automatically builds an image based on [Dockerfile](Dockerfile) and pushes it to Azure Container Registry. The images can also be built locally, in which case the [Makefile](Makefile) included in the project contains the following targets:
+
+- `make deps` will build the image with the required dependencies for the package.
+- `make build` will build the image containing the R package.
+- `make interactive` will lunch the image in interactive mode.
+
+All three targets depend on the environment variables `CNTR` (defults to `docker`) and `TAG` (defaults to `local`). For instance, if you wanted to build the dependency image using `podman` and the `latest` tag, you can do the following:
+
+```bash
+REGISTRY=cfaprdbatchcr.azurecr.io/ TAG=zs-pipeline make build
+```
+
+**NOTICE THE TRAILING SLASH!** Which is equivalent to run:
+
+```bash
+podman build -t cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline \
+    --build-arg TAG=zs-pipeline -f Dockerfile
+```
+
+To run interactively, you can use the following target:
+
+```bash
+REGISTRY=cfaprdbatchcr.azurecr.io/ TAG=zs-pipeline make interactive
+```
+
+which is equivalent to run:
+
+```bash
+podman run \
+    -v/wherever/your/pwd/is:/cfa-epinow2-pipeline -it --rm \
+    cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline
+```
+
+
 ## Project Admin
 
 - @zsusswein
