@@ -19,7 +19,7 @@ must be in parquet format.}
 
 \item{disease}{One of "COVID-19" or "Influenza"}
 
-\item{state_abb}{A two-letter uppercase abbreviation}
+\item{state_abb}{A two-letter uppercase abbreviation. "US" is also an option}
 
 \item{report_date}{The desired single report date}
 

@@ -189,3 +189,8 @@ test_that("Missing GI throws error", {
     class = "Missing_GI"
   )
 })
+
+test_that("Missing keys throws error", {
+  random_seed <- 12345
+  expect_snapshot(format_stan_opts(list(), random_seed), error = TRUE)
+})
