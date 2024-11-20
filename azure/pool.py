@@ -35,7 +35,7 @@ if __name__ == "__main__":
     start_time = datetime.datetime.now()
 
     # Reading a configuration file from the command line
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 3:
         config_file = sys.argv[1]
         config = toml.load(config_file)
         autoscale_fn = sys.argv[2]
