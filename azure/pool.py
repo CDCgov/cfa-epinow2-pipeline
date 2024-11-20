@@ -26,8 +26,8 @@ def create_container(blob_service_client: BlobServiceClient, container_name: str
         print("Container [{}] already exists.".format(container_name))
 
 
-def get_autoscale_formula():
-    autoscale_file = os.path.join(sys.path[0], "autoscale_formula.txt")
+def get_autoscale_formula(fn):
+    autoscale_file = os.path.join(sys.path[0], fn)
     with open(autoscale_file, "r") as autoscale_text:
         return autoscale_text.read()
 
@@ -35,11 +35,15 @@ if __name__ == "__main__":
     start_time = datetime.datetime.now()
 
     # Reading a configuration file from the command line
-    if len(sys.argv) > 1:
+    if len(sys.argv) == 2:
         config_file = sys.argv[1]
         config = toml.load(config_file)
+        autoscale_fn = sys.argv[2]
     else:
-        config = toml.load("run_azure_batch/configuration.toml")
+        raise Exception(
+            "The function needs two arguments, a path to the config.toml "\
+            "and a path to the autoscale formula file."
+            )
 
     # # Load configuration
     # config = toml.load("run_azure_batch/configuration.toml")
@@ -179,7 +183,7 @@ if __name__ == "__main__":
                 # }
                 "autoScale": {
                     "evaluationInterval": "PT5M",
-                    "formula": get_autoscale_formula(),
+                    "formula": get_autoscale_formula(autoscale_fn),
                 }
             },
             "resizeOperationStatus": {
