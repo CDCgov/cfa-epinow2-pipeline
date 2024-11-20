@@ -19,8 +19,9 @@ build:
 tag:
 	$(CNTR_PROG) tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
-interactive:
-	$(CNTR_PROG) run -v$(PWD):/cfa-epinow2-pipeline -it --rm $(REGISTRY)$(IMAGE_NAME):$(TAG)
+up:
+	$(CNTR_PROG) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) /bin/bash
 
 push:
 	$(CNTR_PROG) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
