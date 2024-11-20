@@ -1,6 +1,6 @@
 # If CNTR_PROG is undefined, then set it to be podman
 ifndef CNTR_PROG
-	CNTR_PROG = podman
+	CNTR_PROG = docker
 endif
 
 ifndef TAG
