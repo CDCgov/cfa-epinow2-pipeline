@@ -1,5 +1,7 @@
 # CFAEpiNow2Pipeline (development version)
 
+
+* Adding new action to post a comment on PRs with a link to the rendered pkgdown site.
 * Add inner pipeline responsible for running the business logic
 * Re-organizing GitHub workflows.
 * Checks if batch pool exists. Pools are named after branches. Also allows for deletion via commit message.
@@ -30,3 +32,4 @@
 * Read from new parameters schema
 * Fix bugs in parameter reading from local test run
 * Fix bugs in parameter reading from local test run
+* Add "US" as an option in `state_abb`

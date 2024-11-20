@@ -26,16 +26,12 @@
     },
     "data": {
         "path": "data/test_data.parquet",
-        "blob_storage_container": null,
-        "report_date": [
-            "2023-01-01"
-        ],
-        "reference_date": [
-        "2023-01-01",
-        "2022-12-30",
-        "2022-12-29"
-        ]
-    },
+	 "blob_storage_container": null
+   },
+   "exclusions": {
+        "path": "data/test_exclusions.csv",
+        "blob_storage_container": null
+   },
     "seed": 42,
     "horizon": 14,
     "priors": {
