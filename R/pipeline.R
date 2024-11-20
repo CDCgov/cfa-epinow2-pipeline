@@ -114,7 +114,8 @@ run_pipeline <- function(config_path,
     process_pipeline(config, output_dir),
     error = function(con) {
       cli::cli_warn("Pipeline run failed",
-        parent = con
+        parent = con,
+        class = "Run_failed"
       )
       FALSE
     }
@@ -122,6 +123,7 @@ run_pipeline <- function(config_path,
 
   # TODO: Move metadata to outer wrapper
   cli::cli_alert_info("Finishing run at {Sys.time()}")
+  invisible(pipeline_success)
 }
 
 #' Run the Model Fitting Process
