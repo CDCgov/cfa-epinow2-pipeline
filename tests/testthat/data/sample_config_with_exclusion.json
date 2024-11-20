@@ -26,7 +26,7 @@
     },
     "data": {
         "path": "data/test_data.parquet",
-	"blob_storage_container": null
+	 "blob_storage_container": null
    },
    "exclusions": {
         "path": "data/test_exclusions.csv",
