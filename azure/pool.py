@@ -69,6 +69,8 @@ if __name__ == "__main__":
     )
 
     # Create the blob storage container for this batch job
+    # [2024-11-20 George] We are not using this now, so it should be
+    # removed before merging the PR.
     input_container_name = "nnh-rt-input"
     create_container(blob_service_client, input_container_name)
     output_container_name = "nnh-rt-output"

@@ -115,7 +115,7 @@ jobs:
         with:
           push: true # This can be toggled manually for tweaking.
           tags: |
-            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:test-${{ needs.build-dependencies-image.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ needs.build-dependencies-image.outputs.tag }}
           file: ./Dockerfile
           build-args: |
             TAG=${{ needs.build-dependencies-image.outputs.tag }}
@@ -151,36 +151,14 @@ jobs:
 
       - name: Writing out config file
         run: |
-          cat <<EOF > pool-config-${{ github.sha }}.txt
-          [Authentication]
-          keyvault_url = "${{ secrets.CFA_PREDICT_VAULT_URL }}"
-          tenant_id = "${{ secrets.TENANT_ID }}"
-          application_id = "${{ secrets.EDAV_CFA_PREDICT_NNHT_SP_APP_ID}}"
-          subscription_id = "${{ secrets.SUBSCRIPTION_ID}}"
-          user_assigned_identity = "${{ secrets. BATCH_USER_ASSIGNED_IDENTITY }}"
-          client_id = "${{ secrets.AZURE_BATCH_ACCOUNT_CLIENT_ID}}"
-          principal_id = "${{ secrets.PRINCIPAL_ID }}"
-          subnet_id = "${{ secrets.SUBNET_ID }}"
-          resource_group = "${{ secrets.PRD_RESOURCE_GROUP }}"
-
-          [Storage]
-          storage_account_url = "${{ secrets.STORAGE_ACCOUNT_URL }}"
-          storage_account_name = "${{ secrets.STORAGE_ACCOUNT_NAME}}"
-          user_assigned_identity = "${{ secrets.BATCH_USER_ASSIGNED_IDENTITY}}"
-
-          [Container]
-          container_registry_url = "https://${{ env.REGISTRY }}"
-          container_registry_username = "cfaprdbatchcr"
-          container_registry_password = "${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}"
-          container_registry_server = "${{ env.REGISTRY }}"
-
-          [Batch]
-          pool_vm_size = "${{ env.VM_SIZE }}"
-          pool_id = "${{ env.POOL_ID }}"
-          batch_account_name = "${{ secrets.BATCH_ACCOUNT_NAME}}"
-
-
+          cat <<EOF > pool-config-${{ github.sha }}.toml
+          ${{ secrets.POOL_CONFIG_TOML }}
           EOF
+
+          # Replacing placeholders in the config file
+          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ TAG }}|g' pool-config-${{ github.sha }}.toml
+          sed -i 's|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g' pool-config-${{ github.sha }}.toml
+          sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
 
       - name: Ensuring the Azure CLI is installed
         run: |
@@ -228,7 +206,7 @@ jobs:
           # Running the python script azure/pool.py passing the config file
           # as an argument
           pip install -r azure/requirements.txt
-          python3 azure/pool.py pool-config-${{ github.sha }}.txt
+          python3 azure/pool.py pool-config-${{ github.sha }}.toml
 
 
       #########################################################################
