@@ -149,6 +149,10 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v4
 
+      # This step is only needed during the action to write the
+      # config file. Users can have a config file stored in their VAP
+      # sessions. In the future, we will have the config.toml file
+      # distributed with the repo (encrypted).
       - name: Writing out config file
         run: |
           cat <<EOF > pool-config-${{ github.sha }}.toml
