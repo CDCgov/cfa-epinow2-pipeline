@@ -12,6 +12,9 @@ IMAGE_NAME=cfa-epinow2-pipeline
 deps:
 	$(CNTR_PROG) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
 
+pull:
+	$(CNTR_PROG) pull $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG)
+
 build:
 	$(CNTR_PROG) build -t $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 		--build-arg TAG=$(TAG) -f Dockerfile
