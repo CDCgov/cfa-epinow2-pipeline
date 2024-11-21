@@ -34,45 +34,11 @@ test_that("Pipeline run produces expected outputs with NO exclusions", {
     blob_storage_container = blob_storage_container,
     output_dir = output_dir
   )
-
-  ########
-  # Assert output files all exist
-  job_path <- file.path(output_dir, config[["job_id"]])
-  task_path <- file.path(job_path, "tasks", config[["task_id"]])
-
-  # Samples
-  expect_true(
-    file.exists(
-      file.path(
-        job_path,
-        "samples",
-        paste0(
-          config[["task_id"]],
-          ".parquet"
-        )
-      )
-    )
-  )
-  # Summaries
-  expect_true(
-    file.exists(
-      file.path(
-        job_path,
-        "summaries",
-        paste0(
-          config[["task_id"]],
-          ".parquet"
-        )
-      )
-    )
-  )
-  # Model
-  file.exists(
-    file.path(task_path, "model.rds")
-  )
-  # Logs
-  file.exists(
-    file.path(task_path, "logs.txt")
+  expect_true(pipeline_success)
+  expect_pipeline_files_written(
+    output_dir,
+    config[["job_id"]],
+    config[["task_id"]]
   )
 })
 
@@ -94,43 +60,12 @@ test_that("Pipeline run produces expected outputs with exclusions", {
 
   ########
   # Assert output files all exist
-  job_path <- file.path(output_dir, config[["job_id"]])
-  task_path <- file.path(job_path, "tasks", config[["task_id"]])
-
-  # Samples
-  expect_true(
-    file.exists(
-      file.path(
-        job_path,
-        "samples",
-        paste0(
-          config[["task_id"]],
-          ".parquet"
-        )
-      )
-    )
+  expect_pipeline_files_written(
+    output_dir,
+    config[["job_id"]],
+    config[["task_id"]]
   )
-  # Summaries
-  expect_true(
-    file.exists(
-      file.path(
-        job_path,
-        "summaries",
-        paste0(
-          config[["task_id"]],
-          ".parquet"
-        )
-      )
-    )
-  )
-  # Model
-  file.exists(
-    file.path(task_path, "model.rds")
-  )
-  # Logs
-  file.exists(
-    file.path(task_path, "logs.txt")
-  )
+  expect_true(pipeline_success)
 })
 
 test_that("Process pipeline produces expected outputs and returns success", {
@@ -150,41 +85,9 @@ test_that("Process pipeline produces expected outputs and returns success", {
 
   ########
   # Assert output files all exist
-  job_path <- file.path(output_dir, config[["job_id"]])
-  task_path <- file.path(job_path, "tasks", config[["task_id"]])
-
-  # Samples
-  expect_true(
-    file.exists(
-      file.path(
-        job_path,
-        "samples",
-        paste0(
-          config[["task_id"]],
-          ".parquet"
-        )
-      )
-    )
-  )
-  # Summaries
-  expect_true(
-    file.exists(
-      file.path(
-        job_path,
-        "summaries",
-        paste0(
-          config[["task_id"]],
-          ".parquet"
-        )
-      )
-    )
-  )
-  # Model
-  file.exists(
-    file.path(task_path, "model.rds")
-  )
-  # Logs
-  file.exists(
-    file.path(task_path, "logs.txt")
+  expect_pipeline_files_written(
+    output_dir,
+    config[["job_id"]],
+    config[["task_id"]]
   )
 })
