@@ -35,6 +35,7 @@ Imports:
     jsonlite,
     rlang,
     rstan,
+    S7,
     tidybayes
 Additional_repositories:
     https://stan-dev.r-universe.dev
