@@ -48,11 +48,11 @@ read_data <- function(data_path,
   check_file_exists(data_path)
 
   parameters <- list(
-    data_path,
-    mapped_disease,
-    stringify_date(min_reference_date),
-    stringify_date(max_reference_date),
-    stringify_date(report_date)
+    data_path = data_path,
+    disease = mapped_disease,
+    min_ref_date = stringify_date(min_reference_date),
+    max_ref_date = stringify_date(max_reference_date),
+    report_date = stringify_date(report_date)
   )
 
   # We need different queries for the states and the US overall. For US overall
@@ -98,7 +98,7 @@ read_data <- function(data_path,
   ORDER BY reference_date
   "
     # Append `geo_value` to the query
-    parameters <- c(parameters, list(state_abb))
+    parameters <- c(parameters, list(geo_value = state_abb))
   }
 
   con <- DBI::dbConnect(duckdb::duckdb())
@@ -107,18 +107,18 @@ read_data <- function(data_path,
     DBI::dbGetQuery(
       con,
       statement = query,
-      params = parameters
+      params = unname(parameters)
     ),
     error = function(con) {
       cli::cli_abort(
         c(
           "Error fetching data from {.path {data_path}}",
           "Using parameters:",
-          "*" = "data_path: {.path {parameters[[1]]}}",
-          "*" = "mapped_disease: {.val {parameters[[2]]}}",
-          "*" = "min_reference_date: {.val {parameters[[3]]}}",
-          "*" = "max_reference_date: {.val {parameters[[4]]}}",
-          "*" = "report_date: {.val {parameters[[5]]}}",
+          "*" = "data_path: {.path {parameters[['data_path']]}}",
+          "*" = "mapped_disease: {.val {parameters[['disease']]}}",
+          "*" = "min_reference_date: {.val {parameters[['min_ref_date']]}}",
+          "*" = "max_reference_date: {.val {parameters[['max_ref_date']]}}",
+          "*" = "report_date: {.val {parameters[['report_date']]}}",
           "Original error: {con}"
         ),
         class = "wrapped_invalid_query"
