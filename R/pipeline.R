@@ -183,6 +183,7 @@ process_pipeline <- function(config, output_dir) {
     priors = config[["priors"]],
     sampler_opts = config[["sampler_opts"]]
   )
+
   diagnostics <- extract_diagnostics(
     fit = fit,
     data = cases_df,
@@ -192,12 +193,14 @@ process_pipeline <- function(config, output_dir) {
     geo_value = config[["geo_value"]],
     model = config[["model"]]
   )
+
   samples <- process_samples(
     fit = fit,
     geo_value = config[["geo_value"]],
     model = config[["model"]],
     disease = config[["disease"]]
   )
+
   summaries <- process_quantiles(
     fit = fit,
     geo_value = config[["geo_value"]],
