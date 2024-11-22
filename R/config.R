@@ -194,7 +194,7 @@ SamplerOpts <- S7::new_class(
 #' @param exclusions An instance of `Exclusions` class containing exclusion
 #' criteria.
 #' @param config_version A numeric value specifying the configuration version.
-#' @param quantile_width A list of numeric values representing the desired
+#' @param quantile_width A vector of numeric values representing the desired
 #' quantiles.
 #' @param model A string specifying the model to be used.
 #' @param report_date A Date object representing the report date.
@@ -217,8 +217,8 @@ Config <- S7::new_class(
     parameters = S7::S7_class(Parameters()),
     sampler_opts = S7::S7_class(SamplerOpts()),
     exclusions = S7::S7_class(Exclusions()),
-    config_version = S7::class_numeric,
-    quantile_width = S7::class_list,
-    model = S7::class_character
+    config_version = S7::new_property(S7::class_numeric, default = 1),
+    quantile_width = S7::new_property(S7::class_vector, default = c(0.5, 0.95)),
+    model = S7::new_property(S7::class_character, default = "EpiNow2")
   )
 )

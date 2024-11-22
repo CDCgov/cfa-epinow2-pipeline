@@ -5,14 +5,14 @@
 \alias{process_pipeline}
 \title{Run an Rt Estimation Model Pipeline}
 \usage{
-run_pipeline(config_path, blob_storage_container = NULL, output_dir = "/")
+run_pipeline(config, blob_storage_container = NULL, output_dir = "/")
 
 process_pipeline(config, output_dir)
 }
 \arguments{
-\item{config_path}{A string specifying the file path to the JSON
-configuration file. The configuration file should include at least \code{job_id}
-and \code{task_id} to manage the logging and task metadata.}
+\item{config}{A Config object containing configuration settings for the
+pipeline, including paths to data, exclusions, disease parameters, model
+settings, and other necessary inputs.}
 
 \item{blob_storage_container}{Optional. The name of the blob storage
 container to which logs and outputs will be uploaded. If NULL, no upload
@@ -20,10 +20,6 @@ will occur. (Planned feature, not currently implemented)}
 
 \item{output_dir}{A string specifying the directory where output, logs, and
 other pipeline artifacts will be saved. Defaults to the root directory ("/").}
-
-\item{config}{A list containing configuration settings for the pipeline,
-including paths to data, exclusions, disease parameters, model settings,
-and other necessary inputs.}
 }
 \value{
 The function does not return a value directly. However, the output

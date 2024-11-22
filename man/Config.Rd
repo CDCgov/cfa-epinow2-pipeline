@@ -7,15 +7,15 @@
 Config(
   job_id = character(0),
   task_id = character(0),
-  min_reference_date = (function (.data = double())
+  min_reference_date = (function (.data = double()) 
  {
      .Date(.data)
  })(),
-  max_reference_date = (function (.data = double())
+  max_reference_date = (function (.data = double()) 
  {
      .Date(.data)
  })(),
-  report_date = (function (.data = double())
+  report_date = (function (.data = double()) 
  {
      .Date(.data)
  })(),
@@ -29,9 +29,9 @@ Config(
   parameters = Parameters(),
   sampler_opts = SamplerOpts(),
   exclusions = Exclusions(),
-  config_version = integer(0),
-  quantile_width = list(),
-  model = character(0)
+  config_version = 1,
+  quantile_width = c(0.5, 0.95),
+  model = "EpiNow2"
 )
 }
 \arguments{
@@ -72,7 +72,7 @@ criteria.}
 
 \item{config_version}{A numeric value specifying the configuration version.}
 
-\item{quantile_width}{A list of numeric values representing the desired
+\item{quantile_width}{A vector of numeric values representing the desired
 quantiles.}
 
 \item{model}{A string specifying the model to be used.}
