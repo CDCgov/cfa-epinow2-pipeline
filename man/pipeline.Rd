@@ -15,8 +15,7 @@ execute_model_logic(config, output_dir)
 }
 \arguments{
 \item{config_path}{A string specifying the file path to the JSON
-configuration file. The configuration file should include at least \code{job_id}
-and \code{task_id} to manage the logging and task metadata.}
+configuration file.}
 
 \item{blob_storage_container}{Optional. The name of the blob storage
 container to which logs and outputs will be uploaded. If NULL, no upload
@@ -30,7 +29,8 @@ including paths to data, exclusions, disease parameters, model settings,
 and other necessary inputs.}
 }
 \value{
-The function does not return a value directly. However, the output
+The function returns a boolean, TRUE For pipeline success and FALSE
+otherwise. It writes the files:
 directory will contain the following files:
 \itemize{
 \item Model RDS file (\code{model.rds})

@@ -8,8 +8,7 @@
 #' outputs to a blob storage container is planned.
 #'
 #' @param config_path A string specifying the file path to the JSON
-#' configuration file. The configuration file should include at least `job_id`
-#' and `task_id` to manage the logging and task metadata.
+#' configuration file.
 #' @param blob_storage_container Optional. The name of the blob storage
 #' container to which logs and outputs will be uploaded. If NULL, no upload
 #' will occur. (Planned feature, not currently implemented)
@@ -57,7 +56,8 @@
 #'             └── logs.txt
 #' ```
 #'
-#' @return The function does not return a value directly. However, the output
+#' @return The function returns a boolean, TRUE For pipeline success and FALSE
+#'  otherwise. It writes the files:
 #' directory will contain the following files:
 #' - Model RDS file (`model.rds`)
 #' - Sample output in Parquet format (`<task_id>.parquet` in the `samples/`
