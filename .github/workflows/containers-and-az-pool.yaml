@@ -115,7 +115,7 @@ jobs:
         with:
           push: true # This can be toggled manually for tweaking.
           tags: |
-            ${{ env.REGISTRY}}/${{ env.IMAGE_NAME }}:test-${{ needs.build-dependencies-image.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ needs.build-dependencies-image.outputs.tag }}
           file: ./Dockerfile
           build-args: |
             TAG=${{ needs.build-dependencies-image.outputs.tag }}
@@ -125,6 +125,7 @@ jobs:
     name: Create Batch Pool and Submit Jobs
     runs-on: cfa-cdcgov
     needs: build-pipeline-image
+    container: python:3.12
 
     permissions:
       contents: read
@@ -147,6 +148,25 @@ jobs:
       - name: Checkout Repo
         id: checkout_repo
         uses: actions/checkout@v4
+
+      # This step is only needed during the action to write the
+      # config file. Users can have a config file stored in their VAP
+      # sessions. In the future, we will have the config.toml file
+      # distributed with the repo (encrypted).
+      - name: Writing out config file
+        run: |
+          cat <<EOF > pool-config-${{ github.sha }}.toml
+          ${{ secrets.POOL_CONFIG_TOML }}
+          EOF
+
+          # Replacing placeholders in the config file
+          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
+          sed -i 's|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g' pool-config-${{ github.sha }}.toml
+          sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
+
+      - name: Ensuring the Azure CLI is installed
+        run: |
+          apt-get update && apt-get install -y --no-install-recommends azure-cli
 
       - name: Login to Azure with NNH Service Principal
         id: azure_login_2
@@ -187,20 +207,12 @@ jobs:
 
         # The call to the az cli that actually generates the pool
         run: |
-          az batch account login \
-            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-            --name "${{ env.BATCH_ACCOUNT }}"
-
-          az batch pool create \
-            --account-endpoint "${{ env.BATCH_ENDPOINT }}" \
-            --id "${{ env.POOL_ID }}" \
-            --image "${{ env.VM_IMAGE_TAG }}" \
-            --node-agent-sku-id "${{ env.NODE_AGENT_SKU_ID }}" \
-            --vm-size "${{ env.VM_SIZE }}"
-
-          az batch pool autoscale enable \
-            --pool-id ${{ env.POOL_ID }} \
-            --auto-scale-formula "$(cat './batch-autoscale-formula.txt')"
+          # Running the python script azure/pool.py passing the config file
+          # as an argument
+          pip install -r azure/requirements.txt
+          python3 azure/pool.py \
+            pool-config-${{ github.sha }}.toml \
+            batch-autoscale-formula.txt
 
 
       #########################################################################
