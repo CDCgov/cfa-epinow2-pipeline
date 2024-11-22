@@ -7,9 +7,9 @@
 Data(
   path = character(0),
   blob_storage_container = character(0),
-  report_date = list(),
-  reference_date = list(),
-  production_date = list()
+  report_date = character(0),
+  reference_date = character(0),
+  production_date = character(0)
 )
 }
 \arguments{

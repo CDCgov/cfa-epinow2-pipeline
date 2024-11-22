@@ -7,31 +7,22 @@
 Config(
   job_id = character(0),
   task_id = character(0),
-  min_reference_date = (function (.data = double())
- {
-     .Date(.data)
- })(),
-  max_reference_date = (function (.data = double())
- {
-     .Date(.data)
- })(),
-  report_date = (function (.data = double())
- {
-     .Date(.data)
- })(),
+  min_reference_date = character(0),
+  max_reference_date = character(0),
+  report_date = character(0),
   disease = character(0),
   geo_value = character(0),
   geo_type = character(0),
-  data = Data(),
   seed = integer(0),
   horizon = integer(0),
+  model = "EpiNow2",
+  config_version = character(0),
+  quantile_width = c(0.5, 0.95),
+  data = Data(),
   priors = Priors(),
   parameters = Parameters(),
   sampler_opts = SamplerOpts(),
-  exclusions = Exclusions(),
-  config_version = 1,
-  quantile_width = c(0.5, 0.95),
-  model = "EpiNow2"
+  exclusions = Exclusions()
 )
 }
 \arguments{
@@ -39,13 +30,14 @@ Config(
 
 \item{task_id}{A string specifying the task.}
 
-\item{min_reference_date}{A Date object representing the minimum reference
-date.}
+\item{min_reference_date}{A string representing the minimum reference
+date. Formatted as "YYYY-MM-DD".}
 
-\item{max_reference_date}{A Date object representing the maximum reference
-date.}
+\item{max_reference_date}{A string representing the maximum reference
+date. Formatted as "YYYY-MM-DD".}
 
-\item{report_date}{A Date object representing the report date.}
+\item{report_date}{A string representing the report date. Formatted as
+"YYYY-MM-DD".}
 
 \item{disease}{A string specifying the disease being modeled.}
 
@@ -53,11 +45,18 @@ date.}
 
 \item{geo_type}{A string specifying the geographic type, usually "state".}
 
-\item{data}{An instance of \code{Data} class containing data configurations.}
-
 \item{seed}{An integer for setting the random seed.}
 
 \item{horizon}{An integer specifying the forecasting horizon.}
+
+\item{model}{A string specifying the model to be used.}
+
+\item{config_version}{A numeric value specifying the configuration version.}
+
+\item{quantile_width}{A vector of numeric values representing the desired
+quantiles.}
+
+\item{data}{An instance of \code{Data} class containing data configurations.}
 
 \item{priors}{An instance of \code{Priors} class containing prior configurations.}
 
@@ -69,13 +68,6 @@ options.}
 
 \item{exclusions}{An instance of \code{Exclusions} class containing exclusion
 criteria.}
-
-\item{config_version}{A numeric value specifying the configuration version.}
-
-\item{quantile_width}{A vector of numeric values representing the desired
-quantiles.}
-
-\item{model}{A string specifying the model to be used.}
 }
 \description{
 Represents the complete configuration for the pipeline.
