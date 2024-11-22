@@ -6,3 +6,13 @@
     Data length: 2
     PMF can only be up to the length of the data
 
+# Missing keys throws error
+
+    Code
+      format_stan_opts(list(), random_seed)
+    Condition
+      Error in `format_stan_opts()`:
+      ! Missing expected keys/values in "sampler_opts"
+      Missing keys: "cores", "chains", "iter_warmup", "iter_sampling", "adapt_delta", and "max_treedepth"
+      Missing values:
+

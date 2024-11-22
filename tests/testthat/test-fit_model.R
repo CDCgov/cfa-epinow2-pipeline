@@ -38,8 +38,8 @@ test_that("Minimal model fit all params runs", {
     chains = 1,
     adapt_delta = 0.8,
     max_treedepth = 10,
-    iter_warmup = 100,
-    iter_sampling = 100
+    iter_warmup = 25,
+    iter_sampling = 25
   )
 
   fit <- fit_model(
@@ -94,8 +94,8 @@ test_that("Minimal model fit with no right trunc or delay runs", {
     chains = 1,
     adapt_delta = 0.8,
     max_treedepth = 10,
-    iter_warmup = 100,
-    iter_sampling = 100
+    iter_warmup = 25,
+    iter_sampling = 25
   )
 
   fit <- fit_model(
@@ -155,11 +155,11 @@ test_that("Bad params w/ failing fit issues warning and returns NA", {
     chains = 1,
     adapt_delta = 0.8,
     max_treedepth = 10,
-    iter_warmup = -100,
-    iter_sampling = 100
+    iter_warmup = -25,
+    iter_sampling = 25
   )
 
-  expect_warning(
+  expect_error(
     fit <- fit_model(
       data = data,
       parameters = parameters,
@@ -170,8 +170,6 @@ test_that("Bad params w/ failing fit issues warning and returns NA", {
     ),
     class = "failing_fit"
   )
-
-  expect_true(is.na(fit))
 })
 
 test_that("Right truncation longer than data throws error", {
@@ -190,4 +188,9 @@ test_that("Missing GI throws error", {
   expect_error(format_generation_interval(NA),
     class = "Missing_GI"
   )
+})
+
+test_that("Missing keys throws error", {
+  random_seed <- 12345
+  expect_snapshot(format_stan_opts(list(), random_seed), error = TRUE)
 })

@@ -1,0 +1,54 @@
+{
+    "job_id": "6183da58-89bc-455f-8562-4f607257a876",
+    "task_id": "bc0c3eb3-7158-4631-a2a9-86b97357f97e",
+    "as_of_date": "2023-10-28",
+    "disease": "test",
+    "geo_value": "test",
+    "geo_type": "test",
+    "min_reference_date": "2023-01-02",
+    "max_reference_date": "2023-01-07",
+    "report_date": "2023-10-28",
+    "quantile_width": [0.5, 0.95],
+    "model": "EpiNow2_test",
+    "parameters": {
+       "generation_interval": {
+         "path": "data/test_parameters.parquet",
+         "blob_storage_container": null
+       },
+       "delay_interval": {
+         "path": null,
+         "blob_storage_container": null
+       },
+       "right_truncation": {
+         "path": null,
+         "blob_storage_container": null
+       }
+    },
+    "data": {
+        "path": "data/test_data.parquet",
+	"blob_storage_container": null
+   },
+   "exclusions": {
+        "path": "data/test_exclusions.csv",
+        "blob_storage_container": null
+   },
+    "seed": 42,
+    "horizon": 14,
+    "priors": {
+        "rt": {
+            "mean": 1.0,
+            "sd": 0.2
+        },
+        "gp": {
+            "alpha_sd": 0.01
+        }
+    },
+    "sampler_opts": {
+        "cores": 1,
+        "chains": 1,
+        "iter_warmup": 50,
+        "iter_sampling": -50,
+        "adapt_delta": 0.99,
+        "max_treedepth": 12
+    }
+}

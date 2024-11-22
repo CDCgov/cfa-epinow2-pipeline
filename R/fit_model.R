@@ -44,22 +44,9 @@ fit_model <- function(
     parameters[["right_truncation"]],
     data
   )
-
-  # Stan sampler ------------------------------------------------------------
-  stan <- EpiNow2::stan_opts(
-    cores = sampler_opts[["cores"]],
-    chains = sampler_opts[["chains"]],
-    # NOTE: seed gets used twice -- as the seed passed here to the Stan sampler
-    # and below as the R PRNG seed for EpiNow2 initialization
-    seed = seed,
-    warmup = sampler_opts[["iter_warmup"]],
-    samples = sampler_opts[["iter_sampling"]],
-    control = list(
-      adapt_delta = sampler_opts[["adapt_delta"]],
-      max_treedepth = sampler_opts[["max_treedepth"]]
-    )
+  stan <- format_stan_opts(
+    sampler_opts, seed
   )
-
   df <- data.frame(
     confirm = data[["confirm"]],
     date = as.Date(data[["reference_date"]])
@@ -75,17 +62,24 @@ fit_model <- function(
         rt = rt,
         gp = gp,
         stan = stan,
-        verbose = interactive()
+        verbose = TRUE,
+        # Dump logs to console to be caught by pipeline's logging instead of
+        # EpiNow2's default through futile.logger
+        logs = EpiNow2::setup_logging(
+          threshold = "INFO",
+          file = NULL,
+          mirror_to_console = TRUE,
+          name = "EpiNow2"
+        ),
+        filter_leading_zeros = FALSE,
       )
     }),
-    # Downgrade model erroring out to a warning so we can catch and return
     error = function(cnd) {
-      cli::cli_warn(
-        "Model fitting failed. Returning NA.",
+      cli::cli_abort(
+        "Call to EpiNow2::epinow() failed with an error",
         parent = cnd,
         class = "failing_fit"
       )
-      NA
     }
   )
 }
@@ -187,4 +181,39 @@ format_right_truncation <- function(pmf, data) {
       )
     })
   }
+}
+
+format_stan_opts <- function(sampler_opts, seed) {
+  expected_stan_args <- c(
+    "cores",
+    "chains",
+    "iter_warmup",
+    "iter_sampling",
+    "adapt_delta",
+    "max_treedepth"
+  )
+  missing_keys <- !(expected_stan_args %in% names(sampler_opts))
+  missing_elements <- rlang::is_null(sampler_opts[expected_stan_args])
+  if (any(missing_keys) || any(missing_elements)) {
+    cli::cli_abort(c(
+      "Missing expected keys/values in {.val sampler_opts}",
+      "Missing keys: {.val {expected_stan_args[missing_keys]}}",
+      "Missing values: {.val {expected_stan_args[missing_elements]}}"
+    ))
+  }
+
+  # Stan sampler ------------------------------------------------------------
+  EpiNow2::stan_opts(
+    cores = sampler_opts[["cores"]],
+    chains = sampler_opts[["chains"]],
+    # NOTE: seed gets used twice -- as the seed passed here to the Stan sampler
+    # and as the R PRNG seed for EpiNow2 initialization
+    seed = seed,
+    warmup = sampler_opts[["iter_warmup"]],
+    samples = sampler_opts[["iter_sampling"]],
+    control = list(
+      adapt_delta = sampler_opts[["adapt_delta"]],
+      max_treedepth = sampler_opts[["max_treedepth"]]
+    )
+  )
 }
