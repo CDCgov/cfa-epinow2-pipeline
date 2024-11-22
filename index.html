@@ -8,8 +8,8 @@
 <title>EpiNow2 wrapper for deployment to Azure Batch • CFAEpiNow2Pipeline</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="EpiNow2 wrapper for deployment to Azure Batch">
 <meta name="description" content="Add logging, metadata handling, and data handling functions to use EpiNow2 in a pipeline. This pipeline is optimized for the Center for Forecasting and Outbreak Analytic's use-case, fitting hundreds of models in parallel.">
 <meta property="og:description" content="Add logging, metadata handling, and data handling functions to use EpiNow2 in a pipeline. This pipeline is optimized for the Center for Forecasting and Outbreak Analytic's use-case, fitting hundreds of models in parallel.">
@@ -236,6 +236,30 @@ flowchart LR
     CREATE_POOL---END_POOL
 
   end</code></pre>
+</div>
+<div class="section level2">
+<h2 id="container-images">Container images<a class="anchor" aria-label="anchor" href="#container-images"></a>
+</h2>
+<p>The project includes container images for running the pipelines. Particularly, the GitHub Action workflow located in <a href=".github/workflows/containers-and-az-pool.yaml">.github/workflows/containers-and-az-pool.yaml</a> automatically builds an image based on <a href="Dockerfile">Dockerfile</a> and pushes it to Azure Container Registry. The images can also be built locally, in which case the <a href="Makefile">Makefile</a> included in the project contains the following targets:</p>
+<ul>
+<li>
+<code>make deps</code> will build the image with the required dependencies for the package.</li>
+<li>
+<code>make build</code> will build the image containing the R package.</li>
+<li>
+<code>make interactive</code> will lunch the image in interactive mode.</li>
+</ul>
+<p>All three targets depend on the environment variables <code>CNTR</code> (defults to <code>docker</code>) and <code>TAG</code> (defaults to <code>local</code>). For instance, if you wanted to build the dependency image using <code>podman</code> and the <code>latest</code> tag, you can do the following:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="va">REGISTRY</span><span class="op">=</span>cfaprdbatchcr.azurecr.io/ <span class="va">TAG</span><span class="op">=</span>zs-pipeline <span class="fu">make</span> build</span></code></pre></div>
+<p><strong>NOTICE THE TRAILING SLASH!</strong> Which is equivalent to run:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">podman</span> build <span class="at">-t</span> cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>    <span class="at">--build-arg</span> TAG=zs-pipeline <span class="at">-f</span> Dockerfile</span></code></pre></div>
+<p>To run interactively, you can use the following target:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="va">REGISTRY</span><span class="op">=</span>cfaprdbatchcr.azurecr.io/ <span class="va">TAG</span><span class="op">=</span>zs-pipeline <span class="fu">make</span> interactive</span></code></pre></div>
+<p>which is equivalent to run:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">podman</span> run <span class="dt">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>    <span class="at">-v</span>/wherever/your/pwd/is:/cfa-epinow2-pipeline <span class="at">-it</span> <span class="at">--rm</span> <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="project-admin">Project Admin<a class="anchor" aria-label="anchor" href="#project-admin"></a>
