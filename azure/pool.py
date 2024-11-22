@@ -27,8 +27,7 @@ def create_container(blob_service_client: BlobServiceClient, container_name: str
 
 
 def get_autoscale_formula(fn):
-    autoscale_file = os.path.join(sys.path[0], fn)
-    with open(autoscale_file, "r") as autoscale_text:
+    with open(fn, "r") as autoscale_text:
         return autoscale_text.read()
 
 if __name__ == "__main__":
