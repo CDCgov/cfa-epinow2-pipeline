@@ -1,20 +1,34 @@
-# If CNTR_PROG is undefined, then set it to be podman
-ifndef CNTR_PROG
-	CNTR_PROG = podman
+ifndef TAG
+	TAG = local
 endif
 
-CNTR_USER=gvegayon
-IMAGE_NAME=cfa-epinow2-pipeline-dependencies:latest
+IMAGE_NAME=cfa-epinow2-pipeline
+
+deps:
+	docker build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
+
+pull:
+	docker pull $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG)
 
 build:
-	$(CNTR_PROG) build -t $(IMAGE_NAME) -f Dockerfile-dependencies . && \
-	$(CNTR_PROG) tag $(IMAGE_NAME) $(CNTR_USER)/$(IMAGE_NAME)
+	docker build -t $(REGISTRY)$(IMAGE_NAME):$(TAG) \
+		--build-arg TAG=$(TAG) -f Dockerfile .
+
+tag:
+	docker tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
+
+up:
+	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) /bin/bash
+
+run-function:
+	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
+	Rscript -e "CFAEpiNow2Pipeline::run_pipeline('/cfa-epinow2-pipeline/configs/baa631b0a39111efbec600155d6da693_MS_Influenza_1731703176.json')"
 
 push:
-	$(CNTR_PROG) push $(CNTR_USER)/$(IMAGE_NAME)
+	docker push $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
-run:
-	$(CNTR_PROG) run -it --rm -v $(PWD):/mnt $(IMAGE_NAME)
 
 test:
 	Rscript -e "testthat::test_local()"
