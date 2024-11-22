@@ -31,3 +31,4 @@
 * Fix bugs in parameter reading from local test run
 * Fix bugs in parameter reading from local test run
 * Add "US" as an option in `state_abb`
+* Creating a Config class to make syncing configuration differences easier.

@@ -2,13 +2,14 @@
 #'
 #' Represents exclusion criteria for the pipeline.
 #'
-#' @slot path A string specifying the path to a CSV file containing exclusion
+#' @param path A string specifying the path to a CSV file containing exclusion
 #' data. It should include at least the columns: `reference_date`,
 #' `report_date`, ' `state_abb`, `disease`.
+#' @export
 Exclusions <- S7::new_class(
   "Exclusions",
   properties = list(
-    path = class_character
+    path = S7::class_character
   )
 )
 
@@ -16,14 +17,15 @@ Exclusions <- S7::new_class(
 #'
 #' Represents the generation interval parameters.
 #'
-#' @slot path A string specifying the path to the generation interval CSV file.
-#' @slot blob_storage_container Optional. The name of the blob storage container
-#' to get it from. If NULL, will look locally.
+#' @param path A string specifying the path to the generation interval CSV file.
+#' @param blob_storage_container Optional. The name of the blob storage
+#' container to get it from. If NULL, will look locally.
+#' @export
 GenerationInterval <- S7::new_class(
   "GenerationInterval",
   properties = list(
-    path = class_character,
-    blob_storage_container = class_character
+    path = S7::class_character,
+    blob_storage_container = S7::class_character
   )
 )
 
@@ -31,14 +33,15 @@ GenerationInterval <- S7::new_class(
 #'
 #' Represents the delay interval parameters.
 #'
-#' @slot path A string specifying the path to the delay interval CSV file.
-#' @slot blob_storage_container Optional. The name of the blob storage container
-#' to get it from. If NULL, will look locally.
+#' @param path A string specifying the path to the delay interval CSV file.
+#' @param blob_storage_container Optional. The name of the blob storage
+#' container to get it from. If NULL, will look locally.
+#' @export
 DelayInterval <- S7::new_class(
   "DelayInterval",
   properties = list(
-    path = class_character,
-    blob_storage_container = class_character
+    path = S7::class_character,
+    blob_storage_container = S7::class_character
   )
 )
 
@@ -46,14 +49,15 @@ DelayInterval <- S7::new_class(
 #'
 #' Represents the right truncation parameters.
 #'
-#' @slot path A string specifying the path to the right truncation CSV file.
-#' @slot blob_storage_container Optional. The name of the blob storage container
-#' to get it from. If NULL, will look locally.
+#' @param path A string specifying the path to the right truncation CSV file.
+#' @param blob_storage_container Optional. The name of the blob storage
+#' container to get it from. If NULL, will look locally.
+#' @export
 RightTruncation <- S7::new_class(
   "RightTruncation",
   properties = list(
-    path = class_character,
-    blob_storage_container = class_character
+    path = S7::class_character,
+    blob_storage_container = S7::class_character
   )
 )
 
@@ -61,15 +65,16 @@ RightTruncation <- S7::new_class(
 #'
 #' Holds all parameter-related configurations for the pipeline.
 #'
-#' @slot generation_interval An instance of `GenerationInterval` class.
-#' @slot delay_interval An instance of `DelayInterval` class.
-#' @slot right_truncation An instance of `RightTruncation` class.
+#' @param generation_interval An instance of `GenerationInterval` class.
+#' @param delay_interval An instance of `DelayInterval` class.
+#' @param right_truncation An instance of `RightTruncation` class.
+#' @export
 Parameters <- S7::new_class(
   "Parameters",
   properties = list(
-    generation_interval = class_GenerationInterval,
-    delay_interval = class_DelayInterval,
-    right_truncation = class_RightTruncation
+    generation_interval = S7::S7_class(GenerationInterval()),
+    delay_interval = S7::S7_class(DelayInterval()),
+    right_truncation = S7::S7_class(RightTruncation())
   )
 )
 
@@ -77,13 +82,15 @@ Parameters <- S7::new_class(
 #'
 #' Represents the Rt prior parameters.
 #'
-#' @slot mean A numeric value representing the mean of the Rt prior.
-#' @slot sd A numeric value representing the standard deviation of the Rt prior.
+#' @param mean A numeric value representing the mean of the Rt prior.
+#' @param sd A numeric value representing the standard deviation of the Rt
+#' prior.
+#' @export
 RtPrior <- S7::new_class(
   "RtPrior",
   properties = list(
-    mean = class_numeric,
-    sd = class_numeric
+    mean = S7::class_numeric,
+    sd = S7::class_numeric
   )
 )
 
@@ -91,12 +98,13 @@ RtPrior <- S7::new_class(
 #'
 #' Represents the Gaussian Process prior parameters.
 #'
-#' @slot alpha_sd A numeric value representing the standard deviation of the
+#' @param alpha_sd A numeric value representing the standard deviation of the
 #' alpha parameter in the GP prior.
+#' @export
 GpPrior <- S7::new_class(
   "GpPrior",
   properties = list(
-    alpha_sd = class_numeric
+    alpha_sd = S7::class_numeric
   )
 )
 
@@ -104,13 +112,14 @@ GpPrior <- S7::new_class(
 #'
 #' Holds all prior-related configurations for the pipeline.
 #'
-#' @slot rt An instance of `RtPrior` class.
-#' @slot gp An instance of `GpPrior` class.
+#' @param rt An instance of `RtPrior` class.
+#' @param gp An instance of `GpPrior` class.
+#' @export
 Priors <- S7::new_class(
   "Priors",
   properties = list(
-    rt = class_RtPrior,
-    gp = class_GpPrior
+    rt = S7::S7_class(RtPrior()),
+    gp = S7::S7_class(GpPrior())
   )
 )
 
@@ -118,20 +127,22 @@ Priors <- S7::new_class(
 #'
 #' Represents the data-related configurations.
 #'
-#' @slot path A string specifying the path to the data Parquet file.
-#' @slot blob_storage_container Optional. The name of the blob storage container
-#' to which the data file will be uploaded. If NULL, no upload will occur.
-#' @slot report_date A list of strings representing report dates.
-#' @slot reference_date A list of strings representing reference dates.
-#' @slot production_date A list of strings representing production dates.
+#' @param path A string specifying the path to the data Parquet file.
+#' @param blob_storage_container Optional. The name of the blob storage
+#' container to which the data file will be uploaded. If NULL, no upload will
+#' occur.
+#' @param report_date A list of strings representing report dates.
+#' @param reference_date A list of strings representing reference dates.
+#' @param production_date A list of strings representing production dates.
+#' @export
 Data <- S7::new_class(
   "Data",
   properties = list(
-    path = class_character,
-    blob_storage_container = class_character,
-    report_date = class_list,
-    reference_date = class_list,
-    production_date = class_list
+    path = S7::class_character,
+    blob_storage_container = S7::class_character,
+    report_date = S7::class_list,
+    reference_date = S7::class_list,
+    production_date = S7::class_list
   )
 )
 
@@ -139,22 +150,23 @@ Data <- S7::new_class(
 #'
 #' Represents the sampler options for the pipeline.
 #'
-#' @slot cores An integer specifying the number of CPU cores to use.
-#' @slot chains An integer specifying the number of Markov chains.
-#' @slot iter_warmup An integer specifying the number of warmup iterations.
-#' @slot iter_sampling An integer specifying the number of sampling iterations.
-#' @slot adapt_delta A numeric value for the target acceptance probability.
-#' @slot max_treedepth An integer specifying the maximum tree depth for the
+#' @param cores An integer specifying the number of CPU cores to use.
+#' @param chains An integer specifying the number of Markov chains.
+#' @param iter_warmup An integer specifying the number of warmup iterations.
+#' @param iter_sampling An integer specifying the number of sampling iterations.
+#' @param adapt_delta A numeric value for the target acceptance probability.
+#' @param max_treedepth An integer specifying the maximum tree depth for the
 #' sampler.
+#' @export
 SamplerOpts <- S7::new_class(
   "SamplerOpts",
   properties = list(
-    cores = class_integer,
-    chains = class_integer,
-    iter_warmup = class_integer,
-    iter_sampling = class_integer,
-    adapt_delta = class_numeric,
-    max_treedepth = class_integer
+    cores = S7::class_integer,
+    chains = S7::class_integer,
+    iter_warmup = S7::class_integer,
+    iter_sampling = S7::class_integer,
+    adapt_delta = S7::class_numeric,
+    max_treedepth = S7::class_integer
   )
 )
 
@@ -162,50 +174,51 @@ SamplerOpts <- S7::new_class(
 #'
 #' Represents the complete configuration for the pipeline.
 #'
-#' @slot job_id A string specifying the job.
-#' @slot task_id A string specifying the task.
-#' @slot min_reference_date A Date object representing the minimum reference
+#' @param job_id A string specifying the job.
+#' @param task_id A string specifying the task.
+#' @param min_reference_date A Date object representing the minimum reference
 #' date.
-#' @slot max_reference_date A Date object representing the maximum reference
+#' @param max_reference_date A Date object representing the maximum reference
 #' date.
-#' @slot disease A string specifying the disease being modeled.
-#' @slot geo_value A string specifying the geographic value, usually a state.
-#' @slot geo_type A string specifying the geographic type, usually "state".
-#' @slot data An instance of `Data` class containing data configurations.
-#' @slot seed An integer for setting the random seed.
-#' @slot horizon An integer specifying the forecasting horizon.
-#' @slot priors An instance of `Priors` class containing prior configurations.
-#' @slot parameters An instance of `Parameters` class containing parameter
+#' @param disease A string specifying the disease being modeled.
+#' @param geo_value A string specifying the geographic value, usually a state.
+#' @param geo_type A string specifying the geographic type, usually "state".
+#' @param data An instance of `Data` class containing data configurations.
+#' @param seed An integer for setting the random seed.
+#' @param horizon An integer specifying the forecasting horizon.
+#' @param priors An instance of `Priors` class containing prior configurations.
+#' @param parameters An instance of `Parameters` class containing parameter
 #' configurations.
-#' @slot sampler_opts An instance of `SamplerOpts` class containing sampler
+#' @param sampler_opts An instance of `SamplerOpts` class containing sampler
 #' options.
-#' @slot exclusions An instance of `Exclusions` class containing exclusion
+#' @param exclusions An instance of `Exclusions` class containing exclusion
 #' criteria.
-#' @slot config_version A numeric value specifying the configuration version.
-#' @slot quantile_width A list of numeric values representing the desired
+#' @param config_version A numeric value specifying the configuration version.
+#' @param quantile_width A list of numeric values representing the desired
 #' quantiles.
-#' @slot model A string specifying the model to be used.
-#' @slot report_date A Date object representing the report date.
+#' @param model A string specifying the model to be used.
+#' @param report_date A Date object representing the report date.
+#' @export
 Config <- S7::new_class(
   "Config",
   properties = list(
-    job_id = class_character,
-    task_id = class_character,
-    min_reference_date = class_Date,
-    max_reference_date = class_Date,
-    disease = class_character,
-    geo_value = class_character,
-    geo_type = class_character,
-    data = class_Data,
-    seed = class_integer,
-    horizon = class_integer,
-    priors = class_Priors,
-    parameters = class_Parameters,
-    sampler_opts = class_SamplerOpts,
-    exclusions = class_Exclusions,
-    config_version = class_numeric,
-    quantile_width = class_list,
-    model = class_character,
-    report_date = class_Date
+    job_id = S7::class_character,
+    task_id = S7::class_character,
+    min_reference_date = S7::class_Date,
+    max_reference_date = S7::class_Date,
+    report_date = S7::class_Date,
+    disease = S7::class_character,
+    geo_value = S7::class_character,
+    geo_type = S7::class_character,
+    data = S7::S7_class(Data()),
+    seed = S7::class_integer,
+    horizon = S7::class_integer,
+    priors = S7::S7_class(Priors()),
+    parameters = S7::S7_class(Parameters()),
+    sampler_opts = S7::S7_class(SamplerOpts()),
+    exclusions = S7::S7_class(Exclusions()),
+    config_version = S7::class_numeric,
+    quantile_width = S7::class_list,
+    model = S7::class_character
   )
 )
