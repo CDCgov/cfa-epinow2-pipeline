@@ -1,0 +1,28 @@
+[Authentication]
+vault_url = ""
+vault_sp_secret_id= ""
+tenant_id = ""
+application_id = ""
+subscription_id = ""
+user_assigned_identity = ""
+client_id = ""
+principal_id = ""
+subnet_id = ""
+resource_group = ""
+
+[Storage]
+storage_account_url = ""
+storage_account_name = ""
+user_assigned_identity = ""
+
+[Container]
+container_registry_url = ""
+container_registry_username = ""
+container_registry_password = ""
+container_registry_server = ""
+container_image_name = "{{ IMAGE_NAME }}"
+
+[Batch]
+pool_vm_size = "{{ VM_SIZE }}"
+pool_id = "{{ POOL_ID }}"
+batch_account_name = ""
