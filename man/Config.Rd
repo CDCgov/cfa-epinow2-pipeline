@@ -7,15 +7,15 @@
 Config(
   job_id = character(0),
   task_id = character(0),
-  min_reference_date = (function (.data = double()) 
+  min_reference_date = (function (.data = double())
  {
      .Date(.data)
  })(),
-  max_reference_date = (function (.data = double()) 
+  max_reference_date = (function (.data = double())
  {
      .Date(.data)
  })(),
-  report_date = (function (.data = double()) 
+  report_date = (function (.data = double())
  {
      .Date(.data)
  })(),
