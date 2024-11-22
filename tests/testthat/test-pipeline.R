@@ -9,7 +9,7 @@ test_that("Bad config throws warning and returns failure", {
 
   # Act
   expect_warning(
-    pipeline_success <- run_pipeline(
+    pipeline_success <- orchestrate_pipeline(
       config_path = config_path,
       blob_storage_container = blob_storage_container,
       output_dir = output_dir
@@ -29,7 +29,7 @@ test_that("Pipeline run produces expected outputs with NO exclusions", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- run_pipeline(
+  pipeline_success <- orchestrate_pipeline(
     config_path = config_path,
     blob_storage_container = blob_storage_container,
     output_dir = output_dir
@@ -52,7 +52,7 @@ test_that("Pipeline run produces expected outputs with exclusions", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- run_pipeline(
+  pipeline_success <- orchestrate_pipeline(
     config_path = config_path,
     blob_storage_container = blob_storage_container,
     output_dir = output_dir
@@ -77,7 +77,7 @@ test_that("Process pipeline produces expected outputs and returns success", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- process_pipeline(
+  pipeline_success <- execute_model_logic(
     config = config,
     output_dir = output_dir
   )

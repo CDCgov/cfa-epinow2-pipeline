@@ -20,8 +20,9 @@
 #' The function reads the configuration from a JSON file and uses this to set
 #' up the job and task identifiers. It creates an output directory structure
 #' based on these IDs and starts logging the process in a file. The main
-#' pipeline process is handled by `process_pipeline()`, with errors caught and
-#' logged as warnings. The function will log the success or failure of the run.
+#' pipeline process is handled by `execute_model_logic()`, with errors
+#' caught and logged as warnings. The function will log the success or
+#' failure of the run.
 #'
 #' Logs are written to a file in the output directory, and console output is
 #' also mirrored in this log file. Error handling is in place to capture any
@@ -67,9 +68,9 @@
 #'
 #' @rdname pipeline
 #' @export
-run_pipeline <- function(config_path,
-                         blob_storage_container = NULL,
-                         output_dir = "/") {
+orchestrate_pipeline <- function(config_path,
+                                 blob_storage_container = NULL,
+                                 output_dir = "/") {
   # TODO: Add config reader here
   config <- jsonlite::read_json(config_path,
     simplifyVector = TRUE
@@ -106,12 +107,12 @@ run_pipeline <- function(config_path,
   cli::cli_alert_info("Using job id {.field {config[['job_id']]}}")
   cli::cli_alert_info("Using task id {.field {config[['task_id']]}}")
 
-  # Errors within `process_pipeline()` are downgraded to warnings so
+  # Errors within `execute_model_logic()` are downgraded to warnings so
   # they can be logged and stored in Blob. If there is an error,
   # `pipeline_success` is set to false, which will be stored in the
   # metadata in the next PR.
   pipeline_success <- rlang::try_fetch(
-    process_pipeline(config, output_dir),
+    execute_model_logic(config, output_dir),
     error = function(con) {
       cli::cli_warn("Pipeline run failed",
         parent = con,
@@ -142,7 +143,7 @@ run_pipeline <- function(config_path,
 #'
 #' @rdname pipeline
 #' @export
-process_pipeline <- function(config, output_dir) {
+execute_model_logic <- function(config, output_dir) {
   cases_df <- read_data(
     data_path = config[["data"]][["path"]],
     disease = config[["disease"]],
