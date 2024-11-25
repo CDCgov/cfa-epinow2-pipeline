@@ -226,9 +226,20 @@ Config <- S7::new_class(
   )
 )
 
+#' Read JSON Configuration into Config Object
+#'
+#' Reads a JSON file from the specified path and converts it into a `Config`
+#' object.
+#'
+#' @param config_path A string specifying the path to the JSON configuration
+#' file.
+#' @return An instance of the `Config` class populated with the data from the
+#' JSON file.
+#' @export
 read_json_into_config <- function(config_path) {
   # First, our hard coded, flattened, map from strings to Classes. If any new
-  # subclasses are added above, they will also need to be added here.
+  # subclasses are added above, they will also need to be added here. If we
+  # create a more automated way to do this, we can remove this.
   str2class <- list(
     data = Data,
     priors = Priors,
@@ -244,6 +255,16 @@ read_json_into_config <- function(config_path) {
 
   # First, read the JSON file into a list
   raw_input <- jsonlite::read_json(config_path, simplifyVector = TRUE)
+
+  # Check what top level properties were not in the raw input
+  missing_properties <- setdiff(S7::prop_names(Config()), names(raw_input))
+  # Error out if missing any fields
+  if (length(missing_properties) > 0) {
+    cli::cli_abort(c(
+      "The following properties are missing from the config file:",
+      "{.var missing_properties}"
+    ))
+  }
 
   inner <- function(raw_data, class_to_fill) {
     # For each property, check if it is a regular value, or an S7 object.
@@ -265,16 +286,6 @@ read_json_into_config <- function(config_path) {
       }
     }
     config
-  }
-
-  # Check what top level properties were not in the raw input
-  missing_properties <- setdiff(S7::prop_names(Config()), names(raw_input))
-  # Error out if missing any fields
-  if (length(missing_properties) > 0) {
-    cli::cli_abort(c(
-      "The following properties are missing from the config file:",
-      "{.var missing_properties}"
-    ))
   }
 
   inner(raw_input, Config)
