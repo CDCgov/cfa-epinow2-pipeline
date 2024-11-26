@@ -1,0 +1,58 @@
+{
+  "job_id": "Rt-estimation-2024-11-26T14-38-24-622e8cc8ac3611efbe8d5a0f1d07309c",
+  "task_id": "622e8cc8ac3611efbe8d5a0f1d07309c_CA_COVID-19_1732653504",
+  "min_reference_date": "2024-10-01",
+  "max_reference_date": "2024-11-25",
+  "disease": "test",
+  "geo_value": "test",
+  "geo_type": "test",
+  "report_date": "2024-11-26",
+  "production_date": "2024-11-26",
+  "parameters": {
+    "as_of_date": "2024-11-26",
+    "generation_interval": {
+      "path": null,
+      "blob_storage_container": null
+    },
+    "delay_interval": {
+      "path": null,
+      "blob_storage_container": null
+    },
+    "right_truncation": {
+      "path": null,
+      "blob_storage_container": null
+    }
+  },
+  "data": {
+    "path": "data/test_data.parquet",
+    "blob_storage_container": null
+  },
+  "seed": 42,
+  "horizon": 14,
+  "priors": {
+    "rt": {
+      "mean": 1.0,
+      "sd": 0.2
+    },
+    "gp": {
+      "alpha_sd": 0.01
+    }
+  },
+  "sampler_opts": {
+    "cores": 1,
+    "chains": 1,
+    "iter_warmup": 50,
+    "iter_sampling": 50,
+    "adapt_delta": 0.99,
+    "max_treedepth": 12
+  },
+  "exclusions": {
+    "path": null
+  },
+  "config_version": "1.0",
+  "quantile_width": [
+    0.5,
+    0.95
+  ],
+  "model": "EpiNow2"
+}

@@ -91,3 +91,27 @@ test_that("Process pipeline produces expected outputs and returns success", {
     config@task_id
   )
 })
+
+# test_that("Runs on config from generator as of 2024-11-26", {
+#   # Arrange
+#   config_path <- test_path("data", "CA_COVID-19.json")
+#   config <- read_json_into_config(config_path)
+#   # Read from locally
+#   output_dir <- "pipeline_test"
+#   on.exit(unlink(output_dir, recursive = TRUE))
+
+#   # Act
+#   pipeline_success <- execute_model_logic(
+#     config = config,
+#     output_dir = output_dir
+#   )
+#   expect_true(pipeline_success)
+
+#   ########
+#   # Assert output files all exist
+#   expect_pipeline_files_written(
+#     output_dir,
+#     config@job_id,
+#     config@task_id
+#   )
+# })
