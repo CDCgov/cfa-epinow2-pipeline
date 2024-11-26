@@ -217,7 +217,7 @@ read_json_into_config <- function(config_path) {
   # Error out if missing any fields
   if (length(missing_properties) > 0) {
     cli::cli_alert_info(c(
-      "The following expected properties were not in the config file:",
+      "The following expected propert{?y/ies} were not in the config file:",
       "{.var {missing_properties}}"
     ))
   }
