@@ -5,12 +5,16 @@
 \title{Parameters Class}
 \usage{
 Parameters(
+  as_of_date = character(0),
   generation_interval = GenerationInterval(),
   delay_interval = DelayInterval(),
   right_truncation = RightTruncation()
 )
 }
 \arguments{
+\item{as_of_date}{A string representing the as-of date. Formatted as
+"YYYY-MM-DD".}
+
 \item{generation_interval}{An instance of \code{GenerationInterval} class.}
 
 \item{delay_interval}{An instance of \code{DelayInterval} class.}

@@ -18,58 +18,57 @@ Exclusions <- S7::new_class(
   )
 )
 
-#' GenerationInterval Class
+#' Interval Class
 #'
-#' Represents the generation interval parameters.
+#' Represents a generic interval. Meant to be subclassed.
 #'
 #' @param path A string specifying the path to the generation interval CSV file.
 #' @param blob_storage_container Optional. The name of the blob storage
 #' container to get it from. If NULL, will look locally.
-#' @export
-GenerationInterval <- S7::new_class(
-  "GenerationInterval",
+#' @name Interval
+Interval <- S7::new_class(
+  "Interval",
   properties = list(
     path = character_or_null,
     blob_storage_container = character_or_null
   )
+)
+
+#' GenerationInterval Class
+#'
+#' Represents the generation interval parameters.
+#' @rdname Interval
+#' @export
+GenerationInterval <- S7::new_class(
+  "GenerationInterval",
+  parent = Interval,
 )
 
 #' DelayInterval Class
 #'
 #' Represents the delay interval parameters.
-#'
-#' @param path A string specifying the path to the delay interval CSV file.
-#' @param blob_storage_container Optional. The name of the blob storage
-#' container to get it from. If NULL, will look locally.
+#' @rdname Interval
 #' @export
 DelayInterval <- S7::new_class(
   "DelayInterval",
-  properties = list(
-    path = character_or_null,
-    blob_storage_container = character_or_null
-  )
+  parent = Interval,
 )
 
 #' RightTruncation Class
 #'
 #' Represents the right truncation parameters.
-#'
-#' @param path A string specifying the path to the right truncation CSV file.
-#' @param blob_storage_container Optional. The name of the blob storage
-#' container to get it from. If NULL, will look locally.
+#' @rdname Interval
 #' @export
 RightTruncation <- S7::new_class(
   "RightTruncation",
-  properties = list(
-    path = character_or_null,
-    blob_storage_container = character_or_null
-  )
+  parent = Interval,
 )
 
 #' Parameters Class
 #'
 #' Holds all parameter-related configurations for the pipeline.
-#'
+#' @param as_of_date A string representing the as-of date. Formatted as
+#' "YYYY-MM-DD".
 #' @param generation_interval An instance of `GenerationInterval` class.
 #' @param delay_interval An instance of `DelayInterval` class.
 #' @param right_truncation An instance of `RightTruncation` class.
@@ -77,6 +76,7 @@ RightTruncation <- S7::new_class(
 Parameters <- S7::new_class(
   "Parameters",
   properties = list(
+    as_of_date = S7::class_character,
     generation_interval = S7::S7_class(GenerationInterval()),
     delay_interval = S7::S7_class(DelayInterval()),
     right_truncation = S7::S7_class(RightTruncation())
@@ -137,8 +137,6 @@ Data <- S7::new_class(
 #' @param model A string specifying the model to be used.
 #' @param report_date A string representing the report date. Formatted as
 #' "YYYY-MM-DD".
-#' @param as_of_date A string representing the as-of date. Formatted as
-#' "YYYY-MM-DD".
 #' @export
 Config <- S7::new_class(
   "Config",
@@ -148,7 +146,6 @@ Config <- S7::new_class(
     min_reference_date = S7::class_character,
     max_reference_date = S7::class_character,
     report_date = S7::class_character,
-    as_of_date = S7::class_character,
     disease = S7::class_character,
     geo_value = S7::class_character,
     geo_type = S7::class_character,

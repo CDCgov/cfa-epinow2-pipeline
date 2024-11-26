@@ -10,7 +10,6 @@ Config(
   min_reference_date = character(0),
   max_reference_date = character(0),
   report_date = character(0),
-  as_of_date = character(0),
   disease = character(0),
   geo_value = character(0),
   geo_type = character(0),
@@ -171,9 +170,6 @@ date. Formatted as "YYYY-MM-DD".}
 date. Formatted as "YYYY-MM-DD".}
 
 \item{report_date}{A string representing the report date. Formatted as
-"YYYY-MM-DD".}
-
-\item{as_of_date}{A string representing the as-of date. Formatted as
 "YYYY-MM-DD".}
 
 \item{disease}{A string specifying the disease being modeled.}
