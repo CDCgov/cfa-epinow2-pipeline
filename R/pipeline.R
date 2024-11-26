@@ -71,15 +71,24 @@
 orchestrate_pipeline <- function(config_path,
                                  blob_storage_container = NULL,
                                  output_dir = "/") {
-  # TODO: Add config reader here
-  config <- jsonlite::read_json(config_path,
-    simplifyVector = TRUE
+  config <- rlang::try_fetch(
+    read_json_into_config(config_path),
+    error = function(con) {
+      cli::cli_warn("Bad config file",
+        parent = con,
+        class = "Bad_config"
+      )
+      FALSE
+    }
   )
+  if (typeof(config) == "logical") {
+    return(invisible(FALSE))
+  }
 
   write_output_dir_structure(
     output_dir = output_dir,
-    job_id = config[["job_id"]],
-    task_id = config[["task_id"]]
+    job_id = config@job_id,
+    task_id = config@task_id
   )
 
   # Set up logs
@@ -104,8 +113,8 @@ orchestrate_pipeline <- function(config_path,
   )
   on.exit(sink(file = NULL))
   cli::cli_alert_info("Starting run at {Sys.time()}")
-  cli::cli_alert_info("Using job id {.field {config[['job_id']]}}")
-  cli::cli_alert_info("Using task id {.field {config[['task_id']]}}")
+  cli::cli_alert_info("Using job id {.field {config@job_id}}")
+  cli::cli_alert_info("Using task id {.field {config@task_id}}")
 
   # Errors within `execute_model_logic()` are downgraded to warnings so
   # they can be logged and stored in Blob. If there is an error,
@@ -153,7 +162,8 @@ execute_model_logic <- function(config, output_dir) {
     min_reference_date = config@min_reference_date
   )
 
-  if (!rlang::is_null(config@exclusions@path)) {
+  # rlang::is_empty() checks for empty and NULL values
+  if (!rlang::is_empty(config@exclusions@path)) {
     exclusions_df <- read_exclusions(config@exclusions@path)
     cases_df <- apply_exclusions(cases_df, exclusions_df)
   } else {

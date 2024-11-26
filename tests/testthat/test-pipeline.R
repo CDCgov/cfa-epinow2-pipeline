@@ -71,7 +71,7 @@ test_that("Pipeline run produces expected outputs with exclusions", {
 test_that("Process pipeline produces expected outputs and returns success", {
   # Arrange
   config_path <- test_path("data", "sample_config_with_exclusion.json")
-  config <- jsonlite::read_json(config_path)
+  config <- read_json_into_config(config_path)
   # Read from locally
   output_dir <- "pipeline_test"
   on.exit(unlink(output_dir, recursive = TRUE))
@@ -87,7 +87,7 @@ test_that("Process pipeline produces expected outputs and returns success", {
   # Assert output files all exist
   expect_pipeline_files_written(
     output_dir,
-    config[["job_id"]],
-    config[["task_id"]]
+    config@job_id,
+    config@task_id
   )
 })

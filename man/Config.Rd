@@ -10,6 +10,7 @@ Config(
   min_reference_date = character(0),
   max_reference_date = character(0),
   report_date = character(0),
+  as_of_date = character(0),
   disease = character(0),
   geo_value = character(0),
   geo_type = character(0),
@@ -19,9 +20,142 @@ Config(
   config_version = character(0),
   quantile_width = c(0.5, 0.95),
   data = Data(),
-  priors = Priors(),
+  priors = list(rt = list(mean = structure(list(classes = list(structure(list(class =
+    "integer", constructor_name = "integer", constructor = function (.data = integer(0))
+    
+ .data, validator = function (object) 
+ {
+     if (base_class(object) != name) {
+   
+         sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+   
+     }
+ }), class = "S7_base_class"), structure(list(class = "double", constructor_name =
+    "double", constructor = function (.data = numeric(0)) 
+ .data, validator = function
+    (object) 
+ {
+     if (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"))), class = "S7_union"), sd = structure(list(classes =
+    list(structure(list(class = "integer", constructor_name = "integer", constructor =
+    function (.data = integer(0)) 
+ .data, validator = function (object) 
+ {
+     if
+    (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"), structure(list(class = "double", constructor_name =
+    "double", constructor = function (.data = numeric(0)) 
+ .data, validator = function
+    (object) 
+ {
+     if (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"))), class = "S7_union")), gp = list(alpha_sd =
+    structure(list(classes = list(structure(list(class = "integer", constructor_name =
+    "integer", constructor = function (.data = integer(0)) 
+ .data, validator = function
+    (object) 
+ {
+     if (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"), structure(list(class = "double", constructor_name =
+    "double", constructor = function (.data = numeric(0)) 
+ .data, validator = function
+    (object) 
+ {
+     if (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"))), class = "S7_union"))),
   parameters = Parameters(),
-  sampler_opts = SamplerOpts(),
+  sampler_opts = list(cores = structure(list(class = "integer", constructor_name =
+    "integer", constructor = function (.data = integer(0)) 
+ .data, validator = function
+    (object) 
+ {
+     if (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"), chains = structure(list(class = "integer",
+    constructor_name = "integer", constructor = function (.data = integer(0)) 
+ .data,
+    validator = function (object) 
+ {
+     if (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"), iter_warmup = structure(list(class = "integer",
+    constructor_name = "integer", constructor = function (.data = integer(0)) 
+ .data,
+    validator = function (object) 
+ {
+     if (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"), iter_sampling = structure(list(class = "integer",
+    constructor_name = "integer", constructor = function (.data = integer(0)) 
+ .data,
+    validator = function (object) 
+ {
+     if (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"), max_treedepth = structure(list(class = "integer",
+    constructor_name = "integer", constructor = function (.data = integer(0)) 
+ .data,
+    validator = function (object) 
+ {
+     if (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"), adapt_delta = structure(list(classes =
+    list(structure(list(class = "integer", constructor_name = "integer", constructor =
+    function (.data = integer(0)) 
+ .data, validator = function (object) 
+ {
+     if
+    (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"), structure(list(class = "double", constructor_name =
+    "double", constructor = function (.data = numeric(0)) 
+ .data, validator = function
+    (object) 
+ {
+     if (base_class(object) != name) {
+        
+    sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
+     }
+
+    }), class = "S7_base_class"))), class = "S7_union")),
   exclusions = Exclusions()
 )
 }
@@ -37,6 +171,9 @@ date. Formatted as "YYYY-MM-DD".}
 date. Formatted as "YYYY-MM-DD".}
 
 \item{report_date}{A string representing the report date. Formatted as
+"YYYY-MM-DD".}
+
+\item{as_of_date}{A string representing the as-of date. Formatted as
 "YYYY-MM-DD".}
 
 \item{disease}{A string specifying the disease being modeled.}
@@ -58,13 +195,15 @@ quantiles.}
 
 \item{data}{An instance of \code{Data} class containing data configurations.}
 
-\item{priors}{An instance of \code{Priors} class containing prior configurations.}
+\item{priors}{A list of lists. The first level should contain the key \code{rt}
+with elements \code{mean} and \code{sd} and the key \code{gp} with element \code{alpha_sd}.}
 
 \item{parameters}{An instance of \code{Parameters} class containing parameter
 configurations.}
 
-\item{sampler_opts}{An instance of \code{SamplerOpts} class containing sampler
-options.}
+\item{sampler_opts}{A list. The Stan sampler options to be passed through
+EpiNow2. It has required keys: \code{cores}, \code{chains}, \code{iter_warmup},
+\code{iter_sampling}, \code{max_treedepth}, and \code{adapt_delta}.}
 
 \item{exclusions}{An instance of \code{Exclusions} class containing exclusion
 criteria.}
