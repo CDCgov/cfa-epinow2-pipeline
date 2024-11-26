@@ -175,7 +175,7 @@ execute_model_logic <- function(config, output_dir) {
     delay_interval_path = config@parameters@delay_interval@path,
     right_truncation_path = config@parameters@right_truncation@path,
     disease = config@disease,
-    as_of_date = config@as_of_date,
+    as_of_date = config@parameters@as_of_date,
     group = config@geo_value,
     report_date = config@report_date
   )
