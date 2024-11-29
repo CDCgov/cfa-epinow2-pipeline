@@ -4,11 +4,17 @@
 \alias{read_json_into_config}
 \title{Read JSON Configuration into Config Object}
 \usage{
-read_json_into_config(config_path)
+read_json_into_config(config_path, optional_fields)
 }
 \arguments{
 \item{config_path}{A string specifying the path to the JSON configuration
 file.}
+
+\item{optional_fields}{A list of strings specifying the optional fields in
+the JSON file. If a field is not present in the JSON file, and is marked as
+optional, it will be set to either the empty type (e.g. \code{chr(0)}), or NULL.
+If a field is not present in the JSON file, and is not marked as optional, an
+error will be thrown.}
 }
 \value{
 An instance of the \code{Config} class populated with the data from the

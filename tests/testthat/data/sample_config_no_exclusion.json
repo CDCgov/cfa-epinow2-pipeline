@@ -46,5 +46,6 @@
         "iter_sampling": 50,
         "adapt_delta": 0.99,
         "max_treedepth": 12
-    }
+    },
+    "config_version": "0.1.0"
 }

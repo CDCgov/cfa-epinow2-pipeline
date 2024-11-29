@@ -72,7 +72,7 @@ orchestrate_pipeline <- function(config_path,
                                  blob_storage_container = NULL,
                                  output_dir = "/") {
   config <- rlang::try_fetch(
-    read_json_into_config(config_path),
+    read_json_into_config(config_path, c("exclusions")),
     error = function(con) {
       cli::cli_warn("Bad config file",
         parent = con,

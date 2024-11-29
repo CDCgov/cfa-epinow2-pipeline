@@ -190,10 +190,15 @@ Config <- S7::new_class(
 #'
 #' @param config_path A string specifying the path to the JSON configuration
 #' file.
+#' @param optional_fields A list of strings specifying the optional fields in
+#' the JSON file. If a field is not present in the JSON file, and is marked as
+#' optional, it will be set to either the empty type (e.g. `chr(0)`), or NULL.
+#' If a field is not present in the JSON file, and is not marked as optional, an
+#' error will be thrown.
 #' @return An instance of the `Config` class populated with the data from the
 #' JSON file.
 #' @export
-read_json_into_config <- function(config_path) {
+read_json_into_config <- function(config_path, optional_fields) {
   # First, our hard coded, flattened, map from strings to Classes. If any new
   # subclasses are added above, they will also need to be added here. If we
   # create a more automated way to do this, we can remove this.
@@ -211,11 +216,19 @@ read_json_into_config <- function(config_path) {
 
   # Check what top level properties were not in the raw input
   missing_properties <- setdiff(S7::prop_names(Config()), names(raw_input))
+  # Remove any optional fields from the missing properties, give info message
+  # about what is being given a default arg.
+  not_need_but_missing <- intersect(optional_fields, missing_properties)
+  if (length(not_need_but_missing) > 0) {
+    cli::cli_alert_info(
+      "Optional field{?s} not in config file: {.var {not_need_but_missing}}"
+    )
+  }
+  missing_properties <- setdiff(missing_properties, optional_fields)
   # Error out if missing any fields
   if (length(missing_properties) > 0) {
-    cli::cli_alert_info(c(
-      "The following expected propert{?y/ies} were not in the config file:",
-      "{.var {missing_properties}}"
+    cli::cli_abort(c(
+      "Propert{?y/ies} not in the config file: {.var {missing_properties}}"
     ))
   }
 
