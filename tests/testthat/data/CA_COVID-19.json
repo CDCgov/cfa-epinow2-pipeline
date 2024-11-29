@@ -3,15 +3,15 @@
   "task_id": "622e8cc8ac3611efbe8d5a0f1d07309c_CA_COVID-19_1732653504",
   "min_reference_date": "2024-10-01",
   "max_reference_date": "2024-11-25",
-  "disease": "test",
-  "geo_value": "test",
-  "geo_type": "test",
+  "disease": "COVID-19",
+  "geo_value": "CA",
+  "geo_type": "state",
   "report_date": "2024-11-26",
   "production_date": "2024-11-26",
   "parameters": {
     "as_of_date": "2024-11-26",
     "generation_interval": {
-      "path": null,
+      "path": "data/test_parameters2.parquet",
       "blob_storage_container": null
     },
     "delay_interval": {
@@ -24,7 +24,7 @@
     }
   },
   "data": {
-    "path": "data/test_data.parquet",
+    "path": "data/CA_test.parquet",
     "blob_storage_container": null
   },
   "seed": 42,
