@@ -11,7 +11,7 @@
   "parameters": {
     "as_of_date": "2024-11-26",
     "generation_interval": {
-      "path": "data/test_parameters2.parquet",
+      "path": "data/test_parameters.parquet",
       "blob_storage_container": null
     },
     "delay_interval": {
