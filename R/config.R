@@ -10,7 +10,7 @@ character_or_null <- S7::new_union(S7::class_character, NULL)
 #' @param blob_storage_container Optional. The name of the blob storage
 #' container to get it from. If NULL, will look locally.
 #' @export
-Exclusions <- S7::new_class(
+Exclusions <- S7::new_class( # nolint: object_name_linter
   "Exclusions",
   properties = list(
     path = character_or_null,
@@ -26,7 +26,7 @@ Exclusions <- S7::new_class(
 #' @param blob_storage_container Optional. The name of the blob storage
 #' container to get it from. If NULL, will look locally.
 #' @name Interval
-Interval <- S7::new_class(
+Interval <- S7::new_class( # nolint: object_name_linter
   "Interval",
   properties = list(
     path = character_or_null,
@@ -39,7 +39,7 @@ Interval <- S7::new_class(
 #' Represents the generation interval parameters.
 #' @rdname Interval
 #' @export
-GenerationInterval <- S7::new_class(
+GenerationInterval <- S7::new_class( # nolint: object_name_linter
   "GenerationInterval",
   parent = Interval,
 )
@@ -49,7 +49,7 @@ GenerationInterval <- S7::new_class(
 #' Represents the delay interval parameters.
 #' @rdname Interval
 #' @export
-DelayInterval <- S7::new_class(
+DelayInterval <- S7::new_class( # nolint: object_name_linter
   "DelayInterval",
   parent = Interval,
 )
@@ -59,7 +59,7 @@ DelayInterval <- S7::new_class(
 #' Represents the right truncation parameters.
 #' @rdname Interval
 #' @export
-RightTruncation <- S7::new_class(
+RightTruncation <- S7::new_class( # nolint: object_name_linter
   "RightTruncation",
   parent = Interval,
 )
@@ -73,7 +73,7 @@ RightTruncation <- S7::new_class(
 #' @param delay_interval An instance of `DelayInterval` class.
 #' @param right_truncation An instance of `RightTruncation` class.
 #' @export
-Parameters <- S7::new_class(
+Parameters <- S7::new_class( # nolint: object_name_linter
   "Parameters",
   properties = list(
     as_of_date = S7::class_character,
@@ -95,7 +95,7 @@ Parameters <- S7::new_class(
 #' @param reference_date A list of strings representing reference dates.
 #' @param production_date A list of strings representing production dates.
 #' @export
-Data <- S7::new_class(
+Data <- S7::new_class( # nolint: object_name_linter
   "Data",
   properties = list(
     path = S7::class_character,
@@ -138,7 +138,7 @@ Data <- S7::new_class(
 #' @param report_date A string representing the report date. Formatted as
 #' "YYYY-MM-DD".
 #' @export
-Config <- S7::new_class(
+Config <- S7::new_class( # nolint: object_name_linter
   "Config",
   properties = list(
     job_id = S7::class_character,
