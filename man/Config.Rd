@@ -21,136 +21,136 @@ Config(
   data = Data(),
   priors = list(rt = list(mean = structure(list(classes = list(structure(list(class =
     "integer", constructor_name = "integer", constructor = function (.data = integer(0))
-    
- .data, validator = function (object) 
+
+ .data, validator = function (object)
  {
      if (base_class(object) != name) {
-   
+
          sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
-   
+
      }
  }), class = "S7_base_class"), structure(list(class = "double", constructor_name =
-    "double", constructor = function (.data = numeric(0)) 
+    "double", constructor = function (.data = numeric(0))
  .data, validator = function
-    (object) 
+    (object)
  {
      if (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"))), class = "S7_union"), sd = structure(list(classes =
     list(structure(list(class = "integer", constructor_name = "integer", constructor =
-    function (.data = integer(0)) 
- .data, validator = function (object) 
+    function (.data = integer(0))
+ .data, validator = function (object)
  {
      if
     (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"), structure(list(class = "double", constructor_name =
-    "double", constructor = function (.data = numeric(0)) 
+    "double", constructor = function (.data = numeric(0))
  .data, validator = function
-    (object) 
+    (object)
  {
      if (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"))), class = "S7_union")), gp = list(alpha_sd =
     structure(list(classes = list(structure(list(class = "integer", constructor_name =
-    "integer", constructor = function (.data = integer(0)) 
+    "integer", constructor = function (.data = integer(0))
  .data, validator = function
-    (object) 
+    (object)
  {
      if (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"), structure(list(class = "double", constructor_name =
-    "double", constructor = function (.data = numeric(0)) 
+    "double", constructor = function (.data = numeric(0))
  .data, validator = function
-    (object) 
+    (object)
  {
      if (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"))), class = "S7_union"))),
   parameters = Parameters(),
   sampler_opts = list(cores = structure(list(class = "integer", constructor_name =
-    "integer", constructor = function (.data = integer(0)) 
+    "integer", constructor = function (.data = integer(0))
  .data, validator = function
-    (object) 
+    (object)
  {
      if (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"), chains = structure(list(class = "integer",
-    constructor_name = "integer", constructor = function (.data = integer(0)) 
+    constructor_name = "integer", constructor = function (.data = integer(0))
  .data,
-    validator = function (object) 
+    validator = function (object)
  {
      if (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"), iter_warmup = structure(list(class = "integer",
-    constructor_name = "integer", constructor = function (.data = integer(0)) 
+    constructor_name = "integer", constructor = function (.data = integer(0))
  .data,
-    validator = function (object) 
+    validator = function (object)
  {
      if (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"), iter_sampling = structure(list(class = "integer",
-    constructor_name = "integer", constructor = function (.data = integer(0)) 
+    constructor_name = "integer", constructor = function (.data = integer(0))
  .data,
-    validator = function (object) 
+    validator = function (object)
  {
      if (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"), max_treedepth = structure(list(class = "integer",
-    constructor_name = "integer", constructor = function (.data = integer(0)) 
+    constructor_name = "integer", constructor = function (.data = integer(0))
  .data,
-    validator = function (object) 
+    validator = function (object)
  {
      if (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"), adapt_delta = structure(list(classes =
     list(structure(list(class = "integer", constructor_name = "integer", constructor =
-    function (.data = integer(0)) 
- .data, validator = function (object) 
+    function (.data = integer(0))
+ .data, validator = function (object)
  {
      if
     (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
     }), class = "S7_base_class"), structure(list(class = "double", constructor_name =
-    "double", constructor = function (.data = numeric(0)) 
+    "double", constructor = function (.data = numeric(0))
  .data, validator = function
-    (object) 
+    (object)
  {
      if (base_class(object) != name) {
-        
+
     sprintf("Underlying data must be <\%s> not <\%s>", name, base_class(object))
      }
 
