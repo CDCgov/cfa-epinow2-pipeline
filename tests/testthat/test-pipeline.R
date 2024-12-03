@@ -88,6 +88,10 @@ test_that("Process pipeline produces expected outputs and returns success", {
   expect_pipeline_files_written(
     output_dir,
     config[["job_id"]],
-    config[["task_id"]]
+    config[["task_id"]],
+    # Don't check logs here, bc logs are set up by orchestrate_pipeline(), but
+    # this test is just for execute_model_logic() which is called after logs are
+    # set up in orchestrate_pipeline().
+    check_logs = FALSE
   )
 })

@@ -210,6 +210,22 @@ execute_model_logic <- function(config, output_dir) {
     quantiles = unlist(config[["quantile_width"]])
   )
 
+  # All the top level metadata fields
+  metadata <- list(
+    job_id = config[["job_id"]],
+    task_id = config[["task_id"]],
+    data_path = config[["data"]][["path"]],
+    model = config[["model"]],
+    disease = config[["disease"]],
+    geo_value = config[["geo_value"]],
+    report_date = config[["report_date"]],
+    production_date = config[["production_date"]],
+    max_reference_date = config[["max_reference_date"]],
+    min_reference_date = config[["min_reference_date"]],
+    exclusions = config[["exclusions"]][["path"]],
+    run_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
+  )
+
   write_model_outputs(
     fit = fit,
     samples = samples,
@@ -217,8 +233,7 @@ execute_model_logic <- function(config, output_dir) {
     output_dir = output_dir,
     job_id = config[["job_id"]],
     task_id = config[["task_id"]],
-    # TODO: metadata
-    metadata = list()
+    metadata = metadata
   )
 
   return(TRUE)
