@@ -157,17 +157,12 @@ Config <- S7::new_class( # nolint: object_name_linter
     data = S7::S7_class(Data()),
     # Using a list instead of an S7 object, because EpiNow2 expects a list, and
     # because it reduces changes to the pipeline code.
-    # Adding a default that shows the required keys, with the expected types as
-    # the values. Should fail loudly if the default values are used, but will
-    # be useful to the user to see what is expected.
+    # Would add default values, but Roxygen isn't happy about them yet.
     priors = S7::class_list,
     parameters = S7::S7_class(Parameters()),
     # Using a list instead of an S7 object, because stan expects a list, and
     # because it reduces changes to the pipeline code.
-    # Adding a default that shows the required keys, with the expected types as
-    # the values. Should fail loudly if the default values are used, but will
-    # be useful to the user to see what is expected.
-    # Using a list here also reduces changes to the pipeline code.
+    # Would add default values, but Roxygen isn't happy about them yet.
     sampler_opts = S7::class_list,
     exclusions = S7::S7_class(Exclusions())
   )
