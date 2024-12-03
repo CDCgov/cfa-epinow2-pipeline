@@ -160,10 +160,7 @@ Config <- S7::new_class( # nolint: object_name_linter
     # Adding a default that shows the required keys, with the expected types as
     # the values. Should fail loudly if the default values are used, but will
     # be useful to the user to see what is expected.
-    priors = S7::new_property(S7::class_list, default = list(
-      rt = list(mean = S7::class_numeric, sd = S7::class_numeric),
-      gp = list(alpha_sd = S7::class_numeric)
-    )),
+    priors = S7::class_list,
     parameters = S7::S7_class(Parameters()),
     # Using a list instead of an S7 object, because stan expects a list, and
     # because it reduces changes to the pipeline code.
@@ -171,14 +168,7 @@ Config <- S7::new_class( # nolint: object_name_linter
     # the values. Should fail loudly if the default values are used, but will
     # be useful to the user to see what is expected.
     # Using a list here also reduces changes to the pipeline code.
-    sampler_opts = S7::new_property(S7::class_list, default = list(
-      cores = S7::class_integer,
-      chains = S7::class_integer,
-      iter_warmup = S7::class_integer,
-      iter_sampling = S7::class_integer,
-      max_treedepth = S7::class_integer,
-      adapt_delta = S7::class_numeric
-    )),
+    sampler_opts = S7::class_list,
     exclusions = S7::S7_class(Exclusions())
   )
 )
