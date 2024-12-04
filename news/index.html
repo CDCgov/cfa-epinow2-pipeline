@@ -33,7 +33,11 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="cfaepinow2pipeline-development-version">CFAEpiNow2Pipeline (development version)<a class="anchor" aria-label="anchor" href="#cfaepinow2pipeline-development-version"></a></h2>
-<ul><li>Adding new action to post a comment on PRs with a link to the rendered pkgdown site.</li>
+<ul><li>Creating a Config class to make syncing configuration differences easier.</li>
+<li>Add a JSON reader for the Config class.</li>
+<li>Use the Config class throughout the pipeline.</li>
+<li>Adding a script to setup the Azure Batch Pool to link the container.</li>
+<li>Adding new action to post a comment on PRs with a link to the rendered pkgdown site.</li>
 <li>Add inner pipeline responsible for running the model fitting process</li>
 <li>Re-organizing GitHub workflows.</li>
 <li>Checks if batch pool exists. Pools are named after branches. Also allows for deletion via commit message.</li>

@@ -8,6 +8,11 @@
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/index.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/news/index.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/open_practices.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/Config.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/Data.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/Exclusions.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/Interval.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/Parameters.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/apply_exclusions.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/download_from_azure_blob.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/extract_diagnostics.html</loc></url>
@@ -24,6 +29,7 @@
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/read_disease_parameters.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/read_exclusions.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/read_interval_pmf.html</loc></url>
+<url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/read_json_into_config.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/sample_processing_functions.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/write_model_outputs.html</loc></url>
 <url><loc>https://cdcgov.github.io/cfa-epinow2-pipeline/reference/write_output_dir_structure.html</loc></url>
