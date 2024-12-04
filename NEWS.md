@@ -1,5 +1,8 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Creating a Config class to make syncing configuration differences easier.
+* Add a JSON reader for the Config class.
+* Use the Config class throughout the pipeline.
 * Adding a script to setup the Azure Batch Pool to link the container.
 * Adding new action to post a comment on PRs with a link to the rendered pkgdown site.
 * Add inner pipeline responsible for running the model fitting process

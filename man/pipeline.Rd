@@ -24,9 +24,9 @@ will occur. (Planned feature, not currently implemented)}
 \item{output_dir}{A string specifying the directory where output, logs, and
 other pipeline artifacts will be saved. Defaults to the root directory ("/").}
 
-\item{config}{A list containing configuration settings for the pipeline,
-including paths to data, exclusions, disease parameters, model settings,
-and other necessary inputs.}
+\item{config}{A Config object containing configuration settings for the
+pipeline, including paths to data, exclusions, disease parameters, model
+settings, and other necessary inputs.}
 }
 \value{
 The function returns a boolean, TRUE For pipeline success and FALSE
