@@ -1,7 +1,6 @@
 {
     "job_id": "6183da58-89bc-455f-8562-4f607257a876",
     "task_id": "bc0c3eb3-7158-4631-a2a9-86b97357f97e",
-    "as_of_date": "2023-10-28",
     "disease": "test",
     "geo_value": "test",
     "geo_type": "test",
@@ -11,6 +10,7 @@
     "quantile_width": [0.5, 0.95],
     "model": "EpiNow2_test",
     "parameters": {
+      "as_of_date": "2023-10-28",
        "generation_interval": {
          "path": "data/test_parameters.parquet",
          "blob_storage_container": null
@@ -46,5 +46,6 @@
         "iter_sampling": 50,
         "adapt_delta": 0.99,
         "max_treedepth": 12
-    }
+    },
+    "config_version": "0.1.0"
 }
