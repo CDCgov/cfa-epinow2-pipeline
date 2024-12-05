@@ -60,11 +60,28 @@ download_file_from_container <- function(
     "Downloading blob {.path {blob_storage_path}} to {.path {local_file_path}}"
   )
 
-  AzureStor::download_blob(
-    container = container,
-    src = blob_storage_path,
-    dest = local_file_path,
-    overwrite = TRUE
+  rlang::try_fetch(
+    {
+      dirs <- dirname(local_file_path)
+
+      if (!dir.exists(dirs)) {
+        cli::cli_alert("Creating directory {.path {dirs}}")
+        dir.create(dirs, recursive = TRUE)
+      }
+
+      AzureStor::download_blob(
+        container = container,
+        src = blob_storage_path,
+        dest = local_file_path,
+        overwrite = TRUE
+      )
+    },
+    error = function(cnd) {
+      cli::cli_abort(c(
+        "Failed to download {.path {blob_storage_path}}",
+        ">" = "Does the blob exist in the container?"
+      ))
+    }
   )
 
   cli::cli_alert_success(
@@ -74,7 +91,7 @@ download_file_from_container <- function(
   invisible(local_file_path)
 }
 
-#' Load Azure Blob endpoint using credentials in environment variables
+#' Load Azure Blob container using credentials in environment variables
 #'
 #' This **impure** function depends on the environment variables:
 #' * az_tenant_id
@@ -103,25 +120,35 @@ fetch_blob_container <- function(container_name) {
 
 
   cli::cli_alert_info("Authenticating with loaded credentials")
-  az <- AzureRMR::get_azure_login(az_tenant_id)
-  subscription <- az$get_subscription(az_subscription_id)
-  resource_group <- subscription$get_resource_group(az_resource_group)
-  storage_account <- resource_group$get_storage_account(az_storage_account)
+  rlang::try_fetch(
+    {
+      token <- AzureRMR::get_azure_token(
+        resource = "https://storage.azure.com",
+        tenant = Sys.getenv("az_tenant_id"),
+        app = Sys.getenv("az_client_id"),
+        password = Sys.getenv("SERVICE_PRINCIPAL")
+      )
+      endpoint <- storage_endpoint(
+        "https://cfaazurebatchprd.blob.core.windows.net",
+        token = token
+      )
 
-  # Getting the access key
-  keys <- storage_account$list_keys()
-  access_key <- keys[["key1"]]
-
-  endpoint <- AzureStor::blob_endpoint(
-    storage_account$properties$primaryEndpoints$blob,
-    key = access_key
+      container <- AzureStor::storage_container(endpoint, container_name)
+    },
+    error = function(cnd) {
+      cli::cli_abort(
+        "Failure authenticating connection to {.var {container_name}}",
+        parent = cnd
+      )
+    }
   )
 
-  container <- AzureStor::storage_container(endpoint, container_name)
   cli::cli_alert_success("Authenticated connection to {.var {container_name}}")
 
   return(container)
 }
+
+#' Fetch Azure token
 
 #' Fetch Azure credential from environment variable
 #'
