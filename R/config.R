@@ -93,7 +93,7 @@ Parameters <- S7::new_class( # nolint: object_name_linter
 #' occur.
 #' @param report_date A list of strings representing report dates.
 #' @param reference_date A list of strings representing reference dates.
-#' @param production_date A list of strings representing production dates.
+
 #' @export
 Data <- S7::new_class( # nolint: object_name_linter
   "Data",
@@ -101,8 +101,7 @@ Data <- S7::new_class( # nolint: object_name_linter
     path = S7::class_character,
     blob_storage_container = character_or_null,
     report_date = S7::class_character,
-    reference_date = S7::class_character,
-    production_date = S7::class_character
+    reference_date = S7::class_character
   )
 )
 
@@ -116,6 +115,8 @@ Data <- S7::new_class( # nolint: object_name_linter
 #' date. Formatted as "YYYY-MM-DD".
 #' @param max_reference_date A string representing the maximum reference
 #' date. Formatted as "YYYY-MM-DD".
+#' @param production_date A string representing the production date.
+#' Formatted as "YYYY-MM-DD".
 #' @param disease A string specifying the disease being modeled.
 #' @param geo_value A string specifying the geographic value, usually a state.
 #' @param geo_type A string specifying the geographic type, usually "state".
@@ -146,6 +147,7 @@ Config <- S7::new_class( # nolint: object_name_linter
     min_reference_date = S7::class_character,
     max_reference_date = S7::class_character,
     report_date = S7::class_character,
+    production_date = S7::class_character,
     disease = S7::class_character,
     geo_value = S7::class_character,
     geo_type = S7::class_character,
