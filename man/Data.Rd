@@ -8,8 +8,7 @@ Data(
   path = character(0),
   blob_storage_container = character(0),
   report_date = character(0),
-  reference_date = character(0),
-  production_date = character(0)
+  reference_date = character(0)
 )
 }
 \arguments{
@@ -22,8 +21,6 @@ occur.}
 \item{report_date}{A list of strings representing report dates.}
 
 \item{reference_date}{A list of strings representing reference dates.}
-
-\item{production_date}{A list of strings representing production dates.}
 }
 \description{
 Represents the data-related configurations.
