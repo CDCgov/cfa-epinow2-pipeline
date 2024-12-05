@@ -71,23 +71,32 @@
 orchestrate_pipeline <- function(config_path,
                                  blob_storage_container = NULL,
                                  output_dir = "/") {
-  # TODO: Add config reader here
-  config <- jsonlite::read_json(config_path,
-    simplifyVector = TRUE
+  config <- rlang::try_fetch(
+    read_json_into_config(config_path, c("exclusions")),
+    error = function(con) {
+      cli::cli_warn("Bad config file",
+        parent = con,
+        class = "Bad_config"
+      )
+      FALSE
+    }
   )
+  if (typeof(config) == "logical") {
+    return(invisible(FALSE))
+  }
 
   write_output_dir_structure(
     output_dir = output_dir,
-    job_id = config[["job_id"]],
-    task_id = config[["task_id"]]
+    job_id = config@job_id,
+    task_id = config@task_id
   )
 
   # Set up logs
   logfile_path <- file.path(
     output_dir,
-    config[["job_id"]],
+    config@job_id,
     "tasks",
-    config[["task_id"]]
+    config@task_id
   )
   logfile_connection <- file(file.path(logfile_path, "logs.txt"), open = "wt")
   sink(
@@ -104,8 +113,8 @@ orchestrate_pipeline <- function(config_path,
   )
   on.exit(sink(file = NULL))
   cli::cli_alert_info("Starting run at {Sys.time()}")
-  cli::cli_alert_info("Using job id {.field {config[['job_id']]}}")
-  cli::cli_alert_info("Using task id {.field {config[['task_id']]}}")
+  cli::cli_alert_info("Using job id {.field {config@job_id}}")
+  cli::cli_alert_info("Using task id {.field {config@task_id}}")
 
   # Errors within `execute_model_logic()` are downgraded to warnings so
   # they can be logged and stored in Blob. If there is an error,
@@ -129,9 +138,9 @@ orchestrate_pipeline <- function(config_path,
 
 #' Run the Model Fitting Process
 #'
-#' @param config A list containing configuration settings for the pipeline,
-#' including paths to data, exclusions, disease parameters, model settings,
-#' and other necessary inputs.
+#' @param config A Config object containing configuration settings for the
+#' pipeline, including paths to data, exclusions, disease parameters, model
+#' settings, and other necessary inputs.
 #'
 #' @details
 #' This function performs the core model fitting process within the Rt
@@ -145,69 +154,61 @@ orchestrate_pipeline <- function(config_path,
 #' @export
 execute_model_logic <- function(config, output_dir) {
   cases_df <- read_data(
-    data_path = config[["data"]][["path"]],
-    disease = config[["disease"]],
-    state_abb = config[["geo_value"]],
-    report_date = config[["report_date"]],
-    max_reference_date = config[["max_reference_date"]],
-    min_reference_date = config[["min_reference_date"]]
+    data_path = config@data@path,
+    disease = config@disease,
+    state_abb = config@geo_value,
+    report_date = config@report_date,
+    max_reference_date = config@max_reference_date,
+    min_reference_date = config@min_reference_date
   )
 
-  if (!rlang::is_null(config[["exclusions"]][["path"]])) {
-    exclusions_df <- read_exclusions(config[["exclusions"]][["path"]])
+  # rlang::is_empty() checks for empty and NULL values
+  if (!rlang::is_empty(config@exclusions@path)) {
+    exclusions_df <- read_exclusions(config@exclusions@path)
     cases_df <- apply_exclusions(cases_df, exclusions_df)
   } else {
     cli::cli_alert("No exclusions file provided. Skipping exclusions")
   }
 
   params <- read_disease_parameters(
-    generation_interval_path = config[["parameters"]]
-    [["generation_interval"]]
-    [["path"]],
-    delay_interval_path = config[["parameters"]]
-    [["delay_interval"]]
-    [["path"]],
-    right_truncation_path = config[["parameters"]]
-    [["right_truncation"]]
-    [["path"]],
-    disease = config[["disease"]],
-    as_of_date = config[["as_of_date"]],
-    group = config[["geo_value"]],
-    report_date = config[["report_date"]]
+    generation_interval_path = config@parameters@generation_interval@path,
+    delay_interval_path = config@parameters@delay_interval@path,
+    right_truncation_path = config@parameters@right_truncation@path,
+    disease = config@disease,
+    as_of_date = config@parameters@as_of_date,
+    group = config@geo_value,
+    report_date = config@report_date
   )
 
   fit <- fit_model(
     data = cases_df,
     parameters = params,
-    seed = config[["seed"]],
-    horizon = config[["horizon"]],
-    priors = config[["priors"]],
-    sampler_opts = config[["sampler_opts"]]
+    seed = config@seed,
+    horizon = config@horizon,
+    priors = config@priors,
+    sampler_opts = config@sampler_opts
   )
-
   diagnostics <- extract_diagnostics(
     fit = fit,
     data = cases_df,
-    job_id = config[["job_id"]],
-    task_id = config[["task_id"]],
-    disease = config[["disease"]],
-    geo_value = config[["geo_value"]],
-    model = config[["model"]]
+    job_id = config@job_id,
+    task_id = config@task_id,
+    disease = config@disease,
+    geo_value = config@geo_value,
+    model = config@model
   )
-
   samples <- process_samples(
     fit = fit,
-    geo_value = config[["geo_value"]],
-    model = config[["model"]],
-    disease = config[["disease"]]
+    geo_value = config@geo_value,
+    model = config@model,
+    disease = config@disease
   )
-
   summaries <- process_quantiles(
     fit = fit,
-    geo_value = config[["geo_value"]],
-    model = config[["model"]],
-    disease = config[["disease"]],
-    quantiles = unlist(config[["quantile_width"]])
+    geo_value = config@geo_value,
+    model = config@model,
+    disease = config@disease,
+    quantiles = unlist(config@quantile_width)
   )
 
   # All the top level metadata fields
@@ -235,8 +236,8 @@ execute_model_logic <- function(config, output_dir) {
     samples = samples,
     summaries = summaries,
     output_dir = output_dir,
-    job_id = config[["job_id"]],
-    task_id = config[["task_id"]],
+    job_id = config@job_id,
+    task_id = config@task_id,
     metadata = metadata
   )
 
