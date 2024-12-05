@@ -1,7 +1,8 @@
 ifndef TAG
-	TAG = local
+	TAG = latest
 endif
 
+REGISTRY=cfaprdbatchcr.azurecr.io/
 IMAGE_NAME=cfa-epinow2-pipeline
 
 deps:
@@ -19,6 +20,7 @@ tag:
 
 up:
 	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) /bin/bash
 
 run-function:
