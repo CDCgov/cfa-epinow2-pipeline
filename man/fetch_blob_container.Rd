@@ -2,7 +2,7 @@
 % Please edit documentation in R/azure.R
 \name{fetch_blob_container}
 \alias{fetch_blob_container}
-\title{Load Azure Blob endpoint using credentials in environment variables}
+\title{Load Azure Blob container using credentials in environment variables}
 \usage{
 fetch_blob_container(container_name)
 }

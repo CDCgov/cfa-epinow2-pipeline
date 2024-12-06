@@ -1,19 +1,15 @@
 #' Download specified blobs from Blob Storage and save them in a local dir
 #'
-#' Note that I think it might be wise to instead specify a blob prefix, list the
-#' blobs, and download all the listed blobs. This would let us have some more
-#' flexibility with downloading whole remote directories (like delta tables)
+#' @param blob_storage_path A character of a blob in `storage_container`
+#' @param local_file_path The local path to save the blob
+#' @param storage_container The blob storage container with `blob_storage_path`
 #'
-#' @param blob_names A vector of blobs to donwload from `container_name`
-#' @param local_dest The path to the local directory to save the files in
-#' @param container_name The Azure Blob Storage container with `blob_names`
-#'
-#' @return NULL on success
+#' @return Invisibly, `local_file_path`
 #' @export
 download_file_from_container <- function(
     blob_storage_path,
     local_file_path,
-    container) {
+    storage_container) {
   cli::cli_alert_info(
     "Downloading blob {.path {blob_storage_path}} to {.path {local_file_path}}"
   )
@@ -28,7 +24,7 @@ download_file_from_container <- function(
       }
 
       AzureStor::download_blob(
-        container = container,
+        container = storage_container,
         src = blob_storage_path,
         dest = local_file_path,
         overwrite = TRUE
