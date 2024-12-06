@@ -20,7 +20,7 @@ configuration file.}
 
 \item{blob_storage_container}{Optional. The name of the blob storage
 container to which logs and outputs will be uploaded. If NULL, no upload
-will occur. (Planned feature, not currently implemented)}
+will occur.}
 
 \item{config_container}{Optional. The name of the blob storage container
 from which the config file will be downloaded.}

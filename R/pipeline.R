@@ -13,7 +13,7 @@
 #' from which the config file will be downloaded.
 #' @param blob_storage_container Optional. The name of the blob storage
 #' container to which logs and outputs will be uploaded. If NULL, no upload
-#' will occur. (Planned feature, not currently implemented)
+#' will occur.
 #' @param output_dir A string specifying the directory where output, logs, and
 #' other pipeline artifacts will be saved. Defaults to the root directory ("/").
 #'
