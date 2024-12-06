@@ -10,6 +10,7 @@ deps:
 
 pull:
 	docker pull $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG)
+	docker pull $(REGISTRY)$(IMAGE_NAME):test-$(TAG)
 
 build:
 	docker build -t $(REGISTRY)$(IMAGE_NAME):$(TAG) \
@@ -21,7 +22,7 @@ tag:
 up:
 	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
-	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) /bin/bash
+	--rm $(REGISTRY)$(IMAGE_NAME):test-$(TAG) /bin/bash
 
 run-function:
 	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
