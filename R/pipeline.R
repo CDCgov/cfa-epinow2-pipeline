@@ -82,7 +82,7 @@ orchestrate_pipeline <- function(config_path,
         blob_storage_container = config_container,
         output_dir = output_dir
       )
-      read_json_into_config(config_path, c("exclusions"))
+      jsonlite::read_json(config_path)
     },
     error = function(con) {
       cli::cli_warn("Bad config file",
