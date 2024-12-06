@@ -15,7 +15,7 @@ download_file_from_container(
 
 \item{local_file_path}{The local path to save the blob}
 
-\item{storage_container}{The Azure Blob Storage container with \code{blob_storage_path}}
+\item{storage_container}{The blob storage container with \code{blob_storage_path}}
 }
 \value{
 Invisibly, \code{local_file_path}
