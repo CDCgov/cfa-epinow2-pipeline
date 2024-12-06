@@ -1,4 +1,10 @@
 #' Download if specified
+#'
+#' @param blob_path The name of the blob to download
+#' @param blob_storage_container The name of the container to donwload from
+#' @param output_dir The directory to write the downloaded file to
+#' @return The path of the file
+#' @export
 download_if_specified <- function(
     blob_path,
     blob_storage_container,
