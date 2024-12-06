@@ -111,10 +111,9 @@ fetch_blob_container <- function(container_name) {
   )
   cli::cli_alert_info("Loading Azure credentials from env vars")
   # nolint start: object_name_linter
-  az_tenant_id <- fetch_credential_from_env_var("az_tenant_id ")
-  az_subscription_id <- fetch_credential_from_env_var("az_subscription_id")
-  az_resource_group <- fetch_credential_from_env_var("az_resource_group")
-  az_storage_account <- fetch_credential_from_env_var("az_storage_account")
+  az_tenant_id <- fetch_credential_from_env_var("az_tenant_id")
+  az_client_id <- fetch_credential_from_env_var("az_client_id")
+  az_service_principal <- fetch_credential_from_env_var("az_service_principal")
   # nolint end: object_name_linter
   cli::cli_alert_success("Credentials loaded successfully")
 
@@ -124,9 +123,9 @@ fetch_blob_container <- function(container_name) {
     {
       token <- AzureRMR::get_azure_token(
         resource = "https://storage.azure.com",
-        tenant = Sys.getenv("az_tenant_id"),
-        app = Sys.getenv("az_client_id"),
-        password = Sys.getenv("SERVICE_PRINCIPAL")
+        tenant = az_tenant_id,
+        app = az_client_id,
+        password = az_service_principal
       )
       endpoint <- storage_endpoint(
         "https://cfaazurebatchprd.blob.core.windows.net",

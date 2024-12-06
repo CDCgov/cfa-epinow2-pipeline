@@ -1,5 +1,5 @@
 ifndef TAG
-	TAG = latest
+	TAG = edit-azure-flow
 endif
 
 REGISTRY=cfaprdbatchcr.azurecr.io/
