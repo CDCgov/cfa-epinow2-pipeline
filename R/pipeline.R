@@ -79,7 +79,7 @@ orchestrate_pipeline <- function(config_path,
         config_path <- download_file_from_container(
           blob_storage_path = config_path,
           local_file_path = file.path(output_dir, config_path),
-          container = container
+          storage_container = container
         )
       }
       read_json_into_config(config_path, c("exclusions"))

@@ -1,3 +1,4 @@
+^.env$
 ^CONTRIBUTING.md$
 ^DISCLAIMER.md$
 ^Dockerfile$
