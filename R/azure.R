@@ -121,17 +121,32 @@ fetch_blob_container <- function(container_name) {
   cli::cli_alert_info("Authenticating with loaded credentials")
   rlang::try_fetch(
     {
+      # First, get a general-purpose token using SP flow
+      # Analogous to:
+      # az login --service-principal \
+      #    --username $az_client_id \
+      #    --password $az_service_principal \
+      #    --tenant $az_tenant_id
+      # NOTE: the SP is also sometimes called the `client_secret`
       token <- AzureRMR::get_azure_token(
         resource = "https://storage.azure.com",
         tenant = az_tenant_id,
         app = az_client_id,
         password = az_service_principal
       )
-      endpoint <- storage_endpoint(
+      # Then fetch a storage endpoint using the token. Follows flow from
+      # https://github.com/Azure/AzureStor.
+      # Note that we're using the ABS endpoint (the first example line)
+      # but following the AAD token flow from the AAD alternative at
+      # end of the box. If we didn't replace the endpoint and used the
+      # example flow then it allows authentication to blob but throws
+      # a 409 when trying to download.
+      endpoint <- AzureStor::storage_endpoint(
         "https://cfaazurebatchprd.blob.core.windows.net",
         token = token
       )
 
+      # Finally, set up instantiation of storage container generic
       container <- AzureStor::storage_container(endpoint, container_name)
     },
     error = function(cnd) {
@@ -146,8 +161,6 @@ fetch_blob_container <- function(container_name) {
 
   return(container)
 }
-
-#' Fetch Azure token
 
 #' Fetch Azure credential from environment variable
 #'
