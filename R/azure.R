@@ -11,51 +11,10 @@
 #' @return NULL on success
 #' @family azure
 #' @export
-download_from_azure_blob <- function(blob_names, local_dest, container_name) {
-  # Attempt to connect to the storage container
-  blob_container <- rlang::try_fetch(
-    fetch_blob_container(container_name),
-    error = function(con) {
-      cli::cli_abort(
-        c(
-          "Unable to authenticate connection to Blob endpoint",
-          "!" = "Check correct credentials are present as env variables",
-          "!" = "Check container {.var {container_name}} is correct"
-        ),
-        parent = con
-      )
-    }
-  )
-
-  # Attempt to save each blob into local storage
-  for (blob in blob_names) {
-    local_file_path <- file.path(local_dest, blob)
-    rlang::try_fetch(
-      download_file_from_container(
-        blob,
-        blob_container,
-        local_file_path
-      ),
-      error = function(con) {
-        cli::cli_abort(
-          c(
-            "Error downloading blob {.path {blob}}",
-            "Using container {.path {container_name}}",
-            "Writing to local file path {.path local_file_path}"
-          ),
-          parent = con
-        )
-      }
-    )
-  }
-  cli::cli_alert_success("Blobs {.path {blob_names}} downloaded successfully")
-  invisible(NULL)
-}
-
 download_file_from_container <- function(
     blob_storage_path,
-    container,
-    local_file_path) {
+    local_file_path,
+    container) {
   cli::cli_alert_info(
     "Downloading blob {.path {blob_storage_path}} to {.path {local_file_path}}"
   )
