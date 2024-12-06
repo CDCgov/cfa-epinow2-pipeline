@@ -190,7 +190,7 @@ execute_model_logic <- function(config, output_dir) {
 
   # rlang::is_empty() checks for empty and NULL values
   if (!rlang::is_empty(config@exclusions@path)) {
-    exclusions_path <- download_if_exists(
+    exclusions_path <- download_if_specified(
       blob_path = config@exclusions@path,
       blob_storage_container = config@exclusions@blob_storage_container,
       output_dir - output_dir
