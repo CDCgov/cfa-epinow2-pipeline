@@ -8,6 +8,7 @@
 * Add function families
 * Populated the default values of the metadata to be saved.
 * Working upload/download from ABS
+* Working Azure upload/download
 * Creating a Config class to make syncing configuration differences easier.
 * Add a JSON reader for the Config class.
 * Use the Config class throughout the pipeline.
