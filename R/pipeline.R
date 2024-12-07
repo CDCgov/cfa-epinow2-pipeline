@@ -11,7 +11,7 @@
 #' configuration file.
 #' @param config_container Optional. The name of the blob storage container
 #' from which the config file will be downloaded.
-#' @param blob_storage_container Optional. The name of the blob storage
+#' @param output_container Optional. The name of the blob storage
 #' container to which logs and outputs will be uploaded. If NULL, no upload
 #' will occur.
 #' @param output_dir A string specifying the directory where output, logs, and
@@ -72,7 +72,7 @@
 #' @family pipeline
 #' @export
 orchestrate_pipeline <- function(config_path,
-                                 blob_storage_container = NULL,
+                                 output_container = NULL,
                                  config_container = NULL,
                                  output_dir = "/") {
   config <- rlang::try_fetch(
@@ -145,13 +145,15 @@ orchestrate_pipeline <- function(config_path,
   # TODO: Move metadata to outer wrapper
   cli::cli_alert_info("Finishing run at {Sys.time()}")
 
-  if (!rlang::is_null(blob_storage_container)) {
+  if (!rlang::is_null(output_container)) {
     outfiles <- file.path(output_dir, config@job_id, "*")
     cli::cli_alert("Uploading {.path {outfiles}} to {.path {output_container}}")
-    cont <- fetch_blob_container(blob_storage_container)
+    cont <- fetch_blob_container(output_container)
     AzureStor::multiupload_blob(
       container = cont,
-      src = outfiles
+      src = outfiles,
+      dest = config@job_id,
+      recursive = TRUE
     )
   }
 
@@ -223,8 +225,8 @@ execute_model_logic <- function(config, output_dir) {
 
   params <- read_disease_parameters(
     generation_interval_path = gi_path,
-    delay_interval_path = config@parameters@delay_interval@path,
-    right_truncation_path = config@parameters@right_truncation@path,
+    delay_interval_path = delay_path,
+    right_truncation_path = right_trunc_path,
     disease = config@disease,
     as_of_date = config@parameters@as_of_date,
     group = config@geo_value,

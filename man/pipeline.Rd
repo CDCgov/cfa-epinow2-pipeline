@@ -7,7 +7,7 @@
 \usage{
 orchestrate_pipeline(
   config_path,
-  blob_storage_container = NULL,
+  output_container = NULL,
   config_container = NULL,
   output_dir = "/"
 )
@@ -18,7 +18,7 @@ execute_model_logic(config, output_dir)
 \item{config_path}{A string specifying the file path to the JSON
 configuration file.}
 
-\item{blob_storage_container}{Optional. The name of the blob storage
+\item{output_container}{Optional. The name of the blob storage
 container to which logs and outputs will be uploaded. If NULL, no upload
 will occur.}
 
