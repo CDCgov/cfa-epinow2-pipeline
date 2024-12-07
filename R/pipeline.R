@@ -14,6 +14,8 @@
 #' @param output_container Optional. The name of the blob storage
 #' container to which logs and outputs will be uploaded. If NULL, no upload
 #' will occur.
+#' @param input_dir A string specifying the directory to read inputs from. If
+#' passing storage containers, this is where the files will be downloaded to.
 #' @param output_dir A string specifying the directory where output, logs, and
 #' other pipeline artifacts will be saved. Defaults to the root directory ("/").
 #'
@@ -74,13 +76,14 @@
 orchestrate_pipeline <- function(config_path,
                                  output_container = NULL,
                                  config_container = NULL,
-                                 output_dir = "/") {
+                                 input_dir = "/input",
+                                 output_dir = "/output") {
   config <- rlang::try_fetch(
     {
-      download_if_specified(
+      config_path <- download_if_specified(
         blob_path = config_path,
         blob_storage_container = config_container,
-        output_dir = output_dir
+        output_dir = input_dir
       )
       read_json_into_config(config_path, c("exclusions"))
     },
@@ -133,6 +136,7 @@ orchestrate_pipeline <- function(config_path,
   # metadata in the next PR.
   pipeline_success <- rlang::try_fetch(
     execute_model_logic(config, output_dir, blob_storage_container),
+    execute_model_logic(config, input_dir, output_dir),
     error = function(con) {
       cli::cli_warn("Pipeline run failed",
         parent = con,
@@ -177,7 +181,7 @@ orchestrate_pipeline <- function(config_path,
 #' @rdname pipeline
 #' @family pipeline
 #' @export
-execute_model_logic <- function(config, output_dir) {
+execute_model_logic <- function(config, input_dir, output_dir) {
   data_path <- download_if_specified(
     blob_path = config@data@path,
     blob_storage_container = config@data@blob_storage_container,
@@ -197,7 +201,7 @@ execute_model_logic <- function(config, output_dir) {
     exclusions_path <- download_if_specified(
       blob_path = config@exclusions@path,
       blob_storage_container = config@exclusions@blob_storage_container,
-      output_dir - output_dir
+      output_dir = input_dir
     )
     exclusions_df <- read_exclusions(exclusions_path)
     cases_df <- apply_exclusions(cases_df, exclusions_df)
@@ -209,18 +213,18 @@ execute_model_logic <- function(config, output_dir) {
   gi_path <- download_if_specified(
     blob_path = config@parameters@generation_interval@path,
     blob_storage_container = config@parameters@generation_interval@blob_storage_container, # nolint
-    output_dir = output_dir
+    output_dir = input_dir
   )
   # Delay
   delay_path <- download_if_specified(
     blob_path = config@parameters@delay_interval@path,
     blob_storage_container = config@parameters@delay_interval@blob_storage_container, # nolint
-    output_dir = output_dir
+    output_dir = input_dir
   )
   right_trunc_path <- download_if_specified(
     blob_path = config@parameters@right_truncation@path,
     blob_storage_container = config@parameters@right_truncation@blob_storage_container, # nolint
-    output_dir = output_dir
+    output_dir = input_dir
   )
 
   params <- read_disease_parameters(

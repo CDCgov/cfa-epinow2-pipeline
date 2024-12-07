@@ -9,10 +9,11 @@ orchestrate_pipeline(
   config_path,
   output_container = NULL,
   config_container = NULL,
-  output_dir = "/"
+  input_dir = "/input",
+  output_dir = "/output"
 )
 
-execute_model_logic(config, output_dir)
+execute_model_logic(config, input_dir, output_dir)
 }
 \arguments{
 \item{config_path}{A string specifying the file path to the JSON
@@ -24,6 +25,9 @@ will occur.}
 
 \item{config_container}{Optional. The name of the blob storage container
 from which the config file will be downloaded.}
+
+\item{input_dir}{A string specifying the directory to read inputs from. If
+passing storage containers, this is where the files will be downloaded to.}
 
 \item{output_dir}{A string specifying the directory where output, logs, and
 other pipeline artifacts will be saved. Defaults to the root directory ("/").}

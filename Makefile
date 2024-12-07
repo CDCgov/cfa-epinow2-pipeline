@@ -9,6 +9,7 @@ deps:
 	docker build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
 
 pull:
+	az acr login --name 'cfaprdbatchcr'
 	docker pull $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG)
 	docker pull $(REGISTRY)$(IMAGE_NAME):test-$(TAG)
 
@@ -23,7 +24,7 @@ run:
 	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):test-$(TAG) \
-	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('/cfa-epinow2-pipeline/test.json', output_dir = '/cfa-epinow2-pipeline', output_container = 'zs-test-pipeline-update')"
+	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('test.json', config_container = 'zs-test-pipeline-update', input_dir = '/cfa-epinow2-pipeline/input', output_dir = '/cfa-epinow2-pipeline', output_container = 'zs-test-pipeline-update')"
 
 
 up:
