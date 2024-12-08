@@ -1,9 +1,14 @@
-ifndef TAG
-	TAG = edit-azure-flow
-endif
-
 REGISTRY=cfaprdbatchcr.azurecr.io/
 IMAGE_NAME=cfa-epinow2-pipeline
+BRANCH=$(shell git branch --show-current)
+ifeq ($(BRANCH), 'main')
+TAG=latest
+else
+TAG=$(BRANCH)
+endif
+
+CONFIG=test.json
+
 
 deps:
 	docker build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
@@ -24,7 +29,7 @@ run:
 	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):test-$(TAG) \
-	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('test.json', config_container = 'zs-test-pipeline-update', input_dir = '/cfa-epinow2-pipeline/input', output_dir = '/cfa-epinow2-pipeline', output_container = 'zs-test-pipeline-update')"
+	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'zs-test-pipeline-update', input_dir = '/cfa-epinow2-pipeline/input', output_dir = '/cfa-epinow2-pipeline', output_container = 'zs-test-pipeline-update')"
 
 
 up:
