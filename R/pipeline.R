@@ -185,7 +185,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
   data_path <- download_if_specified(
     blob_path = config@data@path,
     blob_storage_container = config@data@blob_storage_container,
-    output_dir = output_dir
+    output_dir = input_dir
   )
   cases_df <- read_data(
     data_path = data_path,

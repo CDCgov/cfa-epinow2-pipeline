@@ -9,16 +9,21 @@ download_if_specified <- function(
     blob_path,
     blob_storage_container,
     output_dir) {
-  file_exists <- file.exists(file.path(output_dir, blob_path))
-  if (!rlang::is_null(blob_storage_container) && !file_exists) {
-    container <- fetch_blob_container(blob_storage_container)
-    local_path <- download_file_from_container(
-      blob_storage_path = blob_path,
-      local_file_path = file.path(output_dir, blob_path),
-      storage_container = container
-    )
+  # Guard against null input erroring out file.exists()
+  if (rlang::is_null(blob_path)) {
+    local_path <- NULL
   } else {
-    local_path <- file.path(output_dir, blob_path)
+    file_exists <- file.exists(file.path(output_dir, blob_path))
+    if (!rlang::is_null(blob_storage_container) && !file_exists) {
+      container <- fetch_blob_container(blob_storage_container)
+      local_path <- download_file_from_container(
+        blob_storage_path = blob_path,
+        local_file_path = file.path(output_dir, blob_path),
+        storage_container = container
+      )
+    } else {
+      local_path <- file.path(output_dir, blob_path)
+    }
   }
   local_path
 }

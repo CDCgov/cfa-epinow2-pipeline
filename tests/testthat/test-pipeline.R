@@ -3,15 +3,17 @@ test_that("Bad config throws warning and returns failure", {
   config_path <- test_path("data", "bad_config.json")
   config <- jsonlite::read_json(config_path)
   # Read from locally
-  blob_storage_container <- NULL
+  output_container <- NULL
   output_dir <- "pipeline_test"
+  input_dir <- "."
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
   expect_warning(
     pipeline_success <- orchestrate_pipeline(
       config_path = config_path,
-      blob_storage_container = blob_storage_container,
+      output_container = output_container,
+      input_dir = input_dir,
       output_dir = output_dir
     ),
     class = "Bad_config"
@@ -24,14 +26,16 @@ test_that("Pipeline run produces expected outputs with NO exclusions", {
   config_path <- test_path("data", "sample_config_no_exclusion.json")
   config <- jsonlite::read_json(config_path)
   # Read from locally
-  blob_storage_container <- NULL
+  output_container <- NULL
   output_dir <- "pipeline_test"
+  input_dir <- "."
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
   pipeline_success <- orchestrate_pipeline(
     config_path = config_path,
-    blob_storage_container = blob_storage_container,
+    output_container = output_container,
+    input_dir = input_dir,
     output_dir = output_dir
   )
   expect_true(pipeline_success)
@@ -44,17 +48,19 @@ test_that("Pipeline run produces expected outputs with NO exclusions", {
 
 test_that("Pipeline run produces expected outputs with exclusions", {
   # Arrange
-  config_path <- test_path("data", "sample_config_with_exclusion.json")
-  config <- jsonlite::read_json(config_path)
+  input_dir <- test_path("data")
+  config_path <- "sample_config_with_exclusion.json"
+  config <- jsonlite::read_json(file.path(input_dir, config_path))
   # Read from locally
-  blob_storage_container <- NULL
+  output_container <- NULL
   output_dir <- "pipeline_test"
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
   pipeline_success <- orchestrate_pipeline(
     config_path = config_path,
-    blob_storage_container = blob_storage_container,
+    output_container = output_container,
+    input_dir = input_dir,
     output_dir = output_dir
   )
 
@@ -70,7 +76,8 @@ test_that("Pipeline run produces expected outputs with exclusions", {
 
 test_that("Process pipeline produces expected outputs and returns success", {
   # Arrange
-  config_path <- test_path("data", "sample_config_with_exclusion.json")
+  input_dir <- "data"
+  config_path <- file.path(input_dir, "sample_config_with_exclusion.json")
   config <- read_json_into_config(config_path, c("exclusions"))
   # Read from locally
   output_dir <- "pipeline_test"
@@ -79,8 +86,8 @@ test_that("Process pipeline produces expected outputs and returns success", {
   # Act
   pipeline_success <- execute_model_logic(
     config = config,
-    output_dir = output_dir,
-    blob_storage_container = "blah"
+    input_dir = input_dir,
+    output_dir = output_dir
   )
   expect_true(pipeline_success)
 
@@ -99,17 +106,21 @@ test_that("Process pipeline produces expected outputs and returns success", {
 
 test_that("Runs on config from generator as of 2024-11-26", {
   # Arrange
-  config_path <- test_path("data", "CA_COVID-19.json")
-  config <- read_json_into_config(config_path, c("exclusions"))
+  config_path <- "CA_COVID-19.json"
+  input_dir <- test_path("data")
+  config <- read_json_into_config(
+    file.path(input_dir, config_path),
+    c("exclusions")
+  )
   # Read from locally
-  output_dir <- "pipeline_test"
+  output_dir <- test_path("pipeline_test")
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
   pipeline_success <- execute_model_logic(
     config = config,
     output_dir = output_dir,
-    blob_storage_container = "blah"
+    input_dir = input_dir
   )
   expect_true(pipeline_success)
 
@@ -128,16 +139,18 @@ test_that("Runs on config from generator as of 2024-11-26", {
 
 test_that("Warning and exit for bad config file", {
   # Arrange
-  config_path <- test_path("data", "v_bad_config.json")
+  config_path <- test_path("v_bad_config.json")
   # Read from locally
-  output_dir <- "pipeline_test"
+  input_dir <- test_path("data")
+  output_dir <- test_path("bad_output")
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
   expect_warning(
     pipeline_success <- orchestrate_pipeline(
       config_path = config_path,
-      blob_storage_container = NULL,
+      output_container = NULL,
+      input_dir = input_dir,
       output_dir = output_dir
     ),
     class = "Bad_config"
