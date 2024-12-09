@@ -27,7 +27,9 @@ write_model_outputs(
 
 \item{task_id}{String. The identifier for the task.}
 
-\item{metadata}{List. Additional metadata to be included in the output.}
+\item{metadata}{List. Additional metadata to be included in the output. The
+paths to the samples, summaries, and model output will be added to the
+metadata list.}
 }
 \value{
 Invisible NULL. The function is called for its side effects.

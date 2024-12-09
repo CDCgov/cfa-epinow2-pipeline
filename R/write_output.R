@@ -9,7 +9,9 @@
 #' @param summaries A data.table as returned by [process_quantiles()]
 #' @param job_id String. The identifier for the job.
 #' @param task_id String. The identifier for the task.
-#' @param metadata List. Additional metadata to be included in the output.
+#' @param metadata List. Additional metadata to be included in the output. The
+#' paths to the samples, summaries, and model output will be added to the
+#' metadata list.
 #'
 #' @return Invisible NULL. The function is called for its side effects.
 #' @export
@@ -64,6 +66,15 @@ write_model_outputs <- function(
         "tasks",
         task_id,
         "metadata.json"
+      )
+      # Add paths to metadata.
+      metadata <- utils::modifyList(
+        metadata,
+        list(
+          samples_path = samples_path,
+          summaries_path = summaries_path,
+          model_path = model_path
+        )
       )
       jsonlite::write_json(metadata, metadata_path, pretty = TRUE)
       cli::cli_alert_success("Wrote metadata to {.path {metadata_path}}")
