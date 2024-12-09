@@ -6,7 +6,7 @@ character_or_null <- S7::new_union(S7::class_character, NULL)
 #'
 #' @param path A string specifying the path to a CSV file containing exclusion
 #' data. It should include at least the columns: `reference_date`,
-#' `report_date`, ' `state_abb`, `disease`.
+#' `report_date`, `state_abb`, `disease`.
 #' @param blob_storage_container Optional. The name of the blob storage
 #' container to get it from. If NULL, will look locally.
 #' @export
