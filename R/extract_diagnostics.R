@@ -4,8 +4,8 @@
 #' model and provided data. It checks for low case counts and computes
 #' diagnostics from the fitted model, including the mean acceptance
 #' statistic, divergent transitions, maximum tree depth, and Rhat values.
-#' These diagnostics are then flagged if they exceed specific thresholds,
-#' and the results are returned as a data frame.
+#' Additionally, a combined flag is computed indicating if any diagnostics
+#' are outside an acceptable range. The results are returned as a data frame.
 #'
 #' @param fit The model fit object from `EpiNow2`
 #' @param data A data frame containing the input data used in the model fit.
@@ -42,9 +42,9 @@
 #'         counts in the data. See \code{low_case_count_diagnostic()} for more
 #'         information on this diagnostic.
 #'   \item \code{epinow2_diagnostic_flag}: A combined flag that indicates if
-#'         any diagnostic thresholds are exceeded. The diagnostic thresholds
-#'         (1) mean_accept_stat < 0.1, (2) p_divergent > 0.0075, (3)
-#'         p_max_treedepth > 0.05, and (4) p_high_rhat > 0.0075.
+#'         any diagnostic metrics are outside an accepted range, as determined
+#'         by the thresholds: (1) mean_accept_stat < 0.1, (2) p_divergent >
+#'         0.0075, (3) p_max_treedepth > 0.05, and (4) p_high_rhat > 0.0075.
 #' }
 #' @export
 extract_diagnostics <- function(fit,
