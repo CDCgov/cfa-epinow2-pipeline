@@ -286,7 +286,7 @@ post_process_and_merge <- function(
 #'
 #' @param fit An EpiNow2 fit object with posterior estimates.
 #' @param disease,geo_value,model Metadata for downstream processing.
-#' @param quantiles A vector of quantiles to base to [tidybayes::median_qi()]
+#' @param quantiles A vector of quantiles to pass to [tidybayes::median_qi()]
 #'
 #' @return A data.table of posterior draws or quantiles, merged and processed.
 #'
