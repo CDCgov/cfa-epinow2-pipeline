@@ -385,3 +385,7 @@ docs
 # for now... will have to gpg encrypt
 cfa-epinow2-batch-pool-config.json
 azure/*.toml
+
+# Careful with Secrets!
+*.env
+*.env.gpg
