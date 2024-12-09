@@ -88,7 +88,11 @@ test_that("Process pipeline produces expected outputs and returns success", {
   expect_pipeline_files_written(
     output_dir,
     config@job_id,
-    config@task_id
+    config@task_id,
+    # Don't check logs here, bc logs are set up by orchestrate_pipeline(), but
+    # this test is just for execute_model_logic() which is called after logs are
+    # set up in orchestrate_pipeline().
+    check_logs = FALSE
   )
 })
 
@@ -112,7 +116,11 @@ test_that("Runs on config from generator as of 2024-11-26", {
   expect_pipeline_files_written(
     output_dir,
     config@job_id,
-    config@task_id
+    config@task_id,
+    # Do not check for log output here, bc logs get created in
+    # `orchestrate_pipeline()`, and this test only calls `execute_model_logic()`
+    # which gets called after the log files have been created.
+    check_logs = FALSE
   )
 })
 
