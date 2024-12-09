@@ -8,6 +8,7 @@ TAG=$(BRANCH)
 endif
 
 CONFIG=test.json
+JOB=batch-test
 
 
 deps:
@@ -24,6 +25,13 @@ build:
 
 tag:
 	docker tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
+
+run-batch:
+	docker build -f Dockerfile-batch -t batch . --no-cache
+	docker run --rm  \
+	--env-file .env \
+	-it \
+	batch python job.py "cfa-epinow2-edit-azure-flow" "$(JOB)"
 
 run:
 	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
