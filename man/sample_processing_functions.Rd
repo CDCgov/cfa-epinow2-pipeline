@@ -15,7 +15,7 @@ process_quantiles(fit, geo_value, model, disease, quantiles)
 
 \item{disease, geo_value, model}{Metadata for downstream processing.}
 
-\item{quantiles}{A vector of quantiles to base to \code{\link[tidybayes:reexports]{tidybayes::median_qi()}}}
+\item{quantiles}{A vector of quantiles to pass to \code{\link[tidybayes:reexports]{tidybayes::median_qi()}}}
 }
 \value{
 A data.table of posterior draws or quantiles, merged and processed.
