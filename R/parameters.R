@@ -29,6 +29,7 @@
 #'   interval is a required parameter for $R_t$ estimation.
 #'   `delay_interval_path` and `right_truncation_path` are optional (but
 #'   strongly suggested).
+#' @family parameters
 #' @export
 read_disease_parameters <- function(
     generation_interval_path,
@@ -114,6 +115,7 @@ path_is_specified <- function(path) {
 #' @inheritParams read_disease_parameters
 #'
 #' @return A PMF vector
+#' @family parameters
 #' @export
 read_interval_pmf <- function(path,
                               disease = c("COVID-19", "Influenza", "test"),
@@ -226,6 +228,7 @@ read_interval_pmf <- function(path,
 #' @inheritParams read_interval_pmf
 #'
 #' @return The unpacked `value` column, which is a valid PMF
+#' @family parameters
 #' @noRd
 check_returned_pmf <- function(
     pmf_df,
