@@ -9,6 +9,7 @@
 #' @param container_name The Azure Blob Storage container with `blob_names`
 #'
 #' @return NULL on success
+#' @family azure
 #' @export
 download_from_azure_blob <- function(blob_names, local_dest, container_name) {
   # Attempt to connect to the storage container
@@ -85,6 +86,7 @@ download_file_from_container <- function(
 #' @param container_name The Azure Blob Storage container associated with the
 #'   credentials
 #' @return A Blob endpoint
+#' @family azure
 #' @export
 fetch_blob_container <- function(container_name) {
   cli::cli_alert_info(
@@ -128,6 +130,7 @@ fetch_blob_container <- function(container_name) {
 #' @param env_var A character, the credential to fetch
 #'
 #' @return The associated value
+#' @family azure
 #' @export
 fetch_credential_from_env_var <- function(env_var) {
   credential <- Sys.getenv(env_var)

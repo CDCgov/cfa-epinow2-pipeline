@@ -14,6 +14,7 @@
 #' metadata list.
 #'
 #' @return Invisible NULL. The function is called for its side effects.
+#' @family write_output
 #' @export
 write_model_outputs <- function(
     fit,
@@ -103,6 +104,7 @@ write_model_outputs <- function(
 #' @param task_id String. The identifier for the task.
 #'
 #' @return The path to the base output directory (invisible).
+#' @family write_output
 #' @export
 write_output_dir_structure <- function(output_dir, job_id, task_id) {
   # Define the directory structure
@@ -219,6 +221,7 @@ extract_draws_from_fit <- function(fit) {
 #'
 #' @return A data.table with merged posterior draws and standardized parameter
 #' names.
+#' @family write_output
 #' @noRd
 post_process_and_merge <- function(
     draws,
@@ -290,6 +293,7 @@ post_process_and_merge <- function(
 #'
 #' @return A data.table of posterior draws or quantiles, merged and processed.
 #'
+#' @family write_output
 #' @name sample_processing_functions
 NULL
 

@@ -13,6 +13,7 @@
 #' @return A dataframe with the same rows and schema as `cases` where the value
 #'   in the column `confirm` converted to NA in any rows that match a row in
 #'   `exclusions`
+#' @family exclusions
 #' @export
 apply_exclusions <- function(cases, exclusions) {
   cli::cli_alert_info("Applying exclusions to case data")
@@ -62,6 +63,7 @@ apply_exclusions <- function(cases, exclusions) {
 #'
 #' @return A dataframe with columns `reference_date`, `report_date`,
 #'   `state_abb`, `disease`
+#' @family exclusions
 #' @export
 read_exclusions <- function(path) {
   check_file_exists(path)
