@@ -67,6 +67,7 @@
 #' - Log file (`logs.txt`) in the task directory
 #'
 #' @rdname pipeline
+#' @family pipeline
 #' @export
 orchestrate_pipeline <- function(config_path,
                                  blob_storage_container = NULL,
@@ -151,6 +152,7 @@ orchestrate_pipeline <- function(config_path,
 #' logic and logged accordingly.
 #'
 #' @rdname pipeline
+#' @family pipeline
 #' @export
 execute_model_logic <- function(config, output_dir, blob_storage_container) {
   cases_df <- read_data(

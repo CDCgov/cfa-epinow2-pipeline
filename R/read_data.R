@@ -25,6 +25,7 @@
 #'
 #' @return A dataframe with one or more rows and columns `report_date`,
 #'   `reference_date`, `state_abb`, `confirm`
+#' @family read_data
 #' @export
 read_data <- function(data_path,
                       disease = c("COVID-19", "Influenza", "test"),

@@ -9,6 +9,7 @@ character_or_null <- S7::new_union(S7::class_character, NULL)
 #' `report_date`, `state_abb`, `disease`.
 #' @param blob_storage_container Optional. The name of the blob storage
 #' container to get it from. If NULL, will look locally.
+#' @family config
 #' @export
 Exclusions <- S7::new_class( # nolint: object_name_linter
   "Exclusions",
@@ -26,6 +27,7 @@ Exclusions <- S7::new_class( # nolint: object_name_linter
 #' @param blob_storage_container Optional. The name of the blob storage
 #' container to get it from. If NULL, will look locally.
 #' @name Interval
+#' @family config
 Interval <- S7::new_class( # nolint: object_name_linter
   "Interval",
   properties = list(
@@ -38,6 +40,7 @@ Interval <- S7::new_class( # nolint: object_name_linter
 #'
 #' Represents the generation interval parameters.
 #' @rdname Interval
+#' @family config
 #' @export
 GenerationInterval <- S7::new_class( # nolint: object_name_linter
   "GenerationInterval",
@@ -72,6 +75,7 @@ RightTruncation <- S7::new_class( # nolint: object_name_linter
 #' @param generation_interval An instance of `GenerationInterval` class.
 #' @param delay_interval An instance of `DelayInterval` class.
 #' @param right_truncation An instance of `RightTruncation` class.
+#' @family config
 #' @export
 Parameters <- S7::new_class( # nolint: object_name_linter
   "Parameters",
@@ -138,6 +142,7 @@ Data <- S7::new_class( # nolint: object_name_linter
 #' @param model A string specifying the model to be used.
 #' @param report_date A string representing the report date. Formatted as
 #' "YYYY-MM-DD".
+#' @family config
 #' @export
 Config <- S7::new_class( # nolint: object_name_linter
   "Config",
@@ -184,6 +189,7 @@ Config <- S7::new_class( # nolint: object_name_linter
 #' error will be thrown.
 #' @return An instance of the `Config` class populated with the data from the
 #' JSON file.
+#' @family config
 #' @export
 read_json_into_config <- function(config_path, optional_fields) {
   # First, our hard coded, flattened, map from strings to Classes. If any new
