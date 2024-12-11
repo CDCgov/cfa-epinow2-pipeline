@@ -3,13 +3,13 @@
 model and provided data. It checks for low case counts and computes
 diagnostics from the fitted model, including the mean acceptance
 statistic, divergent transitions, maximum tree depth, and Rhat values.
-These diagnostics are then flagged if they exceed specific thresholds,
-and the results are returned as a data frame."><meta property="og:description" content="This function extracts various diagnostic metrics from a fitted EpiNow2
+Additionally, a combined flag is computed indicating if any diagnostics
+are outside an acceptable range. The results are returned as a data frame."><meta property="og:description" content="This function extracts various diagnostic metrics from a fitted EpiNow2
 model and provided data. It checks for low case counts and computes
 diagnostics from the fitted model, including the mean acceptance
 statistic, divergent transitions, maximum tree depth, and Rhat values.
-These diagnostics are then flagged if they exceed specific thresholds,
-and the results are returned as a data frame."></head><body>
+Additionally, a combined flag is computed indicating if any diagnostics
+are outside an acceptable range. The results are returned as a data frame."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -47,8 +47,8 @@ and the results are returned as a data frame."></head><body>
 model and provided data. It checks for low case counts and computes
 diagnostics from the fitted model, including the mean acceptance
 statistic, divergent transitions, maximum tree depth, and Rhat values.
-These diagnostics are then flagged if they exceed specific thresholds,
-and the results are returned as a data frame.</p>
+Additionally, a combined flag is computed indicating if any diagnostics
+are outside an acceptable range. The results are returned as a data frame.</p>
     </div>
 
     <div class="section level2">
@@ -107,9 +107,9 @@ greater than 1.05, indicating potential convergence issues.</p></li>
 counts in the data. See <code><a href="low_case_count_diagnostic.html">low_case_count_diagnostic()</a></code> for more
 information on this diagnostic.</p></li>
 <li><p><code>epinow2_diagnostic_flag</code>: A combined flag that indicates if
-any diagnostic thresholds are exceeded. The diagnostic thresholds
-(1) mean_accept_stat &lt; 0.1, (2) p_divergent &gt; 0.0075, (3)
-p_max_treedepth &gt; 0.05, and (4) p_high_rhat &gt; 0.0075.</p></li>
+any diagnostic metrics are outside an accepted range, as determined
+by the thresholds: (1) mean_accept_stat &lt; 0.1, (2) p_divergent &gt;
+0.0075, (3) p_max_treedepth &gt; 0.05, and (4) p_high_rhat &gt; 0.0075.</p></li>
 </ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
