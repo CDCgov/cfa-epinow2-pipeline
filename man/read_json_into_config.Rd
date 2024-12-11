@@ -24,3 +24,11 @@ JSON file.
 Reads a JSON file from the specified path and converts it into a \code{Config}
 object.
 }
+\seealso{
+Other config: 
+\code{\link{Config}()},
+\code{\link{Exclusions}()},
+\code{\link{Interval}},
+\code{\link{Parameters}()}
+}
+\concept{config}

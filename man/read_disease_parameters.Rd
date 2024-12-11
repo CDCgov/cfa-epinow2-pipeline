@@ -54,3 +54,8 @@ interval is a required parameter for $R_t$ estimation.
 \code{delay_interval_path} and \code{right_truncation_path} are optional (but
 strongly suggested).
 }
+\seealso{
+Other parameters: 
+\code{\link{read_interval_pmf}()}
+}
+\concept{parameters}

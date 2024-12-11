@@ -24,3 +24,8 @@ are applied by converting specified points to NAs in the dataset. NAs are
 skipped in model fitting by EpiNow2, so matched rows are excluded from the
 model likelihood.
 }
+\seealso{
+Other exclusions: 
+\code{\link{read_exclusions}()}
+}
+\concept{exclusions}

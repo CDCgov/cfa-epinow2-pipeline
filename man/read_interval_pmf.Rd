@@ -64,3 +64,8 @@ SCD2 format is shorthand for slowly changing dimension type 2. This format is
 normalized to track change over time:
 https://en.wikipedia.org/wiki/Slowly_changing_dimension#Type_2:_add_new_row
 }
+\seealso{
+Other parameters: 
+\code{\link{read_disease_parameters}()}
+}
+\concept{parameters}

@@ -38,3 +38,9 @@ Invisible NULL. The function is called for its side effects.
 Processes the model fit, extracts samples and quantiles,
 and writes them to the appropriate directories.
 }
+\seealso{
+Other write_output: 
+\code{\link{sample_processing_functions}},
+\code{\link{write_output_dir_structure}()}
+}
+\concept{write_output}

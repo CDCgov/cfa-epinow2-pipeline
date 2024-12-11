@@ -98,3 +98,4 @@ This function performs the core model fitting process within the Rt
 estimation pipeline, including reading data, applying exclusions, fitting
 the model, and writing outputs such as model samples, summaries, and logs.
 }
+\concept{pipeline}

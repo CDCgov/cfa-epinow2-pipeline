@@ -21,3 +21,9 @@ Note that I think it might be wise to instead specify a blob prefix, list the
 blobs, and download all the listed blobs. This would let us have some more
 flexibility with downloading whole remote directories (like delta tables)
 }
+\seealso{
+Other azure: 
+\code{\link{fetch_blob_container}()},
+\code{\link{fetch_credential_from_env_var}()}
+}
+\concept{azure}
