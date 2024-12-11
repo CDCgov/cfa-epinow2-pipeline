@@ -3,6 +3,7 @@ azure-batch==14.2.0
 azure-common==1.1.28
 azure-core==1.32.0
 azure-identity==1.19.0
+azure-storage-blob==12.24.0
 certifi==2024.8.30
 cffi==1.17.1
 charset-normalizer==3.4.0
@@ -23,3 +24,4 @@ requests-oauthlib==2.0.0
 six==1.17.0
 typing_extensions==4.12.2
 urllib3==2.2.3
+uuid==1.30

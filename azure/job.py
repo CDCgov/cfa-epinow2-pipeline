@@ -1,10 +1,22 @@
+import datetime
 import sys
 import os
+import uuid
 
 from azure.identity import DefaultAzureCredential
 from msrest.authentication import BasicTokenAuthentication
+from azure.storage.blob import BlobServiceClient
 from azure.batch import BatchServiceClient
 import azure.batch.models as batchmodels
+
+blob_account = os.environ["BLOB_ACCOUNT"]
+blob_url = f"https://{blob_account}.blob.core.windows.net"
+batch_account = os.environ["BATCH_ACCOUNT"]
+batch_url = f"https://{batch_account}.eastus.batch.azure.com"
+config_container = sys.argv[1]
+pool_id = sys.argv[2]
+# Re-use Azure Pool name unless otherwise specified
+job_id = sys.argv[3] if len(sys.argv) > 3 else pool_id
 
 if __name__ == "__main__":
     # Authenticate with workaround because Batch is the one remaining
@@ -16,12 +28,8 @@ if __name__ == "__main__":
 
     batch_client = BatchServiceClient(
         credentials=credential_v1,
-        batch_url=os.environ["az_batch_url"]
+        batch_url=batch_url
      )
-
-    # Add job to pool
-    pool_id = sys.argv[1]
-    job_id = sys.argv[2]
 
     #############
     # Set up job
@@ -38,9 +46,24 @@ if __name__ == "__main__":
         else:
             print("Job already exists. Using job object")
 
-   ###########
+    ##########
+    # Get tasks
+    blob_service_client = BlobServiceClient(blob_url, credential_v2)
+    container_client = blob_service_client.get_container_client(container=config_container)
+    two_mins_ago = datetime.datetime.now(datetime.UTC) - datetime.timedelta(minutes=2)
+    task_configs = []
+    blobs = container_client.list_blobs()
+
+    for blob in blobs:
+        if blob.creation_time > two_mins_ago:
+            task_configs.append(blob.name)
+    if len(task_configs) == 0:
+        raise ValueError("No tasks found")
+    else:
+        print(f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}")
+
+    ###########
     # Set up task on job
-    task_id = 'sampletask'
     registry = os.environ["AZURE_CONTAINER_REGISTRY"]
     task_container_settings = batchmodels.TaskContainerSettings(
         image_name=registry + '/cfa-epinow2-pipeline:test-edit-azure-flow',
@@ -51,7 +74,6 @@ if __name__ == "__main__":
         batchmodels.EnvironmentSetting(name="az_client_id", value=os.environ["AZURE_CLIENT_ID"]),
         batchmodels.EnvironmentSetting(name="az_service_principal", value=os.environ["AZURE_CLIENT_SECRET"])
     ]
-    command = "Rscript -e \"CFAEpiNow2Pipeline::orchestrate_pipeline('test-batch.json', config_container = 'zs-test-pipeline-update', input_dir = '/cfa-epinow2-pipeline/input', output_dir = '/cfa-epinow2-pipeline', output_container = 'zs-test-pipeline-update')\""
 
     # Run task at the admin level to be able to read/write to mounted drives
     user_identity=batchmodels.UserIdentity(
@@ -61,12 +83,14 @@ if __name__ == "__main__":
         )
     )
 
-    task = batchmodels.TaskAddParameter(
-        id=task_id,
-        command_line=command,
-        container_settings=task_container_settings,
-        environment_settings=task_env_settings,
-        user_identity=user_identity
-    )
+    for config_path in task_configs:
+        command = f"Rscript -e \"CFAEpiNow2Pipeline::orchestrate_pipeline('{config_path}', config_container = '{config_container}', input_dir = '/cfa-epinow2-pipeline/input', output_dir = '/cfa-epinow2-pipeline/output', output_container = 'zs-test-pipeline-update')\""
+        task = batchmodels.TaskAddParameter(
+            id=str(uuid.uuid4()),
+            command_line=command,
+            container_settings=task_container_settings,
+            environment_settings=task_env_settings,
+            user_identity=user_identity
+        )
 
-    batch_client.task.add(job_id, task)
+        batch_client.task.add(job_id, task)

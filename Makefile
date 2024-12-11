@@ -26,6 +26,12 @@ build:
 tag:
 	docker tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
+config:
+	gh workflow run \
+	  -R cdcgov/cfa-config-generator run-workload.yaml  \
+	  -f disease=all \
+	  -f state=all
+
 run-batch:
 	docker build -f Dockerfile-batch -t batch . --no-cache
 	docker run --rm  \
@@ -37,7 +43,7 @@ run:
 	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):test-$(TAG) \
-	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'zs-test-pipeline-update', input_dir = '/cfa-epinow2-pipeline/input', output_dir = '/cfa-epinow2-pipeline', output_container = 'zs-test-pipeline-update')"
+	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/cfa-epinow2-pipeline/input', output_dir = '/cfa-epinow2-pipeline', output_container = 'zs-test-pipeline-update')"
 
 
 up:
