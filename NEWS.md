@@ -6,6 +6,7 @@
 * Change formatting of metadata values to be atomic.
 * Add `blob_storage_container` as a field to the metadata.
 * Use empty string for paths when non-existant.
+* Add function families
 * Populated the default values of the metadata to be saved.
 * Creating a Config class to make syncing configuration differences easier.
 * Add a JSON reader for the Config class.
