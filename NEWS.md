@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Renamed file containing diagnostic functions
 * Populated the default values of the metadata to be saved.
 * Creating a Config class to make syncing configuration differences easier.
 * Add a JSON reader for the Config class.
