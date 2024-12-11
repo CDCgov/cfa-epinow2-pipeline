@@ -80,6 +80,7 @@ Represents the complete configuration for the pipeline.
 }
 \seealso{
 Other config: 
+\code{\link{Data}()},
 \code{\link{Exclusions}()},
 \code{\link{Interval}},
 \code{\link{Parameters}()},

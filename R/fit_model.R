@@ -14,6 +14,7 @@
 #'
 #' @return A fitted model object of class `epinow` or, if model fitting fails,
 #'   an NA is returned with a warning
+#' @family pipeline
 #' @export
 fit_model <- function(
     data,
@@ -98,6 +99,7 @@ fit_model <- function(
 #'   PMF vector or an NA, if not applying the PMF to the model fit.
 #'
 #' @return An EpiNow2::*_opts() formatted object or NA with a message
+#' @family parameters
 #' @name opts_formatter
 NULL
 

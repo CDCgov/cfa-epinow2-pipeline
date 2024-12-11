@@ -24,3 +24,8 @@ count from confirmed outliers, which have been set to NA in the data.
 This function assumes that the \code{df} input dataset has been
 "completed": that any implicit missingness has been made explicit.
 }
+\seealso{
+Other diagnostics: 
+\code{\link{extract_diagnostics}()}
+}
+\concept{diagnostics}

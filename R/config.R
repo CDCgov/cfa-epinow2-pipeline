@@ -99,7 +99,7 @@ Parameters <- S7::new_class( # nolint: object_name_linter
 #' occur.
 #' @param report_date A list of strings representing report dates.
 #' @param reference_date A list of strings representing reference dates.
-
+#' @family config
 #' @export
 Data <- S7::new_class( # nolint: object_name_linter
   "Data",

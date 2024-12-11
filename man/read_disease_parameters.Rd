@@ -56,6 +56,7 @@ strongly suggested).
 }
 \seealso{
 Other parameters: 
+\code{\link{opts_formatter}},
 \code{\link{read_interval_pmf}()}
 }
 \concept{parameters}

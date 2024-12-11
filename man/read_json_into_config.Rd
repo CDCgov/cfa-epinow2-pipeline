@@ -27,6 +27,7 @@ object.
 \seealso{
 Other config: 
 \code{\link{Config}()},
+\code{\link{Data}()},
 \code{\link{Exclusions}()},
 \code{\link{Interval}},
 \code{\link{Parameters}()}

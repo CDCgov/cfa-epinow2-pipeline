@@ -140,6 +140,7 @@ extract_diagnostics <- function(fit,
 #'
 #' @return A logical value (TRUE or FALSE) indicating whether either of the last
 #' two weeks in the dataset had fewer than 10 cases per week.
+#' @family diagnostics
 #' @export
 low_case_count_diagnostic <- function(df) {
   cli::cli_alert_info("Calculating low case count diagnostic")

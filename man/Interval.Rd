@@ -33,24 +33,28 @@ Represents the right truncation parameters.
 \seealso{
 Other config: 
 \code{\link{Config}()},
+\code{\link{Data}()},
 \code{\link{Exclusions}()},
 \code{\link{Parameters}()},
 \code{\link{read_json_into_config}()}
 
 Other config: 
 \code{\link{Config}()},
+\code{\link{Data}()},
 \code{\link{Exclusions}()},
 \code{\link{Parameters}()},
 \code{\link{read_json_into_config}()}
 
 Other config: 
 \code{\link{Config}()},
+\code{\link{Data}()},
 \code{\link{Exclusions}()},
 \code{\link{Parameters}()},
 \code{\link{read_json_into_config}()}
 
 Other config: 
 \code{\link{Config}()},
+\code{\link{Data}()},
 \code{\link{Exclusions}()},
 \code{\link{Parameters}()},
 \code{\link{read_json_into_config}()}

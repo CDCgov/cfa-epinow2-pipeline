@@ -31,3 +31,9 @@ to EpiNow2.
 \details{
 Delays or right truncation are optional and can be skipped by passing \code{pmf = NA}.
 }
+\seealso{
+Other parameters: 
+\code{\link{read_disease_parameters}()},
+\code{\link{read_interval_pmf}()}
+}
+\concept{parameters}
