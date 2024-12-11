@@ -121,7 +121,7 @@ orchestrate_pipeline <- function(config_path,
   # `pipeline_success` is set to false, which will be stored in the
   # metadata in the next PR.
   pipeline_success <- rlang::try_fetch(
-    execute_model_logic(config, output_dir),
+    execute_model_logic(config, output_dir, blob_storage_container),
     error = function(con) {
       cli::cli_warn("Pipeline run failed",
         parent = con,
@@ -152,7 +152,7 @@ orchestrate_pipeline <- function(config_path,
 #'
 #' @rdname pipeline
 #' @export
-execute_model_logic <- function(config, output_dir) {
+execute_model_logic <- function(config, output_dir, blob_storage_container) {
   cases_df <- read_data(
     data_path = config@data@path,
     disease = config@disease,
@@ -218,7 +218,7 @@ execute_model_logic <- function(config, output_dir) {
     data_path = ifelse(
       # is_empty checks for NULL and empty data structures
       rlang::is_empty(config@data@path),
-      config@data@path, ""
+      "", config@data@path
     ),
     model = config@model,
     disease = config@disease,
@@ -227,7 +227,14 @@ execute_model_logic <- function(config, output_dir) {
     production_date = config@production_date,
     max_reference_date = config@max_reference_date,
     min_reference_date = config@min_reference_date,
-    exclusions = config@exclusions@path,
+    exclusions = ifelse(
+      rlang::is_empty(config@exclusions@path),
+      "", config@exclusions@path
+    ),
+    blob_storage_container = ifelse(
+      rlang::is_empty(blob_storage_container),
+      "", blob_storage_container
+    ),
     run_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
   )
 

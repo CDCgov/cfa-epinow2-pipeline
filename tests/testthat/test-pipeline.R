@@ -79,7 +79,8 @@ test_that("Process pipeline produces expected outputs and returns success", {
   # Act
   pipeline_success <- execute_model_logic(
     config = config,
-    output_dir = output_dir
+    output_dir = output_dir,
+    blob_storage_container = "blah"
   )
   expect_true(pipeline_success)
 
@@ -107,7 +108,8 @@ test_that("Runs on config from generator as of 2024-11-26", {
   # Act
   pipeline_success <- execute_model_logic(
     config = config,
-    output_dir = output_dir
+    output_dir = output_dir,
+    blob_storage_container = "blah"
   )
   expect_true(pipeline_success)
 
