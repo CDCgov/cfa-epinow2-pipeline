@@ -51,6 +51,7 @@ GenerationInterval <- S7::new_class( # nolint: object_name_linter
 #'
 #' Represents the delay interval parameters.
 #' @rdname Interval
+#' @family config
 #' @export
 DelayInterval <- S7::new_class( # nolint: object_name_linter
   "DelayInterval",
@@ -61,6 +62,7 @@ DelayInterval <- S7::new_class( # nolint: object_name_linter
 #'
 #' Represents the right truncation parameters.
 #' @rdname Interval
+#' @family config
 #' @export
 RightTruncation <- S7::new_class( # nolint: object_name_linter
   "RightTruncation",

@@ -11,10 +11,18 @@ reference:
   desc: Example data included in the package
   contents:
   - has_concept("data")
+- title: Configuration
+  desc: Manages the input of all configuration settings into the `EpiNow2` model
+  contents:
+  - has_concept("config")
 - title: Exclusions
   desc: Functions to handle exclusion of data from models
   contents:
   - has_concept("exclusions")
+- title: Diagnostics
+  desc: Functions to calculate diagnostics from fitted `EpiNow2` model
+  contents:
+  - has_concept("diagnostics")
 - title: Parameter
   desc: Functions for parameter values that are input into the `EpiNow2` model
   contents:

@@ -46,6 +46,7 @@
 #'         by the thresholds: (1) mean_accept_stat < 0.1, (2) p_divergent >
 #'         0.0075, (3) p_max_treedepth > 0.05, and (4) p_high_rhat > 0.0075.
 #' }
+#' @family diagnostics
 #' @export
 extract_diagnostics <- function(fit,
                                 data,
