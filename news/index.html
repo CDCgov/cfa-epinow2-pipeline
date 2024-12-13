@@ -33,7 +33,10 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="cfaepinow2pipeline-development-version">CFAEpiNow2Pipeline (development version)<a class="anchor" aria-label="anchor" href="#cfaepinow2pipeline-development-version"></a></h2>
-<ul><li>Populated the default values of the metadata to be saved.</li>
+<ul><li>Change formatting of metadata values to be atomic.</li>
+<li>Add <code>blob_storage_container</code> as a field to the metadata.</li>
+<li>Use empty string for paths when non-existant.</li>
+<li>Populated the default values of the metadata to be saved.</li>
 <li>Creating a Config class to make syncing configuration differences easier.</li>
 <li>Add a JSON reader for the Config class.</li>
 <li>Use the Config class throughout the pipeline.</li>
