@@ -11,7 +11,7 @@ orchestrate_pipeline(
   output_dir = "/"
 )
 
-execute_model_logic(config, output_dir)
+execute_model_logic(config, output_dir, blob_storage_container)
 }
 \arguments{
 \item{config_path}{A string specifying the file path to the JSON

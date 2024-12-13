@@ -19,3 +19,8 @@ check_file_exists <- function(data_path) {
   }
   invisible(data_path)
 }
+
+#' If `x` is null or empty, return an empty string, otherwise `x`
+empty_str_if_non_existant <- function(x) {
+  ifelse(rlang::is_empty(x), "", x)
+}

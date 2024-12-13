@@ -39,4 +39,9 @@ expect_pipeline_files_written <- function(
   expect_true(file.exists(metadata_path))
   metadata <- jsonlite::read_json(metadata_path)
   expect_gt(length(metadata), 0)
+
+  # Check that each field passes `rlang::is_atomic()`
+  for (field in names(metadata)) {
+    expect_true(rlang::is_atomic(metadata[[field]]))
+  }
 }
