@@ -2,6 +2,7 @@
 
 * Read parameters on the same day correctly
 * Re-add missing dependency in python venv
+* Clean up Azure Batch pools on PR close
 * Added function families to documentation
 * Renamed file containing diagnostic functions
 * Change formatting of metadata values to be atomic.
