@@ -1,8 +1,7 @@
 # CFAEpiNow2Pipeline (development version)
 
-
+* Added function families to documentation
 * Renamed file containing diagnostic functions
-
 * Change formatting of metadata values to be atomic.
 * Add `blob_storage_container` as a field to the metadata.
 * Use empty string for paths when non-existant.
