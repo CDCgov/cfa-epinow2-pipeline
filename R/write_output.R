@@ -76,7 +76,10 @@ write_model_outputs <- function(
           model_path = model_path
         )
       )
-      jsonlite::write_json(metadata, metadata_path, pretty = TRUE)
+      jsonlite::write_json(
+        metadata, metadata_path,
+        pretty = TRUE, auto_unbox = TRUE
+      )
       cli::cli_alert_success("Wrote metadata to {.path {metadata_path}}")
     },
     error = function(cnd) {
