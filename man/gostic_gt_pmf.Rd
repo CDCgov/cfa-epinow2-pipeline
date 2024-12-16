@@ -37,4 +37,9 @@ delay. The renewal framework, which underpins our model does not account for
 zero-day delays. We renormalize the left-truncated vector to sum to one so
 that it's a proper PMF.
 }
+\seealso{
+Other data: 
+\code{\link{gostic_toy_rt}}
+}
+\concept{data}
 \keyword{datasets}

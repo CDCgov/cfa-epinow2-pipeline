@@ -25,3 +25,9 @@ This \strong{impure} function depends on the environment variables:
 \details{
 It will error out if any of the above is not set.
 }
+\seealso{
+Other azure: 
+\code{\link{download_from_azure_blob}()},
+\code{\link{fetch_credential_from_env_var}()}
+}
+\concept{azure}

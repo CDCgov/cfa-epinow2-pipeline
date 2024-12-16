@@ -26,3 +26,9 @@ them, including merging with a fact table and standardizing the parameter
 names. If calling \code{process_quantiles()} the 50\% and 95\% intervals are
 returned in \code{{tidybayes}} format.
 }
+\seealso{
+Other write_output: 
+\code{\link{write_model_outputs}()},
+\code{\link{write_output_dir_structure}()}
+}
+\concept{write_output}

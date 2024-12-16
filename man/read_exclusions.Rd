@@ -26,3 +26,8 @@ Expects to read a CSV with required columns:
 These columns have the same meaning as in \code{\link[=read_data]{read_data()}}. Additional columns
 are allowed and will be ignored by the reader.
 }
+\seealso{
+Other exclusions: 
+\code{\link{apply_exclusions}()}
+}
+\concept{exclusions}

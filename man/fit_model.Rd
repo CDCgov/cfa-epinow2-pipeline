@@ -31,3 +31,8 @@ an NA is returned with a warning
 \description{
 Fit an EpiNow2 model
 }
+\seealso{
+Other pipeline: 
+\code{\link{orchestrate_pipeline}()}
+}
+\concept{pipeline}

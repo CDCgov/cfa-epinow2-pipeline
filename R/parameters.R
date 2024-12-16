@@ -29,6 +29,7 @@
 #'   interval is a required parameter for $R_t$ estimation.
 #'   `delay_interval_path` and `right_truncation_path` are optional (but
 #'   strongly suggested).
+#' @family parameters
 #' @export
 read_disease_parameters <- function(
     generation_interval_path,
@@ -114,6 +115,7 @@ path_is_specified <- function(path) {
 #' @inheritParams read_disease_parameters
 #'
 #' @return A PMF vector
+#' @family parameters
 #' @export
 read_interval_pmf <- function(path,
                               disease = c("COVID-19", "Influenza", "test"),
@@ -226,6 +228,7 @@ read_interval_pmf <- function(path,
 #' @inheritParams read_interval_pmf
 #'
 #' @return The unpacked `value` column, which is a valid PMF
+#' @family parameters
 #' @noRd
 check_returned_pmf <- function(
     pmf_df,
@@ -289,4 +292,104 @@ check_returned_pmf <- function(
   }
 
   return(pmf)
+}
+
+#' Format PMFs for EpiNow2
+#'
+#' Opinionated wrappers around EpiNow2::generation_time_opts(),
+#' EpiNow2::delay_opts(), or EpiNow2::dist_spec() that formats the generation
+#' interval, delay, or right truncation parameters as an object ready for input
+#' to EpiNow2.
+#'
+#' Delays or right truncation are optional and can be skipped by passing `pmf =
+#' NA`.
+#'
+#' @param pmf As returned by [CFAEpiNow2Pipeline::read_disease_parameters()]. A
+#'   PMF vector or an NA, if not applying the PMF to the model fit.
+#'
+#' @return An EpiNow2::*_opts() formatted object or NA with a message
+#' @family parameters
+#' @name opts_formatter
+NULL
+
+#' @rdname opts_formatter
+#' @export
+format_generation_interval <- function(pmf) {
+  if (
+    rlang::is_na(pmf) || rlang::is_null(pmf)
+  ) {
+    cli::cli_abort("No generation time PMF specified but is required",
+      class = "Missing_GI"
+    )
+  }
+
+  suppressWarnings({
+    EpiNow2::generation_time_opts(
+      dist = EpiNow2::dist_spec(
+        pmf = pmf
+      )
+    )
+  })
+}
+
+#' @rdname opts_formatter
+#' @export
+format_delay_interval <- function(pmf) {
+  if (
+    rlang::is_na(pmf) || rlang::is_null(pmf)
+  ) {
+    cli::cli_alert("Not adjusting for infection to case delay")
+    EpiNow2::delay_opts()
+  } else {
+    suppressWarnings({
+      EpiNow2::delay_opts(
+        dist = EpiNow2::dist_spec(
+          pmf = pmf
+        )
+      )
+    })
+  }
+}
+
+#' @inheritParams fit_model
+#' @rdname opts_formatter
+#' @export
+format_right_truncation <- function(pmf, data) {
+  if (
+    rlang::is_na(pmf) || rlang::is_null(pmf)
+  ) {
+    cli::cli_alert("Not adjusting for right truncation")
+    EpiNow2::trunc_opts()
+  } else if (length(pmf) > nrow(data)) {
+    # Nasty bug we ran into where **left-hand** side of the PMF was being
+    # silently removed if length of the PMF was longer than the data,
+    # effectively eliminating the right-truncation correction
+
+    trunc_len <- nrow(data)
+    cli::cli_warn(
+      c(
+        "Removing right-truncation PMF elements after {.val {trunc_len}}",
+        "Right truncation PMF longer than the data",
+        "PMF length: {.val {length(pmf)}}",
+        "Data length: {.val {nrow(data)}}",
+        "PMF can only be up to the length of the data"
+      ),
+      class = "right_trunc_too_long"
+    )
+    suppressWarnings({
+      EpiNow2::trunc_opts(
+        dist = EpiNow2::dist_spec(
+          pmf = pmf[seq_len(trunc_len)]
+        )
+      )
+    })
+  } else {
+    suppressWarnings({
+      EpiNow2::trunc_opts(
+        dist = EpiNow2::dist_spec(
+          pmf = pmf
+        )
+      )
+    })
+  }
 }

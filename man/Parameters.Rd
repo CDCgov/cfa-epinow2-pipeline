@@ -24,3 +24,12 @@ Parameters(
 \description{
 Holds all parameter-related configurations for the pipeline.
 }
+\seealso{
+Other config: 
+\code{\link{Config}()},
+\code{\link{Data}()},
+\code{\link{Exclusions}()},
+\code{\link{Interval}},
+\code{\link{read_json_into_config}()}
+}
+\concept{config}
