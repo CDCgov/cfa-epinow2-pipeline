@@ -135,8 +135,7 @@ orchestrate_pipeline <- function(config_path,
   # `pipeline_success` is set to false, which will be stored in the
   # metadata in the next PR.
   pipeline_success <- rlang::try_fetch(
-    execute_model_logic(config, output_dir, blob_storage_container),
-    execute_model_logic(config, input_dir, output_dir),
+    execute_model_logic(config, input_dir = input_dir, output_dir = output_dir),
     error = function(con) {
       cli::cli_warn("Pipeline run failed",
         parent = con,
@@ -281,7 +280,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     max_reference_date = config@max_reference_date,
     min_reference_date = config@min_reference_date,
     exclusions = empty_str_if_non_existant(config@exclusions@path),
-    blob_storage_container = empty_str_if_non_existant(blob_storage_container),
+    # Add the config container here when refactoring out to outer func
     run_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
   )
 
