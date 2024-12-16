@@ -31,9 +31,61 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="azure">Azure<a class="anchor" aria-label="anchor" href="#azure"></a></h2>
+
+      <div class="section-desc"><p>Functions which manage interaction with Azure blob</p></div>
 
 
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="download_from_azure_blob.html">download_from_azure_blob()</a></code>
+
+        </dt>
+        <dd>Download specified blobs from Blob Storage and save them in a local dir</dd>
+      </dl><dl><dt>
+
+          <code><a href="fetch_blob_container.html">fetch_blob_container()</a></code>
+
+        </dt>
+        <dd>Load Azure Blob endpoint using credentials in environment variables</dd>
+      </dl><dl><dt>
+
+          <code><a href="fetch_credential_from_env_var.html">fetch_credential_from_env_var()</a></code>
+
+        </dt>
+        <dd>Fetch Azure credential from environment variable</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a></h2>
+
+      <div class="section-desc"><p>Example data included in the package</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="gostic_gt_pmf.html">gostic_gt_pmf</a></code>
+
+        </dt>
+        <dd>Generation interval corresponding to the sample <code>gostic_toy_rt</code> dataset</dd>
+      </dl><dl><dt>
+
+          <code><a href="gostic_toy_rt.html">gostic_toy_rt</a></code>
+
+        </dt>
+        <dd>Synthetic dataset of stochastic SIR system with known Rt</dd>
+      </dl></div><div class="section level2">
+      <h2 id="configuration">Configuration<a class="anchor" aria-label="anchor" href="#configuration"></a></h2>
+
+      <div class="section-desc"><p>Manages the input of all configuration settings into the <code>EpiNow2</code> model</p></div>
 
 
     </div><div class="section level2">
@@ -73,17 +125,45 @@
         <dd>Parameters Class</dd>
       </dl><dl><dt>
 
+          <code><a href="read_json_into_config.html">read_json_into_config()</a></code>
+
+        </dt>
+        <dd>Read JSON Configuration into Config Object</dd>
+      </dl></div><div class="section level2">
+      <h2 id="exclusions">Exclusions<a class="anchor" aria-label="anchor" href="#exclusions"></a></h2>
+
+      <div class="section-desc"><p>Functions to handle exclusion of data from models</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
           <code><a href="apply_exclusions.html">apply_exclusions()</a></code>
 
         </dt>
         <dd>Convert case counts in matching rows to NA</dd>
       </dl><dl><dt>
 
-          <code><a href="download_from_azure_blob.html">download_from_azure_blob()</a></code>
+          <code><a href="read_exclusions.html">read_exclusions()</a></code>
 
         </dt>
-        <dd>Download specified blobs from Blob Storage and save them in a local dir</dd>
-      </dl><dl><dt>
+        <dd>Read exclusions from an external file</dd>
+      </dl></div><div class="section level2">
+      <h2 id="diagnostics">Diagnostics<a class="anchor" aria-label="anchor" href="#diagnostics"></a></h2>
+
+      <div class="section-desc"><p>Functions to calculate diagnostics from fitted <code>EpiNow2</code> model</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="extract_diagnostics.html">extract_diagnostics()</a></code>
 
@@ -91,58 +171,27 @@
         <dd>Extract diagnostic metrics from model fit and data</dd>
       </dl><dl><dt>
 
-          <code><a href="fetch_blob_container.html">fetch_blob_container()</a></code>
-
-        </dt>
-        <dd>Load Azure Blob endpoint using credentials in environment variables</dd>
-      </dl><dl><dt>
-
-          <code><a href="fetch_credential_from_env_var.html">fetch_credential_from_env_var()</a></code>
-
-        </dt>
-        <dd>Fetch Azure credential from environment variable</dd>
-      </dl><dl><dt>
-
-          <code><a href="fit_model.html">fit_model()</a></code>
-
-        </dt>
-        <dd>Fit an EpiNow2 model</dd>
-      </dl><dl><dt>
-
-          <code><a href="gostic_gt_pmf.html">gostic_gt_pmf</a></code>
-
-        </dt>
-        <dd>Generation interval corresponding to the sample <code>gostic_toy_rt</code> dataset</dd>
-      </dl><dl><dt>
-
-          <code><a href="gostic_toy_rt.html">gostic_toy_rt</a></code>
-
-        </dt>
-        <dd>Synthetic dataset of stochastic SIR system with known Rt</dd>
-      </dl><dl><dt>
-
           <code><a href="low_case_count_diagnostic.html">low_case_count_diagnostic()</a></code>
 
         </dt>
         <dd>Calculate low case count diagnostic flag</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="parameter">Parameter<a class="anchor" aria-label="anchor" href="#parameter"></a></h2>
+
+      <div class="section-desc"><p>Functions for parameter values that are input into the <code>EpiNow2</code> model</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="opts_formatter.html">format_generation_interval()</a></code> <code><a href="opts_formatter.html">format_delay_interval()</a></code> <code><a href="opts_formatter.html">format_right_truncation()</a></code>
 
         </dt>
         <dd>Format PMFs for EpiNow2</dd>
-      </dl><dl><dt>
-
-          <code><a href="pipeline.html">orchestrate_pipeline()</a></code> <code><a href="pipeline.html">execute_model_logic()</a></code>
-
-        </dt>
-        <dd>Run an Rt Estimation Model Pipeline</dd>
-      </dl><dl><dt>
-
-          <code><a href="read_data.html">read_data()</a></code>
-
-        </dt>
-        <dd>Read in the dataset of incident case counts</dd>
       </dl><dl><dt>
 
           <code><a href="read_disease_parameters.html">read_disease_parameters()</a></code>
@@ -151,23 +200,62 @@
         <dd>Read in disease process parameters from an external file or files</dd>
       </dl><dl><dt>
 
-          <code><a href="read_exclusions.html">read_exclusions()</a></code>
-
-        </dt>
-        <dd>Read exclusions from an external file</dd>
-      </dl><dl><dt>
-
           <code><a href="read_interval_pmf.html">read_interval_pmf()</a></code>
 
         </dt>
         <dd>Read parameter PMF into memory</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="pipeline">Pipeline<a class="anchor" aria-label="anchor" href="#pipeline"></a></h2>
 
-          <code><a href="read_json_into_config.html">read_json_into_config()</a></code>
+      <div class="section-desc"><p>Functions to orchestrate running of the pipeline including fitting the <code>EpiNow2</code> model</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="fit_model.html">fit_model()</a></code>
 
         </dt>
-        <dd>Read JSON Configuration into Config Object</dd>
+        <dd>Fit an EpiNow2 model</dd>
       </dl><dl><dt>
+
+          <code><a href="pipeline.html">orchestrate_pipeline()</a></code> <code><a href="pipeline.html">execute_model_logic()</a></code>
+
+        </dt>
+        <dd>Run an Rt Estimation Model Pipeline</dd>
+      </dl></div><div class="section level2">
+      <h2 id="read-data">Read data<a class="anchor" aria-label="anchor" href="#read-data"></a></h2>
+
+      <div class="section-desc"><p>Functions for data that are input into the <code>EpiNow2</code> model</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="read_data.html">read_data()</a></code>
+
+        </dt>
+        <dd>Read in the dataset of incident case counts</dd>
+      </dl></div><div class="section level2">
+      <h2 id="write-output">Write output<a class="anchor" aria-label="anchor" href="#write-output"></a></h2>
+
+      <div class="section-desc"><p>Functions for post-processing and writing <code>EpiNow2</code> model output</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="sample_processing_functions.html">process_samples()</a></code> <code><a href="sample_processing_functions.html">process_quantiles()</a></code>
 
@@ -186,7 +274,8 @@
         </dt>
         <dd>Create output directory structure for a given job and task.</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

@@ -33,47 +33,51 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="cfaepinow2pipeline-development-version">CFAEpiNow2Pipeline (development version)<a class="anchor" aria-label="anchor" href="#cfaepinow2pipeline-development-version"></a></h2>
-<ul><li><p>Renamed file containing diagnostic functions</p></li>
-<li><p>Change formatting of metadata values to be atomic.</p></li>
-<li><p>Add <code>blob_storage_container</code> as a field to the metadata.</p></li>
-<li><p>Use empty string for paths when non-existant.</p></li>
-<li><p>Populated the default values of the metadata to be saved.</p></li>
-<li><p>Creating a Config class to make syncing configuration differences easier.</p></li>
-<li><p>Add a JSON reader for the Config class.</p></li>
-<li><p>Use the Config class throughout the pipeline.</p></li>
-<li><p>Adding a script to setup the Azure Batch Pool to link the container.</p></li>
-<li><p>Adding new action to post a comment on PRs with a link to the rendered pkgdown site.</p></li>
-<li><p>Add inner pipeline responsible for running the model fitting process</p></li>
-<li><p>Re-organizing GitHub workflows.</p></li>
-<li><p>Checks if batch pool exists. Pools are named after branches. Also allows for deletion via commit message.</p></li>
-<li><p>Merges workflows 1 and 2 into a single workflow.</p></li>
-<li><p>Now uses CFA Azure ACR and images in the workflows and Dockerfiles, etc.</p></li>
-<li><p>Added Docker image with all the requirements to build the package.</p></li>
-<li><p>Bump pre-commit hooks</p></li>
-<li><p>Fix bug in warning message for incomplete data read (h/t @damonbayer)</p></li>
-<li><p>Fit EpiNow2 model using params and fixed seed</p></li>
-<li><p>Removed <code>.vscode</code> folder from repo</p></li>
-<li><p>Read and apply exclusions to case data</p></li>
-<li><p>Data reader and processor</p></li>
-<li><p>Parameters read from local parquet file or files</p></li>
-<li><p>Additional CI bugs squashed</p></li>
-<li><p>Bug fixed in the updated, faster pre-commit checks</p></li>
-<li><p>Updated, faster pre-commit checks</p></li>
-<li><p>Azure Blob file download utilities</p></li>
-<li><p>CI running on Ubuntu only &amp; working pkgdown deploy to Github Pages</p></li>
-<li><p>Initial R package with checks running in CI</p></li>
-<li><p>Updated DESCRIPTION and added guidelines for package authorship</p></li>
-<li><p>Set up README with explanation of purpose and scope</p></li>
-<li><p>Removed <code>add.R</code> placeholder</p></li>
-<li><p>Fix bugs in date casting caused by DuckDB v1.1.1 release</p></li>
-<li><p>Drop unused pre-commit hooks</p></li>
-<li><p>Write outputs to file</p></li>
-<li><p>Specify number of samples draws with <code>iter_sampling</code></p></li>
-<li><p>Fix NOTE from missing variable name used with NSE</p></li>
-<li><p>Read from new parameters schema</p></li>
-<li><p>Fix bugs in parameter reading from local test run</p></li>
-<li><p>Fix bugs in parameter reading from local test run</p></li>
-<li><p>Add “US” as an option in <code>state_abb</code></p></li>
+<ul><li>Added function families to documentation</li>
+<li>Renamed file containing diagnostic functions</li>
+<li>Change formatting of metadata values to be atomic.</li>
+<li>Add <code>blob_storage_container</code> as a field to the metadata.</li>
+<li>Use empty string for paths when non-existant.</li>
+<li>Add function families</li>
+<li>Populated the default values of the metadata to be saved.</li>
+<li>Creating a Config class to make syncing configuration differences easier.</li>
+<li>Add a JSON reader for the Config class.</li>
+<li>Use the Config class throughout the pipeline.</li>
+<li>Adding a script to setup the Azure Batch Pool to link the container.</li>
+<li>Adding new action to post a comment on PRs with a link to the rendered pkgdown site.</li>
+<li>Add inner pipeline responsible for running the model fitting process</li>
+<li>Re-organizing GitHub workflows.</li>
+<li>Checks if batch pool exists. Pools are named after branches. Also allows for deletion via commit message.</li>
+<li>Merges workflows 1 and 2 into a single workflow.</li>
+<li>Now uses CFA Azure ACR and images in the workflows and Dockerfiles, etc.</li>
+<li>Added Docker image with all the requirements to build the package.</li>
+<li>Bump pre-commit hooks</li>
+<li>Fix bug in warning message for incomplete data read (h/t @damonbayer)</li>
+<li>Fit EpiNow2 model using params and fixed seed</li>
+<li>Removed <code>.vscode</code> folder from repo</li>
+<li>Read and apply exclusions to case data</li>
+<li>Data reader and processor</li>
+<li>Parameters read from local parquet file or files</li>
+<li>Additional CI bugs squashed</li>
+<li>Bug fixed in the updated, faster pre-commit checks</li>
+<li>Updated, faster pre-commit checks</li>
+<li>Azure Blob file download utilities</li>
+<li>CI running on Ubuntu only &amp; working pkgdown deploy to Github Pages</li>
+<li>Initial R package with checks running in CI</li>
+<li>Updated DESCRIPTION and added guidelines for package authorship</li>
+<li>Set up README with explanation of purpose and scope</li>
+<li>Removed <code>add.R</code> placeholder</li>
+<li>Fix bugs in date casting caused by DuckDB v1.1.1 release</li>
+<li>Drop unused pre-commit hooks</li>
+<li>Write outputs to file</li>
+<li>Specify number of samples draws with <code>iter_sampling</code>
+</li>
+<li>Fix NOTE from missing variable name used with NSE</li>
+<li>Read from new parameters schema</li>
+<li>Fix bugs in parameter reading from local test run</li>
+<li>Fix bugs in parameter reading from local test run</li>
+<li>Add “US” as an option in <code>state_abb</code>
+</li>
 </ul></div>
   </main></div>
 
