@@ -4,6 +4,7 @@
 #' @param blob_storage_container The name of the container to donwload from
 #' @param output_dir The directory to write the downloaded file to
 #' @return The path of the file
+#' @family azure
 #' @export
 download_if_specified <- function(
     blob_path,

@@ -28,6 +28,7 @@ It will error out if any of the above is not set.
 \seealso{
 Other azure: 
 \code{\link{download_file_from_container}()},
+\code{\link{download_if_specified}()},
 \code{\link{fetch_credential_from_env_var}()}
 }
 \concept{azure}

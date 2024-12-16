@@ -19,3 +19,10 @@ The path of the file
 \description{
 Download if specified
 }
+\seealso{
+Other azure: 
+\code{\link{download_file_from_container}()},
+\code{\link{fetch_blob_container}()},
+\code{\link{fetch_credential_from_env_var}()}
+}
+\concept{azure}
