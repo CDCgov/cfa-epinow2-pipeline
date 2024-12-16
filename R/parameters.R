@@ -319,10 +319,10 @@ format_generation_interval <- function(pmf) {
     rlang::is_na(pmf) || rlang::is_null(pmf)
   ) {
     cli::cli_abort("No generation time PMF specified but is required",
-                   class = "Missing_GI"
+      class = "Missing_GI"
     )
   }
-  
+
   suppressWarnings({
     EpiNow2::generation_time_opts(
       dist = EpiNow2::dist_spec(
@@ -364,7 +364,7 @@ format_right_truncation <- function(pmf, data) {
     # Nasty bug we ran into where **left-hand** side of the PMF was being
     # silently removed if length of the PMF was longer than the data,
     # effectively eliminating the right-truncation correction
-    
+
     trunc_len <- nrow(data)
     cli::cli_warn(
       c(

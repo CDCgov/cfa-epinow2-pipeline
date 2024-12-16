@@ -33,7 +33,7 @@ fit_model <- function(
   gp <- EpiNow2::gp_opts(
     alpha_sd = priors[["gp"]][["alpha_sd"]]
   )
-  
+
   # Distributions -----------------------------------------------------------
   generation_time <- format_generation_interval(
     parameters[["generation_interval"]]
@@ -103,7 +103,7 @@ format_stan_opts <- function(sampler_opts, seed) {
       "Missing values: {.val {expected_stan_args[missing_elements]}}"
     ))
   }
-  
+
   # Stan sampler ------------------------------------------------------------
   EpiNow2::stan_opts(
     cores = sampler_opts[["cores"]],
