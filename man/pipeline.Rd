@@ -7,19 +7,27 @@
 \usage{
 orchestrate_pipeline(
   config_path,
-  blob_storage_container = NULL,
-  output_dir = "/"
+  output_container = NULL,
+  config_container = NULL,
+  input_dir = "/input",
+  output_dir = "/output"
 )
 
-execute_model_logic(config, output_dir, blob_storage_container)
+execute_model_logic(config, input_dir, output_dir)
 }
 \arguments{
 \item{config_path}{A string specifying the file path to the JSON
 configuration file.}
 
-\item{blob_storage_container}{Optional. The name of the blob storage
+\item{output_container}{Optional. The name of the blob storage
 container to which logs and outputs will be uploaded. If NULL, no upload
-will occur. (Planned feature, not currently implemented)}
+will occur.}
+
+\item{config_container}{Optional. The name of the blob storage container
+from which the config file will be downloaded.}
+
+\item{input_dir}{A string specifying the directory to read inputs from. If
+passing storage containers, this is where the files will be downloaded to.}
 
 \item{output_dir}{A string specifying the directory where output, logs, and
 other pipeline artifacts will be saved. Defaults to the root directory ("/").}

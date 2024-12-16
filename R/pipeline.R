@@ -9,9 +9,13 @@
 #'
 #' @param config_path A string specifying the file path to the JSON
 #' configuration file.
-#' @param blob_storage_container Optional. The name of the blob storage
+#' @param config_container Optional. The name of the blob storage container
+#' from which the config file will be downloaded.
+#' @param output_container Optional. The name of the blob storage
 #' container to which logs and outputs will be uploaded. If NULL, no upload
-#' will occur. (Planned feature, not currently implemented)
+#' will occur.
+#' @param input_dir A string specifying the directory to read inputs from. If
+#' passing storage containers, this is where the files will be downloaded to.
 #' @param output_dir A string specifying the directory where output, logs, and
 #' other pipeline artifacts will be saved. Defaults to the root directory ("/").
 #'
@@ -70,10 +74,19 @@
 #' @family pipeline
 #' @export
 orchestrate_pipeline <- function(config_path,
-                                 blob_storage_container = NULL,
-                                 output_dir = "/") {
+                                 output_container = NULL,
+                                 config_container = NULL,
+                                 input_dir = "/input",
+                                 output_dir = "/output") {
   config <- rlang::try_fetch(
-    read_json_into_config(config_path, c("exclusions")),
+    {
+      config_path <- download_if_specified(
+        blob_path = config_path,
+        blob_storage_container = config_container,
+        output_dir = input_dir
+      )
+      read_json_into_config(config_path, c("exclusions"))
+    },
     error = function(con) {
       cli::cli_warn("Bad config file",
         parent = con,
@@ -122,7 +135,7 @@ orchestrate_pipeline <- function(config_path,
   # `pipeline_success` is set to false, which will be stored in the
   # metadata in the next PR.
   pipeline_success <- rlang::try_fetch(
-    execute_model_logic(config, output_dir, blob_storage_container),
+    execute_model_logic(config, input_dir = input_dir, output_dir = output_dir),
     error = function(con) {
       cli::cli_warn("Pipeline run failed",
         parent = con,
@@ -134,6 +147,19 @@ orchestrate_pipeline <- function(config_path,
 
   # TODO: Move metadata to outer wrapper
   cli::cli_alert_info("Finishing run at {Sys.time()}")
+
+  if (!rlang::is_null(output_container)) {
+    outfiles <- file.path(output_dir, config@job_id, "*")
+    cli::cli_alert("Uploading {.path {outfiles}} to {.path {output_container}}")
+    cont <- fetch_blob_container(output_container)
+    AzureStor::multiupload_blob(
+      container = cont,
+      src = outfiles,
+      dest = config@job_id,
+      recursive = TRUE
+    )
+  }
+
   invisible(pipeline_success)
 }
 
@@ -154,9 +180,14 @@ orchestrate_pipeline <- function(config_path,
 #' @rdname pipeline
 #' @family pipeline
 #' @export
-execute_model_logic <- function(config, output_dir, blob_storage_container) {
+execute_model_logic <- function(config, input_dir, output_dir) {
+  data_path <- download_if_specified(
+    blob_path = config@data@path,
+    blob_storage_container = config@data@blob_storage_container,
+    output_dir = input_dir
+  )
   cases_df <- read_data(
-    data_path = config@data@path,
+    data_path = data_path,
     disease = config@disease,
     state_abb = config@geo_value,
     report_date = config@report_date,
@@ -166,16 +197,39 @@ execute_model_logic <- function(config, output_dir, blob_storage_container) {
 
   # rlang::is_empty() checks for empty and NULL values
   if (!rlang::is_empty(config@exclusions@path)) {
-    exclusions_df <- read_exclusions(config@exclusions@path)
+    exclusions_path <- download_if_specified(
+      blob_path = config@exclusions@path,
+      blob_storage_container = config@exclusions@blob_storage_container,
+      output_dir = input_dir
+    )
+    exclusions_df <- read_exclusions(exclusions_path)
     cases_df <- apply_exclusions(cases_df, exclusions_df)
   } else {
     cli::cli_alert("No exclusions file provided. Skipping exclusions")
   }
 
+  # GI
+  gi_path <- download_if_specified(
+    blob_path = config@parameters@generation_interval@path,
+    blob_storage_container = config@parameters@generation_interval@blob_storage_container, # nolint
+    output_dir = input_dir
+  )
+  # Delay
+  delay_path <- download_if_specified(
+    blob_path = config@parameters@delay_interval@path,
+    blob_storage_container = config@parameters@delay_interval@blob_storage_container, # nolint
+    output_dir = input_dir
+  )
+  right_trunc_path <- download_if_specified(
+    blob_path = config@parameters@right_truncation@path,
+    blob_storage_container = config@parameters@right_truncation@blob_storage_container, # nolint
+    output_dir = input_dir
+  )
+
   params <- read_disease_parameters(
-    generation_interval_path = config@parameters@generation_interval@path,
-    delay_interval_path = config@parameters@delay_interval@path,
-    right_truncation_path = config@parameters@right_truncation@path,
+    generation_interval_path = gi_path,
+    delay_interval_path = delay_path,
+    right_truncation_path = right_trunc_path,
     disease = config@disease,
     as_of_date = config@parameters@as_of_date,
     group = config@geo_value,
@@ -226,7 +280,7 @@ execute_model_logic <- function(config, output_dir, blob_storage_container) {
     max_reference_date = config@max_reference_date,
     min_reference_date = config@min_reference_date,
     exclusions = empty_str_if_non_existant(config@exclusions@path),
-    blob_storage_container = empty_str_if_non_existant(blob_storage_container),
+    # Add the config container here when refactoring out to outer func
     run_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
   )
 

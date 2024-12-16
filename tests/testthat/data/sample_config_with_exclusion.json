@@ -13,7 +13,7 @@
     "parameters": {
       "as_of_date": "2023-10-28",
        "generation_interval": {
-         "path": "data/test_parameters.parquet",
+         "path": "test_parameters.parquet",
          "blob_storage_container": null
        },
        "delay_interval": {
@@ -26,11 +26,11 @@
        }
     },
     "data": {
-        "path": "data/test_data.parquet",
+        "path": "test_data.parquet",
 	 "blob_storage_container": null
    },
    "exclusions": {
-        "path": "data/test_exclusions.csv",
+        "path": "test_exclusions.csv",
         "blob_storage_container": null
    },
     "seed": 42,

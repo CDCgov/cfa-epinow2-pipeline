@@ -1,70 +1,73 @@
-#' Download specified blobs from Blob Storage and save them in a local dir
+#' Download if specified
 #'
-#' Note that I think it might be wise to instead specify a blob prefix, list the
-#' blobs, and download all the listed blobs. This would let us have some more
-#' flexibility with downloading whole remote directories (like delta tables)
-#'
-#' @param blob_names A vector of blobs to donwload from `container_name`
-#' @param local_dest The path to the local directory to save the files in
-#' @param container_name The Azure Blob Storage container with `blob_names`
-#'
-#' @return NULL on success
+#' @param blob_path The name of the blob to download
+#' @param blob_storage_container The name of the container to donwload from
+#' @param output_dir The directory to write the downloaded file to
+#' @return The path of the file
 #' @family azure
 #' @export
-download_from_azure_blob <- function(blob_names, local_dest, container_name) {
-  # Attempt to connect to the storage container
-  blob_container <- rlang::try_fetch(
-    fetch_blob_container(container_name),
-    error = function(con) {
-      cli::cli_abort(
-        c(
-          "Unable to authenticate connection to Blob endpoint",
-          "!" = "Check correct credentials are present as env variables",
-          "!" = "Check container {.var {container_name}} is correct"
-        ),
-        parent = con
+download_if_specified <- function(
+    blob_path,
+    blob_storage_container,
+    output_dir) {
+  # Guard against null input erroring out file.exists()
+  if (rlang::is_null(blob_path)) {
+    local_path <- NULL
+  } else {
+    file_exists <- file.exists(file.path(output_dir, blob_path))
+    if (!rlang::is_null(blob_storage_container) && !file_exists) {
+      container <- fetch_blob_container(blob_storage_container)
+      local_path <- download_file_from_container(
+        blob_storage_path = blob_path,
+        local_file_path = file.path(output_dir, blob_path),
+        storage_container = container
       )
+    } else {
+      local_path <- file.path(output_dir, blob_path)
     }
-  )
-
-  # Attempt to save each blob into local storage
-  for (blob in blob_names) {
-    local_file_path <- file.path(local_dest, blob)
-    rlang::try_fetch(
-      download_file_from_container(
-        blob,
-        blob_container,
-        local_file_path
-      ),
-      error = function(con) {
-        cli::cli_abort(
-          c(
-            "Error downloading blob {.path {blob}}",
-            "Using container {.path {container_name}}",
-            "Writing to local file path {.path local_file_path}"
-          ),
-          parent = con
-        )
-      }
-    )
   }
-  cli::cli_alert_success("Blobs {.path {blob_names}} downloaded successfully")
-  invisible(NULL)
+  local_path
 }
 
+#' Download specified blobs from Blob Storage and save them in a local dir
+#'
+#' @param blob_storage_path A character of a blob in `storage_container`
+#' @param local_file_path The local path to save the blob
+#' @param storage_container The blob storage container with `blob_storage_path`
+#
+#' @return Invisibly, `local_file_path`
+#' @family azure
+#' @export
 download_file_from_container <- function(
     blob_storage_path,
-    container,
-    local_file_path) {
+    local_file_path,
+    storage_container) {
   cli::cli_alert_info(
     "Downloading blob {.path {blob_storage_path}} to {.path {local_file_path}}"
   )
 
-  AzureStor::download_blob(
-    container = container,
-    src = blob_storage_path,
-    dest = local_file_path,
-    overwrite = TRUE
+  rlang::try_fetch(
+    {
+      dirs <- dirname(local_file_path)
+
+      if (!dir.exists(dirs)) {
+        cli::cli_alert("Creating directory {.path {dirs}}")
+        dir.create(dirs, recursive = TRUE)
+      }
+
+      AzureStor::download_blob(
+        container = storage_container,
+        src = blob_storage_path,
+        dest = local_file_path,
+        overwrite = TRUE
+      )
+    },
+    error = function(cnd) {
+      cli::cli_abort(c(
+        "Failed to download {.path {blob_storage_path}}",
+        ">" = "Does the blob exist in the container?"
+      ))
+    }
   )
 
   cli::cli_alert_success(
@@ -74,7 +77,7 @@ download_file_from_container <- function(
   invisible(local_file_path)
 }
 
-#' Load Azure Blob endpoint using credentials in environment variables
+#' Load Azure Blob container using credentials in environment variables
 #'
 #' This **impure** function depends on the environment variables:
 #' * az_tenant_id
@@ -94,30 +97,52 @@ fetch_blob_container <- function(container_name) {
   )
   cli::cli_alert_info("Loading Azure credentials from env vars")
   # nolint start: object_name_linter
-  az_tenant_id <- fetch_credential_from_env_var("az_tenant_id ")
-  az_subscription_id <- fetch_credential_from_env_var("az_subscription_id")
-  az_resource_group <- fetch_credential_from_env_var("az_resource_group")
-  az_storage_account <- fetch_credential_from_env_var("az_storage_account")
+  az_tenant_id <- fetch_credential_from_env_var("az_tenant_id")
+  az_client_id <- fetch_credential_from_env_var("az_client_id")
+  az_service_principal <- fetch_credential_from_env_var("az_service_principal")
   # nolint end: object_name_linter
   cli::cli_alert_success("Credentials loaded successfully")
 
 
   cli::cli_alert_info("Authenticating with loaded credentials")
-  az <- AzureRMR::get_azure_login(az_tenant_id)
-  subscription <- az$get_subscription(az_subscription_id)
-  resource_group <- subscription$get_resource_group(az_resource_group)
-  storage_account <- resource_group$get_storage_account(az_storage_account)
+  rlang::try_fetch(
+    {
+      # First, get a general-purpose token using SP flow
+      # Analogous to:
+      # az login --service-principal \
+      #    --username $az_client_id \
+      #    --password $az_service_principal \
+      #    --tenant $az_tenant_id
+      # NOTE: the SP is also sometimes called the `client_secret`
+      token <- AzureRMR::get_azure_token(
+        resource = "https://storage.azure.com",
+        tenant = az_tenant_id,
+        app = az_client_id,
+        password = az_service_principal
+      )
+      # Then fetch a storage endpoint using the token. Follows flow from
+      # https://github.com/Azure/AzureStor.
+      # Note that we're using the ABS endpoint (the first example line)
+      # but following the AAD token flow from the AAD alternative at
+      # end of the box. If we didn't replace the endpoint and used the
+      # example flow then it allows authentication to blob but throws
+      # a 409 when trying to download.
+      endpoint <- AzureStor::storage_endpoint(
+        "https://cfaazurebatchprd.blob.core.windows.net",
+        token = token
+      )
 
-  # Getting the access key
-  keys <- storage_account$list_keys()
-  access_key <- keys[["key1"]]
-
-  endpoint <- AzureStor::blob_endpoint(
-    storage_account$properties$primaryEndpoints$blob,
-    key = access_key
+      # Finally, set up instantiation of storage container generic
+      container <- AzureStor::storage_container(endpoint, container_name)
+    },
+    error = function(cnd) {
+      cli::cli_abort(
+        "Failure authenticating connection to {.var {container_name}}",
+        parent = cnd
+      )
+    }
   )
 
-  container <- AzureStor::storage_container(endpoint, container_name)
   cli::cli_alert_success("Authenticated connection to {.var {container_name}}")
 
   return(container)
