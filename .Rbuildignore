@@ -1,3 +1,4 @@
+$Dockerfile-batch^
 ^.env$
 ^CONTRIBUTING.md$
 ^DISCLAIMER.md$
@@ -12,6 +13,7 @@
 ^\.vscode$
 ^\.vscode$
 ^_pkgdown\.yml$
+^azure$
 ^batch-autoscale-formula.txt$
 ^code-of-conduct.md$
 ^codecov\.yml$
