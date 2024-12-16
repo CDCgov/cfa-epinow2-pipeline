@@ -11,11 +11,11 @@ download_file_from_container(
 )
 }
 \arguments{
-\item{blob_names}{A vector of blobs to donwload from \code{container_name}}
+\item{blob_storage_path}{A character of a blob in \code{storage_container}}
 
-\item{local_dest}{The path to the local directory to save the files in}
+\item{local_file_path}{The local path to save the blob}
 
-\item{container_name}{The Azure Blob Storage container with \code{blob_names}}
+\item{storage_container}{The blob storage container with \code{blob_storage_path}}
 }
 \value{
 Invisibly, \code{local_file_path}

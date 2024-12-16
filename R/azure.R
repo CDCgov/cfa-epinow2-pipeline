@@ -30,10 +30,10 @@ download_if_specified <- function(
 
 #' Download specified blobs from Blob Storage and save them in a local dir
 #'
-#' @param blob_names A vector of blobs to donwload from `container_name`
-#' @param local_dest The path to the local directory to save the files in
-#' @param container_name The Azure Blob Storage container with `blob_names`
-#'
+#' @param blob_storage_path A character of a blob in `storage_container`
+#' @param local_file_path The local path to save the blob
+#' @param storage_container The blob storage container with `blob_storage_path`
+#
 #' @return Invisibly, `local_file_path`
 #' @family azure
 #' @export
