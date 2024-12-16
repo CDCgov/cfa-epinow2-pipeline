@@ -37,7 +37,7 @@ run-batch:
 	docker run --rm  \
 	--env-file .env \
 	-it \
-	batch python job.py "cfa-epinow2-edit-azure-flow" "$(JOB)"
+	batch python job.py "$(IMAGE)" "$(POOL)" "$(JOB)"
 
 run:
 	docker run --mount type=bind,source=$(PWD),target=/mnt -it \

@@ -13,10 +13,11 @@ blob_account = os.environ["BLOB_ACCOUNT"]
 blob_url = f"https://{blob_account}.blob.core.windows.net"
 batch_account = os.environ["BATCH_ACCOUNT"]
 batch_url = f"https://{batch_account}.eastus.batch.azure.com"
-config_container = sys.argv[1]
-pool_id = sys.argv[2]
+image_name = sys.argv[1]
+config_container = sys.argv[2]
+pool_id = sys.argv[3]
 # Re-use Azure Pool name unless otherwise specified
-job_id = sys.argv[3] if len(sys.argv) > 3 else pool_id
+job_id = sys.argv[4] if len(sys.argv) > 3 else pool_id
 
 if __name__ == "__main__":
     # Authenticate with workaround because Batch is the one remaining
@@ -65,7 +66,7 @@ if __name__ == "__main__":
     # Set up task on job
     registry = os.environ["AZURE_CONTAINER_REGISTRY"]
     task_container_settings = batchmodels.TaskContainerSettings(
-        image_name=registry + '/cfa-epinow2-pipeline:test-edit-azure-flow',
+        image_name=registry + '/cfa-epinow2-pipeline:test-' + image_name,
         container_run_options='--rm --workdir /'
     )
     task_env_settings = [
