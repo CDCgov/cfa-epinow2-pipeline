@@ -60,4 +60,5 @@ jobs:
 
         az batch pool delete \
             --pool-id "cfa-epinow2-${{ steps.image-tag.outputs.tag }}" \
+            # Don't prompt for user input
             --yes
