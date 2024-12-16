@@ -2,7 +2,7 @@
 % Please edit documentation in R/azure.R
 \name{fetch_blob_container}
 \alias{fetch_blob_container}
-\title{Load Azure Blob endpoint using credentials in environment variables}
+\title{Load Azure Blob container using credentials in environment variables}
 \usage{
 fetch_blob_container(container_name)
 }
@@ -27,7 +27,8 @@ It will error out if any of the above is not set.
 }
 \seealso{
 Other azure: 
-\code{\link{download_from_azure_blob}()},
+\code{\link{download_file_from_container}()},
+\code{\link{download_if_specified}()},
 \code{\link{fetch_credential_from_env_var}()}
 }
 \concept{azure}

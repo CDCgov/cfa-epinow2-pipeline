@@ -1,0 +1,6 @@
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm
+
+COPY azure .
+RUN uv pip install -r requirements.txt --system
+
+CMD /bin/bash
