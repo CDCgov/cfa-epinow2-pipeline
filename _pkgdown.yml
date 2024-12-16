@@ -1,3 +1,42 @@
 url: https://cdcgov.github.io/cfa-epinow2-pipeline/
 template:
   bootstrap: 5
+
+reference:
+- title: Azure
+  desc: Functions which manage interaction with Azure blob
+  contents:
+  - has_concept("azure")
+- title: Data
+  desc: Example data included in the package
+  contents:
+  - has_concept("data")
+- title: Configuration
+  desc: Manages the input of all configuration settings into the `EpiNow2` model
+  contents:
+  - has_concept("config")
+- title: Exclusions
+  desc: Functions to handle exclusion of data from models
+  contents:
+  - has_concept("exclusions")
+- title: Diagnostics
+  desc: Functions to calculate diagnostics from fitted `EpiNow2` model
+  contents:
+  - has_concept("diagnostics")
+- title: Parameter
+  desc: Functions for parameter values that are input into the `EpiNow2` model
+  contents:
+  - has_concept("parameters")
+- title: Pipeline
+  desc: Functions to orchestrate running of the pipeline including fitting the
+    `EpiNow2` model
+  contents:
+  - has_concept("pipeline")
+- title: Read data
+  desc: Functions for data that are input into the `EpiNow2` model
+  contents:
+  - has_concept("read_data")
+- title: Write output
+  desc: Functions for post-processing and writing `EpiNow2` model output
+  contents:
+  - has_concept("write_output")

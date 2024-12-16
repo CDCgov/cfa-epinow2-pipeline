@@ -15,3 +15,9 @@ The associated value
 \description{
 And throw an informative error if credential is not found
 }
+\seealso{
+Other azure: 
+\code{\link{download_from_azure_blob}()},
+\code{\link{fetch_blob_container}()}
+}
+\concept{azure}

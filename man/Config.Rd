@@ -78,3 +78,12 @@ criteria.}
 \description{
 Represents the complete configuration for the pipeline.
 }
+\seealso{
+Other config: 
+\code{\link{Data}()},
+\code{\link{Exclusions}()},
+\code{\link{Interval}},
+\code{\link{Parameters}()},
+\code{\link{read_json_into_config}()}
+}
+\concept{config}

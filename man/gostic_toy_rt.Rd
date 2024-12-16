@@ -61,4 +61,9 @@ the original dataset, we add a new column with the original incidence counts
 with additional observation noise: \code{obs_incidence}. We manually add
 observation noise with \code{rnbinom(299, mu = gostic_toy_rt[["obs_cases"]], size = 10)} and the random seed 123456 and store it in the \code{obs_incidence} column.
 }
+\seealso{
+Other data: 
+\code{\link{gostic_gt_pmf}}
+}
+\concept{data}
 \keyword{datasets}

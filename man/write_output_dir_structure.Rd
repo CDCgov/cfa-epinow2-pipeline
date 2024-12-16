@@ -21,3 +21,9 @@ This function generates the necessary directory structure for storing output
 files related to a job and its tasks, including directories for raw samples
 and summarized quantiles.
 }
+\seealso{
+Other write_output: 
+\code{\link{sample_processing_functions}},
+\code{\link{write_model_outputs}()}
+}
+\concept{write_output}

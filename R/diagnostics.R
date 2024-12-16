@@ -46,6 +46,7 @@
 #'         by the thresholds: (1) mean_accept_stat < 0.1, (2) p_divergent >
 #'         0.0075, (3) p_max_treedepth > 0.05, and (4) p_high_rhat > 0.0075.
 #' }
+#' @family diagnostics
 #' @export
 extract_diagnostics <- function(fit,
                                 data,
@@ -139,6 +140,7 @@ extract_diagnostics <- function(fit,
 #'
 #' @return A logical value (TRUE or FALSE) indicating whether either of the last
 #' two weeks in the dataset had fewer than 10 cases per week.
+#' @family diagnostics
 #' @export
 low_case_count_diagnostic <- function(df) {
   cli::cli_alert_info("Calculating low case count diagnostic")
