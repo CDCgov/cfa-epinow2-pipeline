@@ -1,6 +1,7 @@
 REGISTRY=cfaprdbatchcr.azurecr.io/
 IMAGE_NAME=cfa-epinow2-pipeline
 BRANCH=$(shell git branch --show-current)
+CONFIG_CONTAINER=rt-epinow2-config
 ifeq ($(BRANCH), 'main')
 TAG=latest
 else
@@ -37,7 +38,7 @@ run-batch:
 	docker run --rm  \
 	--env-file .env \
 	-it \
-	batch python job.py "$(IMAGE)" "$(POOL)" "$(JOB)"
+	batch python job.py "$(IMAGE)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 run:
 	docker run --mount type=bind,source=$(PWD),target=/mnt -it \
