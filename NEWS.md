@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline (development version)
 
 * Read parameters on the same day correctly
+* Re-add missing dependency in python venv
 * Added function families to documentation
 * Renamed file containing diagnostic functions
 * Change formatting of metadata values to be atomic.
