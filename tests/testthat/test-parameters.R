@@ -512,3 +512,35 @@ test_that("NULL `reference_date` prints in output", {
   )
   expect_equal(pmf, pmf_df[["value"]][[1]])
 })
+
+test_that("Same-day parameter can be read", {
+  expected <- c(0.8, 0.2)
+  path <- "test.parquet"
+  parameter <- "delay"
+  start_date <- as.Date("2023-01-01")
+  disease <- "COVID-19"
+  reference_date <- NA
+
+  withr::with_tempdir({
+    write_sample_parameters_file(
+      value = expected,
+      path = path,
+      disease = disease,
+      parameter = parameter,
+      param = parameter,
+      start_date = start_date,
+      end_date = NA,
+      geo_value = NA,
+      reference_date = reference_date
+    )
+
+    actual <- read_interval_pmf(
+      path = path,
+      disease = disease,
+      as_of_date = start_date,
+      parameter = parameter
+    )
+
+    expect_equal(actual, expected)
+  })
+})
