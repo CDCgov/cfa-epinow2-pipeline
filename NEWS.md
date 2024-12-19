@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Add warning and autofix for improperly specified GI PMF
 * Read parameters on the same day correctly
 * Re-add missing dependency in python venv
 * Don't emit DEBUG level logs from EpiNow2
