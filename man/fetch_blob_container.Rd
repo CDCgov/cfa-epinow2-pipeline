@@ -14,16 +14,20 @@ credentials}
 A Blob endpoint
 }
 \description{
-This \strong{impure} function depends on the environment variables:
-\itemize{
-\item az_tenant_id
-\item az_subscription_id
-\item az_resource_group
-\item az_storage_account
-}
+This function depends on the following Azure credentials stored in
+environment variables:
 }
 \details{
-It will error out if any of the above is not set.
+\itemize{
+\item \code{az_tenant_id}: an Azure Active Directory (AAD) tenant ID
+\item \code{az_subscription_id}: an Azure subscription ID
+\item \code{az_resource_group}: The name of the Azure resource group
+\item \code{az_storage_account}: The name of the Azure storage account
+}
+
+Each variable is obtained
+using \code{\link[=fetch_credential_from_env_var]{fetch_credential_from_env_var()}} (which will return an error if the
+credential is not specified or empty).
 }
 \seealso{
 Other azure: 
