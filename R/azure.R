@@ -79,13 +79,18 @@ download_file_from_container <- function(
 
 #' Load Azure Blob container using credentials in environment variables
 #'
-#' This **impure** function depends on the environment variables:
-#' * az_tenant_id
-#' * az_subscription_id
-#' * az_resource_group
-#' * az_storage_account
+#' This function depends on the following Azure credentials stored in
+#' environment variables:
+#' 
+#' * `az_tenant_id`: an Azure Active Directory (AAD) tenant ID
+#' * `az_subscription_id`: an Azure subscription ID
+#' * `az_resource_group`: The name of the Azure resource group
+#' * `az_storage_account`: The name of the Azure storage account
+#' 
+#' Each variable is obtained
+#' using [fetch_credential_from_env_var()] (which will return an error if the
+#' credential is not specified or empty).
 #'
-#' It will error out if any of the above is not set.
 #' @param container_name The Azure Blob Storage container associated with the
 #'   credentials
 #' @return A Blob endpoint
@@ -102,7 +107,6 @@ fetch_blob_container <- function(container_name) {
   az_service_principal <- fetch_credential_from_env_var("az_service_principal")
   # nolint end: object_name_linter
   cli::cli_alert_success("Credentials loaded successfully")
-
 
   cli::cli_alert_info("Authenticating with loaded credentials")
   rlang::try_fetch(
