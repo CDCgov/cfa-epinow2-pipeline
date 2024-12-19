@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Drop old pre-commit action in favor of CI service
 * Read parameters on the same day correctly
 * Re-add missing dependency in python venv
 * Don't emit DEBUG level logs from EpiNow2
