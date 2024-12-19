@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Build Batch pool on merge to main
 * Read parameters on the same day correctly
 * Re-add missing dependency in python venv
 * Don't emit DEBUG level logs from EpiNow2

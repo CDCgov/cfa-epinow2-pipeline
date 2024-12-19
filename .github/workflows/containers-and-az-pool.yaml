@@ -8,6 +8,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 env:
   # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
