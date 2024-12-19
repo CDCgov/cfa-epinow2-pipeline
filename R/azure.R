@@ -81,12 +81,12 @@ download_file_from_container <- function(
 #'
 #' This function depends on the following Azure credentials stored in
 #' environment variables:
-#' 
+#'
 #' * `az_tenant_id`: an Azure Active Directory (AAD) tenant ID
 #' * `az_subscription_id`: an Azure subscription ID
 #' * `az_resource_group`: The name of the Azure resource group
 #' * `az_storage_account`: The name of the Azure storage account
-#' 
+#'
 #' Each variable is obtained
 #' using [fetch_credential_from_env_var()] (which will return an error if the
 #' credential is not specified or empty).
