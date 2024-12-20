@@ -97,8 +97,8 @@ time period.</p></dd>
 
 <dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
 <dd><p>An optional parameter to subset the query to a parameter with a
-particular two-letter state abbrevation. Right now, the only parameter with
-state-specific estimates is <code>right_truncation</code>.</p></dd>
+particular two-letter state abbreviation. Right now, the only parameter
+with state-specific estimates is <code>right_truncation</code>.</p></dd>
 
 
 <dt id="arg-report-date">report_date<a class="anchor" aria-label="anchor" href="#arg-report-date"></a></dt>
@@ -122,7 +122,7 @@ with a methodological update). We can pull the estimate for date
 end_date may be NULL (e.g. for the current value used in production). value
 must contain a pmf vector whose values are all positive and sum to 1. all
 other fields must be consistent with the specifications of the function
-arguments describe below, which are used to query from the .parquet file.</p>
+arguments described below, which are used to query from the .parquet file.</p>
 <p>SCD2 format is shorthand for slowly changing dimension type 2. This format is
 normalized to track change over time:
 https://en.wikipedia.org/wiki/Slowly_changing_dimension#Type_2:_add_new_row</p>
