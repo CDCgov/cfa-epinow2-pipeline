@@ -103,8 +103,6 @@ format_stan_opts <- function(sampler_opts, seed) {
       "Missing values: {.val {expected_stan_args[missing_elements]}}"
     ))
   }
-
-  # Stan sampler ------------------------------------------------------------
   EpiNow2::stan_opts(
     cores = sampler_opts[["cores"]],
     chains = sampler_opts[["chains"]],
