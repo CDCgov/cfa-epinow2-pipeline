@@ -7,12 +7,15 @@
 format_stan_opts(sampler_opts, seed)
 }
 \arguments{
-\item{sampler_opts}{A list containing the entries \code{cores}, \code{chains},
-\code{iter_warmup}, \code{iter_sampling}, \code{adapt_delta} and \code{max_treedepth}. If any of
-these entries are missing an error will be returned}
+\item{sampler_opts}{A list. The Stan sampler options to be passed through
+EpiNow2. It has required keys: \code{cores}, \code{chains}, \code{iter_warmup},
+\code{iter_sampling}, \code{max_treedepth}, and \code{adapt_delta}.}
 
 \item{seed}{A stochastic seed passed here to the Stan sampler and as the R
 PRNG seed for EpiNow2 initialization}
+}
+\value{
+A \code{stan_opts} object of arguments
 }
 \description{
 Format configuration \code{sampler_opts} for input to EpiNow2 via a call to

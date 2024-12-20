@@ -90,11 +90,11 @@ fit_model <- function(
 #' Format configuration `sampler_opts` for input to EpiNow2 via a call to
 #' [EpiNow2::stan_opts()].
 #'
-#' @param sampler_opts A list containing the entries `cores`, `chains`,
-#' `iter_warmup`, `iter_sampling`, `adapt_delta` and `max_treedepth`. If any of
-#' these entries are missing an error will be returned
+#' @inheritParams fit_model
 #' @param seed A stochastic seed passed here to the Stan sampler and as the R
 #' PRNG seed for EpiNow2 initialization
+#' 
+#' @return A `stan_opts` object of arguments
 #' 
 #' @family pipeline
 #' @export
