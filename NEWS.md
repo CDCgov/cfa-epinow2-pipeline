@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Improved documentation of `format_stan_opts`
 * Drop old pre-commit action in favor of CI service
 * Read parameters on the same day correctly
 * Re-add missing dependency in python venv
