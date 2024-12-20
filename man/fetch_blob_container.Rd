@@ -25,8 +25,9 @@ environment variables:
 \item \code{az_storage_account}: The name of the Azure storage account
 }
 
-Each variable is obtained
-using \code{\link[=fetch_credential_from_env_var]{fetch_credential_from_env_var()}} (which will return an error if the
+As a result it is an impure function, and should be used bearing that
+warning in mind. Each variable is obtained using
+\code{\link[=fetch_credential_from_env_var]{fetch_credential_from_env_var()}} (which will return an error if the
 credential is not specified or empty).
 }
 \seealso{

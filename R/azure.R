@@ -87,8 +87,9 @@ download_file_from_container <- function(
 #' * `az_resource_group`: The name of the Azure resource group
 #' * `az_storage_account`: The name of the Azure storage account
 #'
-#' Each variable is obtained
-#' using [fetch_credential_from_env_var()] (which will return an error if the
+#' As a result it is an impure function, and should be used bearing that
+#' warning in mind. Each variable is obtained using
+#' [fetch_credential_from_env_var()] (which will return an error if the
 #' credential is not specified or empty).
 #'
 #' @param container_name The Azure Blob Storage container associated with the
