@@ -27,8 +27,8 @@ parameters and set to an earlier date to use parameters from an earlier
 time period.}
 
 \item{group}{An optional parameter to subset the query to a parameter with a
-particular two-letter state abbrevation. Right now, the only parameter with
-state-specific estimates is \code{right_truncation}.}
+particular two-letter state abbreviation. Right now, the only parameter
+with state-specific estimates is \code{right_truncation}.}
 
 \item{report_date}{An optional parameter to subset the query to a parameter
 on or before a particular \code{report_date}. Right now, the only parameter with
