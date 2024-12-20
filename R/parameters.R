@@ -10,8 +10,8 @@
 #'   parameters and set to an earlier date to use parameters from an earlier
 #'   time period.
 #' @param group An optional parameter to subset the query to a parameter with a
-#'   particular two-letter state abbrevation. Right now, the only parameter with
-#'   state-specific estimates is `right_truncation`.
+#'   particular two-letter state abbreviation. Right now, the only parameter
+#'   with state-specific estimates is `right_truncation`.
 #' @param report_date An optional parameter to subset the query to a parameter
 #'   on or before a particular `report_date`. Right now, the only parameter with
 #'   report date-specific estimates is `right_truncation`. Note that this
@@ -104,7 +104,7 @@ path_is_specified <- function(path) {
 #' end_date may be NULL (e.g. for the current value used in production). value
 #' must contain a pmf vector whose values are all positive and sum to 1. all
 #' other fields must be consistent with the specifications of the function
-#' arguments describe below, which are used to query from the .parquet file.
+#' arguments described below, which are used to query from the .parquet file.
 #'
 #' SCD2 format is shorthand for slowly changing dimension type 2. This format is
 #' normalized to track change over time:
@@ -220,9 +220,9 @@ read_interval_pmf <- function(path,
 #' Run validity checks on the PMF returned from the file
 #'
 #' We're treating this input as possibly invalid because it's from an
-#' external file. We're still updating the schema and process ands has
+#' external file. We're still updating the schema and this process has
 #' been a frequent source of problems. We want to be alert to any
-#' unexpexted changes in schema or format.
+#' unexpected changes in schema or format.
 #'
 #' @param pmf_df A dataframe with columns `value` and `reference_date`.
 #' @inheritParams read_interval_pmf
