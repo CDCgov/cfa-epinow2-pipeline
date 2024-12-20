@@ -33,6 +33,7 @@ Fit an EpiNow2 model
 }
 \seealso{
 Other pipeline: 
+\code{\link{format_stan_opts}()},
 \code{\link{orchestrate_pipeline}()}
 }
 \concept{pipeline}

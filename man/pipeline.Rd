@@ -108,9 +108,11 @@ the model, and writing outputs such as model samples, summaries, and logs.
 }
 \seealso{
 Other pipeline: 
-\code{\link{fit_model}()}
+\code{\link{fit_model}()},
+\code{\link{format_stan_opts}()}
 
 Other pipeline: 
-\code{\link{fit_model}()}
+\code{\link{fit_model}()},
+\code{\link{format_stan_opts}()}
 }
 \concept{pipeline}
