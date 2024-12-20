@@ -86,16 +86,16 @@ fit_model <- function(
 }
 
 #' Format Stan options for input to EpiNow2
-#' 
+#'
 #' Format configuration `sampler_opts` for input to EpiNow2 via a call to
 #' [EpiNow2::stan_opts()].
 #'
 #' @inheritParams fit_model
 #' @param seed A stochastic seed passed here to the Stan sampler and as the R
 #' PRNG seed for EpiNow2 initialization
-#' 
+#'
 #' @return A `stan_opts` object of arguments
-#' 
+#'
 #' @family pipeline
 #' @export
 format_stan_opts <- function(sampler_opts, seed) {
