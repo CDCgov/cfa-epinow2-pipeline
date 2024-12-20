@@ -2,6 +2,7 @@
 
 * Improved documentation of `format_stan_opts`
 * Drop old pre-commit action in favor of CI service
+* Improve documentation of `fetch_blob_container`
 * Read parameters on the same day correctly
 * Re-add missing dependency in python venv
 * Don't emit DEBUG level logs from EpiNow2
