@@ -271,7 +271,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
   metadata <- list(
     job_id = config@job_id,
     task_id = config@task_id,
-    data_path = empty_str_if_non_existant(config@data@path),
+    data_path = empty_str_if_non_existent(config@data@path),
     model = config@model,
     disease = config@disease,
     geo_value = config@geo_value,
@@ -279,7 +279,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     production_date = config@production_date,
     max_reference_date = config@max_reference_date,
     min_reference_date = config@min_reference_date,
-    exclusions = empty_str_if_non_existant(config@exclusions@path),
+    exclusions = empty_str_if_non_existent(config@exclusions@path),
     # Add the config container here when refactoring out to outer func
     run_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
   )

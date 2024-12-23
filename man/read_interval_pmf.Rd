@@ -26,8 +26,8 @@ time period.}
 \item{parameter}{One of "generation interval", "delay", or "right-truncation}
 
 \item{group}{An optional parameter to subset the query to a parameter with a
-particular two-letter state abbrevation. Right now, the only parameter with
-state-specific estimates is \code{right_truncation}.}
+particular two-letter state abbreviation. Right now, the only parameter
+with state-specific estimates is \code{right_truncation}.}
 
 \item{report_date}{An optional parameter to subset the query to a parameter
 on or before a particular \code{report_date}. Right now, the only parameter with
@@ -58,7 +58,7 @@ start_date and end_date specify the date range for which the value was used.
 end_date may be NULL (e.g. for the current value used in production). value
 must contain a pmf vector whose values are all positive and sum to 1. all
 other fields must be consistent with the specifications of the function
-arguments describe below, which are used to query from the .parquet file.
+arguments described below, which are used to query from the .parquet file.
 
 SCD2 format is shorthand for slowly changing dimension type 2. This format is
 normalized to track change over time:
