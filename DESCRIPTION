@@ -27,6 +27,7 @@ Imports:
     AzureRMR,
     AzureStor,
     cli,
+    cmdstanr,
     data.table,
     DBI,
     dplyr,
@@ -34,7 +35,6 @@ Imports:
     EpiNow2 (>= 1.4.0),
     jsonlite,
     rlang,
-    rstan,
     S7,
     tidybayes
 Additional_repositories:
