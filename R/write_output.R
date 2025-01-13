@@ -236,8 +236,8 @@ post_process_and_merge <- function(
   # Step 0: isolate "as_of" cases from fit objec. Create variables with constants
   fit_obs <- fit$estimates$observations |> data.table::as.data.table()
   names(fit_obs)[names(fit_obs) == "confirm"] <- ".value"
-  set(fit_obs, j = ".variable", value = "fit_obs")
-  set(fit_obs, j = ".point", value = "as_of")
+  data.table::set(fit_obs, j = ".variable", value = "fit_obs")
+  data.table::set(fit_obs, j = ".point", value = "as_of")
 
   # Step 1: Left join the date-time-parameter map onto the Stan draws
   merged_dt <- merge(
