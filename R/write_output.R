@@ -251,7 +251,7 @@ post_process_and_merge <- function(
   # Step 1.5 Merge as_of_cases with merged_dt to get time variable
   fit_obs_time <- unique(
     merge(
-      as_of_cases,
+      fit_obs,
       merged_dt[, .(date, time)],
       by = c("date"),
       all.x = FALSE,
