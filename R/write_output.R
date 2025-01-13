@@ -234,15 +234,15 @@ post_process_and_merge <- function(
     model,
     disease) {
   # Step 0: isolate "as_of" cases from fit objec. Create blank variables to match merged_dt
-  as_of_cases <- fit$estimates$observations |>data.table::as.data.table()
-  names(as_of_cases)[names(as_of_cases) == 'confirm'] <- '.value'
-  as_of_cases[, ':=' (
-    .variable=as.character("as_of_RDS_reports"),
-    .lower=as.double(NA),
-    .upper=as.double(NA),
-    .width=as.double(NA),
-    .point=as.character("as_of"),
-    .interval=as.character(NA)
+  as_of_cases <- fit$estimates$observations |> data.table::as.data.table()
+  names(as_of_cases)[names(as_of_cases) == "confirm"] <- ".value"
+  as_of_cases[, ":="(
+    .variable = as.character("as_of_RDS_reports"),
+    .lower = as.double(NA),
+    .upper = as.double(NA),
+    .width = as.double(NA),
+    .point = as.character("as_of"),
+    .interval = as.character(NA)
   )]
 
   # Step 1: Left join the date-time-parameter map onto the Stan draws
@@ -262,11 +262,11 @@ post_process_and_merge <- function(
       by = c("date"),
       all.x = FALSE,
       all.y = TRUE
-      )
     )
+  )
   # Step 1.75 rbind as_of_cases with merged_dt and sort
   merged_dt <- rbind(merged_dt, as_of_cases_time)
-  merged_dt <- merged_dt[order(time, .variable),]
+  merged_dt <- merged_dt[order(time, .variable), ]
 
   # Step 2: Standardize parameter names
   data.table::set(merged_dt, j = ".variable", value = factor(
