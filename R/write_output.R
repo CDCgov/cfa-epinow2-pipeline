@@ -227,11 +227,24 @@ extract_draws_from_fit <- function(fit) {
 #' @family write_output
 #' @noRd
 post_process_and_merge <- function(
+    fit,
     draws,
     fact_table,
     geo_value,
     model,
     disease) {
+  # Step 0: isolate "as_of" cases from fit objec. Create blank variables to match merged_dt
+  as_of_cases <- fit$estimates$observations |>data.table::as.data.table()
+  names(as_of_cases)[names(as_of_cases) == 'confirm'] <- '.value'
+  as_of_cases[, ':=' (
+    .variable=as.character("as_of_RDS_reports"),
+    .lower=as.double(NA),
+    .upper=as.double(NA),
+    .width=as.double(NA),
+    .point=as.character("as_of"),
+    .interval=as.character(NA)
+  )]
+
   # Step 1: Left join the date-time-parameter map onto the Stan draws
   merged_dt <- merge(
     draws,
@@ -241,10 +254,25 @@ post_process_and_merge <- function(
     all.y = FALSE
   )
 
+  # Step 1.5 Merge as_of_cases with merged_dt to get time variable
+  as_of_cases_time <- unique(
+    merge(
+      as_of_cases,
+      merged_dt[, .(date, time)],
+      by = c("date"),
+      all.x = FALSE,
+      all.y = TRUE
+      )
+    )
+  # Step 1.75 rbind as_of_cases with merged_dt and sort
+  merged_dt <- rbind(merged_dt, as_of_cases_time)
+  merged_dt <- merged_dt[order(time, .variable),]
+
   # Step 2: Standardize parameter names
   data.table::set(merged_dt, j = ".variable", value = factor(
     merged_dt[[".variable"]],
     levels = c(
+      "as_of_RDS_reports",
       "reports",
       "imputed_reports",
       "obs_reports",
@@ -252,6 +280,7 @@ post_process_and_merge <- function(
       "r"
     ),
     labels = c(
+      "as_of_RDS_cases",
       "expected_nowcast_cases",
       "pp_nowcast_cases",
       "expected_obs_cases",
@@ -336,6 +365,7 @@ process_quantiles <- function(
 
   # Step 3: Post-process summarized draws
   post_process_and_merge(
+    fit,
     summarized_draws,
     draws_list$fact_table,
     geo_value,
