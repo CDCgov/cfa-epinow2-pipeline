@@ -256,8 +256,8 @@ post_process_and_merge <- function(
       by = c("date"),
       all.x = FALSE,
       all.y = TRUE
-      )
     )
+  )
   # Step 1.75 rbind as_of_cases with merged_dt and sort
   merged_dt <- rbind(merged_dt, fit_obs_time, fill=TRUE)[order(time, .variable),]
 
