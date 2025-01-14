@@ -184,7 +184,7 @@ test_that("process_quantiles works as expected", {
 
   # Test 5: Check if there are no missing values
   expect_false(
-    anyNA(result[`_variable` != "fit_obs_cases", ]),
+    anyNA(result[result[["_variable"]] != "fit_obs_cases", ]),
     "Relevant columns have NA values"
   )
 
@@ -258,7 +258,7 @@ test_that("process_samples works as expected", {
 
   # Test 5: Check if there are no missing values
   expect_false(
-    anyNA(result[`_variable` != "fit_obs_cases", ]),
+    anyNA(result[result[["_variable"]] != "fit_obs_cases", ]),
     "Columns have NA values"
   )
 

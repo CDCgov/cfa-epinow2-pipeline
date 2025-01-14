@@ -258,7 +258,10 @@ post_process_and_merge <- function(
     )
   )
   # Step 1.75 rbind as_of_cases with merged_dt and sort
-  merged_dt <- rbind(merged_dt, fit_obs_time, fill = TRUE)[order(time, .variable), ]
+  merged_dt <- rbind(merged_dt, fit_obs_time, fill = TRUE)
+  sort_cols <-c("time",".variable")
+  merged_dt<- data.table::setorderv(merged_dt, sort_cols)
+  #merged_dt <- merged_dt[order(merged_dt[['time']],merged_dt[['.variable']])]
 
   # Step 2: Standardize parameter names
   data.table::set(merged_dt, j = ".variable", value = factor(
