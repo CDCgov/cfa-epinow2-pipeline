@@ -28,12 +28,11 @@ tag:
 	docker tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 config:
-	@read -p "Enter job_id: " job_id; \
 	gh workflow run \
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
 	  -f state=all \
-	  -f job_id=$$job_id
+	  -f job_id=$(JOB)
 
 run-batch:
 	docker build -f Dockerfile-batch -t batch . --no-cache
