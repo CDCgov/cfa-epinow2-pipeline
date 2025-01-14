@@ -18,10 +18,10 @@ deps:
 pull:
 	az acr login --name 'cfaprdbatchcr'
 	docker pull $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG)
-	docker pull $(REGISTRY)$(IMAGE_NAME):test-$(TAG)
+	docker pull $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 build:
-	docker build -t $(REGISTRY)$(IMAGE_NAME):test-$(TAG) \
+	docker build -t $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 		--build-arg TAG=$(TAG) -f Dockerfile .
 
 tag:
@@ -43,14 +43,14 @@ run-batch:
 run:
 	docker run --mount type=bind,source=$(PWD),target=/mnt -it \
 	--env-file .env \
-	--rm $(REGISTRY)$(IMAGE_NAME):test-$(TAG) \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt', output_container = 'zs-test-pipeline-update')"
 
 
 up:
 	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
-	--rm $(REGISTRY)$(IMAGE_NAME):test-$(TAG) /bin/bash
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) /bin/bash
 
 run-function:
 	docker run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \

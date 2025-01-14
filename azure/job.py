@@ -66,7 +66,7 @@ if __name__ == "__main__":
     # Set up task on job
     registry = os.environ["AZURE_CONTAINER_REGISTRY"]
     task_container_settings = batchmodels.TaskContainerSettings(
-        image_name=registry + '/cfa-epinow2-pipeline:test-' + image_name,
+        image_name=registry + '/cfa-epinow2-pipeline:' + image_name,
         container_run_options='--rm --workdir /'
     )
     task_env_settings = [
