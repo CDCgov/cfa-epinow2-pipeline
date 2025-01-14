@@ -1,0 +1,10 @@
+name: Manual Docker System Prune (CDCgov)
+on:
+  workflow_dispatch:
+
+jobs:
+  docker-system-prune:
+    runs-on: cfa-cdcgov
+
+    steps:
+    - run: docker system prune -a -f
