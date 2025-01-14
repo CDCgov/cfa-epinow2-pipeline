@@ -4,8 +4,6 @@ on:
   pull_request:
     types:
       - closed
-    branches:
-      - main
 
 jobs:
 
@@ -18,10 +16,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Get commit message
-        id: commit-message
-        run: echo "message=$(git log -1 --pretty=%s HEAD)" >> $GITHUB_OUTPUT
 
         # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
@@ -38,11 +32,7 @@ jobs:
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Install az CLI
-        run: |
-          apt-get update && apt-get install -y --no-install-recommends azure-cli
-
-      - name: Login to Azure with NNH Service Principal
+      - name: Azure login
         id: azure_login_2
         uses: azure/login@v2
         with:
@@ -50,14 +40,15 @@ jobs:
           creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
       - name: Delete pool
-        id: delete_pool
-        run: |
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az batch account login \
+              --resource-group {{ secrets.PRD_RESOURCE_GROUP }} \
+              --name "{{ env.BATCH_ACCOUNT }}"
 
-          az batch account login \
-            --resource-group {{ secrets.PRD_RESOURCE_GROUP }} \
-            --name "{{ env.BATCH_ACCOUNT }}"
-
-          az batch pool delete \
+            az batch pool delete \
               --pool-id "cfa-epinow2-${{ steps.image-tag.outputs.tag }}" \
               # Don't prompt for user input
               --yes
