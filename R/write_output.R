@@ -252,7 +252,7 @@ post_process_and_merge <- function(
   fit_obs_time <- unique(
     merge(
       fit_obs,
-      merged_dt[, c('date', 'time'), with=FALSE],
+      merged_dt[, c("date", "time"), with = FALSE],
       by = c("date"),
       all.x = FALSE,
       all.y = TRUE
