@@ -25,27 +25,16 @@ jobs:
 
     outputs:
       tag: ${{ steps.image-tag.outputs.tag }}
-      commit-msg: ${{ steps.commit-message.outputs.message }}
 
     steps:
 
-      #########################################################################
-      # Retrieving the commit message
-      # We need to ensure we are checking out the commit sha that triggered the
-      # workflow, not the PR's head sha. This is because the PR's head sha may
-      # be a merge commit, which will not have the commit message we need.
-      #########################################################################
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Getting the commit message
-        id: commit-message
-        run: echo "message=$(git log -1 --pretty=%s HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Checking out the latest (may be merge if PR)
-        uses: actions/checkout@v4
+      #########################################################################
+      # Getting the tag from the branch
+      # The tag will be used for both the docker image and the batch pool
+      #########################################################################
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
@@ -53,10 +42,6 @@ jobs:
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: branch-name
 
-      #########################################################################
-      # Getting the tag
-      # The tag will be used for both the docker image and the batch pool
-      #########################################################################
       - name: Figure out tag (either latest if it is main or the branch name)
         id: image-tag
         run: |
@@ -66,6 +51,9 @@ jobs:
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
 
+      # NOTE: This lookup is only for the cache _key_. We don't need the cache _value_
+      # because we explicitly fetch image from the registry in the next step. Keeping the
+      # cached image on the runner causes the runner to quickly run out of storage.
       - name: Check cache for base image
         uses: actions/cache@v4
         id: cache
@@ -102,7 +90,6 @@ jobs:
 
     outputs:
       tag: ${{ needs.build-dependencies-image.outputs.tag }}
-      commit-msg: ${{ needs.build-dependencies-image.outputs.commit-msg }}
 
     steps:
 
@@ -138,7 +125,6 @@ jobs:
 
     env:
       TAG: ${{ needs.build-pipeline-image.outputs.tag }}
-      COMMIT_MSG: ${{ needs.build-pipeline-image.outputs.commit-msg }}
       # Every Azure Batch Pool parameter can simply go here,
       # no python module or config toml necessary
       POOL_ID: "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
@@ -218,19 +204,3 @@ jobs:
           python3 azure/pool.py \
             pool-config-${{ github.sha }}.toml \
             batch-autoscale-formula.txt
-
-
-      #########################################################################
-      # Deleting the pool only if (a) it exists and (b) the commit message
-      # contains '[delete pool]'.
-      #########################################################################
-      - name: Delete the pool
-        if: ${{ (steps.check_pool_id.outputs.pool-exists != '' || steps.create_batch_pool.outputs.pool-created == 'yes' ) && contains( env.COMMIT_MSG, '[delete pool]' )}}
-        run: |
-          az batch account login \
-            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-            --name "${{ env.BATCH_ACCOUNT }}"
-
-          az batch pool delete \
-            --pool-id ${{ env.POOL_ID }} \
-            --yes
