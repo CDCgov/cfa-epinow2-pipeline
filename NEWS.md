@@ -1,5 +1,5 @@
 # CFAEpiNow2Pipeline (development version)
-
+* Created workflow_dispatch docker system prune -a -f action; made container job ignore irrelevant changes
 * Build Batch pool on merge to main
 * Install suggests into base first-step image
 * Fixed issue with running `make pull` while on main.
