@@ -23,11 +23,12 @@ write_sample_parameters_file <- function(value,
   on.exit(DBI::dbDisconnect(con), add = TRUE)
 
   duckdb::duckdb_register(con, "test_table", df)
-  # This is bad practice but `dbBind()` doesn't allow us to parameterize COPY
-  # ... TO.  The danger of doing it this way seems quite low risk because it's
-  # an ephemeral from a temporary in-memory DB. There's no actual database to
-  # guard against a SQL injection attack.
-  query <- paste0("COPY (SELECT * FROM test_table) TO '", path, "'")
+  sql <- "COPY (SELECT * FROM test_table) TO ?path"
+  query <- DBI::sqlInterpolate(
+    DBI::ANSI(),
+    sql,
+    path = DBI::dbQuoteIdentifier(DBI::ANSI(), path)
+  )
 
   # Retry a few times because DuckDB throws std::exception intermittently.
   # This seems like a bug in DuckDB coming from on.exit not always closing the
