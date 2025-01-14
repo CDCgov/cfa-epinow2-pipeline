@@ -31,7 +31,8 @@ config:
 	gh workflow run \
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
-	  -f state=all
+	  -f state=all \
+	  -f job_id=$(JOB)
 
 run-batch:
 	docker build -f Dockerfile-batch -t batch . --no-cache

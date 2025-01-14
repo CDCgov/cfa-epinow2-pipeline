@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Add functionality to pass `job_id` to config generation
 * Build Batch pool on merge to main
 * Install suggests into base first-step image
 * Fixed issue with running `make pull` while on main.
