@@ -81,8 +81,8 @@
 #' zero-day delays. We renormalize the left-truncated vector to sum to one so
 #' that it's a proper PMF.
 #'
-#' @name gostic_gt_pmf
-#' @format `gostic_gt_pmf` A numeric vector of length 26 that sums to one within
+#' @name sir_gt_pmf
+#' @format `sir_gt_pmf` A numeric vector of length 26 that sums to one within
 #'   numerical tolerance
 #' @family data
-"gostic_gt_pmf"
+"sir_gt_pmf"

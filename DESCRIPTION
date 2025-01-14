@@ -20,7 +20,9 @@ Remotes: github::epiforecasts/EpiNow2@bcf297cf36a93cc56123bc3c9e8cebfb1421a962
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests:
+    primarycensored,
     testthat (>= 3.0.0),
+    usethis,
     withr
 Config/testthat/edition: 3
 Imports:
