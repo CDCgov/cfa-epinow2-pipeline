@@ -14,7 +14,7 @@ on:
       - .github/workflows/pr-commands.yaml 
       - .github/workflows/r-cmd-check.yaml 
       - .github/workflows/test-coverage.yaml
-      - *.md
+      - '**.md'
     branches:
       - main
   push:
