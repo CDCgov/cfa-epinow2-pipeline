@@ -46,9 +46,9 @@ jobs:
           inlineScript: |
             az batch account login \
               --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-              --name "${{ secrets.BATCH_ACCOUNT }}"
+              --name "${{ secrets.BATCH_ACCOUNT }}" \
+              --yes
 
             az batch pool delete \
               --pool-id "cfa-epinow2-${{ steps.image-tag.outputs.tag }}" \
-              # Don't prompt for user input
               --yes
