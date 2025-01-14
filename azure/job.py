@@ -51,11 +51,10 @@ if __name__ == "__main__":
     # Get tasks
     blob_service_client = BlobServiceClient(blob_url, credential_v2)
     container_client = blob_service_client.get_container_client(container=config_container)
-    two_mins_ago = datetime.datetime.now(datetime.UTC) - datetime.timedelta(minutes=2)
     task_configs: list[str] = [
         b.name
         for b in container_client.list_blobs()
-        if b.creation_time > two_mins_ago
+        if job_id in b.name
     ]
     if len(task_configs) == 0:
         raise ValueError("No tasks found")
