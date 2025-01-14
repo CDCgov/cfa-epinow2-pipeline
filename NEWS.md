@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Build Batch pool on merge to main
 * Fixed issue with running `make pull` while on main.
 * Improved documentation of `format_stan_opts`
 * Drop old pre-commit action in favor of CI service
