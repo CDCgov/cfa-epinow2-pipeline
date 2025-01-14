@@ -163,7 +163,7 @@ test_that("process_quantiles works as expected", {
   )
 
   # Test 3: Check if the result contains the correct number of rows
-  expected_num_rows <- 50
+  expected_num_rows <- 55
   expect_equal(nrow(result), expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
   )
@@ -173,6 +173,7 @@ test_that("process_quantiles works as expected", {
     "Rt",
     "expected_nowcast_cases",
     "expected_obs_cases",
+    "fit_obs_cases",
     "growth_rate",
     "pp_nowcast_cases"
   )
@@ -183,8 +184,8 @@ test_that("process_quantiles works as expected", {
 
   # Test 5: Check if there are no missing values
   expect_false(
-    anyNA(result),
-    "Columns have NA values"
+    anyNA(result[`_variable` != 'fit_obs_cases',]),
+    "Relevant columns have NA values"
   )
 
   # Test 6: Verify the left join: all `time` values from
@@ -236,7 +237,7 @@ test_that("process_samples works as expected", {
   )
 
   # Test 3: Check if the result contains the correct number of rows
-  expected_num_rows <- 2500 # Replace with actual expected value
+  expected_num_rows <- 2505 # Replace with actual expected value
   expect_equal(nrow(result), expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
   )
@@ -246,6 +247,7 @@ test_that("process_samples works as expected", {
     "Rt",
     "expected_nowcast_cases",
     "expected_obs_cases",
+    "fit_obs_cases",
     "growth_rate",
     "pp_nowcast_cases"
   )
@@ -256,7 +258,7 @@ test_that("process_samples works as expected", {
 
   # Test 5: Check if there are no missing values
   expect_false(
-    anyNA(result),
+    anyNA(result[`_variable` != 'fit_obs_cases',]),
     "Columns have NA values"
   )
 

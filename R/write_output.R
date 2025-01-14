@@ -237,7 +237,6 @@ post_process_and_merge <- function(
   fit_obs <- fit$estimates$observations |> data.table::as.data.table()
   names(fit_obs)[names(fit_obs) == "confirm"] <- ".value"
   data.table::set(fit_obs, j = ".variable", value = "fit_obs")
-  data.table::set(fit_obs, j = ".point", value = "as_of")
 
   # Step 1: Left join the date-time-parameter map onto the Stan draws
   merged_dt <- merge(
@@ -327,6 +326,7 @@ NULL
 process_samples <- function(fit, geo_value, model, disease) {
   draws_list <- extract_draws_from_fit(fit)
   raw_processed_output <- post_process_and_merge(
+    fit,
     draws_list$stan_draws,
     draws_list$fact_table,
     geo_value,
