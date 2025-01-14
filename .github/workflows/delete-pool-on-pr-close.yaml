@@ -1,0 +1,54 @@
+name: Tear down Batch pool
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+
+  delete-pool:
+    runs_on: cdc-cdcgov
+    name: Delete Batch pool
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+        # From: https://stackoverflow.com/a/58035262/2097171
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: branch-name
+
+      - name: Figure out tag (either latest if it is main or the branch name)
+        id: image-tag
+        run: |
+          if [ "${{ steps.branch-name.outputs.branch }}" = "main" ]; then
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Azure login
+        id: azure_login_2
+        uses: azure/login@v2
+        with:
+        # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
+          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+
+      - name: Delete pool
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az batch account login \
+              --resource-group {{ secrets.PRD_RESOURCE_GROUP }} \
+              --name "{{ env.BATCH_ACCOUNT }}"
+
+            az batch pool delete \
+              --pool-id "cfa-epinow2-${{ steps.image-tag.outputs.tag }}" \
+              # Don't prompt for user input
+              --yes
