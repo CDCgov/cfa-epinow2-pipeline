@@ -4,11 +4,21 @@ name: Create Docker Image and Azure Pool
 # cfa-epinow2-pipeline-docker project. In-container tests can be added here.
 
 on:
+  workflow_dispatch:
   pull_request:
+    paths-ignore: # we don't need this to run everytime we make an edit to an irrelevant file
+      - .github/workflows/block-fixup.yaml 
+      - .github/workflows/check-news-md.yaml 
+      - .github/workflows/manual-docker-prune.yml 
+      - .github/workflows/pkgdown.yaml 
+      - .github/workflows/pr-commands.yaml 
+      - .github/workflows/r-cmd-check.yaml 
+      - .github/workflows/test-coverage.yaml
+      - *.md
     branches:
       - main
-  workflow_dispatch:
   push:
+    paths-ignore:
     branches:
       - main
 
