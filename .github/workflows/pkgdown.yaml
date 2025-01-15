@@ -35,7 +35,7 @@ jobs:
         with:
           extra-packages: any::pkgdown, local::.
           needs: website
-          dependencies: "hard"
+          dependencies: hard
 
 
       - name: Build site
