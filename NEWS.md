@@ -1,12 +1,16 @@
 # CFAEpiNow2Pipeline (development version)
-
+* Created workflow_dispatch docker system prune -a -f action; made container job ignore irrelevant changes
+* Build Batch pool on merge to main
+* Install suggests into base first-step image
 * Fixed issue with running `make pull` while on main.
 * Improved documentation of `format_stan_opts`
 * Drop old pre-commit action in favor of CI service
 * Improve documentation of `fetch_blob_container`
+* Add warning and autofix for improperly specified GI PMF
 * Read parameters on the same day correctly
 * Re-add missing dependency in python venv
 * Don't emit DEBUG level logs from EpiNow2
+* Clean up Azure Batch pools on PR close
 * Added function families to documentation
 * Renamed file containing diagnostic functions
 * Change formatting of metadata values to be atomic.

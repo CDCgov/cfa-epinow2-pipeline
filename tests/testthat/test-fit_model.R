@@ -1,7 +1,7 @@
 test_that("Minimal model fit all params runs", {
   # Parameters
   parameters <- list(
-    generation_interval = gostic_gt_pmf,
+    generation_interval = sir_gt_pmf,
     delay_interval = c(0.2, 0.8),
     right_truncation = c(0.7, 0.3)
   )
@@ -57,7 +57,7 @@ test_that("Minimal model fit all params runs", {
 test_that("Minimal model fit with no right trunc or delay runs", {
   # Parameters
   parameters <- list(
-    generation_interval = gostic_gt_pmf,
+    generation_interval = sir_gt_pmf,
     delay_interval = NA,
     right_truncation = NA
   )
@@ -118,7 +118,7 @@ test_that("Bad params w/ failing fit issues warning and returns NA", {
 
   # Parameters
   parameters <- list(
-    generation_interval = gostic_gt_pmf,
+    generation_interval = sir_gt_pmf,
     delay_interval = NA,
     right_truncation = NA
   )

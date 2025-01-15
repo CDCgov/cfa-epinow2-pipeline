@@ -544,3 +544,14 @@ test_that("Same-day parameter can be read", {
     expect_equal(actual, expected)
   })
 })
+
+test_that("GI with nonzero first element throws warning", {
+  pmf <- sir_gt_pmf[2:length(sir_gt_pmf)]
+  expect_snapshot(
+    fixed <- format_generation_interval(pmf)
+  )
+  expect_equal(
+    fixed,
+    EpiNow2::generation_time_opts(dist = EpiNow2::dist_spec(pmf = sir_gt_pmf))
+  )
+})
