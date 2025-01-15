@@ -2,7 +2,7 @@ REGISTRY=cfaprdbatchcr.azurecr.io/
 IMAGE_NAME=cfa-epinow2-pipeline
 BRANCH=$(shell git branch --show-current)
 CONFIG_CONTAINER=rt-epinow2-config
-ifeq ($(BRANCH), 'main')
+ifeq ($(BRANCH), main)
 TAG=latest
 else
 TAG=$(BRANCH)

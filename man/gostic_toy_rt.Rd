@@ -63,7 +63,7 @@ observation noise with \code{rnbinom(299, mu = gostic_toy_rt[["obs_cases"]], siz
 }
 \seealso{
 Other data: 
-\code{\link{gostic_gt_pmf}}
+\code{\link{sir_gt_pmf}}
 }
 \concept{data}
 \keyword{datasets}
