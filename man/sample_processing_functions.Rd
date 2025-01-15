@@ -12,6 +12,17 @@ process_quantiles(fit, geo_value, model, disease, quantile_width)
 }
 \arguments{
 \item{fit}{An EpiNow2 fit object with posterior estimates.}
+
+\item{geo_value}{An uppercase, two-character string specifying the geographic
+value, usually a state or \code{"US"} for national data.}
+
+\item{model}{A string specifying the model to be used.}
+
+\item{disease}{A string specifying the disease being modeled. One of
+\code{"COVID-19"} or \code{"Influenza"}.}
+
+\item{quantile_width}{A vector of numeric values representing the desired
+quantiles. Passed to \code{\link[tidybayes:reexports]{tidybayes::median_qi()}}.}
 }
 \value{
 A data.table of posterior draws or quantiles, merged and processed.

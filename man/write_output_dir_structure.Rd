@@ -8,6 +8,10 @@ write_output_dir_structure(output_dir, job_id, task_id)
 }
 \arguments{
 \item{output_dir}{String. The base output directory path.}
+
+\item{job_id}{A string specifying the job.}
+
+\item{task_id}{A string specifying the task.}
 }
 \value{
 The path to the base output directory (invisible).

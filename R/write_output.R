@@ -102,7 +102,7 @@ write_model_outputs <- function(
 #' and summarized quantiles.
 #'
 #' @param output_dir String. The base output directory path.
-# " @inheritParams Config
+#' @inheritParams Config
 #'
 #' @return The path to the base output directory (invisible).
 #' @family write_output
@@ -289,7 +289,7 @@ post_process_and_merge <- function(
 #' returned in `{tidybayes}` format.
 #'
 #' @param fit An EpiNow2 fit object with posterior estimates.
-# " @inheritParams Config
+#' @inheritParams Config
 #'
 #' @return A data.table of posterior draws or quantiles, merged and processed.
 #'
