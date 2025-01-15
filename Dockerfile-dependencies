@@ -1,12 +1,15 @@
 FROM docker.io/rocker/geospatial:4.4.1
 
-# Will copy the package to the container preserving the directory structure
 COPY . pkg/
 
 # Installing missing dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
-RUN install2.r pak
-# dependencies = TRUE means we install `suggests` too
-RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
+RUN install2.r pak 
 
-ENTRYPOINT ["bash"]
+RUN Rscript -e 'install.packages("EpiNow2")'
+RUN Rscript -e 'install.packages("cmdstanr", repos = c("https://stan-dev.r-universe.dev", getOption("repos")))'  && \
+    Rscript -e 'cmdstanr::install_cmdstan()'
+
+RUN Rscript -e 'pak::local_install_dev_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
+
+ENTRYPOINT ["/bin/bash"]
