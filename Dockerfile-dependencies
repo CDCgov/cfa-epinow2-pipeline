@@ -9,4 +9,4 @@ RUN install2.r pak
 # dependencies = TRUE means we install `suggests` too
 RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
 
-CMD ["bash"]
+ENTRYPOINT ["bash"]
