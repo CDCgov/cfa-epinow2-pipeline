@@ -8,14 +8,10 @@
 \usage{
 process_samples(fit, geo_value, model, disease)
 
-process_quantiles(fit, geo_value, model, disease, quantiles)
+process_quantiles(fit, geo_value, model, disease, quantile_width)
 }
 \arguments{
 \item{fit}{An EpiNow2 fit object with posterior estimates.}
-
-\item{disease, geo_value, model}{Metadata for downstream processing.}
-
-\item{quantiles}{A vector of quantiles to pass to \code{\link[tidybayes:reexports]{tidybayes::median_qi()}}}
 }
 \value{
 A data.table of posterior draws or quantiles, merged and processed.

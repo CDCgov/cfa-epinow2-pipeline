@@ -43,7 +43,8 @@ date. Formatted as "YYYY-MM-DD".}
 \item{production_date}{A string representing the production date.
 Formatted as "YYYY-MM-DD".}
 
-\item{disease}{A string specifying the disease being modeled.}
+\item{disease}{A string specifying the disease being modeled. One of
+\code{"COVID-19"} or \code{"Influenza"}.}
 
 \item{geo_value}{An uppercase, two-character string specifying the geographic
 value, usually a state or \code{"US"} for national data.}
@@ -59,7 +60,7 @@ value, usually a state or \code{"US"} for national data.}
 \item{config_version}{A numeric value specifying the configuration version.}
 
 \item{quantile_width}{A vector of numeric values representing the desired
-quantiles.}
+quantiles. Passed to \code{\link[tidybayes:reexports]{tidybayes::median_qi()}}.}
 
 \item{data}{An instance of \code{Data} class containing data configurations.}
 

@@ -7,11 +7,10 @@
 #' @param output_dir String. The base output directory path.
 #' @param samples A data.table as returned by [process_samples()]
 #' @param summaries A data.table as returned by [process_quantiles()]
-#' @param job_id String. The identifier for the job.
-#' @param task_id String. The identifier for the task.
 #' @param metadata List. Additional metadata to be included in the output. The
 #' paths to the samples, summaries, and model output will be added to the
 #' metadata list.
+#' @inheritParams Config
 #'
 #' @return Invisible NULL. The function is called for its side effects.
 #' @family write_output
@@ -103,8 +102,7 @@ write_model_outputs <- function(
 #' and summarized quantiles.
 #'
 #' @param output_dir String. The base output directory path.
-#' @param job_id String. The identifier for the job.
-#' @param task_id String. The identifier for the task.
+# " @inheritParams Config
 #'
 #' @return The path to the base output directory (invisible).
 #' @family write_output
@@ -291,8 +289,7 @@ post_process_and_merge <- function(
 #' returned in `{tidybayes}` format.
 #'
 #' @param fit An EpiNow2 fit object with posterior estimates.
-#' @param disease,geo_value,model Metadata for downstream processing.
-#' @param quantiles A vector of quantiles to pass to [tidybayes::median_qi()]
+# " @inheritParams Config
 #'
 #' @return A data.table of posterior draws or quantiles, merged and processed.
 #'
@@ -321,7 +318,7 @@ process_quantiles <- function(
     geo_value,
     model,
     disease,
-    quantiles) {
+    quantile_width) {
   # Step 1: Extract the draws
   draws_list <- extract_draws_from_fit(fit)
 
@@ -330,7 +327,7 @@ process_quantiles <- function(
   summarized_draws <- draws_list$stan_draws |>
     dplyr::group_by(.variable, time) |>
     tidybayes::median_qi(
-      .width = quantiles,
+      .width = quantile_width,
     ) |>
     data.table::as.data.table()
 

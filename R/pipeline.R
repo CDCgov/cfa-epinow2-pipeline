@@ -264,7 +264,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     geo_value = config@geo_value,
     model = config@model,
     disease = config@disease,
-    quantiles = unlist(config@quantile_width)
+    quantile_width = unlist(config@quantile_width)
   )
 
   # All the top level metadata fields

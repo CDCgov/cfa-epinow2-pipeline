@@ -23,9 +23,9 @@ write_model_outputs(
 
 \item{output_dir}{String. The base output directory path.}
 
-\item{job_id}{String. The identifier for the job.}
+\item{job_id}{A string specifying the job.}
 
-\item{task_id}{String. The identifier for the task.}
+\item{task_id}{A string specifying the task.}
 
 \item{metadata}{List. Additional metadata to be included in the output. The
 paths to the samples, summaries, and model output will be added to the

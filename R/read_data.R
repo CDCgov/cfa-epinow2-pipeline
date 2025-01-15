@@ -17,10 +17,6 @@
 #'
 #' @param data_path The path to the local file. This could contain a glob and
 #'   must be in parquet format.
-#' @param disease One of "COVID-19" or "Influenza"
-#' @param report_date The desired single report date
-#' @param max_reference_date,min_reference_date The first and last reference
-#'   dates, inclusive, of the timeseries
 #' @inheritParams Config
 #'
 #' @return A dataframe with one or more rows and columns `report_date`,

@@ -4,7 +4,6 @@
 #'   Path to a local file with the parameter PMF. See [read_interval_pmf] for
 #'   details on the file schema. The parameters can be in the same file or a
 #'   different file.
-#' @param disease One of `COVID-19` or `Influenza`
 #' @param as_of_date Use the parameters that were used in production on this
 #'   date. Set for the current date for the most up-to-to date version of the
 #'   parameters and set to an earlier date to use parameters from an earlier

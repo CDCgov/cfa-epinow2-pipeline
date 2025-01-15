@@ -123,7 +123,8 @@ Data <- S7::new_class( # nolint: object_name_linter
 #' date. Formatted as "YYYY-MM-DD".
 #' @param production_date A string representing the production date.
 #' Formatted as "YYYY-MM-DD".
-#' @param disease A string specifying the disease being modeled.
+#' @param disease A string specifying the disease being modeled. One of
+#'    `"COVID-19"` or `"Influenza"`.
 #' @param geo_value An uppercase, two-character string specifying the geographic
 #'   value, usually a state or `"US"` for national data.
 #' @param geo_type A string specifying the geographic type, usually "state".
@@ -141,7 +142,7 @@ Data <- S7::new_class( # nolint: object_name_linter
 #' criteria.
 #' @param config_version A numeric value specifying the configuration version.
 #' @param quantile_width A vector of numeric values representing the desired
-#' quantiles.
+#' quantiles. Passed to [tidybayes::median_qi()].
 #' @param model A string specifying the model to be used.
 #' @param report_date A string representing the report date. Formatted as
 #' "YYYY-MM-DD".
