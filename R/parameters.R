@@ -9,9 +9,7 @@
 #'   date. Set for the current date for the most up-to-to date version of the
 #'   parameters and set to an earlier date to use parameters from an earlier
 #'   time period.
-#' @param group An optional parameter to subset the query to a parameter with a
-#'   particular two-letter state abbreviation. Right now, the only parameter
-#'   with state-specific estimates is `right_truncation`.
+#' @inheritParams Config
 #' @param report_date An optional parameter to subset the query to a parameter
 #'   on or before a particular `report_date`. Right now, the only parameter with
 #'   report date-specific estimates is `right_truncation`. Note that this
@@ -37,7 +35,7 @@ read_disease_parameters <- function(
     right_truncation_path,
     disease,
     as_of_date,
-    group,
+    geo_value,
     report_date) {
   generation_interval <- read_interval_pmf(
     path = generation_interval_path,
@@ -66,7 +64,7 @@ read_disease_parameters <- function(
       disease = disease,
       as_of_date = as_of_date,
       parameter = "right_truncation",
-      group = group,
+      geo_value = geo_value,
       report_date = report_date
     )
   } else {
@@ -125,7 +123,7 @@ read_interval_pmf <- function(path,
                                 "delay",
                                 "right_truncation"
                               ),
-                              group = NA,
+                              geo_value = NA,
                               report_date = NA) {
   ###################
   # Validate input
@@ -163,11 +161,11 @@ read_interval_pmf <- function(path,
 
   # Handle state separately because can't use `=` for NULL comparison and
   # DBI::dbBind() can't parameterize a query after IS
-  if (rlang::is_na(group) || rlang::is_null(group)) {
+  if (rlang::is_na(geo_value) || rlang::is_null(geo_value)) {
     query <- paste(query, "AND geo_value IS NULL")
   } else {
     query <- paste(query, "AND geo_value = ?")
-    parameters <- c(parameters, list(group))
+    parameters <- c(parameters, list(geo_value))
   }
   if (parameter == "right_truncation") {
     query <- paste(query, "AND (
@@ -193,7 +191,7 @@ read_interval_pmf <- function(path,
       cli::cli_abort(
         c(
           "Failure loading {.arg {parameter}} from {.path {path}}",
-          "Using {.val {disease}}, {.val {as_of_date}}, and {.val {group}}",
+          "Using {.val {disease}}, {.val {as_of_date}}, and {.val {geo_value}}",
           "Original error: {cnd}"
         ),
         class = "wrapped_error"
@@ -207,7 +205,7 @@ read_interval_pmf <- function(path,
     parameter,
     disease,
     as_of_date,
-    group,
+    geo_value,
     report_date,
     path
   )
@@ -235,7 +233,7 @@ check_returned_pmf <- function(
     parameter,
     disease,
     as_of_date,
-    group,
+    geo_value,
     report_date,
     path) {
   ################
@@ -245,7 +243,7 @@ check_returned_pmf <- function(
       c(
         "Failure loading {.arg {parameter}} from {.path {path}} ",
         "Query did not return exactly one row",
-        "Using {.val {disease}}, {.val {as_of_date}}, and {.val {group}}",
+        "Using {.val {disease}}, {.val {as_of_date}}, and {.val {geo_value}}",
         "Query matched {.val {nrow(pmf_df)}} rows"
       ),
       class = "not_one_row_returned"

@@ -45,7 +45,8 @@ Formatted as "YYYY-MM-DD".}
 
 \item{disease}{A string specifying the disease being modeled.}
 
-\item{geo_value}{A string specifying the geographic value, usually a state.}
+\item{geo_value}{An uppercase, two-character string specifying the geographic
+value, usually a state or \code{"US"} for national data.}
 
 \item{geo_type}{A string specifying the geographic type, usually "state".}
 

@@ -7,7 +7,7 @@
 read_data(
   data_path,
   disease = c("COVID-19", "Influenza", "test"),
-  state_abb,
+  geo_value,
   report_date,
   max_reference_date,
   min_reference_date
@@ -19,7 +19,8 @@ must be in parquet format.}
 
 \item{disease}{One of "COVID-19" or "Influenza"}
 
-\item{state_abb}{A two-letter uppercase abbreviation. "US" is also an option}
+\item{geo_value}{An uppercase, two-character string specifying the geographic
+value, usually a state or \code{"US"} for national data.}
 
 \item{report_date}{The desired single report date}
 
@@ -28,7 +29,7 @@ dates, inclusive, of the timeseries}
 }
 \value{
 A dataframe with one or more rows and columns \code{report_date},
-\code{reference_date}, \code{state_abb}, \code{confirm}
+\code{reference_date}, \code{geo_value}, \code{confirm}
 }
 \description{
 Each row of the table corresponds to a single facilities' cases for a

@@ -189,7 +189,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
   cases_df <- read_data(
     data_path = data_path,
     disease = config@disease,
-    state_abb = config@geo_value,
+    geo_value = config@geo_value,
     report_date = config@report_date,
     max_reference_date = config@max_reference_date,
     min_reference_date = config@min_reference_date
@@ -232,7 +232,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     right_truncation_path = right_trunc_path,
     disease = config@disease,
     as_of_date = config@parameters@as_of_date,
-    group = config@geo_value,
+    geo_value = config@geo_value,
     report_date = config@report_date
   )
 

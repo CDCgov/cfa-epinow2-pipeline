@@ -10,7 +10,7 @@ read_disease_parameters(
   right_truncation_path,
   disease,
   as_of_date,
-  group,
+  geo_value,
   report_date
 )
 }
@@ -26,9 +26,8 @@ date. Set for the current date for the most up-to-to date version of the
 parameters and set to an earlier date to use parameters from an earlier
 time period.}
 
-\item{group}{An optional parameter to subset the query to a parameter with a
-particular two-letter state abbreviation. Right now, the only parameter
-with state-specific estimates is \code{right_truncation}.}
+\item{geo_value}{An uppercase, two-character string specifying the geographic
+value, usually a state or \code{"US"} for national data.}
 
 \item{report_date}{An optional parameter to subset the query to a parameter
 on or before a particular \code{report_date}. Right now, the only parameter with
