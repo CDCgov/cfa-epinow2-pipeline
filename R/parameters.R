@@ -323,6 +323,15 @@ format_generation_interval <- function(pmf) {
     )
   }
 
+  if (pmf[1] != 0) {
+    pmf <- c(0, pmf)
+    cli::cli_warn(c(
+      "First element of GI PMF is not 0",
+      "x" = "Renewal equation assumes no same-day transmission",
+      "!" = "Auto-fixing by prepending a 0. Consider left-truncating instead?",
+      ">" = "New PMF: {.val {pmf}}"
+    ))
+  }
   suppressWarnings({
     EpiNow2::generation_time_opts(
       dist = EpiNow2::dist_spec(
