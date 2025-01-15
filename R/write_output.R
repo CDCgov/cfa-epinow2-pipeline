@@ -233,7 +233,7 @@ post_process_and_merge <- function(
     geo_value,
     model,
     disease) {
-  # Step 0: isolate "as_of" cases from fit objec. Create variables with constants
+  # Step 0: isolate "as_of" cases from fit objec. Create constants
   fit_obs <- fit$estimates$observations |> data.table::as.data.table()
   names(fit_obs)[names(fit_obs) == "confirm"] <- ".value"
   data.table::set(fit_obs, j = ".variable", value = "fit_obs")
@@ -261,7 +261,6 @@ post_process_and_merge <- function(
   merged_dt <- rbind(merged_dt, fit_obs_time, fill = TRUE)
   sort_cols <- c("time", ".variable")
   merged_dt <- data.table::setorderv(merged_dt, sort_cols)
-  # merged_dt <- merged_dt[order(merged_dt[['time']],merged_dt[['.variable']])]
 
   # Step 2: Standardize parameter names
   data.table::set(merged_dt, j = ".variable", value = factor(
