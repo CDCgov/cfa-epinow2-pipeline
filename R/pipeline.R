@@ -83,7 +83,7 @@ orchestrate_pipeline <- function(config_path,
       config_path <- download_if_specified(
         blob_path = config_path,
         blob_storage_container = config_container,
-        output_dir = input_dir
+        dir = input_dir
       )
       read_json_into_config(config_path, c("exclusions"))
     },
@@ -184,7 +184,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
   data_path <- download_if_specified(
     blob_path = config@data@path,
     blob_storage_container = config@data@blob_storage_container,
-    output_dir = input_dir
+    dir = input_dir
   )
   cases_df <- read_data(
     data_path = data_path,
@@ -200,7 +200,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     exclusions_path <- download_if_specified(
       blob_path = config@exclusions@path,
       blob_storage_container = config@exclusions@blob_storage_container,
-      output_dir = input_dir
+      dir = input_dir
     )
     exclusions_df <- read_exclusions(exclusions_path)
     cases_df <- apply_exclusions(cases_df, exclusions_df)
@@ -212,18 +212,18 @@ execute_model_logic <- function(config, input_dir, output_dir) {
   gi_path <- download_if_specified(
     blob_path = config@parameters@generation_interval@path,
     blob_storage_container = config@parameters@generation_interval@blob_storage_container, # nolint
-    output_dir = input_dir
+    dir = input_dir
   )
   # Delay
   delay_path <- download_if_specified(
     blob_path = config@parameters@delay_interval@path,
     blob_storage_container = config@parameters@delay_interval@blob_storage_container, # nolint
-    output_dir = input_dir
+    dir = input_dir
   )
   right_trunc_path <- download_if_specified(
     blob_path = config@parameters@right_truncation@path,
     blob_storage_container = config@parameters@right_truncation@blob_storage_container, # nolint
-    output_dir = input_dir
+    dir = input_dir
   )
 
   params <- read_disease_parameters(
