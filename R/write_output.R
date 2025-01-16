@@ -217,6 +217,7 @@ extract_draws_from_fit <- function(fit) {
 #' date-time-parameter combinations. It also standardizes parameter names and
 #' renames key columns.
 #'
+#' @param fit An EpiNow2 fit object with posterior estimates.
 #' @param draws A data.table of posterior draws (either raw or summarized).
 #' @param fact_table A data.table of unique date-time-parameter combinations.
 #'
