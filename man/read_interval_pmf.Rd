@@ -9,14 +9,15 @@ read_interval_pmf(
   disease = c("COVID-19", "Influenza", "test"),
   as_of_date,
   parameter = c("generation_interval", "delay", "right_truncation"),
-  group = NA,
+  geo_value = NA,
   report_date = NA
 )
 }
 \arguments{
 \item{path}{A path to a local file}
 
-\item{disease}{One of \code{COVID-19} or \code{Influenza}}
+\item{disease}{A string specifying the disease being modeled. One of
+\code{"COVID-19"} or \code{"Influenza"}.}
 
 \item{as_of_date}{Use the parameters that were used in production on this
 date. Set for the current date for the most up-to-to date version of the
@@ -25,9 +26,8 @@ time period.}
 
 \item{parameter}{One of "generation interval", "delay", or "right-truncation}
 
-\item{group}{An optional parameter to subset the query to a parameter with a
-particular two-letter state abbreviation. Right now, the only parameter
-with state-specific estimates is \code{right_truncation}.}
+\item{geo_value}{An uppercase, two-character string specifying the geographic
+value, usually a state or \code{"US"} for national data.}
 
 \item{report_date}{An optional parameter to subset the query to a parameter
 on or before a particular \code{report_date}. Right now, the only parameter with
