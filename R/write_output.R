@@ -4,13 +4,13 @@
 #' and writes them to the appropriate directories.
 #'
 #' @param fit An EpiNow2 fit object with posterior estimates.
-#' @param output_dir String. The base output directory path.
 #' @param samples A data.table as returned by [process_samples()]
 #' @param summaries A data.table as returned by [process_quantiles()]
 #' @param metadata List. Additional metadata to be included in the output. The
 #' paths to the samples, summaries, and model output will be added to the
 #' metadata list.
 #' @inheritParams Config
+#' @inheritParams orchestrate_pipeline
 #'
 #' @return Invisible NULL. The function is called for its side effects.
 #' @family write_output
@@ -101,8 +101,8 @@ write_model_outputs <- function(
 #' files related to a job and its tasks, including directories for raw samples
 #' and summarized quantiles.
 #'
-#' @param output_dir String. The base output directory path.
 #' @inheritParams Config
+#' @inheritParams orchestrate_pipeline
 #'
 #' @return The path to the base output directory (invisible).
 #' @family write_output

@@ -21,7 +21,8 @@ write_model_outputs(
 
 \item{summaries}{A data.table as returned by \code{\link[=process_quantiles]{process_quantiles()}}}
 
-\item{output_dir}{String. The base output directory path.}
+\item{output_dir}{A string specifying the directory where output, logs, and
+other pipeline artifacts will be saved. Defaults to the root directory ("/").}
 
 \item{job_id}{A string specifying the job.}
 
