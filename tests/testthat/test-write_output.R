@@ -173,9 +173,9 @@ test_that("process_quantiles works as expected", {
     "Rt",
     "expected_nowcast_cases",
     "expected_obs_cases",
-    "fit_obs_cases",
     "growth_rate",
-    "pp_nowcast_cases"
+    "pp_nowcast_cases",
+    "processed_obs_data"
   )
   unique_parameters <- sort(unique(as.character(result[["_variable"]])))
   expect_equal(
@@ -184,7 +184,7 @@ test_that("process_quantiles works as expected", {
 
   # Test 5: Check if there are no missing values
   expect_false(
-    anyNA(result[result[["_variable"]] != "fit_obs_cases", ]),
+    anyNA(result[result[["_variable"]] != "processed_obs_data", ]),
     "Relevant columns have NA values"
   )
 
@@ -247,9 +247,9 @@ test_that("process_samples works as expected", {
     "Rt",
     "expected_nowcast_cases",
     "expected_obs_cases",
-    "fit_obs_cases",
     "growth_rate",
-    "pp_nowcast_cases"
+    "pp_nowcast_cases",
+    "processed_obs_data"
   )
   unique_parameters <- sort(unique(as.character(result[["_variable"]])))
   expect_equal(
@@ -258,7 +258,7 @@ test_that("process_samples works as expected", {
 
   # Test 5: Check if there are no missing values
   expect_false(
-    anyNA(result[result[["_variable"]] != "fit_obs_cases", ]),
+    anyNA(result[result[["_variable"]] != "processed_obs_data", ]),
     "Columns have NA values"
   )
 
