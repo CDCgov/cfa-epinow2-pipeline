@@ -24,7 +24,7 @@ date. Set for the current date for the most up-to-to date version of the
 parameters and set to an earlier date to use parameters from an earlier
 time period.}
 
-\item{parameter}{One of "generation interval", "delay", or "right-truncation}
+\item{parameter}{One of "generation interval", "delay", or "right-truncation"}
 
 \item{geo_value}{An uppercase, two-character string specifying the geographic
 value, usually a state or \code{"US"} for national data.}
