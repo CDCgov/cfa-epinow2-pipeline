@@ -111,7 +111,7 @@ path_is_specified <- function(path) {
 #' https://en.wikipedia.org/wiki/Slowly_changing_dimension#Type_2:_add_new_row
 #'
 #' @param path A path to a local file
-#' @param parameter One of "generation interval", "delay", or "right-truncation
+#' @param parameter One of "generation interval", "delay", or "right-truncation"
 #' @inheritParams read_disease_parameters
 #'
 #' @return A PMF vector
