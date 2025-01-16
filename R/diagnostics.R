@@ -9,9 +9,7 @@
 #'
 #' @param fit The model fit object from `EpiNow2`
 #' @param data A data frame containing the input data used in the model fit.
-#' @param job_id A unique identifier for the job
-#' @param task_id A unique identifier for the task
-#' @param disease,geo_value,model Metadata for downstream processing.
+#' @inheritParams Config
 #'
 #' @return A \code{data.frame} containing the extracted diagnostic metrics. The
 #' data frame includes the following columns:
