@@ -7,9 +7,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
 RUN install2.r pak
 
 RUN Rscript -e 'install.packages("EpiNow2")'
-RUN Rscript -e 'install.packages("cmdstanr", repos = c("https://stan-dev.r-universe.dev", getOption("repos")))'  && \
-    Rscript -e 'cmdstanr::install_cmdstan()'
 
 RUN Rscript -e 'pak::local_install_dev_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
+RUN Rscript -e 'cmdstanr::install_cmdstan()'
 
 ENTRYPOINT ["/bin/bash"]
