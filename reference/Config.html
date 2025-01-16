@@ -94,11 +94,13 @@ Formatted as "YYYY-MM-DD".</p></dd>
 
 
 <dt id="arg-disease">disease<a class="anchor" aria-label="anchor" href="#arg-disease"></a></dt>
-<dd><p>A string specifying the disease being modeled.</p></dd>
+<dd><p>A string specifying the disease being modeled. One of
+<code>"COVID-19"</code> or <code>"Influenza"</code>.</p></dd>
 
 
 <dt id="arg-geo-value">geo_value<a class="anchor" aria-label="anchor" href="#arg-geo-value"></a></dt>
-<dd><p>A string specifying the geographic value, usually a state.</p></dd>
+<dd><p>An uppercase, two-character string specifying the geographic
+value, usually a state or <code>"US"</code> for national data.</p></dd>
 
 
 <dt id="arg-geo-type">geo_type<a class="anchor" aria-label="anchor" href="#arg-geo-type"></a></dt>
@@ -123,7 +125,7 @@ Formatted as "YYYY-MM-DD".</p></dd>
 
 <dt id="arg-quantile-width">quantile_width<a class="anchor" aria-label="anchor" href="#arg-quantile-width"></a></dt>
 <dd><p>A vector of numeric values representing the desired
-quantiles.</p></dd>
+quantiles. Passed to <code><a href="https://mjskay.github.io/tidybayes/reference/reexports.html" class="external-link">tidybayes::median_qi()</a></code>.</p></dd>
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>

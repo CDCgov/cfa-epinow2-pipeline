@@ -69,15 +69,25 @@ are outside an acceptable range. The results are returned as a data frame.</p>
 
 
 <dt id="arg-job-id">job_id<a class="anchor" aria-label="anchor" href="#arg-job-id"></a></dt>
-<dd><p>A unique identifier for the job</p></dd>
+<dd><p>A string specifying the job.</p></dd>
 
 
 <dt id="arg-task-id">task_id<a class="anchor" aria-label="anchor" href="#arg-task-id"></a></dt>
-<dd><p>A unique identifier for the task</p></dd>
+<dd><p>A string specifying the task.</p></dd>
 
 
-<dt id="arg-disease-geo-value-model">disease, geo_value, model<a class="anchor" aria-label="anchor" href="#arg-disease-geo-value-model"></a></dt>
-<dd><p>Metadata for downstream processing.</p></dd>
+<dt id="arg-disease">disease<a class="anchor" aria-label="anchor" href="#arg-disease"></a></dt>
+<dd><p>A string specifying the disease being modeled. One of
+<code>"COVID-19"</code> or <code>"Influenza"</code>.</p></dd>
+
+
+<dt id="arg-geo-value">geo_value<a class="anchor" aria-label="anchor" href="#arg-geo-value"></a></dt>
+<dd><p>An uppercase, two-character string specifying the geographic
+value, usually a state or <code>"US"</code> for national data.</p></dd>
+
+
+<dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
+<dd><p>A string specifying the model to be used.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -67,7 +67,7 @@ format with column names:</p><ul><li><p>parameter</p></li>
 <span>  disease <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"COVID-19"</span>, <span class="st">"Influenza"</span>, <span class="st">"test"</span><span class="op">)</span>,</span>
 <span>  <span class="va">as_of_date</span>,</span>
 <span>  parameter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"generation_interval"</span>, <span class="st">"delay"</span>, <span class="st">"right_truncation"</span><span class="op">)</span>,</span>
-<span>  group <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  geo_value <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  report_date <span class="op">=</span> <span class="cn">NA</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -81,7 +81,8 @@ format with column names:</p><ul><li><p>parameter</p></li>
 
 
 <dt id="arg-disease">disease<a class="anchor" aria-label="anchor" href="#arg-disease"></a></dt>
-<dd><p>One of <code>COVID-19</code> or <code>Influenza</code></p></dd>
+<dd><p>A string specifying the disease being modeled. One of
+<code>"COVID-19"</code> or <code>"Influenza"</code>.</p></dd>
 
 
 <dt id="arg-as-of-date">as_of_date<a class="anchor" aria-label="anchor" href="#arg-as-of-date"></a></dt>
@@ -95,10 +96,9 @@ time period.</p></dd>
 <dd><p>One of "generation interval", "delay", or "right-truncation</p></dd>
 
 
-<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
-<dd><p>An optional parameter to subset the query to a parameter with a
-particular two-letter state abbreviation. Right now, the only parameter
-with state-specific estimates is <code>right_truncation</code>.</p></dd>
+<dt id="arg-geo-value">geo_value<a class="anchor" aria-label="anchor" href="#arg-geo-value"></a></dt>
+<dd><p>An uppercase, two-character string specifying the geographic
+value, usually a state or <code>"US"</code> for national data.</p></dd>
 
 
 <dt id="arg-report-date">report_date<a class="anchor" aria-label="anchor" href="#arg-report-date"></a></dt>

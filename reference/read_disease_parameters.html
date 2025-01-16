@@ -44,7 +44,7 @@
 <span>  <span class="va">right_truncation_path</span>,</span>
 <span>  <span class="va">disease</span>,</span>
 <span>  <span class="va">as_of_date</span>,</span>
-<span>  <span class="va">group</span>,</span>
+<span>  <span class="va">geo_value</span>,</span>
 <span>  <span class="va">report_date</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -60,7 +60,8 @@ different file.</p></dd>
 
 
 <dt id="arg-disease">disease<a class="anchor" aria-label="anchor" href="#arg-disease"></a></dt>
-<dd><p>One of <code>COVID-19</code> or <code>Influenza</code></p></dd>
+<dd><p>A string specifying the disease being modeled. One of
+<code>"COVID-19"</code> or <code>"Influenza"</code>.</p></dd>
 
 
 <dt id="arg-as-of-date">as_of_date<a class="anchor" aria-label="anchor" href="#arg-as-of-date"></a></dt>
@@ -70,10 +71,9 @@ parameters and set to an earlier date to use parameters from an earlier
 time period.</p></dd>
 
 
-<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
-<dd><p>An optional parameter to subset the query to a parameter with a
-particular two-letter state abbreviation. Right now, the only parameter
-with state-specific estimates is <code>right_truncation</code>.</p></dd>
+<dt id="arg-geo-value">geo_value<a class="anchor" aria-label="anchor" href="#arg-geo-value"></a></dt>
+<dd><p>An uppercase, two-character string specifying the geographic
+value, usually a state or <code>"US"</code> for national data.</p></dd>
 
 
 <dt id="arg-report-date">report_date<a class="anchor" aria-label="anchor" href="#arg-report-date"></a></dt>
