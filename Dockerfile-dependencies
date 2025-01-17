@@ -1,4 +1,4 @@
-FROM docker.io/rocker/geospatial:4.4.1
+FROM docker.io/rocker/verse:4.4.1
 
 COPY . pkg/
 
