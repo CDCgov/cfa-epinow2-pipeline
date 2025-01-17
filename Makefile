@@ -9,8 +9,8 @@ TAG=$(BRANCH)
 endif
 
 CONFIG=test.json
-JOB=batch-test
-
+POOL="cfa-epinow2-$(TAG)"
+JOB=$(POOL)
 
 deps:
 	docker build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
@@ -38,7 +38,7 @@ run-batch:
 	docker run --rm  \
 	--env-file .env \
 	-it \
-	batch python job.py "$(IMAGE)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 run:
 	docker run --mount type=bind,source=$(PWD),target=/mnt -it \
