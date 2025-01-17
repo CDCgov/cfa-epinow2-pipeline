@@ -125,7 +125,7 @@ jobs:
           push: true # This can be toggled manually for tweaking.
           no-cache: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ needs.build-dependencies-image.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.build-dependencies-image.outputs.tag }}
           file: ./Dockerfile
           build-args: |
             TAG=${{ needs.build-dependencies-image.outputs.tag }}
@@ -169,7 +169,7 @@ jobs:
           EOF
 
           # Replacing placeholders in the config file
-          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test-${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
+          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
           sed -i 's|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g' pool-config-${{ github.sha }}.toml
           sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
 
