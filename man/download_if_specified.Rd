@@ -4,14 +4,14 @@
 \alias{download_if_specified}
 \title{Download if specified}
 \usage{
-download_if_specified(blob_path, blob_storage_container, output_dir)
+download_if_specified(blob_path, blob_storage_container, dir)
 }
 \arguments{
 \item{blob_path}{The name of the blob to download}
 
 \item{blob_storage_container}{The name of the container to donwload from}
 
-\item{output_dir}{The directory to write the downloaded file to}
+\item{dir}{The directory to which to write the downloaded file}
 }
 \value{
 The path of the file

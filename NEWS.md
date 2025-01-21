@@ -1,6 +1,10 @@
 # CFAEpiNow2Pipeline (development version)
 
 * Add functionality to pass `job_id` to config generation
+* Fix Batch run trigger from Makefile and drop `test-` prefix
+* Add fit observation data to summaries
+* Use a consistent name scheme for geographies: `geo_value`
+* Created workflow_dispatch docker system prune -a -f action; made container job ignore irrelevant changes
 * Build Batch pool on merge to main
 * Install suggests into base first-step image
 * Fixed issue with running `make pull` while on main.

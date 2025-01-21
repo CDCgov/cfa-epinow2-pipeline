@@ -2,7 +2,7 @@ test_that("Can apply exclusions on happy path", {
   exclusions <- data.frame(
     reference_date = as.Date("2023-01-06"),
     report_date = as.Date("2023-10-28"),
-    state_abb = "test",
+    geo_value = "test",
     disease = "test"
   )
   data_path <- test_path("data", "test_data.parquet")
@@ -12,7 +12,7 @@ test_that("Can apply exclusions on happy path", {
                            report_date,
                            reference_date,
                            disease,
-                           geo_value AS state_abb,
+                           geo_value,
                            value AS confirm
                          FROM read_parquet(?)",
     params = list(data_path)
@@ -39,7 +39,7 @@ test_that("Can read exclusions on happy path", {
   expected <- data.frame(
     reference_date = as.Date("2023-01-01"),
     report_date = as.Date("2023-01-02"),
-    state_abb = "test",
+    geo_value = "test",
     disease = "test"
   )
 
@@ -48,7 +48,15 @@ test_that("Can read exclusions on happy path", {
   duckdb::duckdb_register(con, "exclusions", expected)
 
   withr::with_tempdir({
-    DBI::dbExecute(con, "COPY (FROM exclusions) TO 'test.csv'")
+    DBI::dbExecute(con, "
+    COPY (
+      SELECT
+        reference_date,
+        report_date,
+        geo_value AS state_abb,
+        disease
+       FROM exclusions
+     ) TO 'test.csv'")
 
     actual <- read_exclusions("test.csv")
   })

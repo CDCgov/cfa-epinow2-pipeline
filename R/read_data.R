@@ -17,19 +17,15 @@
 #'
 #' @param data_path The path to the local file. This could contain a glob and
 #'   must be in parquet format.
-#' @param disease One of "COVID-19" or "Influenza"
-#' @param state_abb A two-letter uppercase abbreviation. "US" is also an option
-#' @param report_date The desired single report date
-#' @param max_reference_date,min_reference_date The first and last reference
-#'   dates, inclusive, of the timeseries
+#' @inheritParams Config
 #'
 #' @return A dataframe with one or more rows and columns `report_date`,
-#'   `reference_date`, `state_abb`, `confirm`
+#'   `reference_date`, `geo_value`, `confirm`
 #' @family read_data
 #' @export
 read_data <- function(data_path,
                       disease = c("COVID-19", "Influenza", "test"),
-                      state_abb,
+                      geo_value,
                       report_date,
                       max_reference_date,
                       min_reference_date) {
@@ -59,14 +55,14 @@ read_data <- function(data_path,
   # We need different queries for the states and the US overall. For US overall
   # we need to aggregate over all the facilities in all the states. For the
   # states, we need to aggregate over all the facilities in that one state
-  if (state_abb == "US") {
+  if (geo_value == "US") {
     query <- "
    SELECT
      report_date,
      reference_date,
      disease,
      -- We want to inject the 'US' as our abbrevation here bc data is not agg'd
-     'US' AS state_abb,
+     'US' AS geo_value,
       sum(value) AS confirm
     FROM read_parquet(?)
     WHERE 1=1
@@ -85,7 +81,7 @@ read_data <- function(data_path,
     report_date,
     reference_date,
     disease,
-    geo_value AS state_abb,
+    geo_value AS geo_value,
     sum(value) AS confirm,
   FROM read_parquet(?)
   WHERE 1=1
@@ -99,7 +95,7 @@ read_data <- function(data_path,
   ORDER BY reference_date
   "
     # Append `geo_value` to the query
-    parameters <- c(parameters, list(geo_value = state_abb))
+    parameters <- c(parameters, list(geo_value = geo_value))
   }
 
   con <- DBI::dbConnect(duckdb::duckdb())
