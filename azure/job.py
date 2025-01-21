@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import datetime
 import sys
 import os
@@ -63,10 +65,10 @@ if __name__ == "__main__":
         print(f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}")
 
     ###########
-    # Set up task on job
+    # Set up tasks on job
     registry = os.environ["AZURE_CONTAINER_REGISTRY"]
     task_container_settings = batchmodels.TaskContainerSettings(
-        image_name=registry + '/cfa-epinow2-pipeline:test-' + image_name,
+        image_name=image_name,
         container_run_options='--rm --workdir /'
     )
     task_env_settings = [
