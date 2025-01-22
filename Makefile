@@ -10,7 +10,8 @@ endif
 
 CONFIG=test.json
 POOL="cfa-epinow2-$(TAG)"
-JOB=$(POOL)
+TIMESTAMP=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+JOB=Rt-estimation-$(TIMESTAMP)
 
 deps:
 	docker build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
