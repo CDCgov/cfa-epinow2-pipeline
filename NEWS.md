@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Added workflow to automatically delete container tags after PRs are closed.
 * Fix Batch run trigger from Makefile and drop `test-` prefix
 * Add fit observation data to summaries
 * Use a consistent name scheme for geographies: `geo_value`
