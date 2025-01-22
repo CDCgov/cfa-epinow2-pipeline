@@ -1,16 +1,14 @@
 name: Delete tag from container registry
 
 on:
-  delete:
+  pull_request:
+    types: [closed]
 
 env:
-  REGISTRY: cfaprdbatchcr.azurecr.io
-  USERNAME: cfaprdbatchcr
   IMAGE_NAME: cfa-epinow2-pipeline
 
 jobs:
   delete-container:
-    if: github.event.ref_type == 'branch'
     runs-on: cfa-cdcgov
     name: Deleting the container
 
@@ -20,19 +18,14 @@ jobs:
 
       - name: Figure out tag (either latest if it is main or the branch name)
         id: image-tag
-        run: |
-          if [ "${{ github.event.ref }}" = "main" ]; then
-            echo "The image associated with the main branch cannot be deleted."
-            exit 1
-          else
-            echo "tag=${{ github.event.ref }}" >> $GITHUB_OUTPUT
-          fi
+        run: echo "tag=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
 
       - name: Login to the Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ env.USERNAME }}
+          registry: ${{ secrets.CONTAINER_REGISTRY_URL }}
+          username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
           password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
 
       - name: Login to Azure with NNH Service Principal
@@ -42,18 +35,12 @@ jobs:
           # managed by EDAV. Contact Amit Mantri or Jon Kislin if you
           # have issues. Also, this is documented in the Predict
           # handbook.
-          creds: ${{ secrets.EDAV_STF_SERVICE_PRINCIPAL }}
+          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
-      - name: Deleting the image
-        run: |
-          # Remove the image from the registry
-          az acr repository delete \
-            --yes \
-            --name ${{ env.REGISTRY }} \
-            --image ${{ env.IMAGE_NAME }}:${{ steps.image-tag.outputs.tag }}
-
-          # Remove the dependencies image from the registry
-          az acr repository delete \
-            --yes \
-            --name ${{ env.REGISTRY }} \
-            --image ${{ env.IMAGE_NAME }}:dependencies-${{ steps.image-tag.outputs.tag }}
+      - name: Azure CLI script
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            chmod +x $GITHUB_WORKSPACE/.github/scripts/cleanup-tags-on-pr-close.sh
+            $GITHUB_WORKSPACE/.github/scripts/cleanup-tags-on-pr-close.sh ${{ secrets.CONTAINER_REGISTRY_URL }} ${{ env.IMAGE_NAME }} ${{ steps.image-tag.outputs.tag }}
