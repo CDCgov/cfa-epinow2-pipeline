@@ -1,5 +1,6 @@
 # CFAEpiNow2Pipeline (development version)
 
+* Refactored container build workflow to use CDCgov/cfa-actions/twostep-container-build.
 * Fix Batch run trigger from Makefile and drop `test-` prefix
 * Add fit observation data to summaries
 * Use a consistent name scheme for geographies: `geo_value`
