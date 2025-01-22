@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Delete Batch Pools and associated jobs
+# Delete container tags from Azure CR
 
 if [ "${#}" -ne 3 ]; then
   echo "Usage: $0 <registry> <image> <tag>"
