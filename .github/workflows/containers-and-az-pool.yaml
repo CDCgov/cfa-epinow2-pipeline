@@ -32,7 +32,7 @@ on:
 
 env:
   # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
-  REGISTRY: cfaprdbatchcr.azurecr.io
+  REGISTRY: cfaprdbatchcr.azurecr.io/
   IMAGE_NAME: cfa-epinow2-pipeline
 
 jobs:
