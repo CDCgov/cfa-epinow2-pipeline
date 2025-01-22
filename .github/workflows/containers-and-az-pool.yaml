@@ -39,7 +39,7 @@ jobs:
 
   build-pipeline-image:
     runs-on: cfa-cdcgov # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
-    name: Build simage
+    name: Build image
 
     outputs:
       tag: ${{ steps.image-tag.outputs.tag }}
