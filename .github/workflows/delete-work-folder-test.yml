@@ -9,13 +9,20 @@ jobs:
   delete-work-and-checkout:
     runs-on: cfa-cdcgov
     steps:
-      - name: 'Cleanup build folder'
+
+      - name: 'Cleanup runtime workspace folder'
         run: |
           ls -la ./
           pwd
-          sudo rm -rf ./* || true
-          sudo rm -rf ./.??* || true
+          echo ${{ secrets.CFA_AUTOMATED_JOBS }} | sudo -S rm -rf ./* || true
+          echo ${{ secrets.CFA_AUTOMATED_JOBS }} | sudo -S rm -rf ./.??* || true
           ls -la ./
 
       - name: Checkout
         uses: actions/checkout@v4
+
+
+      - name: 'Post checkout inspection'
+        run: |
+          ls -la ./
+          pwd
