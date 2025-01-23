@@ -13,9 +13,9 @@ jobs:
         run: |
           ls -la ./
           pwd
-          # rm -rf ./* || true
-          # rm -rf ./.??* || true
-          # ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
 
       - name: Checkout
         uses: actions/checkout@v4
