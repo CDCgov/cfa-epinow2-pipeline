@@ -15,7 +15,7 @@ jobs:
           ls -la ./
           pwd
           echo ${{ secrets.CFA_AUTOMATED_JOBS }} | sudo -S rm -rf ./*
-          echo ${{ secrets.CFA_AUTOMATED_JOBS }} | sudo -S rm -rf ./.??*
+          # echo ${{ secrets.CFA_AUTOMATED_JOBS }} | sudo -S rm -rf ./.??*
           ls -la ./
 
       - name: Checkout
