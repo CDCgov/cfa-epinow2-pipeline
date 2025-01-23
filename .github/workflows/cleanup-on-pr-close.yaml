@@ -1,6 +1,7 @@
 name: Tear down Batch pool
 
 on:
+  workflow_dispatch:
   pull_request:
     types:
       - closed
@@ -18,19 +19,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
         # From: https://stackoverflow.com/a/58035262/2097171
-      - name: Extract branch name
+      - name: Extract tag
         shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        run: echo "tag=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: branch-name
-
-      - name: Figure out tag (either latest if it is main or the branch name)
-        id: image-tag
-        run: |
-          if [ "${{ steps.branch-name.outputs.branch }}" = "main" ]; then
-            echo "tag=latest" >> $GITHUB_OUTPUT
-          else
-            echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
-          fi
 
       - name: Azure login
         id: azure_login_2
@@ -44,10 +36,8 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az batch account login \
-              --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-              --name "${{ secrets.BATCH_ACCOUNT }}"
-
-            az batch pool delete \
-              --pool-id "cfa-epinow2-${{ steps.image-tag.outputs.tag }}" \
-              --yes
+            chmod +x $GITHUB_WORKSPACE/.github/scripts/cleanup-on-pr-close.sh
+            $GITHUB_WORKSPACE/.github/scripts/cleanup-on-pr-close.sh \
+              "${{ secrets.BATCH_ACCOUNT }}" \
+              "${{ secrets.PRD_RESOURCE_GROUP }}" \
+              "cfa-epinow2-${{ steps.brach-name.outputs.tag }}"
