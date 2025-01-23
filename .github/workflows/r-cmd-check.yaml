@@ -40,7 +40,7 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-      
+
       - name: Set cmdstan path
         run: |
           Rscript -e 'cmdstanr::set_cmdstan_path()'
