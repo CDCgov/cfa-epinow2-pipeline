@@ -12,6 +12,7 @@ jobs:
       - name: 'Cleanup build folder'
         run: |
           ls -la ./
+          pwd
           # rm -rf ./* || true
           # rm -rf ./.??* || true
           # ls -la ./
