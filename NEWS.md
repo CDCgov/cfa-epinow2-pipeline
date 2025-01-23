@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline (development version)
 
 * Add functionality to pass `job_id` to config generation
+* Refactor cleanup action to also delete jobs
 * Fix Batch run trigger from Makefile and drop `test-` prefix
 * Add fit observation data to summaries
 * Use a consistent name scheme for geographies: `geo_value`
