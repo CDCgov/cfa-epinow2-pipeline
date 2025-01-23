@@ -43,4 +43,4 @@ jobs:
           azcliversion: latest
           inlineScript: |
             chmod +x $GITHUB_WORKSPACE/.github/scripts/cleanup-tags-on-pr-close.sh
-            $GITHUB_WORKSPACE/.github/scripts/cleanup-tags-on-pr-close.sh ${{ secrets.CONTAINER_REGISTRY_URL }} ${{ env.IMAGE_NAME }} ${{ steps.image-tag.outputs.tag }}
+            $GITHUB_WORKSPACE/.github/scripts/cleanup-tags-on-pr-close.sh ${{ secrets.BATCH_ACCOUNT_NAME }} ${{ secrets.RESOURCE_GROUP }} ${{ secrets.CONTAINER_REGISTRY_URL }} ${{ env.IMAGE_NAME }} ${{ steps.image-tag.outputs.tag }}

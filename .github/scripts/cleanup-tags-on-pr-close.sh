@@ -3,13 +3,15 @@
 # Delete container tags from Azure CR
 
 if [ "${#}" -ne 3 ]; then
-  echo "Usage: $0 <registry> <image> <tag>"
+  echo "Usage: $0 <account name> <resource group> <registry> <image> <tag>"
   exit 1
 fi
 
-REGISTRY="$1"
-IMAGE="$2"
-TAG="$3"
+ACCOUNT_NAME="$1"
+RESOURCE_GROUP="$2"
+REGISTRY="$3"
+IMAGE="$4"
+TAG="$5"
 
 echo "Logging into Batch account"
 az batch account login \
