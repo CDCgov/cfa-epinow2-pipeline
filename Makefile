@@ -10,7 +10,8 @@ endif
 
 CONFIG=test.json
 POOL="cfa-epinow2-$(TAG)"
-JOB=$(POOL)
+TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
+JOB:=Rt-estimation-$(TIMESTAMP)
 
 deps:
 	docker build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
@@ -31,9 +32,10 @@ config:
 	gh workflow run \
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
-	  -f state=all
+	  -f state=all \
+	  -f job_id=$(JOB)
 
-run-batch:
+run-batch: config
 	docker build -f Dockerfile-batch -t batch . --no-cache
 	docker run --rm  \
 	--env-file .env \
