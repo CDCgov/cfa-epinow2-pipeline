@@ -13,8 +13,8 @@ jobs:
         run: |
           ls -la ./
           pwd
-          rm -rf ./* || true
-          rm -rf ./.??* || true
+          sudo rm -rf ./* || true
+          sudo rm -rf ./.??* || true
           ls -la ./
 
       - name: Checkout
