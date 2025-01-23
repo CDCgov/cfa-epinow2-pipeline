@@ -39,7 +39,8 @@ test_that("Minimal model fit all params runs", {
     adapt_delta = 0.8,
     max_treedepth = 10,
     iter_warmup = 25,
-    iter_sampling = 25
+    iter_sampling = 25,
+    backend = "cmdstanr"
   )
 
   fit <- fit_model(
