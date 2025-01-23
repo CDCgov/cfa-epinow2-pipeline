@@ -5,16 +5,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  
+
   delete-work-and-checkout:
     runs-on: cfa-cdcgov
-    steps: 
+    steps:
       - name: 'Cleanup build folder'
         run: |
           ls -la ./
           # rm -rf ./* || true
           # rm -rf ./.??* || true
           # ls -la ./
-          
+
       - name: Checkout
         uses: actions/checkout@v4
