@@ -90,6 +90,7 @@ test_that("Minimal model fit with no right trunc or delay runs", {
   )
   # Sampler
   sampler_opts <- list(
+    backend = "cmdstanr",
     cores = 1,
     chains = 1,
     adapt_delta = 0.8,
