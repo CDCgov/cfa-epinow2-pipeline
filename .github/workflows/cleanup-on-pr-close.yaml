@@ -40,4 +40,4 @@ jobs:
             $GITHUB_WORKSPACE/.github/scripts/cleanup-on-pr-close.sh \
               "${{ secrets.BATCH_ACCOUNT }}" \
               "${{ secrets.PRD_RESOURCE_GROUP }}" \
-              "cfa-epinow2-${{ steps.brach-name.outputs.tag }}"
+              "cfa-epinow2-${{ steps.branch-name.outputs.tag }}"
