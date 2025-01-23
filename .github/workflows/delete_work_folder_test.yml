@@ -1,0 +1,20 @@
+name: Pre-checkout work delete test
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  
+  delete-work-and-checkout:
+    runs-on: cfa-cdcgov
+    steps: 
+      - name: 'Cleanup build folder'
+        run: |
+          ls -la ./
+          # rm -rf ./* || true
+          # rm -rf ./.??* || true
+          # ls -la ./
+          
+      - name: Checkout
+        uses: actions/checkout@v4
