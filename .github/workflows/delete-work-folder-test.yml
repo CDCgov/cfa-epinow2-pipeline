@@ -12,10 +12,27 @@ jobs:
 
       - name: 'Cleanup runtime workspace folder'
         run: |
+          echo "Current state of the runtime workspace folder:"
           ls -la ./
+          echo ""
+          echo "Our runtime workspace folder is located here:"
           pwd
-          echo ${{ secrets.CFA_AUTOMATED_JOBS }} | sudo -S rm -rf ./*
-          # echo ${{ secrets.CFA_AUTOMATED_JOBS }} | sudo -S rm -rf ./.??*
+          echo ""
+          echo "Force deleting everything in the folder..."
+          echo "First trying without sudo..."
+          echo ""
+          rm -rf ./* || true
+          echo ""
+          echo "State after running without sudo:"
+          echo ""
+          ls -la ./
+          echo ""
+          echo "Now trying with sudo..."
+          echo ""
+          echo ${{ secrets.CFA_AUTOMATED_JOBS }} | sudo -S rm -rfv ./* # recursive, forced, verbose
+          echo ${{ secrets.CFA_AUTOMATED_JOBS }} | sudo -S rm -rfv ./.??* # recursive, forced, verbose
+          echo "State after running with sudo:"
+          echo ""
           ls -la ./
 
       - name: Checkout
