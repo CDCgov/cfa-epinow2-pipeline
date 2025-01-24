@@ -32,76 +32,18 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="cfaepinow2pipeline-development-version">CFAEpiNow2Pipeline (development version)<a class="anchor" aria-label="anchor" href="#cfaepinow2pipeline-development-version"></a></h2>
-<ul><li>Add functionality to pass <code>job_id</code> to config generation</li>
-<li>Refactor cleanup action to also delete jobs</li>
-<li>Fix Batch run trigger from Makefile and drop <code>test-</code> prefix</li>
-<li>Add fit observation data to summaries</li>
-<li>Use a consistent name scheme for geographies: <code>geo_value</code>
-</li>
-<li>Created workflow_dispatch docker system prune -a -f action; made container job ignore irrelevant changes</li>
-<li>Build Batch pool on merge to main</li>
-<li>Install suggests into base first-step image</li>
-<li>Fixed issue with running <code>make pull</code> while on main.</li>
-<li>Improved documentation of <code>format_stan_opts</code>
-</li>
-<li>Drop old pre-commit action in favor of CI service</li>
-<li>Improve documentation of <code>fetch_blob_container</code>
-</li>
-<li>Add warning and autofix for improperly specified GI PMF</li>
-<li>Read parameters on the same day correctly</li>
-<li>Re-add missing dependency in python venv</li>
-<li>Don’t emit DEBUG level logs from EpiNow2</li>
-<li>Clean up Azure Batch pools on PR close</li>
-<li>Added function families to documentation</li>
-<li>Renamed file containing diagnostic functions</li>
-<li>Change formatting of metadata values to be atomic.</li>
-<li>Add <code>blob_storage_container</code> as a field to the metadata.</li>
-<li>Use empty string for paths when non-existant.</li>
-<li>Add function families</li>
-<li>Populated the default values of the metadata to be saved.</li>
-<li>Working upload/download from ABS</li>
-<li>Working Azure upload/download</li>
-<li>Creating a Config class to make syncing configuration differences easier.</li>
-<li>Add a JSON reader for the Config class.</li>
-<li>Use the Config class throughout the pipeline.</li>
-<li>Adding a script to setup the Azure Batch Pool to link the container.</li>
-<li>Adding new action to post a comment on PRs with a link to the rendered pkgdown site.</li>
-<li>Add inner pipeline responsible for running the model fitting process</li>
-<li>Re-organizing GitHub workflows.</li>
-<li>Checks if batch pool exists. Pools are named after branches. Also allows for deletion via commit message.</li>
-<li>Merges workflows 1 and 2 into a single workflow.</li>
-<li>Now uses CFA Azure ACR and images in the workflows and Dockerfiles, etc.</li>
-<li>Added Docker image with all the requirements to build the package.</li>
-<li>Bump pre-commit hooks</li>
-<li>Fix bug in warning message for incomplete data read (h/t @damonbayer)</li>
-<li>Fit EpiNow2 model using params and fixed seed</li>
-<li>Removed <code>.vscode</code> folder from repo</li>
-<li>Read and apply exclusions to case data</li>
-<li>Data reader and processor</li>
-<li>Parameters read from local parquet file or files</li>
-<li>Additional CI bugs squashed</li>
-<li>Bug fixed in the updated, faster pre-commit checks</li>
-<li>Updated, faster pre-commit checks</li>
-<li>Azure Blob file download utilities</li>
-<li>CI running on Ubuntu only &amp; working pkgdown deploy to Github Pages</li>
-<li>Initial R package with checks running in CI</li>
-<li>Updated DESCRIPTION and added guidelines for package authorship</li>
-<li>Set up README with explanation of purpose and scope</li>
-<li>Removed <code>add.R</code> placeholder</li>
-<li>Fix bugs in date casting caused by DuckDB v1.1.1 release</li>
-<li>Drop unused pre-commit hooks</li>
-<li>Write outputs to file</li>
-<li>Specify number of samples draws with <code>iter_sampling</code>
-</li>
-<li>Fix NOTE from missing variable name used with NSE</li>
-<li>Read from new parameters schema</li>
-<li>Fix bugs in parameter reading from local test run</li>
-<li>Fix bugs in parameter reading from local test run</li>
-<li>Add “US” as an option in <code>state_abb</code>
-</li>
+<h2 class="pkg-version" data-toc-text="0.1.0" id="cfaepinow2pipeline-v010">CFAEpiNow2Pipeline v0.1.0<a class="anchor" aria-label="anchor" href="#cfaepinow2pipeline-v010"></a></h2>
+<p>This initial release establishes minimal feature parity with the internal EpiNow2 Rt modeling pipeline. It adds wrappers to integrate with internal data schemas and ingest pre-estimated model parameters (i.e., generation intervals, right-truncation). It defines an output schema and adds comprehensive logging. The repository also has functionality to set up and deploy to Azure Batch.</p>
+<div class="section level3">
+<h3 id="features-0-1-0">Features<a class="anchor" aria-label="anchor" href="#features-0-1-0"></a></h3>
+<ul><li>GitHub Actions to build Docker images on PR and merge to main, deploy Azure Batch environments off the built images, and tear down the environment on PR close.</li>
+<li>Comprehensive documentation of pipeline code and validation of input data, parameters, and model run configs</li>
+<li>Set up comprehensive logging of model runs and handle pipeline failures to preserve logs where possible</li>
+<li>Automatically download and upload inputs and outputs from Azure Blob Storage</li>
 </ul></div>
-  </main></div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
