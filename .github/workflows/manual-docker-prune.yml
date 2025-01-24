@@ -1,8 +1,13 @@
-name: Manual Docker System Prune (CDCgov)
+name: Docker System Prune (CDCgov)
+# Works either by manual Workflow Dispatch, or daily on a schedule
+
 on:
-  workflow_dispatch:
+  workflow_dispatch: 
+  schedule:
+    - cron: "0 0 * * *"   # daily at midnight UTC 
 
 jobs:
+  
   docker-system-prune:
     runs-on: cfa-cdcgov
 

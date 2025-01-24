@@ -1,7 +1,9 @@
 name: Pre-checkout work delete test
 
+# This is a temporary template workflow that is used as a proof of concept 
+# to clear the workspace to prevent checkout action errors.
+
 on:
-  push:
   workflow_dispatch:
 
 jobs:
@@ -37,7 +39,6 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
-
 
       - name: 'Post checkout inspection'
         run: |
