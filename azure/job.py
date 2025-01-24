@@ -95,4 +95,4 @@ if __name__ == "__main__":
             user_identity=user_identity
         )
 
-        batch_client.task.add(job_id, task)
+        batch_client.task.add(batch_job_id, task)
