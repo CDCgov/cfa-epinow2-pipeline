@@ -11,7 +11,7 @@ endif
 CONFIG=test.json
 POOL="cfa-epinow2-$(TAG)"
 TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
-JOB:=Rt-estimation-$(TIMESTAMP)
+JOB:=$(POOL)
 
 deps:
 	docker build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
@@ -36,6 +36,8 @@ config:
 	  -f job_id=$(JOB)
 
 run-batch: config
+	@echo "Hanging for 15 seconds to wait for configs to generate"
+	sleep 15
 	docker build -f Dockerfile-batch -t batch . --no-cache
 	docker run --rm  \
 	--env-file .env \
