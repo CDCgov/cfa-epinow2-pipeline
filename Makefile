@@ -36,6 +36,8 @@ config:
 	  -f job_id=$(JOB)
 
 run-batch: config
+	@echo "Hanging for 15 seconds to wait for configs to generate"
+	sleep 15
 	docker build -f Dockerfile-batch -t batch . --no-cache
 	docker run --rm  \
 	--env-file .env \
