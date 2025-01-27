@@ -2,7 +2,7 @@
 #
 # Delete container tags from Azure CR
 
-if [ "${#}" -ne 3 ]; then
+if [ "${#}" -ne 5 ]; then
   echo "Usage: $0 <account name> <resource group> <registry> <image> <tag>"
   exit 1
 fi
