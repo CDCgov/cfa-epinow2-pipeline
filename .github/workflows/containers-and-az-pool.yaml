@@ -91,7 +91,7 @@ jobs:
 
       - name: Build and push
         if: steps.cache.outputs.cache-hit != 'true'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v3
         with:
           push: false
           no-cache: true
