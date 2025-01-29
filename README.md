@@ -162,13 +162,11 @@ The project includes container images for running the pipelines. Particularly, t
 - `make build` will build the image containing the R package.
 - `make interactive` will lunch the image in interactive mode.
 
-All three targets depend on the environment variables `CNTR` (defults to `docker`) and `TAG` (defaults to `local`). For instance, if you wanted to build the dependency image using `podman` and the `latest` tag, you can do the following:
+All three targets depend on the environment variables `CNTR_MGR` (defults to `docker`) and `TAG` (defaults to `local`). For instance, if you wanted to build the dependency image using `podman` and the `latest` tag, you can do the following:
 
 ```bash
-REGISTRY=cfaprdbatchcr.azurecr.io/ TAG=zs-pipeline make build
+make build CNTR_MGR=podman TAG=zs-pipeline
 ```
-
-**NOTICE THE TRAILING SLASH!** Which is equivalent to run:
 
 ```bash
 podman build -t cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline \
@@ -178,13 +176,15 @@ podman build -t cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline \
 To run interactively, you can use the following target:
 
 ```bash
-REGISTRY=cfaprdbatchcr.azurecr.io/ TAG=zs-pipeline make interactive
+make interactive TAG=zs-pipeline
 ```
 
 which is equivalent to run:
 
+**NOTICE docker IS THE DEFAULT CNTR_MGR**
+
 ```bash
-podman run \
+docker run \
     -v/wherever/your/pwd/is:/cfa-epinow2-pipeline -it --rm \
     cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline
 ```
