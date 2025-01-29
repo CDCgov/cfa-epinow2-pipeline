@@ -9,5 +9,7 @@ This initial release establishes minimal feature parity with the internal EpiNow
 * Set up comprehensive logging of model runs and handle pipeline failures to preserve logs where possible
 * Automatically download and upload inputs and outputs from Azure Blob Storage
 
-## Updates
+# CFAEpiNow2Pipeline v0.2.0
+
+## Features
 * Makefile supports either docker or podman as arguments to setup & manage containers
