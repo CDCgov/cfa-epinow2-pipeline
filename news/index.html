@@ -32,11 +32,18 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="cfaepinow2pipeline-v020">CFAEpiNow2Pipeline v0.2.0<a class="anchor" aria-label="anchor" href="#cfaepinow2pipeline-v020"></a></h2>
+<div class="section level3">
+<h3 id="features-0-2-0">Features<a class="anchor" aria-label="anchor" href="#features-0-2-0"></a></h3>
+<ul><li>Makefile supports either docker or podman as arguments to setup &amp; manage containers</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="cfaepinow2pipeline-v010">CFAEpiNow2Pipeline v0.1.0<a class="anchor" aria-label="anchor" href="#cfaepinow2pipeline-v010"></a></h2>
 <p>This initial release establishes minimal feature parity with the internal EpiNow2 Rt modeling pipeline. It adds wrappers to integrate with internal data schemas and ingest pre-estimated model parameters (i.e., generation intervals, right-truncation). It defines an output schema and adds comprehensive logging. The repository also has functionality to set up and deploy to Azure Batch.</p>
 <div class="section level3">
 <h3 id="features-0-1-0">Features<a class="anchor" aria-label="anchor" href="#features-0-1-0"></a></h3>
-<ul><li>GitHub Actions to build Docker images on PR and merge to main, deploy Azure Batch environments off the built images, and tear down the environment on PR close.</li>
+<ul><li>GitHub Actions to build Docker images on PR and merge to main, deploy Azure Batch environments off the built images, and tear down the environment (including images) on PR close.</li>
 <li>Comprehensive documentation of pipeline code and validation of input data, parameters, and model run configs</li>
 <li>Set up comprehensive logging of model runs and handle pipeline failures to preserve logs where possible</li>
 <li>Automatically download and upload inputs and outputs from Azure Blob Storage</li>

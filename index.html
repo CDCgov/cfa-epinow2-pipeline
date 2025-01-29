@@ -249,15 +249,15 @@ flowchart LR
 <li>
 <code>make interactive</code> will lunch the image in interactive mode.</li>
 </ul>
-<p>All three targets depend on the environment variables <code>CNTR</code> (defults to <code>docker</code>) and <code>TAG</code> (defaults to <code>local</code>). For instance, if you wanted to build the dependency image using <code>podman</code> and the <code>latest</code> tag, you can do the following:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="va">REGISTRY</span><span class="op">=</span>cfaprdbatchcr.azurecr.io/ <span class="va">TAG</span><span class="op">=</span>zs-pipeline <span class="fu">make</span> build</span></code></pre></div>
-<p><strong>NOTICE THE TRAILING SLASH!</strong> Which is equivalent to run:</p>
+<p>All three targets depend on the environment variables <code>CNTR_MGR</code> (defults to <code>docker</code>) and <code>TAG</code> (defaults to <code>local</code>). The default repository is cfaprdbatchcr.azurecr.io. For instance, if you wanted to build the dependency image using <code>podman</code> and the <code>latest</code> tag, you can do the following:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">make</span> build CNTR_MGR=podman TAG=zs-pipeline</span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">podman</span> build <span class="at">-t</span> cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline <span class="dt">\</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>    <span class="at">--build-arg</span> TAG=zs-pipeline <span class="at">-f</span> Dockerfile</span></code></pre></div>
 <p>To run interactively, you can use the following target:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="va">REGISTRY</span><span class="op">=</span>cfaprdbatchcr.azurecr.io/ <span class="va">TAG</span><span class="op">=</span>zs-pipeline <span class="fu">make</span> interactive</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">make</span> interactive TAG=zs-pipeline</span></code></pre></div>
 <p>which is equivalent to run:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">podman</span> run <span class="dt">\</span></span>
+<p><strong>NOTICE docker IS THE DEFAULT CNTR_MGR</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="dt">\</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>    <span class="at">-v</span>/wherever/your/pwd/is:/cfa-epinow2-pipeline <span class="at">-it</span> <span class="at">--rm</span> <span class="dt">\</span></span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline</span></code></pre></div>
 </div>
