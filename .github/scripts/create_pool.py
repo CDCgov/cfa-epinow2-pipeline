@@ -20,6 +20,7 @@ CONTAINER_REGISTRY_SERVER="<container registry server>"
 CONTAINER_REGISTRY_USERNAME="<container registry username>"
 CONTAINER_REGISTRY_PASSWORD="<container registry password>"
 CONTAINER_IMAGE_NAME="<container image name>"
+POOL_ID="<pool id>"
 
 If running in CI, all of the above environment variables should be set in the repo
 secrets.
