@@ -162,7 +162,7 @@ The project includes container images for running the pipelines. Particularly, t
 - `make build` will build the image containing the R package.
 - `make interactive` will lunch the image in interactive mode.
 
-All three targets depend on the environment variables `CNTR_MGR` (defults to `docker`) and `TAG` (defaults to `local`). For instance, if you wanted to build the dependency image using `podman` and the `latest` tag, you can do the following:
+All three targets depend on the environment variables `CNTR_MGR` (defults to `docker`) and `TAG` (defaults to `local`). The default repository is cfaprdbatchcr.azurecr.io. For instance, if you wanted to build the dependency image using `podman` and the `latest` tag, you can do the following:
 
 ```bash
 make build CNTR_MGR=podman TAG=zs-pipeline
