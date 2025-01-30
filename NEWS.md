@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Allows unique job_ids for runs.
 * Makefile supports either docker or podman as arguments to setup & manage containers
 
 # CFAEpiNow2Pipeline v0.1.0
