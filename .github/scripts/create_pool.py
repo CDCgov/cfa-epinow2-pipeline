@@ -99,9 +99,9 @@ def main() -> None:
             ),
             network_configuration=NetworkConfiguration(
                 subnet_id=os.environ["SUBNET_ID"],
-                public_ip_address_configuration=PublicIPAddressConfiguration(
-                    provision="NoPublicIPAddresses"
-                ),
+                # public_ip_address_configuration=PublicIPAddressConfiguration(
+                #     provision="NoPublicIPAddresses"
+                # ),
             ),
         )
     )
