@@ -21,6 +21,7 @@ CONTAINER_REGISTRY_USERNAME="<container registry username>"
 CONTAINER_REGISTRY_PASSWORD="<container registry password>"
 CONTAINER_IMAGE_NAME="<container image name>"
 POOL_ID="<pool id>"
+SUBNET_ID="<subnet id>"
 
 If running in CI, all of the above environment variables should be set in the repo
 secrets.
@@ -36,6 +37,8 @@ from azure.batch.models import (
     ImageReference,
     ContainerConfiguration,
     ContainerRegistry,
+    NetworkConfiguration,
+    PublicIPAddressConfiguration,
 )
 from azuretools.autoscale import remaining_task_autoscale_formula
 
@@ -93,6 +96,12 @@ def main() -> None:
                 evaluation_interval="PT5M",
                 task_sample_interval_minutes=5,
                 max_number_vms=100,
+            ),
+            network_configuration=NetworkConfiguration(
+                subnet_id=os.environ["SUBNET_ID"],
+                public_ip_address_configuration=PublicIPAddressConfiguration(
+                    provision="NoPublicIPAddresses"
+                ),
             ),
         )
     )
