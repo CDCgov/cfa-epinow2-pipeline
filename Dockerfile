@@ -2,7 +2,7 @@
 ARG TAG=local
 
 # This requires access to the Azure Container Registry
-FROM cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:${TAG}
+FROM cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:${TAG}
 
 # Will copy the package to the container preserving the directory structure
 COPY . pkg/
