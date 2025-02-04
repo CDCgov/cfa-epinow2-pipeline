@@ -80,6 +80,7 @@ jobs:
         run: |
           executor \
             --context $(pwd) \
+            --build-arg "TAG=latest" \
             --no-push
 
   # build-pipeline-image:
