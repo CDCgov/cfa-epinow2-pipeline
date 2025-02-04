@@ -20,13 +20,14 @@ To authenticate to the requisite Azure resources to source a .env file containin
 ### Test Pre-requisites are Setup
 #### Test Configuration Generation
 1. `make config`
+Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a configuration file and saves it into the appropriate azure blob storage account. 
 If you receive an error that you do not have the necessary permissions to run this command please reach out Agastya Mondal (ab59@cdc.gov) for assistance
 
 #### Test make run command
 1. The following command will test your setup for using the `CFAEpiNow2Pipeline` package as well as your connection to the azure resources
- `make run CONFIG=test.json`
+ `make run CONFIG=test/test.json`
 
-If you are able to run all of the following commands then you can move on to running the weekly Rt pipeline.
+This command will run the pipeline for a single state and disease locally (using the computing power of your VAP account). This will take approximately 2 minutes.
 
 ### Rt Estimation Pipeline (Production)
-If you have succesfully setup the pre-requisites and are able to run `make config` and `make run CONGIF=test.json` you are ready to run the entire pipeline in production `make run-batch`
+If you have succesfully setup the pre-requisites and are able to run `make config` and `make run CONGIF=test/test.json` you are ready to run the entire pipeline in production `make run-batch`. This command will connect to Azure Batch and setup approximately 100 unique tasks that Azure Batch will run. This command is intended to close after initializing the jobs in Azure Batch. Please open Azure Batch Explorer to view the progress of these tasks.
