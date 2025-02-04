@@ -69,15 +69,15 @@ jobs:
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
 
-      # - name: Login to the Container Registry
-      #   uses: docker/login-action@v3
-      #   with:
-      #     registry: "cfaprdbatchcr.azurecr.io"
-      #     username: "cfaprdbatchcr"
-      #     password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+      - name: Login to the Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: "cfaprdbatchcr.azurecr.io"
+          username: "cfaprdbatchcr"
+          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
 
       - name: Build and push
-        shell: bash -ieo pipefail {0}
+        shell: bash -ie pipefail {0}
         run: |
           executor \
             --context $(pwd) \
