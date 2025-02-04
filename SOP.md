@@ -20,7 +20,7 @@ To authenticate to the requisite Azure resources to source a .env file containin
 ### Test Pre-requisites are Setup
 #### Test Configuration Generation
 1. `make config`
-Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a configuration file and saves it into the appropriate azure blob storage account. 
+Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a configuration file and saves it into the appropriate azure blob storage account.
 If you receive an error that you do not have the necessary permissions to run this command please reach out Agastya Mondal (ab59@cdc.gov) for assistance
 
 #### Test make run command
