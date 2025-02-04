@@ -77,6 +77,7 @@ jobs:
       #     password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
 
       - name: Build and push
+        shell: bash -ieo pipefail {0}
         run: |
           executor \
             --context $(pwd) \
