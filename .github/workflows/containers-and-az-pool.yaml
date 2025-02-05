@@ -43,7 +43,7 @@ jobs:
 
     outputs:
       tag: ${{ steps.image-tag.outputs.tag }}
-      did-dependencies-change: ${{ steps.filter.outputs.description }}
+      did-dependencies-change: ${{ steps.filter.outputs.dependencies }}
 
     steps:
 
@@ -70,13 +70,15 @@ jobs:
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
 
+      # this filter is checking if the DESCRIPTION or Dockerfile-dependencies changed
       - name: Filter modified files
         id: filter
         uses: dorny/paths-filter@v3
         with:
           filters: |
-            description:
+            dependencies:
               - 'DESCRIPTION'
+              - 'Dockerfile-dependencies'
 
       - name: Login to the Container Registry
         uses: docker/login-action@v3
@@ -89,7 +91,7 @@ jobs:
         # need bash -i to use aliases on runner
         shell: bash -ie {0}
         run: |
-          if [ "${{ steps.filter.outputs.description }}" = "true" ]; then
+          if [ "${{ steps.filter.outputs.dependencies }}" = "true" ]; then
             kaniko \
               --context $(pwd) \
               --dockerfile "Dockerfile-dependencies" \
@@ -100,6 +102,7 @@ jobs:
 
   build-pipeline-image:
 
+    if: false == true
     name: Build pipeline image
     needs: build-dependencies-image
     runs-on: cfa-cdcgov-aca
