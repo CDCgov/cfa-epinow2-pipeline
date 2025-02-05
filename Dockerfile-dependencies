@@ -6,7 +6,6 @@ COPY . pkg/
 # Installing missing dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
 RUN install2.r pak
-RUN echo 'changing file'
 # dependencies = TRUE means we install `suggests` too
 RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
 
