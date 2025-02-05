@@ -37,7 +37,23 @@ env:
 
 jobs:
 
+  check-dependencies-changed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Filter modified files
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            description:
+              - 'DESCRIPTION'
+
   build-dependencies-image:
+    needs: check-dependencies-changed
+    if: needs.check-dependencies-changed.outputs.description == 'true'
     runs-on: cfa-cdcgov-aca # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
     name: Build dependencies image
 
@@ -81,34 +97,46 @@ jobs:
         run: |
           kaniko \
             --context $(pwd) \
-            --build-arg "TAG=latest" \
+            --dockerfile "Dockerfile-dependencies" \
+            --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}" \
             --no-push
 
-  # build-pipeline-image:
-  #
-  #   name: Build pipeline image
-  #
-  #   needs: build-dependencies-image
-  #   runs-on: cfa-cdcgov-aca
-  #
-  #   outputs:
-  #     tag: ${{ needs.build-dependencies-image.outputs.tag }}
-  #
-  #   steps:
-  #
-  #     # - name: Login to the Container Registry
-  #     #   uses: docker/login-action@v3
-  #     #   with:
-  #     #     registry: "cfaprdbatchcr.azurecr.io"
-  #     #     username: "cfaprdbatchcr"
-  #     #     password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
-  #
-  #     - name: Build and push model pipeline image for Azure batch
-  #       id: build_and_push_model_image
-  #       run: |
-  #         executor \
-  #           --context $(pwd) \
-  #           --no-push
+  build-pipeline-image:
+
+    name: Build pipeline image
+
+    needs: 
+      - build-dependencies-image
+      - check-dependencies-changed
+    runs-on: cfa-cdcgov-aca
+
+    outputs:
+      tag: ${{ needs.build-dependencies-image.outputs.tag }}
+
+    steps:
+
+      - name: Login to the Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: "cfaprdbatchcr.azurecr.io"
+          username: "cfaprdbatchcr"
+          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+
+      - name: Build and push model pipeline image for Azure batch
+        id: build_and_push_model_image
+        run: |
+          if [ "${{ needs.check-dependencies-changed.outputs.description }}" == "true" ]; then
+            echo "Dependencies changed, using branch tag"
+            DEPENDENCY_TAG="${{ steps.image-tag.outputs.tag }}"
+          else
+            echo "No deependencies changed, using tag: latest"
+            TAG="latest"
+          fi
+          kaniko \
+            --context $(pwd) \
+            --build-arg "TAG=$DEPENDENCY_TAG" \
+            --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.image-tag.outputs.tag }}" \
+            --no-push
         #
         #
         #
