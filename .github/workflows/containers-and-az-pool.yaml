@@ -36,19 +36,8 @@ env:
   IMAGE_NAME: cfa-epinow2-pipeline
 
 jobs:
-  test-python:
-    runs-on: cfa-cdcgov-aca
-    name: Test Python
-    steps:
-      # - name: Setup Python
-      #   uses: actions/setup-python@v5
-      #   with:
-      #     python-version: '3.12'
-      - name: Test Python
-        run: 'python3 --version'
 
   build-dependencies-image:
-    if: true == false
     runs-on: cfa-cdcgov-aca # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
     name: Build dependencies image
 
