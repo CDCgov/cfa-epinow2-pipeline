@@ -53,7 +53,6 @@ jobs:
 
   build-dependencies-image:
     needs: check-dependencies-changed
-    if: needs.check-dependencies-changed.outputs.description == 'true'
     runs-on: cfa-cdcgov-aca # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
     name: Build dependencies image
 
@@ -95,11 +94,15 @@ jobs:
       - name: Build and push
         shell: bash -ie {0}
         run: |
-          kaniko \
-            --context $(pwd) \
-            --dockerfile "Dockerfile-dependencies" \
-            --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}" \
-            --no-push
+          if [ "${{ needs.check-dependencies-changed.outputs.description }}" = "true" ]; then
+            kaniko \
+              --context $(pwd) \
+              --dockerfile "Dockerfile-dependencies" \
+              --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}" \
+              --no-push
+          else
+            echo "Skipping build and push since dependencies haven't changed"
+          fi
 
   build-pipeline-image:
 
@@ -125,7 +128,7 @@ jobs:
       - name: Build and push model pipeline image for Azure batch
         id: build_and_push_model_image
         run: |
-          if [ "${{ needs.check-dependencies-changed.outputs.description }}" == "true" ]; then
+          if [ "${{ needs.check-dependencies-changed.outputs.description }}" = "true" ]; then
             echo "Dependencies changed, using branch tag"
             DEPENDENCY_TAG="${{ steps.image-tag.outputs.tag }}"
           else
