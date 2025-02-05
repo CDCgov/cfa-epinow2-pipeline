@@ -94,7 +94,6 @@ jobs:
               --context $(pwd) \
               --dockerfile "Dockerfile-dependencies" \
               --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}" \
-              --no-push
           else
             echo "Skipping build and push since dependencies haven't changed"
           fi
@@ -130,7 +129,7 @@ jobs:
             echo "Dependencies changed, using branch tag"
             DEPENDENCY_TAG="$BUILD_TAG"
           else
-            echo "No deependencies changed, using tag: latest"
+            echo "No dependencies changed, using tag: latest"
             DEPENDENCY_TAG="latest"
           fi
           kaniko \
@@ -138,7 +137,6 @@ jobs:
             --dockerfile "Dockerfile" \
             --build-arg "TAG=$DEPENDENCY_TAG" \
             --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$BUILD_TAG" \
-            --no-push
         #
         #
         #
