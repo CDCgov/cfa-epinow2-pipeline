@@ -122,17 +122,18 @@ jobs:
         # need bash -i to use aliases on runner
         shell: bash -ie {0}
         run: |
+          BUILD_TAG="${{ needs.build-dependencies-image.outputs.tag }}"
           if [ "${{ needs.build-dependencies-image.outputs.did-dependencies-change }}" = "true" ]; then
             echo "Dependencies changed, using branch tag"
-            DEPENDENCY_TAG="${{ steps.image-tag.outputs.tag }}"
+            DEPENDENCY_TAG="$BUILD_TAG"
           else
             echo "No deependencies changed, using tag: latest"
-            TAG="latest"
+            DEPENDENCY_TAG="latest"
           fi
           kaniko \
             --context $(pwd) \
             --build-arg "TAG=$DEPENDENCY_TAG" \
-            --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.image-tag.outputs.tag }}" \
+            --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$BUILD_TAG" \
             --no-push
         #
         #
