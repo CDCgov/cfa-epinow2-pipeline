@@ -132,8 +132,8 @@ jobs:
           fi
           kaniko \
             --context $(pwd) \
-            --build-arg "TAG=$DEPENDENCY_TAG" \
             --dockerfile "Dockerfile" \
+            --build-arg "TAG=$DEPENDENCY_TAG" \
             --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$BUILD_TAG" \
             --no-push
         #
