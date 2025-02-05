@@ -37,27 +37,13 @@ env:
 
 jobs:
 
-  check-dependencies-changed:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Filter modified files
-        id: filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            description:
-              - 'DESCRIPTION'
-
   build-dependencies-image:
-    needs: check-dependencies-changed
     runs-on: cfa-cdcgov-aca # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
     name: Build dependencies image
 
     outputs:
       tag: ${{ steps.image-tag.outputs.tag }}
+      did-dependencies-change: ${{ steps.filter.outputs.description }}
 
     steps:
 
@@ -84,6 +70,14 @@ jobs:
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
 
+      - name: Filter modified files
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            description:
+              - 'DESCRIPTION'
+
       - name: Login to the Container Registry
         uses: docker/login-action@v3
         with:
@@ -94,7 +88,7 @@ jobs:
       - name: Build and push
         shell: bash -ie {0}
         run: |
-          if [ "${{ needs.check-dependencies-changed.outputs.description }}" = "true" ]; then
+          if [ "${{ steps.filter.outputs.description }}" = "true" ]; then
             kaniko \
               --context $(pwd) \
               --dockerfile "Dockerfile-dependencies" \
@@ -107,10 +101,7 @@ jobs:
   build-pipeline-image:
 
     name: Build pipeline image
-
-    needs: 
-      - build-dependencies-image
-      - check-dependencies-changed
+    needs: build-dependencies-image
     runs-on: cfa-cdcgov-aca
 
     outputs:
@@ -128,7 +119,7 @@ jobs:
       - name: Build and push model pipeline image for Azure batch
         id: build_and_push_model_image
         run: |
-          if [ "${{ needs.check-dependencies-changed.outputs.description }}" = "true" ]; then
+          if [ "${{ needs.build-dependencies-image.outputs.did-dependencies-change }}" = "true" ]; then
             echo "Dependencies changed, using branch tag"
             DEPENDENCY_TAG="${{ steps.image-tag.outputs.tag }}"
           else
