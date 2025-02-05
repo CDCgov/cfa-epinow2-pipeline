@@ -40,10 +40,10 @@ jobs:
     runs-on: cfa-cdcgov-aca
     name: Test Python
     steps:
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+      # - name: Setup Python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.12'
       - name: Test Python
         run: 'python3 --version'
 
