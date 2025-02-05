@@ -95,14 +95,13 @@ jobs:
             kaniko \
               --context $(pwd) \
               --dockerfile "Dockerfile-dependencies" \
-              --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}" \
+              --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}"
           else
             echo "Skipping build and push since dependencies haven't changed"
           fi
 
   build-pipeline-image:
 
-    if: false == true
     name: Build pipeline image
     needs: build-dependencies-image
     runs-on: cfa-cdcgov-aca
@@ -139,7 +138,7 @@ jobs:
             --context $(pwd) \
             --dockerfile "Dockerfile" \
             --build-arg "TAG=$DEPENDENCY_TAG" \
-            --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$BUILD_TAG" \
+            --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$BUILD_TAG" 
   batch-pool:
 
     name: Create Batch Pool and Submit Jobs
