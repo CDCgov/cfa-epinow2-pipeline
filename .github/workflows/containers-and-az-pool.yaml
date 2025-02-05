@@ -2,7 +2,6 @@ name: Create Docker Image and Azure Pool
 
 # This GitHub Actions workflow builds a Docker image for the
 # cfa-epinow2-pipeline-docker project. In-container tests can be added here.
-
 on:
   workflow_dispatch:
   pull_request:
@@ -30,6 +29,9 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    shell: bash -ie {0}
 env:
   # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
   REGISTRY: cfaprdbatchcr.azurecr.io
@@ -57,7 +59,6 @@ jobs:
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
-        shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: branch-name
 
@@ -89,7 +90,6 @@ jobs:
 
       - name: Build and push
         # need bash -i to use aliases on runner
-        shell: bash -ie {0}
         run: |
           if [ "${{ steps.filter.outputs.dependencies }}" = "true" ]; then
             kaniko \
@@ -124,7 +124,6 @@ jobs:
       - name: Build and push model pipeline image for Azure batch
         id: build_and_push_model_image
         # need bash -i to use aliases on runner
-        shell: bash -ie {0}
         run: |
           BUILD_TAG="${{ needs.build-dependencies-image.outputs.tag }}"
           if [ "${{ needs.build-dependencies-image.outputs.did-dependencies-change }}" = "true" ]; then
