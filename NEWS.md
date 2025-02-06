@@ -11,6 +11,7 @@ This initial release establishes minimal feature parity with the internal EpiNow
 ## Features
 
 * GitHub Actions to build Docker images on PR and merge to main, deploy Azure Batch environments off the built images, and tear down the environment (including images) on PR close.
+* Serverless GitHub Actions to build Docker images on PR and merge to main, deploy Azure Batch environments off the built images, and tear down the environment on PR close.
 * Comprehensive documentation of pipeline code and validation of input data, parameters, and model run configs
 * Set up comprehensive logging of model runs and handle pipeline failures to preserve logs where possible
 * Automatically download and upload inputs and outputs from Azure Blob Storage
