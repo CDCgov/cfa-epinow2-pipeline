@@ -9,7 +9,8 @@ This document is meant to guide someone in running the weekly Rt estimation pipe
 
 2. cfa-epinow2-pipeline repository in VAP
 	- Navigate to where you would like to clone the repository code
-	- Clone the repository (`git clone https://www.github.com/cdcgov/cfa-epinow2-pipeline`)
+	- Clone the repository (`git clone https://www.github.com/cdcgov/cfa-epinow2-pipeline` OR `gh auth login`
+and then `gh repo clone cdcgov/cfa-epinow2-pipeline`)
 
 3. Authentication to Azure
 To authenticate to the requisite Azure resources provide a `.env` file containing the secrets necessary for authentication.
