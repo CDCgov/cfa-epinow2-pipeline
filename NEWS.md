@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Creating SOP.md to document weekly run procedures
 * Allows unique job_ids for runs.
 * Makefile supports either docker or podman as arguments to setup & manage containers
 
