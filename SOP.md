@@ -15,7 +15,7 @@ This document is meant to guide someone in running the weekly Rt estimation pipe
 To authenticate to the requisite Azure resources provide a `.env` file containing the secrets necessary for authentication.
 	- Request access to necessary Azure credential file (.env) from any of the admins listed in the README.md
 	- decrypt the file (`gpg --decrypt .env`)
-	- source it into your environemnt (`source .env`)
+	- Place the decrypted file in your `cfa-epinow2-pipeline` directory
 
 ### Test Pre-requisites are Setup
 #### Test Configuration Generation
