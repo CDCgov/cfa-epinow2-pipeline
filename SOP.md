@@ -32,6 +32,6 @@ This command will run the pipeline for a single state and disease locally (using
 ### Rt Estimation Pipeline (Production)
 If you have succesfully setup the pre-requisites and are able to run `make config` and `make run CONGIF=test/test.json` you are ready to run the entire pipeline in production `make run-batch`. This command will connect to Azure Batch and setup approximately 100 unique tasks that Azure Batch will run. This command is intended to close after initializing the jobs in Azure Batch. Please open Azure Batch Explorer to view the progress of these tasks.
 
-### Appendix 
+### Appendix
 #### Podman
 The default container management software is setup to utilize docker. For users that are currently using podman, please adjust the variable `CNTR_MGR` within the makefile prior to running any commands. Further, it will be necessary to authenticate to azure resources through podman (`podman login`).
