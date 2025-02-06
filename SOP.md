@@ -12,7 +12,7 @@ This document is meant to guide someone in running the weekly Rt estimation pipe
 	- Clone the repository (`git clone https://www.github.com/cdcgov/cfa-epinow2-pipeline`)
 
 3. Authentication to Azure
-To authenticate to the requisite Azure resources to source a .env file containing a service principal or other credentials necessary for authentication.
+To authenticate to the requisite Azure resources provide a `.env` file containing the secrets necessary for authentication.
 	- Request access to necessary Azure credential file (.env) from any of the admins listed in the README.md
 	- decrypt the file (`gpg --decrypt .env`)
 	- source it into your environemnt (`source .env`)
