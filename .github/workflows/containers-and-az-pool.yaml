@@ -165,7 +165,9 @@ jobs:
 
     name: Create Batch Pool and Submit Jobs
     runs-on: cfa-cdcgov-aca
-    needs: build-pipeline-image
+    needs: 
+      - build-pipeline-image
+      - copy-images
 
     permissions:
       contents: read
