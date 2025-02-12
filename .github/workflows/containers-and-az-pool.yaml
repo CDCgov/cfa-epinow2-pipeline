@@ -136,20 +136,18 @@ jobs:
             TAG=${{ needs.build-dependencies-image.outputs.tag }}
 
   copy-pipeline-image:
-    runs-on: cfa-cdcgov-aca
-    name: Copy pipeline image from GHCR to ACR
+    needs: 
+      - build-pipeline-image
+      - build-dependencies-image
     permissions:
       id-token: 'write'
       packages: 'read'
       contents: 'read'
-    needs: 
-      - build-pipeline-image
-      - build-dependencies-image
     uses: ./.github/workflows/copy-ghcr-to-acr.yaml
+    secrets: inherit
     with:
       image: ${{ env.IMAGE_NAME }}:${{ needs.build-dependencies-image.outputs.tag }}
       registry: ${{ env.registry }}
-      secrets: inherit
 
   batch-pool:
 
