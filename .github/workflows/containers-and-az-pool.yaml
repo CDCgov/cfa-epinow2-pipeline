@@ -97,7 +97,7 @@ jobs:
           push: true
           no-cache: true
           tags: |
-            ghcr.io/${{ github.repository }}-dependencies:${{ steps.image-tag.outputs.tag }}
+            ghcr.io/cdcgov/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}
           file: ./Dockerfile-dependencies
 
   build-pipeline-image:
@@ -130,7 +130,7 @@ jobs:
           push: true # This can be toggled manually for tweaking.
           no-cache: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ needs.build-dependencies-image.outputs.tag }}
+            ghcr.io/cdcgov/${{ env.IMAGE_NAME }}:${{ needs.build-dependencies-image.outputs.tag }}
           file: ./Dockerfile
           build-args: |
             TAG=${{ needs.build-dependencies-image.outputs.tag }}
