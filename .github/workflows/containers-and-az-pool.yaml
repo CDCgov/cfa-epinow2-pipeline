@@ -147,7 +147,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ env.IMAGE_NAME }}:${{ needs.build-dependencies-image.outputs.tag }}
-      registry: ${{ env.registry }}
+      registry: ${{ env.REGISTRY }}
 
   batch-pool:
 
