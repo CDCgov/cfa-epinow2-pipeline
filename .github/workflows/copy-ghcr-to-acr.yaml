@@ -34,7 +34,7 @@ jobs:
       - name: Azure login with OIDC
         uses: azure/login@v2
         with:
-	  creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
       - name: Copy Image
         run: |
