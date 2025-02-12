@@ -13,9 +13,11 @@ on:
       image:
         description: 'Image name and tag e.g. cdcorg/myrepo:latest'
         required: true
+        type: string
       registry:
         description: 'Azure Container registry name'
         required: true
+        type: string
 
 defaults:
   run:
