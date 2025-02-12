@@ -108,7 +108,9 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
+      image: ${{ env.IMAGE_NAME }}
       tag: ${{ needs.build-dependencies-image.outputs.tag }}
+      registry: ${{ env.REGISTRY }}
 
     steps:
 
@@ -138,7 +140,6 @@ jobs:
   copy-pipeline-image:
     needs: 
       - build-pipeline-image
-      - build-dependencies-image
     permissions:
       id-token: 'write'
       packages: 'read'
@@ -146,8 +147,8 @@ jobs:
     uses: ./.github/workflows/copy-ghcr-to-acr.yaml
     secrets: inherit
     with:
-      image: ${{ env.IMAGE_NAME }}:${{ needs.build-dependencies-image.outputs.tag }}
-      registry: ${{ env.REGISTRY }}
+      image: ${{ needs.build-pipeline-image.outputs.image }}:${{ needs.build-pipeline-image.outputs.tag }}
+      registry: ${{ needs.build-pipeline-image.outputs.registry }}
 
   batch-pool:
 
