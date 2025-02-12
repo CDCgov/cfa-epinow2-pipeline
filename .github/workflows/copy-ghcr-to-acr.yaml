@@ -8,9 +8,6 @@ on:
       registry:
         description: 'ACR repository name'
         required: true
-      creds: 
-        description: 'Azure Service Principal Credentials'
-        required: true
   workflow_call:
     inputs:
       image:
@@ -18,9 +15,6 @@ on:
         required: true
       registry:
         description: 'Azure Container registry name'
-        required: true
-      creds: 
-        description: 'Azure Service Principal Credentials'
         required: true
 
 defaults:
@@ -40,8 +34,8 @@ jobs:
       - name: Azure login with OIDC
         uses: azure/login@v2
         with:
-          creds: ${{ inputs.azure_creds }}
-  
+	  creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+
       - name: Copy Image
         run: |
           az acr import --name ${{ inputs.registry }} \
