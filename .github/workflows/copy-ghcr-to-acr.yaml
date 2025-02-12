@@ -1,0 +1,55 @@
+name: Copy Runner image from GHCR to ACR
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: 'Image name and tag. Defaults to repo name + latest e.g. cdcorg/myrepo:latest'
+        required: false
+        default: ${{ github.repository }}:latest
+      registry:
+        description: 'ACR repository name'
+        required: true
+      creds: 
+        description: 'Azure Service Principal Credentials'
+        required: true
+  workflow_call:
+    inputs:
+      image:
+        description: 'Image name and tag. Defaults to repo name + latest e.g. cdcorg/myrepo:latest'
+        required: false
+        default: ${{ github.repository }}:latest
+      registry:
+        description: 'Azure Container registry name'
+        required: true
+      creds: 
+        description: 'Azure Service Principal Credentials'
+        required: true
+
+defaults:
+  run:
+    shell: bash -ie {0}
+
+jobs:
+  acr-import:
+    permissions:
+      id-token: 'write'
+      packages: 'read'
+      
+    runs-on: cfa-cdcent-aca
+    name: Copy image from GHCR to ACR
+    steps:
+    
+      - name: Azure login with OIDC
+        uses: azure/login@v2
+        with:
+          creds: ${{ inputs.azure_creds }}
+  
+      - name: Copy Image
+        run: |
+          az acr import --name ${{ inputs.registry }} \
+            --source ghcr.io/${{ inputs.image }} \
+            --username ${{ github.actor }} \
+            --password ${{ secrets.GITHUB_TOKEN }} \
+            --image ${{ inputs.image }} \
+            --force # allows overwrite of existing tags
+          echo "Copied image!"

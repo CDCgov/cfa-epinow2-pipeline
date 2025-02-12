@@ -38,14 +38,12 @@ env:
   IMAGE_NAME: cfa-epinow2-pipeline
 
 jobs:
-
   build-dependencies-image:
-    runs-on: cfa-cdcgov-aca # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
+    runs-on: ubuntu-latest
     name: Build dependencies image
 
     outputs:
       tag: ${{ steps.image-tag.outputs.tag }}
-      did-dependencies-change: ${{ steps.filter.outputs.dependencies }}
 
     steps:
 
@@ -59,6 +57,7 @@ jobs:
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
+        shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: branch-name
 
@@ -71,73 +70,97 @@ jobs:
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
 
-      # this filter is checking if the DESCRIPTION or Dockerfile-dependencies changed
-      - name: Filter modified files
-        id: filter
-        uses: dorny/paths-filter@v3
+      # NOTE: This lookup is only for the cache _key_. We don't need the cache _value_
+      # because we explicitly fetch image from the registry in the next step. Keeping the
+      # cached image on the runner causes the runner to quickly run out of storage.
+      - name: Check cache for base image
+        uses: actions/cache@v4
+        id: cache
         with:
-          filters: |
-            dependencies:
-              - 'DESCRIPTION'
-              - 'Dockerfile-dependencies'
+          key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}-${{ steps.image-tag.outputs.tag }}
+          lookup-only: true
+          path:
+            ./DESCRIPTION
 
       - name: Login to the Container Registry
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: docker/login-action@v3
         with:
-          registry: "cfaprdbatchcr.azurecr.io"
-          username: "cfaprdbatchcr"
-          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
-        # need bash -i to use aliases on runner
-        run: |
-          if [ "${{ steps.filter.outputs.dependencies }}" = "true" ]; then
-            kaniko \
-              --context $(pwd) \
-              --dockerfile "Dockerfile-dependencies" \
-              --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}"
-          else
-            echo "Skipping build and push since dependencies haven't changed"
-          fi
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          no-cache: true
+          tags: |
+            ghcr.io/${{ env.IMAGE_NAME }}-dependencies:${{ steps.image-tag.outputs.tag }}
+          file: ./Dockerfile-dependencies
 
   build-pipeline-image:
 
     name: Build pipeline image
+
     needs: build-dependencies-image
-    runs-on: cfa-cdcgov-aca
+    runs-on: ubuntu-latest
 
     outputs:
       tag: ${{ needs.build-dependencies-image.outputs.tag }}
 
     steps:
 
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Login to the Container Registry
         uses: docker/login-action@v3
         with:
-          registry: "cfaprdbatchcr.azurecr.io"
-          username: "cfaprdbatchcr"
-          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+          # registry: "cfaprdbatchcr.azurecr.io"
+          # username: "cfaprdbatchcr"
+          # password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
 
       - name: Build and push model pipeline image for Azure batch
         id: build_and_push_model_image
-        # need bash -i to use aliases on runner
-        run: |
-          BUILD_TAG="${{ needs.build-dependencies-image.outputs.tag }}"
-          if [ "${{ needs.build-dependencies-image.outputs.did-dependencies-change }}" = "true" ]; then
-            echo "Dependencies changed, using branch tag"
-            DEPENDENCY_TAG="$BUILD_TAG"
-          else
-            echo "No dependencies changed, using tag: latest"
-            DEPENDENCY_TAG="latest"
-          fi
-          kaniko \
-            --context $(pwd) \
-            --dockerfile "Dockerfile" \
-            --build-arg "TAG=$DEPENDENCY_TAG" \
-            --destination "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$BUILD_TAG"
+        uses: docker/build-push-action@v6
+        with:
+          push: true # This can be toggled manually for tweaking.
+          no-cache: true
+          tags: |
+            ghcr.io/${{ env.IMAGE_NAME }}:${{ needs.build-dependencies-image.outputs.tag }}
+          file: ./Dockerfile
+          build-args: |
+            TAG=${{ needs.build-dependencies-image.outputs.tag }}
+
+  copy-images:
+    runs-on: cfa-cdcgov-aca
+    name: Copy images from GHCR to ACR
+    permissions:
+      id-token: 'write'
+      packages: 'read'
+      contents: 'read'
+    needs: 
+      - build-pipeline-image
+      - build-dependencies-image
+    steps:
+      
+      - name: Copy Dependency Image
+        uses: ./.github/workflows/copy-ghcr-to-acr.yaml
+        with:
+          image: ${{ env.IMAGE_NAME }}-dependencies:${{ needs.build-dependencies-image.outputs.tag }}
+          registry: ${{ env.registry }}
+          secrets: inherit
+
+      - name: Copy Pipeline Image
+        uses: ./.github/workflows/copy-ghcr-to-acr.yaml
+        with:
+          image: ${{ env.IMAGE_NAME }}:${{ needs.build-dependencies-image.outputs.tag }}
+          registry: ${{ env.registry }}
+          secrets: inherit
+
   batch-pool:
 
     name: Create Batch Pool and Submit Jobs
