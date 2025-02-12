@@ -29,7 +29,7 @@ jobs:
       id-token: 'write'
       packages: 'read'
       
-    runs-on: cfa-cdcent-aca
+    runs-on: cfa-cdcgov-aca
     name: Copy image from GHCR to ACR
     steps:
     
