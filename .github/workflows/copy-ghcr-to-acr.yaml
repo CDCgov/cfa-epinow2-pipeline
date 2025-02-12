@@ -47,7 +47,7 @@ jobs:
       - name: Copy Image
         run: |
           az acr import --name ${{ inputs.registry }} \
-            --source ghcr.io/${{ inputs.image }} \
+            --source ghcr.io/${{ env.GITHUB_REPOSITORY_OWNER }}/${{ inputs.image }} \
             --username ${{ github.actor }} \
             --password ${{ secrets.GITHUB_TOKEN }} \
             --image ${{ inputs.image }} \
