@@ -135,9 +135,9 @@ jobs:
           build-args: |
             TAG=${{ needs.build-dependencies-image.outputs.tag }}
 
-  copy-images:
+  copy-pipeline-image:
     runs-on: cfa-cdcgov-aca
-    name: Copy images from GHCR to ACR
+    name: Copy pipeline image from GHCR to ACR
     permissions:
       id-token: 'write'
       packages: 'read'
@@ -145,21 +145,11 @@ jobs:
     needs: 
       - build-pipeline-image
       - build-dependencies-image
-    steps:
-      
-      - name: Copy Dependency Image
-        uses: ./.github/workflows/copy-ghcr-to-acr.yaml
-        with:
-          image: ${{ env.IMAGE_NAME }}-dependencies:${{ needs.build-dependencies-image.outputs.tag }}
-          registry: ${{ env.registry }}
-          secrets: inherit
-
-      - name: Copy Pipeline Image
-        uses: ./.github/workflows/copy-ghcr-to-acr.yaml
-        with:
-          image: ${{ env.IMAGE_NAME }}:${{ needs.build-dependencies-image.outputs.tag }}
-          registry: ${{ env.registry }}
-          secrets: inherit
+    uses: ./.github/workflows/copy-ghcr-to-acr.yaml
+    with:
+      image: ${{ env.IMAGE_NAME }}:${{ needs.build-dependencies-image.outputs.tag }}
+      registry: ${{ env.registry }}
+      secrets: inherit
 
   batch-pool:
 
@@ -167,7 +157,7 @@ jobs:
     runs-on: cfa-cdcgov-aca
     needs: 
       - build-pipeline-image
-      - copy-images
+      - copy-pipeline-image
 
     permissions:
       contents: read
