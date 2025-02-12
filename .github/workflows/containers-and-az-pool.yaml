@@ -149,6 +149,7 @@ jobs:
     with:
       image: ${{ needs.build-pipeline-image.outputs.image }}:${{ needs.build-pipeline-image.outputs.tag }}
       registry: ${{ needs.build-pipeline-image.outputs.registry }}
+      creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
   batch-pool:
 
