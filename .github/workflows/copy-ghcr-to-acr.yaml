@@ -3,9 +3,8 @@ on:
   workflow_dispatch:
     inputs:
       image:
-        description: 'Image name and tag. Defaults to repo name + latest e.g. cdcorg/myrepo:latest'
-        required: false
-        default: ${{ github.repository }}:latest
+        description: 'Image name and tag e.g. cdcorg/myrepo:latest'
+        required: true
       registry:
         description: 'ACR repository name'
         required: true
@@ -15,9 +14,8 @@ on:
   workflow_call:
     inputs:
       image:
-        description: 'Image name and tag. Defaults to repo name + latest e.g. cdcorg/myrepo:latest'
-        required: false
-        default: ${{ github.repository }}:latest
+        description: 'Image name and tag e.g. cdcorg/myrepo:latest'
+        required: true
       registry:
         description: 'Azure Container registry name'
         required: true
