@@ -3,7 +3,8 @@
 ## Features
 * Creating SOP.md to document weekly run procedures
 * Allows unique job_ids for runs.
-* Makefile supports either docker or podman as arguments to setup & manage containers
+* Makefile supports either docker or podman as arguments to setup & manage containers.
+* Minor changes in removing unused container tags.
 
 # CFAEpiNow2Pipeline v0.1.0
 
