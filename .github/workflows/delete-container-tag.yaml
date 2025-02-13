@@ -3,6 +3,7 @@ name: Delete tag from container registry
 on:
   pull_request:
     types: [closed]
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: cfa-epinow2-pipeline
@@ -34,5 +35,8 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            chmod +x $GITHUB_WORKSPACE/.github/scripts/cleanup-tags-on-pr-close.sh
-            $GITHUB_WORKSPACE/.github/scripts/cleanup-tags-on-pr-close.sh ${{ secrets.CONTAINER_REGISTRY_URL }} ${{ env.IMAGE_NAME }} ${{ steps.image-tag.outputs.tag }}
+            chmod +x $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh
+            $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh \
+              ${{ secrets.CONTAINER_REGISTRY_URL }} \
+              ${{ env.IMAGE_NAME }} 
+              ${{ steps.image-tag.outputs.tag }}
