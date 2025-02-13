@@ -38,5 +38,5 @@ jobs:
             chmod +x $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh
             $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh \
               ${{ secrets.CONTAINER_REGISTRY_URL }} \
-              ${{ env.IMAGE_NAME }} 
+              ${{ env.IMAGE_NAME }}
               ${{ steps.image-tag.outputs.tag }}
