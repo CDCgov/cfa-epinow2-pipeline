@@ -138,7 +138,7 @@ jobs:
             TAG=${{ needs.build-dependencies-image.outputs.tag }}
 
   copy-pipeline-image:
-    needs: 
+    needs:
       - build-pipeline-image
     permissions:
       id-token: 'write'
@@ -154,7 +154,7 @@ jobs:
 
     name: Create Batch Pool and Submit Jobs
     runs-on: cfa-cdcgov-aca
-    needs: 
+    needs:
       - build-pipeline-image
       - copy-pipeline-image
 

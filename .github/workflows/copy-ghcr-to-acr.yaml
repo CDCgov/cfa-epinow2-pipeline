@@ -28,11 +28,11 @@ jobs:
     permissions:
       id-token: 'write'
       packages: 'read'
-      
+
     runs-on: cfa-cdcgov-aca
     name: Copy image from GHCR to ACR
     steps:
-    
+
       - name: Azure login with OIDC
         uses: azure/login@v2
         with:
