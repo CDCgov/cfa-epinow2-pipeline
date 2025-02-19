@@ -7,7 +7,7 @@
 * Makefile supports either docker or podman as arguments to setup & manage containers.
 * Minor changes in removing unused container tags.
 * Changing EpiNow2 backend to use 'cmdstanr'
-* Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyvese (2.7 GB)
+* Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyverse (2.7 GB)
 
 
 # CFAEpiNow2Pipeline v0.1.0
