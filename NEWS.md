@@ -6,6 +6,7 @@
 * Allows unique job_ids for runs.
 * Makefile supports either docker or podman as arguments to setup & manage containers.
 * Minor changes in removing unused container tags.
+* Changing EpiNow2 backend to use 'cmdstanr'
 
 # CFAEpiNow2Pipeline v0.1.0
 
