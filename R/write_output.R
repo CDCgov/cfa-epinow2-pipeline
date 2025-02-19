@@ -4,14 +4,13 @@
 #' and writes them to the appropriate directories.
 #'
 #' @param fit An EpiNow2 fit object with posterior estimates.
-#' @param output_dir String. The base output directory path.
 #' @param samples A data.table as returned by [process_samples()]
 #' @param summaries A data.table as returned by [process_quantiles()]
-#' @param job_id String. The identifier for the job.
-#' @param task_id String. The identifier for the task.
 #' @param metadata List. Additional metadata to be included in the output. The
 #' paths to the samples, summaries, and model output will be added to the
 #' metadata list.
+#' @inheritParams Config
+#' @inheritParams orchestrate_pipeline
 #'
 #' @return Invisible NULL. The function is called for its side effects.
 #' @family write_output
@@ -102,9 +101,8 @@ write_model_outputs <- function(
 #' files related to a job and its tasks, including directories for raw samples
 #' and summarized quantiles.
 #'
-#' @param output_dir String. The base output directory path.
-#' @param job_id String. The identifier for the job.
-#' @param task_id String. The identifier for the task.
+#' @inheritParams Config
+#' @inheritParams orchestrate_pipeline
 #'
 #' @return The path to the base output directory (invisible).
 #' @family write_output
@@ -219,6 +217,7 @@ extract_draws_from_fit <- function(fit) {
 #' date-time-parameter combinations. It also standardizes parameter names and
 #' renames key columns.
 #'
+#' @param fit An EpiNow2 fit object with posterior estimates.
 #' @param draws A data.table of posterior draws (either raw or summarized).
 #' @param fact_table A data.table of unique date-time-parameter combinations.
 #'
@@ -227,11 +226,21 @@ extract_draws_from_fit <- function(fit) {
 #' @family write_output
 #' @noRd
 post_process_and_merge <- function(
+    fit,
     draws,
     fact_table,
     geo_value,
     model,
     disease) {
+  # Step 0: isolate "as_of" cases from fit objec. Create constants
+  processed_obs_data <- fit$estimates$observations |>
+    data.table::as.data.table()
+  names(processed_obs_data)[names(processed_obs_data) == "confirm"] <- ".value"
+  data.table::set(processed_obs_data,
+    j = ".variable",
+    value = "processed_obs_data"
+  )
+
   # Step 1: Left join the date-time-parameter map onto the Stan draws
   merged_dt <- merge(
     draws,
@@ -241,10 +250,26 @@ post_process_and_merge <- function(
     all.y = FALSE
   )
 
+  # Step 1.5 Merge as_of_cases with merged_dt to get time variable
+  processed_obs_data_time <- unique(
+    merge(
+      processed_obs_data,
+      merged_dt[, c("date", "time"), with = FALSE],
+      by = c("date"),
+      all.x = TRUE,
+      all.y = FALSE
+    )
+  )
+  # Step 1.75 rbind as_of_cases with merged_dt and sort
+  merged_dt <- rbind(merged_dt, processed_obs_data_time, fill = TRUE)
+  sort_cols <- c("time", ".variable")
+  merged_dt <- data.table::setorderv(merged_dt, sort_cols)
+
   # Step 2: Standardize parameter names
   data.table::set(merged_dt, j = ".variable", value = factor(
     merged_dt[[".variable"]],
     levels = c(
+      "processed_obs_data",
       "reports",
       "imputed_reports",
       "obs_reports",
@@ -252,6 +277,7 @@ post_process_and_merge <- function(
       "r"
     ),
     labels = c(
+      "processed_obs_data",
       "expected_nowcast_cases",
       "pp_nowcast_cases",
       "expected_obs_cases",
@@ -291,8 +317,7 @@ post_process_and_merge <- function(
 #' returned in `{tidybayes}` format.
 #'
 #' @param fit An EpiNow2 fit object with posterior estimates.
-#' @param disease,geo_value,model Metadata for downstream processing.
-#' @param quantiles A vector of quantiles to pass to [tidybayes::median_qi()]
+#' @inheritParams Config
 #'
 #' @return A data.table of posterior draws or quantiles, merged and processed.
 #'
@@ -305,6 +330,7 @@ NULL
 process_samples <- function(fit, geo_value, model, disease) {
   draws_list <- extract_draws_from_fit(fit)
   raw_processed_output <- post_process_and_merge(
+    fit,
     draws_list$stan_draws,
     draws_list$fact_table,
     geo_value,
@@ -321,7 +347,7 @@ process_quantiles <- function(
     geo_value,
     model,
     disease,
-    quantiles) {
+    quantile_width) {
   # Step 1: Extract the draws
   draws_list <- extract_draws_from_fit(fit)
 
@@ -330,12 +356,13 @@ process_quantiles <- function(
   summarized_draws <- draws_list$stan_draws |>
     dplyr::group_by(.variable, time) |>
     tidybayes::median_qi(
-      .width = quantiles,
+      .width = quantile_width,
     ) |>
     data.table::as.data.table()
 
   # Step 3: Post-process summarized draws
   post_process_and_merge(
+    fit,
     summarized_draws,
     draws_list$fact_table,
     geo_value,

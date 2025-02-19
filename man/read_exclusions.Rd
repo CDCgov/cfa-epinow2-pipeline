@@ -11,7 +11,7 @@ read_exclusions(path)
 }
 \value{
 A dataframe with columns \code{reference_date}, \code{report_date},
-\code{state_abb}, \code{disease}
+\code{geo_value}, \code{disease}
 }
 \description{
 Expects to read a CSV with required columns:

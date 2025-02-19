@@ -3,7 +3,7 @@ test_that("Can read all params on happy path", {
   start_date <- as.Date("2023-01-01")
   reference_date <- as.Date("2022-12-01")
   disease <- "COVID-19"
-  group <- "test_geo"
+  geo_value <- "test_geo"
 
   withr::with_tempdir({
     write_sample_parameters_file(
@@ -33,7 +33,7 @@ test_that("Can read all params on happy path", {
       disease = disease,
       start_date = start_date,
       end_date = NA,
-      geo_value = group,
+      geo_value = geo_value,
       reference_date = reference_date
     )
 
@@ -44,7 +44,7 @@ test_that("Can read all params on happy path", {
       right_truncation_path = "right_truncation.parquet",
       disease = "COVID-19",
       as_of_date = start_date + 1,
-      group = group,
+      geo_value = geo_value,
       report_date = reference_date
     )
   })
@@ -105,7 +105,7 @@ test_that("Can skip params on happy path", {
       right_truncation_path = NULL,
       disease = "COVID-19",
       as_of_date = start_date + 1,
-      group = "test"
+      geo_value = "test"
     )
   })
 
@@ -145,7 +145,7 @@ test_that("Can read right-truncation on happy path", {
       parameter = parameter,
       disease = disease,
       as_of_date = start_date + 1,
-      group = "test",
+      geo_value = "test",
       report_date = reference_date
     )
   })
@@ -171,7 +171,7 @@ test_that("Can read right-truncation on happy path", {
       parameter = parameter,
       disease = disease,
       as_of_date = start_date + 1,
-      group = "test",
+      geo_value = "test",
       report_date = reference_date
     )
   })
@@ -203,7 +203,7 @@ test_that("Can read right-truncation with no geo_value", {
       parameter = parameter,
       disease = disease,
       as_of_date = start_date + 1,
-      group = NA,
+      geo_value = NA,
       report_date = reference_date
     )
   })
@@ -237,7 +237,7 @@ test_that("Invalid PMF errors", {
         parameter = parameter,
         disease = disease,
         as_of_date = start_date + 1,
-        group = "test",
+        geo_value = "test",
         report_date = reference_date
       ),
       class = "invalid_pmf"
@@ -329,7 +329,7 @@ test_that("Not a PMF errors", {
         disease = disease,
         as_of_date = start_date + 1,
         parameter = parameter,
-        group = NA
+        geo_value = NA
       ),
       class = "not_a_pmf"
     )
@@ -495,7 +495,7 @@ test_that("NULL `reference_date` prints in output", {
   parameter <- "right_truncation"
   disease <- "test_disease"
   as_of_date <- as.Date("2023-01-01")
-  group <- "test_group"
+  geo_value <- "test_geo_value"
   report_date <- as.Date("2023-01-15")
   path <- "test/path/to/file.ext"
 
@@ -505,7 +505,7 @@ test_that("NULL `reference_date` prints in output", {
       parameter = parameter,
       disease = disease,
       as_of_date = as_of_date,
-      group = group,
+      geo_value = geo_value,
       report_date = report_date,
       path = path
     )
