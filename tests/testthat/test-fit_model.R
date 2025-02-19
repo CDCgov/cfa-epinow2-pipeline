@@ -34,6 +34,7 @@ test_that("Minimal model fit all params runs", {
   )
   # Sampler
   sampler_opts <- list(
+    backend = "cmdstanr",
     cores = 1,
     chains = 1,
     adapt_delta = 0.8,
@@ -152,6 +153,7 @@ test_that("Bad params w/ failing fit issues warning and returns NA", {
   )
   # Sampler
   sampler_opts <- list(
+    backend = "cmdstanr",
     cores = 1,
     chains = 1,
     adapt_delta = 0.8,
