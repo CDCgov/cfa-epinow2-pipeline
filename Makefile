@@ -65,6 +65,12 @@ run-function:
 push:
 	$(CNTR_MGR) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
+interactive: 
+	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--env-file .env \
+	--workdir /cfa-epinow2-pipeline \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG)
+
 test:
 	Rscript -e "testthat::test_local()"
 
