@@ -29,7 +29,7 @@ apply_exclusions <- function(cases, exclusions) {
       cases.report_date,
       cases.reference_date,
       cases.disease,
-      cases.state_abb,
+      cases.geo_value,
       CASE
         WHEN exclusions.reference_date IS NOT NULL THEN NULL
         ELSE cases.confirm
@@ -38,7 +38,7 @@ apply_exclusions <- function(cases, exclusions) {
       LEFT JOIN exclusions
         ON cases.reference_date = exclusions.reference_date
         AND cases.report_date = exclusions.report_date
-        AND cases.state_abb = exclusions.state_abb
+        AND cases.geo_value = exclusions.geo_value
         AND cases.disease = exclusions.disease
       ORDER BY cases.reference_date
     ")
@@ -62,7 +62,7 @@ apply_exclusions <- function(cases, exclusions) {
 #' @param path The path to the exclusions file in `.csv` format
 #'
 #' @return A dataframe with columns `reference_date`, `report_date`,
-#'   `state_abb`, `disease`
+#'   `geo_value`, `disease`
 #' @family exclusions
 #' @export
 read_exclusions <- function(path) {
@@ -75,7 +75,7 @@ read_exclusions <- function(path) {
       SELECT
         reference_date,
         report_date,
-        state_abb,
+        state_abb AS geo_value,
         disease
       FROM read_csv(?)
         ",

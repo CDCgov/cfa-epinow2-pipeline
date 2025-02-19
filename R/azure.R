@@ -2,28 +2,28 @@
 #'
 #' @param blob_path The name of the blob to download
 #' @param blob_storage_container The name of the container to donwload from
-#' @param output_dir The directory to write the downloaded file to
+#' @param dir The directory to which to write the downloaded file
 #' @return The path of the file
 #' @family azure
 #' @export
 download_if_specified <- function(
     blob_path,
     blob_storage_container,
-    output_dir) {
+    dir) {
   # Guard against null input erroring out file.exists()
   if (rlang::is_null(blob_path)) {
     local_path <- NULL
   } else {
-    file_exists <- file.exists(file.path(output_dir, blob_path))
+    file_exists <- file.exists(file.path(dir, blob_path))
     if (!rlang::is_null(blob_storage_container) && !file_exists) {
       container <- fetch_blob_container(blob_storage_container)
       local_path <- download_file_from_container(
         blob_storage_path = blob_path,
-        local_file_path = file.path(output_dir, blob_path),
+        local_file_path = file.path(dir, blob_path),
         storage_container = container
       )
     } else {
-      local_path <- file.path(output_dir, blob_path)
+      local_path <- file.path(dir, blob_path)
     }
   }
   local_path

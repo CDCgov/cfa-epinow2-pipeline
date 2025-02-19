@@ -6,7 +6,7 @@ test_that("Data read for one state works on happy path", {
                            report_date,
                            reference_date,
                            disease,
-                           geo_value AS state_abb,
+                           geo_value AS geo_value,
                            value AS confirm
                          FROM read_parquet(?)
                          WHERE reference_date <= '2023-01-22'",
@@ -16,7 +16,7 @@ test_that("Data read for one state works on happy path", {
 
   actual <- read_data(data_path,
     disease = "test",
-    state_abb = "test",
+    geo_value = "test",
     report_date = "2023-10-28",
     min_reference_date = as.Date("2023-01-02"),
     max_reference_date = "2023-01-22"
@@ -33,7 +33,7 @@ test_that("Data read for US overall works on happy path", {
                            report_date,
                            reference_date,
                            disease,
-                           geo_value AS state_abb,
+                           geo_value AS geo_value,
                            value AS confirm
                          FROM read_parquet(?)
                          WHERE reference_date <= '2023-01-22'",
@@ -43,7 +43,7 @@ test_that("Data read for US overall works on happy path", {
 
   actual <- read_data(data_path,
     disease = "test",
-    state_abb = "US",
+    geo_value = "US",
     report_date = "2023-10-28",
     min_reference_date = "2023-01-02",
     max_reference_date = "2023-01-22"
@@ -57,7 +57,7 @@ test_that("Reading a file that doesn't exist fails", {
   expect_error(
     read_data(data_path,
       disease = "test",
-      state_abb = "not_a_real_state",
+      geo_value = "not_a_real_state",
       report_date = "2023-10-28",
       min_reference_date = "2023-01-02",
       max_reference_date = "2023-01-22"
@@ -71,7 +71,7 @@ test_that("A query with no matching return fails", {
   expect_error(
     read_data(data_path,
       disease = "test",
-      state_abb = "not_a_real_state",
+      geo_value = "not_a_real_state",
       report_date = "2023-10-28",
       min_reference_date = "2023-01-02",
       max_reference_date = "2023-01-22"
@@ -86,7 +86,7 @@ test_that("An invalid query throws a wrapped error", {
   expect_error(
     read_data(data_path,
       disease = "test",
-      state_abb = "not_a_real_state",
+      geo_value = "not_a_real_state",
       report_date = "2023-10-28",
       min_reference_date = "2023-01-02",
       max_reference_date = "2023-01-22"
@@ -102,7 +102,7 @@ test_that("Incomplete return throws warning", {
   expect_snapshot_warning(
     read_data(data_path,
       disease = "test",
-      state_abb = "test",
+      geo_value = "test",
       report_date = "2023-10-28",
       min_reference_date = "2022-12-31",
       max_reference_date = "2023-01-22"

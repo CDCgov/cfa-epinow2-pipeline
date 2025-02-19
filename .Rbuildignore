@@ -3,6 +3,7 @@ $Dockerfile-batch^
 ^CONTRIBUTING.md$
 ^DISCLAIMER.md$
 ^Dockerfile$
+^Dockerfile-batch$
 ^Dockerfile-dependencies$
 ^LICENSE.md$
 ^Makefile$
