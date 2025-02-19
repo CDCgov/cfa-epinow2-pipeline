@@ -16,4 +16,4 @@ RUN R CMD build --no-build-vignettes --no-manual pkg && \
 # Commenting out to complete build (will uncomment later)
 # RUN R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
 
-CMD ["bash"]
+ENTRYPOINT ["/bin/bash"]
