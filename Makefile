@@ -15,7 +15,7 @@ TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
 JOB:=Rt-estimation-$(TIMESTAMP)
 
 deps:
-	$(CNTR_MGR) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
+	$(CNTR_MGR) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies .
 
 pull:
 	az acr login --name 'cfaprdbatchcr'
