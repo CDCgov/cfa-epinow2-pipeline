@@ -9,6 +9,7 @@
 * Changing EpiNow2 backend to use 'cmdstanr'
 * Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyvese (2.7 GB)
 
+
 # CFAEpiNow2Pipeline v0.1.0
 
 This initial release establishes minimal feature parity with the internal EpiNow2 Rt modeling pipeline. It adds wrappers to integrate with internal data schemas and ingest pre-estimated model parameters (i.e., generation intervals, right-truncation). It defines an output schema and adds comprehensive logging. The repository also has functionality to set up and deploy to Azure Batch.
