@@ -11,7 +11,8 @@ write_model_outputs(
   output_dir,
   job_id,
   task_id,
-  metadata = list()
+  metadata = list(),
+  diagnostics
 )
 }
 \arguments{
