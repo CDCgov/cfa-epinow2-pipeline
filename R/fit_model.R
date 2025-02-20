@@ -100,7 +100,6 @@ fit_model <- function(
 #' @export
 format_stan_opts <- function(sampler_opts, seed) {
   expected_stan_args <- c(
-    "backend",
     "cores",
     "chains",
     "iter_warmup",
@@ -118,7 +117,7 @@ format_stan_opts <- function(sampler_opts, seed) {
     ))
   }
   EpiNow2::stan_opts(
-    backend = sampler_opts[["backend"]],
+    backend = "cmdstanr",
     cores = sampler_opts[["cores"]],
     chains = sampler_opts[["chains"]],
     seed = seed,
