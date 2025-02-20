@@ -127,10 +127,6 @@ jobs:
           sed -i 's|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g' pool-config-${{ github.sha }}.toml
           sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
 
-      - name: Ensuring the Azure CLI is installed
-        run: |
-          apt-get update && apt-get install -y --no-install-recommends azure-cli
-
       - name: Login to Azure with NNH Service Principal
         id: azure_login_2
         uses: azure/login@v2
