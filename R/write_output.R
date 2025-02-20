@@ -9,7 +9,7 @@
 #' @param metadata List. Additional metadata to be included in the output. The
 #' paths to the samples, summaries, and model output will be added to the
 #' metadata list.
-# " @param diagnostics A data.table as returned by [extract_diagnostics()]
+#' @param diagnostics A data.table as returned by [extract_diagnostics()]
 #' @inheritParams Config
 #' @inheritParams orchestrate_pipeline
 #'
