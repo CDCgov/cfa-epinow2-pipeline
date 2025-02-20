@@ -291,7 +291,8 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     output_dir = output_dir,
     job_id = config@job_id,
     task_id = config@task_id,
-    metadata = metadata
+    metadata = metadata,
+    diagnostics = diagnostics
   )
 
   return(TRUE)
