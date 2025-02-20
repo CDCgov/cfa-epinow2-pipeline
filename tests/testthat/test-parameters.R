@@ -500,7 +500,7 @@ test_that("NULL `reference_date` prints in output", {
   path <- "test/path/to/file.ext"
 
   expect_snapshot(
-    pmf <- check_returned_pmf(
+    pmf <- CFAEpiNow2Pipeline:::check_returned_pmf(
       pmf_df = pmf_df,
       parameter = parameter,
       disease = disease,
