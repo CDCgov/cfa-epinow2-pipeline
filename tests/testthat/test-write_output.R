@@ -61,7 +61,7 @@ test_that("write_model_outputs writes files and directories correctly", {
       job_id,
       "tasks",
       task_id,
-      "diagnostics.json"
+      "diagnostics.parquet"
     )
     expect_true(file.exists(diagnostics_file))
 
