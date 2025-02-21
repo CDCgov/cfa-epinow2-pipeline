@@ -5,6 +5,8 @@ BUILDER=docker-container-driver-builder
 # create a builder. By default will use docker-container driver which allows cache export
 docker buildx create --name "$BUILDER" || true
 
+docker pull "$IMAGE:cache"
+
 # use the cache tag and the latest tag for cache sources
 # in practice, the cache tag would instead be the name of a branch when adding
 # commits to an open PR
