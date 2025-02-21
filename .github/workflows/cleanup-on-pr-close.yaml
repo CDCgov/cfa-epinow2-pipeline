@@ -9,7 +9,7 @@ on:
 jobs:
 
   delete-pool:
-    runs-on: cfa-cdcgov
+    runs-on: cfa-cdcgov-aca
     name: Delete Batch pool
 
     steps:

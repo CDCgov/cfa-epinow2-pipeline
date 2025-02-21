@@ -10,7 +10,7 @@ env:
 
 jobs:
   delete-container:
-    runs-on: cfa-cdcgov
+    runs-on: cfa-cdcgov-aca
     name: Deleting the container
 
     steps:
