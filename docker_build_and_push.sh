@@ -6,12 +6,13 @@ BUILDER=docker-container-driver-builder
 docker buildx create --name "$BUILDER" || true
 
 docker pull "$IMAGE:cache"
+echo "Pulled image - '$IMAGE:cache'"
 
 # use the cache tag and the latest tag for cache sources
 # in practice, the cache tag would instead be the name of a branch when adding
 # commits to an open PR
 time docker buildx build --push -t "$IMAGE" \
-	--builder docker-container-driver-builder \
+	--builder "$BUILDER" \
 	--cache-from "type=registry,ref=$IMAGE:$TAG" \
 	--cache-from "type=registry,ref=$IMAGE:cache" \
 	--cache-from "type=registry,ref=$IMAGE:latest" \
