@@ -69,6 +69,13 @@ jobs:
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
 
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Docker build and push
         run: ./docker_build_and_push.sh ${{ steps.image-tag.outputs.tag }}
 
