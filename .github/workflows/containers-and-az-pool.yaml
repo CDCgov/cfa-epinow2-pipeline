@@ -51,9 +51,9 @@ jobs:
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
-	shell: bash
-	run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-	id: branch-name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: branch-name
 
       #########################################################################
       # Getting the tag
@@ -61,13 +61,13 @@ jobs:
       #########################################################################
       - name: Figure out tag (either latest if it is main or the branch name)
         shell: bash
-	id: image-tag
-	run: |
-	  if [ "${{ steps.branch-name.outputs.branch }}" = "${{ inputs.main-branch-name }}" ]; then
-	    echo "tag=${{ inputs.main-branch-tag }}" >> $GITHUB_OUTPUT
-	  else
-	    echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
-	  fi
+        id: image-tag
+        run: |
+          if [ "${{ steps.branch-name.outputs.branch }}" = "${{ inputs.main-branch-name }}" ]; then
+            echo "tag=${{ inputs.main-branch-tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Docker build and push
         id: image-tag
