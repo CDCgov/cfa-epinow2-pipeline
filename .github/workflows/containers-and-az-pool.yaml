@@ -70,7 +70,6 @@ jobs:
           fi
 
       - name: Docker build and push
-        id: image-tag
         run: ./docker_build_and_push.sh ${{ steps.image-tag.outputs.tag }}
 
   acr-import:
