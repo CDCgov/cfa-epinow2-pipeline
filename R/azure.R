@@ -177,3 +177,4 @@ fetch_credential_from_env_var <- function(env_var) {
 
   return(credential)
 }
+#
