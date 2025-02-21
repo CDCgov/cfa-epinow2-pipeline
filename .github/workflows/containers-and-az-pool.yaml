@@ -77,7 +77,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Docker build and push
-        run: ./docker_build_and_push.sh ${{ steps.image-tag.outputs.tag }}
+        run: |
+          chmod +x $GITHUB_WORKSPACE/.github/scripts/docker_build_and_push.sh
+          $GITHUB_WORKSPACE/.github/scripts/docker_build_and_push.sh ${{ env.IMAGE_NAME }} ${{ steps.image-tag.outputs.tag }}
 
   acr-import:
     needs: build-pipeline-image
