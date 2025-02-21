@@ -71,7 +71,7 @@ jobs:
 
       - name: Docker build and push
         id: image-tag
-        run: ./docker_build_and_push.sh
+        run: ./docker_build_and_push.sh ${{ steps.image-tag.outputs.tag }}
 
   acr-import:
     needs: build-pipeline-image
