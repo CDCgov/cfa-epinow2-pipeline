@@ -25,10 +25,10 @@ fit_model <- function(
     sampler_opts) {
   # Priors ------------------------------------------------------------------
   rt <- EpiNow2::rt_opts(
-    prior = LogNormal(
-      mean = priors[["rt"]][["mean"]],
-      sd = priors[["rt"]][["sd"]]
-    )
+	prior = EpiNow2::LogNormal(
+		     mean = priors[["rt"]][["mean"]], 
+		     sd = priors[["rt"]][["sd"]]
+	)
   )
   gp <- EpiNow2::gp_opts(
     alpha_sd = priors[["gp"]][["alpha_sd"]]
