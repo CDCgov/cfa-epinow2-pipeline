@@ -26,7 +26,7 @@ fit_model <- function(
   # Priors ------------------------------------------------------------------
   rt <- EpiNow2::rt_opts(
 	prior = EpiNow2:::dist_spec(
-		params_mean = priors[["rt"]][["mean"]], 
+		params_mean = priors[["rt"]][["mean"]],
 		params_sd = priors[["rt"]][["sd"]])
   )
   gp <- EpiNow2::gp_opts(
