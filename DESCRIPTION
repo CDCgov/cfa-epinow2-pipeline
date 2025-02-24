@@ -40,7 +40,7 @@ Imports:
     S7,
     tidybayes
 Additional_repositories:
-    stan-dev/cmdstanr
+    https://stan-dev.r-universe.dev
 Remotes:
     github::epiforecasts/EpiNow2@82f90b994ede5b6b2ea32c4aef2de6dba5133483
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
