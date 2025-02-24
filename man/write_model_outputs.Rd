@@ -11,7 +11,8 @@ write_model_outputs(
   output_dir,
   job_id,
   task_id,
-  metadata = list()
+  metadata = list(),
+  diagnostics
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ other pipeline artifacts will be saved. Defaults to the root directory ("/").}
 \item{metadata}{List. Additional metadata to be included in the output. The
 paths to the samples, summaries, and model output will be added to the
 metadata list.}
+
+\item{diagnostics}{A data.table as returned by \code{\link[=extract_diagnostics]{extract_diagnostics()}}}
 }
 \value{
 Invisible NULL. The function is called for its side effects.
