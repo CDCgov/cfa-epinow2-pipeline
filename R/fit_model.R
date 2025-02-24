@@ -25,8 +25,8 @@ fit_model <- function(
     sampler_opts) {
   # Priors ------------------------------------------------------------------
   rt <- EpiNow2::rt_opts(
-      mean = priors[["rt"]][["mean"]],
-      sd = priors[["rt"]][["sd"]]
+    mean = priors[["rt"]][["mean"]],
+    sd = priors[["rt"]][["sd"]]
   )
   gp <- EpiNow2::gp_opts(
     alpha_sd = priors[["gp"]][["alpha_sd"]]
