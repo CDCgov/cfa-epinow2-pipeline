@@ -4,9 +4,9 @@ COPY . pkg/
 
 # Installing missing dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
-RUN install2.r pak
+RUN install2.r pak remotes
 
-RUN Rscript -e 'install.packages("EpiNow2")'
+RUN Rscript -e 'remotes::install_github("epiforecasts/EpiNow2@v1.6.0")'
 
 RUN Rscript -e 'pak::local_install_dev_deps("pkg", upgrade = FALSE, dependencies = TRUE)' &&\
     Rscript -e 'cmdstanr::install_cmdstan(version="2.36.0")' &&\
