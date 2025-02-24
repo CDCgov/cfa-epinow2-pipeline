@@ -226,7 +226,6 @@ read_interval_pmf <- function(path,
 #'
 #' @return The unpacked `value` column, which is a valid PMF
 #' @family parameters
-#' @noRd
 #' @export
 check_returned_pmf <- function(
     pmf_df,
