@@ -13,6 +13,6 @@
     Condition
       Error in `format_stan_opts()`:
       ! Missing expected keys/values in "sampler_opts"
-      Missing keys: "backend", "cores", "chains", "iter_warmup", "iter_sampling", "adapt_delta", and "max_treedepth"
+      Missing keys: "cores", "chains", "iter_warmup", "iter_sampling", "adapt_delta", and "max_treedepth"
       Missing values:
 
