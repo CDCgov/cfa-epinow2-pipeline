@@ -19,6 +19,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests:
+    EpiNow2,
     primarycensored,
     testthat (>= 3.0.0),
     usethis,
@@ -33,15 +34,15 @@ Imports:
     DBI,
     dplyr,
     duckdb,
-    EpiNow2 (>= 1.6.0),
-    EpiNow2 (< 1.7.0),
     jsonlite,
     rlang,
     rstan,
     S7,
     tidybayes
-Remotes:
+Additional_repositories:
     stan-dev/cmdstanr
+Remotes:
+    github::epiforecasts/EpiNow2@82f90b994ede5b6b2ea32c4aef2de6dba5133483
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
 Depends:
     R (>= 3.50)
