@@ -48,7 +48,8 @@ and writes them to the appropriate directories.</p>
 <span>  <span class="va">output_dir</span>,</span>
 <span>  <span class="va">job_id</span>,</span>
 <span>  <span class="va">task_id</span>,</span>
-<span>  metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">diagnostics</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -85,6 +86,10 @@ other pipeline artifacts will be saved. Defaults to the root directory ("/").</p
 <dd><p>List. Additional metadata to be included in the output. The
 paths to the samples, summaries, and model output will be added to the
 metadata list.</p></dd>
+
+
+<dt id="arg-diagnostics">diagnostics<a class="anchor" aria-label="anchor" href="#arg-diagnostics"></a></dt>
+<dd><p>A data.table as returned by <code><a href="extract_diagnostics.html">extract_diagnostics()</a></code></p></dd>
 
 </dl></div>
     <div class="section level2">
