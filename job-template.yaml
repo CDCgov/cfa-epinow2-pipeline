@@ -18,9 +18,3 @@ containers:
     secretRef: az-service-principal
   image: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:latest
   name: cfa-epinow2-test-caj
-  probes: []
-  resources:
-    cpu: 4
-    memory: 8Gi
-initContainers: null
-volumes: null
