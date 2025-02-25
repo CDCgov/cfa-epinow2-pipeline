@@ -1,14 +1,14 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Write model diagnostics to an output file, correcting an oversight
 * Refactored GH Actions container build to cfa-actions 2-step build
 * Creating SOP.md to document weekly run procedures
 * Allows unique job_ids for runs.
-* Makefile supports either docker or podman as arguments to setup & manage containers.
-* Minor changes in removing unused container tags.
+* Makefile supports either docker or podman as arguments to setup & manage containers
+* Minor changes in removing unused container tags from Azure CR.
 * Changing EpiNow2 backend to use 'cmdstanr'
 * Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyverse (2.7 GB)
-
 
 # CFAEpiNow2Pipeline v0.1.0
 
