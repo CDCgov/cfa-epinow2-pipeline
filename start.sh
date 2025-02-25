@@ -2,7 +2,7 @@
 
 # This is a wrapper script around the CFAEpiNow2Pipeline::orchestrate_pipeline command that checks
 # environment variables and executes the command. This provides a simple mechanism that can be specified
-# as a container startup command, allowing the same build to be executed with different configurations 
+# as a container startup command, allowing the same build to be executed with different configurations
 # and inputs.
 
 # Config file always differs and needs to be specified as a parameter. Azure tenant id, client id,
@@ -12,7 +12,7 @@ if [[ -z "$1" ]]; then
     echo "No config file specified - please provide as argument to this script."
 elif [[ -z "${az_tenant_id}" ]]; then
     echo "No Azure Tenant ID specified - please set az_tenant_id environment variable."
-elif [[ -z "${az_client_id}" ]]; then       
+elif [[ -z "${az_client_id}" ]]; then
     echo "No Azure Client ID specified - please set az_client_id environment variable."
 elif [[ -z "${az_service_principal}" ]]; then
     echo "No Azure Service Principal specified - please set az_service_principal environment variable."
