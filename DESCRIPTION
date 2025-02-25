@@ -41,8 +41,6 @@ Imports:
     rstan,
     S7,
     tidybayes
-Additional_repositories:
-    https://stan-dev.r-universe.dev
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
 Depends:
     R (>= 3.50)
