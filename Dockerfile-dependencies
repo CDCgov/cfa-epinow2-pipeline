@@ -1,4 +1,4 @@
-FROM docker.io/rocker/tidyverse:4.4.1
+FROM docker.io/rocker/tidyverse:4.4.0
 
 COPY . pkg/
 
@@ -6,9 +6,7 @@ COPY . pkg/
 RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
 RUN install2.r pak remotes
 
-RUN Rscript -e 'remotes::install_github("epiforecasts/EpiNow2@v1.6.0")'
-
-RUN Rscript -e 'pak::local_install_dev_deps("pkg", upgrade = FALSE, dependencies = TRUE)' &&\
+RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)' &&\
     Rscript -e 'cmdstanr::install_cmdstan(version="2.36.0")' &&\
     Rscript -e 'cmdstanr::set_cmdstan_path()'
 
