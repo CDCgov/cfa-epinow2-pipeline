@@ -3,7 +3,7 @@ FROM docker.io/rocker/tidyverse:4.4.0
 COPY . pkg/
 
 # Installing missing dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
+RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc vim
 RUN install2.r pak remotes
 
 RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)' &&\
