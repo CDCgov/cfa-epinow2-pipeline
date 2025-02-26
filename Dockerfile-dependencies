@@ -7,6 +7,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
 RUN install2.r pak remotes
 
 RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)' &&\
-    Rscript -e 'cmdstanr::install_cmdstan(version="2.36.0")' 
+    Rscript -e 'cmdstanr::install_cmdstan(version="2.36.0")'
 
 ENTRYPOINT ["/bin/bash"]
