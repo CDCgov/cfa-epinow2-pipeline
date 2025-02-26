@@ -45,6 +45,10 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+      
+      - name: Set cmdstan path
+        run: |
+          Rscript -e 'cmdstanr::set_cmdstan_path("/root/.cmdstan/cmdstan-2.36.0")'
 
       - uses: r-lib/actions/check-r-package@v2
         with:
