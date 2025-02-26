@@ -3,6 +3,7 @@ name: Delete tag from container registry
 on:
   pull_request:
     types: [closed]
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: cfa-epinow2-pipeline
@@ -20,14 +21,6 @@ jobs:
         id: image-tag
         run: echo "tag=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
-
-      - name: Login to the Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.CONTAINER_REGISTRY_URL }}
-          username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
-          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
-
       - name: Login to Azure with NNH Service Principal
         id: azure_login_2
         uses: azure/login@v2
@@ -42,5 +35,8 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            chmod +x $GITHUB_WORKSPACE/.github/scripts/cleanup-tags-on-pr-close.sh
-            $GITHUB_WORKSPACE/.github/scripts/cleanup-tags-on-pr-close.sh ${{ secrets.CONTAINER_REGISTRY_URL }} ${{ env.IMAGE_NAME }} ${{ steps.image-tag.outputs.tag }}
+            chmod +x $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh
+            $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh \
+              ${{ secrets.CONTAINER_REGISTRY_URL }} \
+              ${{ env.IMAGE_NAME }} \
+              ${{ steps.image-tag.outputs.tag }}

@@ -1,10 +1,13 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Write model diagnostics to an output file, correcting an oversight
+* Refactored GH Actions container build to cfa-actions 2-step build
 * Creating SOP.md to document weekly run procedures
 * Allows unique job_ids for runs.
 * Makefile supports either docker or podman as arguments to setup & manage containers
 * Streamlined Container App Job execution provided by included start.sh script and job-template.yaml file
+* Minor changes in removing unused container tags from Azure CR.
 
 # CFAEpiNow2Pipeline v0.1.0
 
