@@ -45,10 +45,10 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
-      
+
       - name: Inspect directory
         run: |
-          ls 
+          ls
 
       - name: Set cmdstan path
         run: |
