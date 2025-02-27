@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Inspect directory
         run: |
-          ls 
+          ls
 
       - uses: actions/checkout@v4
 
