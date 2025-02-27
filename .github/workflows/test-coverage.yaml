@@ -12,17 +12,13 @@ jobs:
   test-coverage:
     runs-on: ubuntu-latest
     container:
-      image: docker.io/rocker/tidyverse:4.4.2
+      image: docker.io/rocker/geospatial:4.4.2
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
-
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
