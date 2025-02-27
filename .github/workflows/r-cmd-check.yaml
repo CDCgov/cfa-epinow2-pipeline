@@ -14,7 +14,7 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
     container:
-      image: docker.io/rocker/tidyverse:4.4.0
+      image: docker.io/rocker/geospatial:4.4.1
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
