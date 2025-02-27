@@ -79,9 +79,10 @@ jobs:
       POOL_ID: "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
       BATCH_ACCOUNT:     "cfaprdba"
       BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
-      VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
-      NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
-      VM_SIZE:           "standard_a4m_v2"
+        # MPW: commenting out VM_IMAGE_TAG -> I don't see it being used
+        # VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
+      NODE_AGENT_SKU_ID: "batch.node.ubuntu 22.04"
+      VM_SIZE:           "standard_d4d_v5"
       RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
 
     steps:
