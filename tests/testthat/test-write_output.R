@@ -11,6 +11,7 @@ test_that("write_model_outputs writes files and directories correctly", {
   mock_samples <- data.frame(x = 1)
   mock_summaries <- data.frame(y = 2)
   mock_metadata <- list(author = "Test", date = "2023-01-01")
+  mock_diagnostics <- list(diagnostic = "Test")
 
   # Run the function
   withr::with_tempdir({
@@ -21,7 +22,8 @@ test_that("write_model_outputs writes files and directories correctly", {
       ".",
       job_id,
       task_id,
-      mock_metadata
+      mock_metadata,
+      mock_diagnostics
     )
 
     # Check if the directory structure was created
@@ -53,6 +55,15 @@ test_that("write_model_outputs writes files and directories correctly", {
       "model.rds"
     )
     expect_true(file.exists(model_file))
+
+    # Check if the diagnostics file was written
+    diagnostics_file <- file.path(
+      job_id,
+      "tasks",
+      task_id,
+      "diagnostics.parquet"
+    )
+    expect_true(file.exists(diagnostics_file))
 
     # Check if metadata JSON file was written
     metadata_file <- file.path(
@@ -96,6 +107,8 @@ test_that("write_model_outputs handles errors correctly", {
   mock_metadata <- list(author = "Test", date = Sys.Date())
   samples <- data.frame(x = 1)
   summaries <- data.frame(y = 2)
+  mock_diagnostics <- list(diagnostic = "Test")
+
 
   # Expect the function to raise a warning due to the invalid directory
   withr::with_tempdir({
@@ -107,7 +120,8 @@ test_that("write_model_outputs handles errors correctly", {
         output_dir = invalid_output_dir,
         job_id = "job_123",
         task_id = "task_456",
-        metadata = mock_metadata
+        metadata = mock_metadata,
+        diagnostics = mock_diagnostics
       ),
       class = "no_outputs"
     )
