@@ -4,6 +4,7 @@
 * Creating SOP.md to document weekly run procedures
 * Allows unique job_ids for runs.
 * Makefile supports either docker or podman as arguments to setup & manage containers
+* Streamlined Container App Job execution provided by included start.sh script and job-template.yaml file
 
 # CFAEpiNow2Pipeline v0.1.0
 

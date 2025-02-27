@@ -1,0 +1,20 @@
+# Template file for starting an Azure Container App job running this workflow.
+# A Container App Job must be created and defined in Azure, and its name and
+# resource group passed to the command with this template to start the job execution.
+# Config file, tenant id, and client id need to be set before running.
+# Usage:
+#   az containerapp job start --name <<_job_name_>> --resource-group <<_rg_>> --yaml job-template.yaml
+
+containers:
+- args: ["<<_config_file_>>"]
+  command:
+  - /pkg/start.sh
+  env:
+  - name: az_tenant_id
+    value: <<_tenant_id_>>
+  - name: az_client_id
+    value: <<_client_id_>>
+  - name: az_service_principal
+    secretRef: az-service-principal   # pragma: allowlist secret
+  image: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:latest
+  name: cfa-epinow2-test-caj
