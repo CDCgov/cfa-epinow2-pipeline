@@ -13,7 +13,7 @@ on:
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
-    container: 
+    container:
       image: docker.io/rocker/tidyverse:4.4.0
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
