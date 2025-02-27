@@ -14,11 +14,22 @@ POOL="cfa-epinow2-$(TAG)"
 TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
 JOB:=Rt-estimation-$(TIMESTAMP)
 
+login:
+	@if  [ $(CNTR_MGR) = "podman" ]; then \
+		echo "Using podman login"; \
+		podman login -u 00000000-0000-0000-0000-000000000000 \
+			-p `az acr login --name 'cfaprdbatchcr' --expose-token \
+			| grep accessToken | sed 's/[:",]//g' | sed 's/accessToken//g'` \
+			cfaprdbatchcr.azurecr.io; \
+	else \
+		echo "Using standard non-podman login"; \
+		az acr login --name 'cfaprdbatchcr'; \
+	fi
+
 deps:
 	$(CNTR_MGR) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
 
-pull:
-	az acr login --name 'cfaprdbatchcr'
+pull: login
 	$(CNTR_MGR) pull $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG)
 	$(CNTR_MGR) pull $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
@@ -50,7 +61,6 @@ run:
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt', output_container = 'zs-test-pipeline-update')"
-
 
 up:
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
