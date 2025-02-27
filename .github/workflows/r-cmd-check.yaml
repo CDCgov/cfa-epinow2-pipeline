@@ -31,10 +31,6 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - name: Inspect directory
-        run: |
-          ls
-
       - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-pandoc@v2
@@ -49,6 +45,10 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+      
+      - name: Inspect directory
+        run: |
+          ls 
 
       - name: Set cmdstan path
         run: |
