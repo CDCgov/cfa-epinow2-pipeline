@@ -33,7 +33,7 @@ config:
 	gh workflow run \
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
-	  -f state=all \
+	  -f state=NY \
 	  -f job_id=$(JOB)
 
 run-batch: config
