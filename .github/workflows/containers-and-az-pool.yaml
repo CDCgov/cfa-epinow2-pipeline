@@ -32,7 +32,7 @@ on:
 
 env:
   # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
-  REGISTRY: cfaprdbatchcr.azurecr.io
+  REGISTRY: cfaprdbatchcr.azurecr.io/
   IMAGE_NAME: cfa-epinow2-pipeline
 
 jobs:
@@ -55,7 +55,7 @@ jobs:
         with:
           container-file-1: ./Dockerfile-dependencies
           container-file-2: ./Dockerfile
-          registry: ${{ env.REGISTRY }}/
+          registry: ${{ env.REGISTRY }}
           password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
           username: cfaprdbatchcr
           image: ${{ env.IMAGE_NAME }}
