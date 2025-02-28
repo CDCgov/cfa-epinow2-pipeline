@@ -100,7 +100,7 @@ jobs:
           EOF
 
           # Replacing placeholders in the config file
-          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
+          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}${{ env.IMAGE_NAME }}:${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
           sed -i 's|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g' pool-config-${{ github.sha }}.toml
           sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
 
