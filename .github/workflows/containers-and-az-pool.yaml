@@ -2,6 +2,7 @@ name: Create Docker Image and Azure Pool
 
 # This GitHub Actions workflow builds a Docker image for the
 # cfa-epinow2-pipeline-docker project. In-container tests can be added here.
+# Comment for test
 
 on:
   workflow_dispatch:
