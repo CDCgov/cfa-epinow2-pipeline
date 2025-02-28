@@ -79,9 +79,8 @@ jobs:
       POOL_ID: "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
       BATCH_ACCOUNT:     "cfaprdba"
       BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
-      VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
-      NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
-      VM_SIZE:           "standard_a4m_v2"
+      NODE_AGENT_SKU_ID: "batch.node.ubuntu 22.04"
+      VM_SIZE:           "standard_d4d_v5"
       RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
 
     steps:
@@ -100,7 +99,7 @@ jobs:
           EOF
 
           # Replacing placeholders in the config file
-          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
+          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}${{ env.IMAGE_NAME }}:${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
           sed -i 's|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g' pool-config-${{ github.sha }}.toml
           sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
 
