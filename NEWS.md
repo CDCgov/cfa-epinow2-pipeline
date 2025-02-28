@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Updating to newest VM size for nodes
 * Write model diagnostics to an output file, correcting an oversight
 * Refactored GH Actions container build to cfa-actions 2-step build
 * Creating SOP.md to document weekly run procedures
