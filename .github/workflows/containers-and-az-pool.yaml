@@ -2,7 +2,11 @@ name: Create Docker Image and Azure Pool
 
 # This GitHub Actions workflow builds a Docker image for the
 # cfa-epinow2-pipeline-docker project. In-container tests can be added here.
+<<<<<<< HEAD
 # Force build
+=======
+
+>>>>>>> 990d7ea (removing unused VM_IMAGE_TAG var)
 on:
   workflow_dispatch:
   pull_request:
@@ -79,8 +83,6 @@ jobs:
       POOL_ID: "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
       BATCH_ACCOUNT:     "cfaprdba"
       BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
-        # MPW: commenting out VM_IMAGE_TAG -> I don't see it being used
-        # VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
       NODE_AGENT_SKU_ID: "batch.node.ubuntu 22.04"
       VM_SIZE:           "standard_d4d_v5"
       RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
