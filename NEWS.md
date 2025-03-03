@@ -1,13 +1,12 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
-* Updating subnet ID and simplifying pool-config.toml
-* Updating pool VM to 22.04 from 20.04
+* Updating subnet ID & pool VM to 22.04 from 20.04
 * Write model diagnostics to an output file, correcting an oversight
 * Refactored GH Actions container build to cfa-actions 2-step build
 * Creating SOP.md to document weekly run procedures
 * Allows unique job_ids for runs.
-* Makefile supports either docker or podman as arguments to setup & manage containers
+* Makefile supports either docker or podman to manage containers. Adding 'test-batch' make command to run small job (2 nodes)
 * Streamlined Container App Job execution provided by included start.sh script and job-template.yaml file
 * Minor changes in removing unused container tags from Azure CR.
 
