@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Updating subnet ID and simplifying pool-config.toml
 * Updating pool VM to 22.04 from 20.04
 * Write model diagnostics to an output file, correcting an oversight
 * Refactored GH Actions container build to cfa-actions 2-step build
