@@ -126,12 +126,6 @@ if __name__ == "__main__":
                         "registryServer": config["Container"][
                             "container_registry_server"
                         ],
-                        # "registryServer": config["Container"]["container_registry_url"],
-                        # "identityReference": {
-                        #     "resourceId": config["Authentication"][
-                        #         "user_assigned_identity"
-                        #     ]
-                        # },
                     }
                 ],
             },

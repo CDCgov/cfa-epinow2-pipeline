@@ -82,6 +82,7 @@ jobs:
       NODE_AGENT_SKU_ID: "batch.node.ubuntu 22.04"
       VM_SIZE:           "standard_d4d_v5"
       RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
+      BATCH_SUBNET_ID:   ${{ secrets.BATCH_SUBNET_ID }}
 
     steps:
       - name: Checkout Repo
@@ -101,6 +102,7 @@ jobs:
           # Replacing placeholders in the config file
           sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}${{ env.IMAGE_NAME }}:${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
           sed -i 's|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g' pool-config-${{ github.sha }}.toml
+          sed -i 's|{{ BATCH_SUBNET_ID }}|${{ env.BATCH_SUBNET_ID }}|g' pool-config-${{ github.sha }}.toml
           sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
 
       - name: Ensuring the Azure CLI is installed
