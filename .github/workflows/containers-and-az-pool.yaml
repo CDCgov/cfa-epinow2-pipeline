@@ -96,7 +96,7 @@ jobs:
       - name: Writing out config file
         run: |
           cat <<EOF > pool-config-${{ github.sha }}.toml
-          ${{ secrets.POOL_CONFIG_TOML }}
+          ${{ secrets.POOL_CONFIG_TOML_TEST }}
           EOF
 
           # Replacing placeholders in the config file
