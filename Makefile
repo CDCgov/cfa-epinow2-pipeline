@@ -78,7 +78,7 @@ test-batch:
 	--env-file .env \
 	-it \
 	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
-	   
+
 test:
 	Rscript -e "testthat::test_local()"
 
