@@ -1,12 +1,12 @@
-FROM docker.io/rocker/geospatial:4.4.1
+FROM docker.io/rocker/tidyverse:4.4.0
 
-# Will copy the package to the container preserving the directory structure
 COPY . pkg/
 
 # Installing missing dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
-RUN install2.r pak
-# dependencies = TRUE means we install `suggests` too
-RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
+RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc vim
+RUN install2.r pak remotes
 
-CMD ["bash"]
+RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)' &&\
+    Rscript -e 'cmdstanr::install_cmdstan(version="2.36.0")'
+
+ENTRYPOINT ["/bin/bash"]

@@ -10,6 +10,8 @@
 * Makefile supports either docker or podman as arguments to setup & manage containers
 * Streamlined Container App Job execution provided by included start.sh script and job-template.yaml file
 * Minor changes in removing unused container tags from Azure CR.
+* Changing EpiNow2 backend to use 'cmdstanr'
+* Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyverse (2.7 GB)
 
 # CFAEpiNow2Pipeline v0.1.0
 
