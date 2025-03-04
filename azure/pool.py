@@ -109,12 +109,12 @@ if __name__ == "__main__":
     deployment_config = {
         "virtualMachineConfiguration": {
             "imageReference": {
-                "publisher": "microsoft-azure-batch",
-                "offer": "ubuntu-server-container",
-                "sku": "20-04-lts",
+                "publisher": "microsoft-dsvm",
+                "offer": "ubuntu-hpc",
+                "sku": "2204",
                 "version": "latest",
             },
-            "nodeAgentSkuId": "batch.node.ubuntu 20.04",
+            "nodeAgentSkuId": "batch.node.ubuntu 22.04",
             "containerConfiguration": {
                 "type": "dockercompatible",
                 "containerImageNames": [config["Container"]["container_image_name"]],
@@ -126,12 +126,6 @@ if __name__ == "__main__":
                         "registryServer": config["Container"][
                             "container_registry_server"
                         ],
-                        # "registryServer": config["Container"]["container_registry_url"],
-                        # "identityReference": {
-                        #     "resourceId": config["Authentication"][
-                        #         "user_assigned_identity"
-                        #     ]
-                        # },
                     }
                 ],
             },
