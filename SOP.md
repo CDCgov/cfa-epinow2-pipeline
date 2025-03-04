@@ -25,10 +25,10 @@ Running this command runs code located in the CDCgov/cfa-config-generator reposi
 If you receive an error that you do not have the necessary permissions to run this command please reach out Agastya Mondal (ab59@cdc.gov) for assistance
 
 #### Test make run command
-1. The following command will test your setup for using the `CFAEpiNow2Pipeline` package as well as your connection to the azure resources
+1. The following command will test your setup for using the `CFAEpiNow2Pipeline` package. This command will run the pipeline for a single state and disease locally (using the computing power of your VAP account). This will take approximately 2 minutes.
  `make run CONFIG=test/test.json`
-
-This command will run the pipeline for a single state and disease locally (using the computing power of your VAP account). This will take approximately 2 minutes.
+2. The following command will test your connection to Azure Batch resources. This command will run the pipeline for a single state (NY) and run using Azure Batch resources. To track the status of the nodes and pool, open Azure Batch Explorer.
+ `make test-batch`
 
 ### Rt Estimation Pipeline (Production)
 If you have succesfully setup the pre-requisites and are able to run `make config` and `make run CONGIF=test/test.json` you are ready to run the entire pipeline in production `make run-batch`. This command will connect to Azure Batch and setup approximately 100 unique tasks that Azure Batch will run. This command is intended to close after initializing the jobs in Azure Batch. Please open Azure Batch Explorer to view the progress of these tasks.
