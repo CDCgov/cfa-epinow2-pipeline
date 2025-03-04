@@ -60,10 +60,11 @@
 </ol></div>
 <div class="section level4">
 <h4 id="test-make-run-command">Test make run command<a class="anchor" aria-label="anchor" href="#test-make-run-command"></a></h4>
-<ol style="list-style-type: decimal"><li>The following command will test your setup for using the <code>CFAEpiNow2Pipeline</code> package as well as your connection to the azure resources <code>make run CONFIG=test/test.json</code>
+<ol style="list-style-type: decimal"><li>The following command will test your setup for using the <code>CFAEpiNow2Pipeline</code> package. This command will run the pipeline for a single state and disease locally (using the computing power of your VAP account). This will take approximately 2 minutes. <code>make run CONFIG=test/test.json</code>
 </li>
-</ol><p>This command will run the pipeline for a single state and disease locally (using the computing power of your VAP account). This will take approximately 2 minutes.</p>
-</div>
+<li>The following command will test your connection to Azure Batch resources. This command will run the pipeline for a single state (NY) and run using Azure Batch resources. To track the status of the nodes and pool, open Azure Batch Explorer. <code>make test-batch</code>
+</li>
+</ol></div>
 </div>
 <div class="section level3">
 <h3 id="rt-estimation-pipeline-production">Rt Estimation Pipeline (Production)<a class="anchor" aria-label="anchor" href="#rt-estimation-pipeline-production"></a></h3>
