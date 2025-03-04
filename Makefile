@@ -65,6 +65,20 @@ run-function:
 push:
 	$(CNTR_MGR) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
+test-batch:
+	gh workflow run \
+	  -R cdcgov/cfa-config-generator run-workload.yaml  \
+	  -f disease=all \
+	  -f state=NY \
+	  -f job_id=$(JOB)
+	@echo "Hanging for 15 seconds to wait for configs to generate"
+	sleep 15
+	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
+	$(CNTR_MGR) run --rm  \
+	--env-file .env \
+	-it \
+	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	   
 test:
 	Rscript -e "testthat::test_local()"
 
