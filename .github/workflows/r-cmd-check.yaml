@@ -33,6 +33,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: test pwd
+        run: |
+          echo $GITHUB_WORKSPACE
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -41,7 +44,7 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-
+      
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
