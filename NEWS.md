@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Add the blob storage container, if provided
 * Adding make command to test Azure batch
 * Updating subnet ID and pool VM to 22.04 from 20.04
 * Write model diagnostics to an output file, correcting an oversight
