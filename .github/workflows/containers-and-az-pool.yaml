@@ -81,29 +81,28 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/.github/scripts/docker_build_and_push.sh
           $GITHUB_WORKSPACE/.github/scripts/docker_build_and_push.sh ${{ env.IMAGE_NAME }} ${{ steps.image-tag.outputs.tag }}
 
-  acr-import:
-    needs: build-pipeline-image
-    runs-on: cfa-cdcgov-aca
-    name: Copy image from GHCR to ACR
-    outputs:
-      tag: ${{ needs.build-pipeline-image.outputs.tag }}
-    steps:
-
-      - name: Azure login with OIDC
-        uses: azure/login@v2
+      - name: ACR Import
+        uses: CDCgov/cfa-actions/runner-action@runner-action
         with:
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+          github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
+          github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
+          wait_for_completion: true
+          print_logs: true
+          script: |
+            IMAGE_TAG=${{ env.IMAGE_NAME }}:${{ needs.build-pipeline-image.outputs.tag }}
 
-      - name: Copy Image
-        run: |
-          IMAGE_TAG=${{ env.IMAGE_NAME }}:${{ needs.build-pipeline-image.outputs.tag }}
-          az acr import --name ${{ env.REGISTRY }} \
-            --source "ghcr.io/cdcgov/$IMAGE_TAG" \
-            --username ${{ github.actor }} \
-            --password ${{ secrets.GITHUB_TOKEN }} \
-            --image "$IMAGE_TAG" \
-            --force # allows overwrite of existing tags
-          echo "Copied image!"
+            az login --service-principal \
+            --username ${{ fromJSON(secrets.EDAV_CFA_PREDICT_NNHT_SP).clientId }} \
+            --password ${{ fromJSON(secrets.EDAV_CFA_PREDICT_NNHT_SP).clientSecret }} \
+            --tenant ${{ fromJSON(secrets.EDAV_CFA_PREDICT_NNHT_SP).tenantId }}
+
+            az acr import --name ${{ env.REGISTRY }} \
+              --source "ghcr.io/cdcgov/$IMAGE_TAG" \
+              --username ${{ github.actor }} \
+              --password ${{ secrets.GITHUB_TOKEN }} \
+              --image "$IMAGE_TAG" \
+              --force # allows overwrite of existing tags
+            echo "Copied image!"
 
   batch-pool:
 
