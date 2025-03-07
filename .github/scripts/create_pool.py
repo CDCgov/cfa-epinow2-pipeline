@@ -16,12 +16,18 @@ If running locally, use:
 uv run --env-file .env .github/scripts/create_pool.py
 Requires a `.env` file with at least the following:
 BATCH_ACCOUNT="<batch account name>"
+AZURE_SUBSCRIPTION_ID="<azure subscription id>"
+USER_ASSIGNED_IDENTITY="<user assigned identity>"
+AZURE_CLIENT_ID="<azure client id>"
+PRINCIPAL_ID="<principal id>"
 CONTAINER_REGISTRY_SERVER="<container registry server>"
 CONTAINER_REGISTRY_USERNAME="<container registry username>"
 CONTAINER_REGISTRY_PASSWORD="<container registry password>"
-CONTAINER_IMAGE_NAME="<container image name>"
+CONTAINER_REGISTRY_URL="<container registry url>"
+CONTAINER_IMAGE_NAME="https://full-cr-server/<container image name>:tag"
 POOL_ID="<pool id>"
 SUBNET_ID="<subnet id>"
+AZURE_RESOURCE_GROUP_NAME="<resource group name>"
 
 If running in CI, all of the above environment variables should be set in the repo
 secrets.
@@ -29,81 +35,93 @@ secrets.
 
 import os
 from azure.identity import DefaultAzureCredential
-from msrest.authentication import BasicTokenAuthentication
-from azure.batch import BatchServiceClient
-from azure.batch.models import (
-    PoolAddParameter,
-    VirtualMachineConfiguration,
-    ImageReference,
-    ContainerConfiguration,
-    ContainerRegistry,
-    NetworkConfiguration,
-    PublicIPAddressConfiguration,
-)
-from azuretools.autoscale import remaining_task_autoscale_formula
+from azure.mgmt.batch import BatchManagementClient
 
-batch_account = os.environ["BATCH_ACCOUNT"]
-batch_url = f"https://{batch_account}.eastus.batch.azure.com"
+from azuretools.autoscale import remaining_task_autoscale_formula
 
 
 def main() -> None:
-    # Authenticate with workaround because Batch is the one remaining
-    # service that doesn't yet support Azure auth flow v2 :) :)
-    # https://github.com/Azure/azure-sdk-for-python/issues/30468
-    credential_v2 = DefaultAzureCredential()
-    token = {
-        "access_token": credential_v2.get_token(
-            "https://batch.core.windows.net/.default"
-        ).token
+    # Create the BatchManagementClient
+    batch_mgmt_client = BatchManagementClient(
+        credential=DefaultAzureCredential(),
+        subscription_id=os.environ["AZURE_SUBSCRIPTION_ID"],
+    )
+
+    # Assemble the pool parameters
+    pool_parameters = {
+        "identity": {
+            "type": "UserAssigned",
+            "userAssignedIdentities": {
+                os.environ["USER_ASSIGNED_IDENTITY"]: {
+                    "clientId": os.environ["AZURE_CLIENT_ID"],
+                    "principalId": os.environ["PRINCIPAL_ID"],
+                }
+            },
+        },
+        "properties": {
+            "vmSize": "STANDARD_d4d_v5",
+            "interNodeCommunication": "Disabled",
+            "taskSlotsPerNode": 1,
+            "taskSchedulingPolicy": {"nodeFillType": "Spread"},
+            "deploymentConfiguration": {
+                "virtualMachineConfiguration": {
+                    "imageReference": {
+                        "publisher": "microsoft-dsvm",
+                        "offer": "ubuntu-hpc",
+                        "sku": "2204",
+                        "version": "latest",
+                    },
+                    "nodeAgentSkuId": "batch.node.ubuntu 22.04",
+                    "containerConfiguration": {
+                        "type": "dockercompatible",
+                        "containerImageNames": [os.environ["CONTAINER_IMAGE_NAME"]],
+                        "containerRegistries": [
+                            {
+                                "registryServer": os.environ["CONTAINER_REGISTRY_URL"],
+                                "userName": os.environ["CONTAINER_REGISTRY_USERNAME"],
+                                "password": os.environ["CONTAINER_REGISTRY_PASSWORD"],
+                                "registryServer": os.environ[
+                                    "CONTAINER_REGISTRY_SERVER"
+                                ],
+                            }
+                        ],
+                    },
+                }
+            },
+            "networkConfiguration": {
+                "subnetId": os.environ["SUBNET_ID"],
+                "publicIPAddressConfiguration": {"provision": "NoPublicIPAddresses"},
+                "dynamicVnetAssignmentScope": "None",
+            },
+            "scaleSettings": {
+                "autoScale": {
+                    "evaluationInterval": "PT5M",
+                    "formula": remaining_task_autoscale_formula(
+                        # Evaluate every 5 minutes
+                        evaluation_interval="PT5M",
+                        task_sample_interval_minutes=5,
+                        max_number_vms=100,
+                    ),
+                }
+            },
+            "resizeOperationStatus": {
+                "targetDedicatedNodes": 1,
+                "nodeDeallocationOption": "Requeue",
+                "resizeTimeout": "PT15M",
+                "startTime": "2023-07-05T13:18:25.7572321Z",
+            },
+            "currentDedicatedNodes": 0,
+            "currentLowPriorityNodes": 0,
+            "targetNodeCommunicationMode": "Simplified",
+            "currentNodeCommunicationMode": "Simplified",
+        },
     }
-    credential_v1 = BasicTokenAuthentication(token)
 
-    # Create the BatchServiceClient
-    batch_client = BatchServiceClient(credentials=credential_v1, batch_url=batch_url)
-
-    # Create the pool using direct Class construction as much as possible for IDE
-    # assissitance
-    batch_client.pool.add(
-        PoolAddParameter(
-            id=os.environ["POOL_ID"],
-            display_name="Rt Epinow2 Pool",
-            # 4 cores, 16GB RAM, 150GB disk
-            vm_size="STANDARD_d4d_v5",
-            virtual_machine_configuration=VirtualMachineConfiguration(
-                image_reference=ImageReference(
-                    publisher="microsoft-dsvm",
-                    offer="ubuntu-hpc",
-                    sku="2204",
-                    version="latest",
-                ),
-                node_agent_sku_id="batch.node.ubuntu 22.04",
-                container_configuration=ContainerConfiguration(
-                    type="dockercompatible",
-                    container_registries=[
-                        ContainerRegistry(
-                            registry_server=os.environ["CONTAINER_REGISTRY_SERVER"],
-                            user_name=os.environ["CONTAINER_REGISTRY_USERNAME"],
-                            password=os.environ["CONTAINER_REGISTRY_PASSWORD"],
-                        )
-                    ],
-                    container_image_names=[os.environ["CONTAINER_IMAGE_NAME"]],
-                ),
-            ),
-            enable_auto_scale=True,
-            # Use STF's autoscale formula function
-            auto_scale_formula=remaining_task_autoscale_formula(
-                # Evaluate every 5 minutes
-                evaluation_interval="PT5M",
-                task_sample_interval_minutes=5,
-                max_number_vms=100,
-            ),
-            network_configuration=NetworkConfiguration(
-                subnet_id=os.environ["SUBNET_ID"],
-                # public_ip_address_configuration=PublicIPAddressConfiguration(
-                #     provision="NoPublicIPAddresses"
-                # ),
-            ),
-        )
+    batch_mgmt_client.pool.create(
+        resource_group_name=os.environ["AZURE_RESOURCE_GROUP_NAME"],
+        account_name=os.environ["BATCH_ACCOUNT"],
+        pool_name=os.environ["POOL_ID"],
+        parameters=pool_parameters,
     )
 
 
