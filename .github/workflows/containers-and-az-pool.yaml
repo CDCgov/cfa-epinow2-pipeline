@@ -98,8 +98,8 @@ jobs:
 
             az acr import --name ${{ env.REGISTRY }} \
               --source "ghcr.io/cdcgov/$IMAGE_TAG" \
-              --username 'zsusswein' \
-              --password ${{ secrets.ZS_PAT }} \
+              --username '${{ github.repository_owner }}'\
+              --password ${{ secrets.GITHUB_TOKEN }} \
               --image "$IMAGE_TAG" \
               --force && echo 'Copied image!'
 
