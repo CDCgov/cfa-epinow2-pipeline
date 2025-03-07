@@ -98,11 +98,14 @@ jobs:
 
             az acr import --name ${{ env.REGISTRY }} \
               --source "ghcr.io/cdcgov/$IMAGE_TAG" \
-              --username ${{ github.actor }} \
-              --password ${{ secrets.GITHUB_TOKEN }} \
+              --username 'zsusswein' \
+              --password ${{ secrets.ZS_PAT }} \
               --image "$IMAGE_TAG" \
-              --force # allows overwrite of existing tags
-            echo "Copied image!"
+              --force && echo 'Copied image!'
+
+            if [ $? -ne 0 ]; then
+              echo "Failed to copy image"
+            fi
 
   batch-pool:
 
