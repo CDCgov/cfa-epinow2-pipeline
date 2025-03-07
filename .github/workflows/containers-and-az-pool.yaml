@@ -38,7 +38,7 @@ env:
 jobs:
 
   build-pipeline-image:
-    runs-on: cfa-cdcgov # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
+    runs-on: ubuntu-latest
     name: Build image
 
     outputs:
@@ -55,12 +55,36 @@ jobs:
         with:
           container-file-1: ./Dockerfile-dependencies
           container-file-2: ./Dockerfile
-          registry: ${{ env.REGISTRY }}
-          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
-          username: cfaprdbatchcr
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           image: ${{ env.IMAGE_NAME }}
           first-step-cache-key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}
+  
+  acr-import:
+    needs: build-pipeline-image
+    runs-on: cfa-cdcgov
+    name: Copy image from GHCR to ACR
+    outputs:
+      tag: ${{ needs.build-pipeline-image.outputs.tag }}
+    steps:
 
+      - name: Azure login with OIDC
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+
+      - name: Copy Image
+        run: |
+          IMAGE_TAG=${{ env.IMAGE_NAME }}:${{ needs.build-pipeline-image.outputs.tag }}
+          az acr import --name ${{ env.REGISTRY }} \
+            --source "ghcr.io/cdcgov/$IMAGE_TAG" \
+            --username ${{ github.actor }} \
+            --password ${{ secrets.GITHUB_TOKEN }} \
+            --image "$IMAGE_TAG" \
+            --force # allows overwrite of existing tags
+          echo "Copied image!"
+          
   batch-pool:
 
     name: Create Batch Pool and Submit Jobs
