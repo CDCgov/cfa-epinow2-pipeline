@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     #############
     # Set up job
-    batch_job_id = f"batch-{job_id}"
+    batch_job_id = pool_id
     job = batchmodels.JobAddParameter(
         id=batch_job_id,
         pool_info=batchmodels.PoolInformation(pool_id=pool_id)

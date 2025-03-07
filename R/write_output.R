@@ -9,6 +9,7 @@
 #' @param metadata List. Additional metadata to be included in the output. The
 #' paths to the samples, summaries, and model output will be added to the
 #' metadata list.
+#' @param diagnostics A data.table as returned by [extract_diagnostics()]
 #' @inheritParams Config
 #' @inheritParams orchestrate_pipeline
 #'
@@ -22,7 +23,8 @@ write_model_outputs <- function(
     output_dir,
     job_id,
     task_id,
-    metadata = list()) {
+    metadata = list(),
+    diagnostics) {
   rlang::try_fetch(
     {
       # Create directory structure
@@ -59,6 +61,17 @@ write_model_outputs <- function(
       saveRDS(fit, model_path)
       cli::cli_alert_success("Wrote model to {.path {model_path}}")
 
+      # Write diagnostics
+      diagnostics_path <- file.path(
+        output_dir,
+        job_id,
+        "tasks",
+        task_id,
+        "diagnostics.parquet"
+      )
+      write_parquet(diagnostics, diagnostics_path)
+      cli::cli_alert_success("Wrote diagnostics to {.path {diagnostics_path}}")
+
       # Write model run metadata
       metadata_path <- file.path(
         output_dir,
@@ -73,7 +86,8 @@ write_model_outputs <- function(
         list(
           samples_path = samples_path,
           summaries_path = summaries_path,
-          model_path = model_path
+          model_path = model_path,
+          diagnostics_path = diagnostics_path
         )
       )
       jsonlite::write_json(
