@@ -38,7 +38,7 @@ env:
 jobs:
 
   build-pipeline-image:
-    runs-on: cfa-cdcgov # VM based runner serving CFA's cdcgov repos (as opposed to cdcent)
+    runs-on: ubuntu-latest
     name: Build image
 
     outputs:
@@ -55,28 +55,51 @@ jobs:
         with:
           container-file-1: ./Dockerfile-dependencies
           container-file-2: ./Dockerfile
-          registry: ${{ env.REGISTRY }}
-          password: ${{ secrets.CFAPRDBATCHCR_REGISTRY_PASSWORD }}
-          username: cfaprdbatchcr
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
           image: ${{ env.IMAGE_NAME }}
           first-step-cache-key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}
+  
+  acr-import:
+    needs: build-pipeline-image
+    runs-on: cfa-cdcgov-aca
+    name: Copy image from GHCR to ACR
+    outputs:
+      tag: ${{ needs.build-pipeline-image.outputs.tag }}
+    steps:
 
+      - name: Azure login with OIDC
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+
+      - name: Copy Image
+        run: |
+          IMAGE_TAG=${{ env.IMAGE_NAME }}:${{ needs.build-pipeline-image.outputs.tag }}
+          az acr import --name ${{ env.REGISTRY }} \
+            --source "ghcr.io/cdcgov/$IMAGE_TAG" \
+            --username ${{ github.actor }} \
+            --password ${{ secrets.GITHUB_TOKEN }} \
+            --image "$IMAGE_TAG" \
+            --force # allows overwrite of existing tags
+          echo "Copied image!"
+          
   batch-pool:
 
     name: Create Batch Pool and Submit Jobs
-    runs-on: cfa-cdcgov
+    runs-on: cfa-cdcgov-aca
     needs: build-pipeline-image
-    container: python:3.12
 
     permissions:
       contents: read
       packages: write
 
     env:
-      TAG: ${{ needs.build-pipeline-image.outputs.tag }}
+      TAG: ${{ needs.acr-import.outputs.tag }}
       # Every Azure Batch Pool parameter can simply go here,
       # no python module or config toml necessary
-      POOL_ID: "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
+      POOL_ID: "cfa-epinow2-${{ needs.acr-import.outputs.tag }}"
       BATCH_ACCOUNT:     "cfaprdba"
       BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
       NODE_AGENT_SKU_ID: "batch.node.ubuntu 22.04"
@@ -105,9 +128,6 @@ jobs:
           sed -i 's|{{ BATCH_SUBNET_ID }}|${{ env.BATCH_SUBNET_ID }}|g' pool-config-${{ github.sha }}.toml
           sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
 
-      - name: Ensuring the Azure CLI is installed
-        run: |
-          apt-get update && apt-get install -y --no-install-recommends azure-cli
 
       - name: Login to Azure with NNH Service Principal
         id: azure_login_2
