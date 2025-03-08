@@ -110,7 +110,7 @@ jobs:
 
     name: Create Batch Pool and Submit Jobs
     runs-on: cfa-cdcgov-aca
-    needs: build-pipeline-image
+    needs: acr-import
 
     permissions:
       contents: read
