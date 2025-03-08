@@ -1,6 +1,10 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Building with ubuntu-latest
+* Adding make command to test Azure batch
+* Updating subnet ID and pool VM to 22.04 from 20.04
+* Write model diagnostics to an output file, correcting an oversight
 * Refactored GH Actions container build to cfa-actions 2-step build
 * Creating SOP.md to document weekly run procedures
 * Allows unique job_ids for runs.
