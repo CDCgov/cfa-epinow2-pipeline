@@ -185,7 +185,8 @@ jobs:
               --query "[].[id, allocationState, creationTime]" > \
               pool-list-${{ github.sha }}
 
-            if [ -s "pool-list-${{ github.sha }}" ]; then
+            # if file is empty, create batch pool
+            if [ ! -s "pool-list-${{ github.sha }}" ]; then
               echo "Create cfa-epinow2-pipeline Pool"
               pip install -r azure/requirements.txt
               python3 azure/pool.py \
