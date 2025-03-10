@@ -191,4 +191,6 @@ jobs:
               python3 azure/pool.py \
                 pool-config-${{ github.sha }}.toml \
                 batch-autoscale-formula.txt
+            else
+              echo "Batch pool exists for pool id '$POOL_ID'"
             fi
