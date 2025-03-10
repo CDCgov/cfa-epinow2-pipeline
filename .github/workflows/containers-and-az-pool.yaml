@@ -135,7 +135,7 @@ jobs:
             TAG=${{ needs.build-pipeline-image.outputs.tag }}
             # Every Azure Batch Pool parameter can simply go here,
             # no python module or config toml necessary
-            POOL_ID= "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
+            POOL_ID="cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
             BATCH_ACCOUNT="cfaprdba"
             BATCH_ENDPOINT="https://cfaprdba.eastus.batch.azure.com/"
             VM_IMAGE_TAG="canonical:0001-com-ubuntu-server-focal:20_04-lts"
