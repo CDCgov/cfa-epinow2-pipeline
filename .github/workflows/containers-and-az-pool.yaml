@@ -82,8 +82,10 @@ jobs:
             --username ${{ github.actor }} \
             --password ${{ secrets.GITHUB_TOKEN }} \
             --image "$IMAGE_TAG" \
-            --force # allows overwrite of existing tags
-          echo "Copied image!"
+            --force && echo 'Copied image!'
+            if [ $? -ne 0 ]; then
+              echo "Failed to copy image"
+            fi
 
   batch-pool:
 
