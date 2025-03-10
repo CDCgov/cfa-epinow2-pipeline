@@ -55,7 +55,7 @@ jobs:
         with:
           container-file-1: ./Dockerfile-dependencies
           container-file-2: ./Dockerfile
-          registry: ghcr.io
+          registry: ghcr.io/cdcgov/
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           image: ${{ env.IMAGE_NAME }}
@@ -82,9 +82,11 @@ jobs:
             --username ${{ github.actor }} \
             --password ${{ secrets.GITHUB_TOKEN }} \
             --image "$IMAGE_TAG" \
-            --force # allows overwrite of existing tags
-          echo "Copied image!"
-          
+            --force && echo 'Copied image!'
+            if [ $? -ne 0 ]; then
+              echo "Failed to copy image"
+            fi
+
   batch-pool:
 
     name: Create Batch Pool and Submit Jobs
