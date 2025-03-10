@@ -110,87 +110,74 @@ jobs:
   batch-pool:
 
     name: Create Batch Pool and Submit Jobs
-    runs-on: cfa-cdcgov-aca
+    runs-on: ubuntu-latest
     needs: build-pipeline-image
-
-    permissions:
-      contents: read
-      packages: write
-
-    env:
-      TAG: ${{ needs.build-pipeline-image.outputs.tag }}
-      # Every Azure Batch Pool parameter can simply go here,
-      # no python module or config toml necessary
-      POOL_ID: "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
-      BATCH_ACCOUNT:     "cfaprdba"
-      BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
-      VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
-      NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
-      VM_SIZE:           "standard_a4m_v2"
-      RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
 
     steps:
       - name: Checkout Repo
         id: checkout_repo
         uses: actions/checkout@v4
 
-      # This step is only needed during the action to write the
-      # config file. Users can have a config file stored in their VAP
-      # sessions. In the future, we will have the config.toml file
-      # distributed with the repo (encrypted).
-      - name: Writing out config file
+      - name: Get current branch
         run: |
-          cat <<EOF > pool-config-${{ github.sha }}.toml
-          ${{ secrets.POOL_CONFIG_TOML }}
-          EOF
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          echo "CURRENT_BRANCH=$CURRENT_BRANCH" >> "$GITHUB_OUTPUT"
 
-          # Replacing placeholders in the config file
-          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
-          sed -i 's|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g' pool-config-${{ github.sha }}.toml
-          sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
-
-      - name: Login to Azure with NNH Service Principal
-        id: azure_login_2
-        uses: azure/login@v2
+      - name: Config & Batch Pool
+        uses: CDCgov/cfa-actions/runner-action@runner-action
         with:
-        # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+          github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
+          github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
+          wait_for_completion: true
+          print_logs: true
+          script: |
+            TAG=${{ needs.build-pipeline-image.outputs.tag }}
+            # Every Azure Batch Pool parameter can simply go here,
+            # no python module or config toml necessary
+            POOL_ID= "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
+            BATCH_ACCOUNT="cfaprdba"
+            BATCH_ENDPOINT="https://cfaprdba.eastus.batch.azure.com/"
+            VM_IMAGE_TAG="canonical:0001-com-ubuntu-server-focal:20_04-lts"
+            NODE_AGENT_SKU_ID="batch.node.ubuntu 20.04"
+            VM_SIZE="standard_a4m_v2"
+            RESOURCE_GROUP="${{ secrets.PRD_RESOURCE_GROUP }}"
 
-      #########################################################################
-      # Checking if the pool exists
-      # This is done via az batch pool list. If there is no pool matching the
-      # pool id (which is a function of the tag, i.e., branch name), then we
-      # pool-exists will be ''.
-      #########################################################################
-      - name: Check if pool exists
-        id: check_pool_id
-        run: |
+            echo "Cloning repo at branch '${{ steps.outputs.CURRENT_BRANCH }}'"
+            git clone -b ${{ steps.outputs.CURRENT_BRANCH }} https://github.com/${{ github.repository }}.git
+            cd cfa-epinow2-pipeline
 
-          az batch account login \
-            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-            --name "${{ env.BATCH_ACCOUNT }}"
+            echo "Writing out config file"
+            cat <<EOF > pool-config-${{ github.sha }}.toml
+            ${{ secrets.POOL_CONFIG_TOML }}
+            EOF
 
-          az batch pool list \
-            --output tsv \
-            --filter "(id eq '${{ env.POOL_ID }}')" \
-            --query "[].[id, allocationState, creationTime]" > \
-            pool-list-${{ github.sha }}
+            # Replacing placeholders in the config file
+            sed -i "s|{{ IMAGE_NAME }}|$REGISTRY/$IMAGE_NAME:$TAG|g" pool-config-${{ github.sha }}.toml
+            sed -i "s|{{ VM_SIZE }}|$VM_SIZE|g" pool-config-${{ github.sha }}.toml
+            sed -i "s|{{ POOL_ID }}|$POOL_ID|g" pool-config-${{ github.sha }}.toml
 
-          echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
-            $GITHUB_OUTPUT
 
-      - name: Create cfa-epinow2-pipeline Pool
-        id: create_batch_pool
+            echo "Login to Azure with NNH Service Principal"
+            az login --service-principal \
+            --username ${{ fromJSON(secrets.EDAV_CFA_PREDICT_NNHT_SP).clientId }} \
+            --password ${{ fromJSON(secrets.EDAV_CFA_PREDICT_NNHT_SP).clientSecret }} \
+            --tenant ${{ fromJSON(secrets.EDAV_CFA_PREDICT_NNHT_SP).tenantId }}
 
-        # This is a conditional step that will only run if the pool does not
-        # exist
-        if: ${{ steps.check_pool_id.outputs.pool-exists == '' }}
+            echo "Check if pool exists"
+            az batch account login \
+              --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
+              --name "$BATCH_ACCOUNT"
 
-        # The call to the az cli that actually generates the pool
-        run: |
-          # Running the python script azure/pool.py passing the config file
-          # as an argument
-          pip install -r azure/requirements.txt
-          python3 azure/pool.py \
-            pool-config-${{ github.sha }}.toml \
-            batch-autoscale-formula.txt
+            az batch pool list \
+              --output tsv \
+              --filter "(id eq '$POOL_ID')" \
+              --query "[].[id, allocationState, creationTime]" > \
+              pool-list-${{ github.sha }}
+
+            if [ -s "pool-list-${{ github.sha }}" ]; then
+              echo "Create cfa-epinow2-pipeline Pool"
+              pip install -r azure/requirements.txt
+              python3 azure/pool.py \
+                pool-config-${{ github.sha }}.toml \
+                batch-autoscale-formula.txt
+            fi
