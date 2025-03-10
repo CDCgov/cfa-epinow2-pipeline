@@ -133,16 +133,25 @@ jobs:
           print_logs: true
           script: |
             TAG=${{ needs.build-pipeline-image.outputs.tag }}
+            echo "TAG='$TAG'"
             # Every Azure Batch Pool parameter can simply go here,
             # no python module or config toml necessary
-            POOL_ID="cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
+            POOL_ID="cfa-epinow2-$TAG"
+            echo "POOL_ID='$POOL_ID'"
             BATCH_ACCOUNT="cfaprdba"
+            echo "BATCH_ACCOUNT='$BATCH_ACCOUNT'"
             BATCH_ENDPOINT="https://cfaprdba.eastus.batch.azure.com/"
+            echo "BATCH_ENDPOINT='$BATCH_ENDPOINT'"
             VM_IMAGE_TAG="canonical:0001-com-ubuntu-server-focal:20_04-lts"
+            echo "VM_IMAGE_TAG='$VM_IMAGE_TAG'"
             NODE_AGENT_SKU_ID="batch.node.ubuntu 20.04"
+            echo "NODE_AGENT_SKU_ID='$NODE_AGENT_SKU_ID'"
             VM_SIZE="standard_a4m_v2"
+            echo "VM_SIZE='$VM_SIZE'"
             RESOURCE_GROUP="${{ secrets.PRD_RESOURCE_GROUP }}"
+            echo "RESOURCE_GROUP='$RESOURCE_GROUP'"
             CURRENT_BRANCH="${{ steps.get-branch.outputs.CURRENT_BRANCH }}"
+            echo "CURRENT_BRANCH='$CURRENT_BRANCH'"
 
             echo "Cloning repo at branch '$CURRENT_BRANCH'"
             git clone -b "$CURRENT_BRANCH" https://github.com/${{ github.repository }}.git
