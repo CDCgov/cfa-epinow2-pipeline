@@ -119,6 +119,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Get current branch
+        id: get-branch
         run: |
           CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           echo "CURRENT_BRANCH=$CURRENT_BRANCH" >> "$GITHUB_OUTPUT"
@@ -141,9 +142,10 @@ jobs:
             NODE_AGENT_SKU_ID="batch.node.ubuntu 20.04"
             VM_SIZE="standard_a4m_v2"
             RESOURCE_GROUP="${{ secrets.PRD_RESOURCE_GROUP }}"
+            CURRENT_BRANCH="${{ steps.get-branch.outputs.CURRENT_BRANCH }}"
 
-            echo "Cloning repo at branch '${{ steps.outputs.CURRENT_BRANCH }}'"
-            git clone -b ${{ steps.outputs.CURRENT_BRANCH }} https://github.com/${{ github.repository }}.git
+            echo "Cloning repo at branch '$CURRENT_BRANCH'"
+            git clone -b "$CURRENT_BRANCH" https://github.com/${{ github.repository }}.git
             cd cfa-epinow2-pipeline
 
             echo "Writing out config file"
