@@ -4,12 +4,8 @@
 #     "azure-batch",
 #     "azure-identity",
 #     "azure-mgmt-batch",
-#     "azuretools",
 #     "msrest",
 # ]
-#
-# [tool.uv.sources]
-# azuretools = { git = "https://github.com/cdcgov/cfa-azuretools" }
 # ///
 """
 If running locally, use:
@@ -37,7 +33,24 @@ import os
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.batch import BatchManagementClient
 
-from azuretools.autoscale import remaining_task_autoscale_formula
+AUTO_SCALE_FORMULA = """
+// In this example, the pool size
+// is adjusted based on the number of tasks in the queue.
+// Note that both comments and line breaks are acceptable in formula strings.
+
+// Get pending tasks for the past 5 minutes.
+$samples = $ActiveTasks.GetSamplePercent(TimeInterval_Minute * 5);
+// If we have fewer than 70 percent data points, we use the last sample point, otherwise we use the maximum of last sample point and the history average.
+$tasks = $samples < 70 ? max(0, $ActiveTasks.GetSample(1)) :
+max( $ActiveTasks.GetSample(1), avg($ActiveTasks.GetSample(TimeInterval_Minute * 5)));
+// If number of pending tasks is not 0, set targetVM to pending tasks, otherwise half of current dedicated.
+$targetVMs = $tasks > 0 ? $tasks : max(0, $TargetDedicatedNodes / 2);
+// The pool size is capped at 100, if target VM value is more than that, set it to 100.
+cappedPoolSize = 100;
+$TargetDedicatedNodes = max(0, min($targetVMs, cappedPoolSize));
+// Set node deallocation mode - keep nodes active only until tasks finish
+$NodeDeallocationOption = taskcompletion;
+"""
 
 
 def main() -> None:
@@ -96,12 +109,7 @@ def main() -> None:
             "scaleSettings": {
                 "autoScale": {
                     "evaluationInterval": "PT5M",
-                    "formula": remaining_task_autoscale_formula(
-                        # Evaluate every 5 minutes
-                        evaluation_interval="PT5M",
-                        task_sample_interval_minutes=5,
-                        max_number_vms=100,
-                    ),
+                    "formula": AUTO_SCALE_FORMULA,
                 }
             },
             "resizeOperationStatus": {
