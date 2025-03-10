@@ -100,12 +100,6 @@ val = input('Confirm to proceed (Y)? ')     # confirm the list with the user
 if val.upper() == 'Y':
     # Create some Azure SDK objects that are reused for each config file template
     
-    print(config.get('env_vars', 'tenant_id_label'))
-    print(config.get('azure', 'tenant_id_value'))
-    print(config.get('env_vars', 'client_id_label'))
-    print(config.get('azure', 'client_id_value'))
-    print(config.get('env_vars', 'sp_label'))
-    print(config.get('env_vars', 'sp_ref'))
     # Setup environment variable objects
     env_vars = []
     env_vars.append(EnvironmentVar(
