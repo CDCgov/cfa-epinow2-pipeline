@@ -24,16 +24,17 @@ This command will start the job and return metadata including the newly created 
 
 The *blob-config-runner* directory contains a Python tool that can start multiple jobs at once. It looks for files within a specified Azure Blob Storage container, presents them to the user for interactive selection, and runs a job on each once confirmed.
 
-This tool requires Python 3, which is already installed within WSL. To install necessary config files, run the following command from the directory:
+This tool requires Python 3, which is already installed within WSL. A virtual environment using *venv* is recommend for execution, which can be installed with *apt*. To initialize the environment and necessary libraries, run the following command from the directory:
 
 ```bash
-python3 -m pip install -r requirements.txt
+python3 -m venv .venv
+.venv/bin/python3 -m pip install -r requirements.txt
 ```
 
 Enter the *config.ini* file's client, tenant, and subscription id values within the Azure section. Update the container name and prefix as needed for this specific run. The env_vars section should not be updated, as these are used by the script to replace the values.  The tool can now be run as follows:
 
 ```bash
-python3 start-jobs.py
+.venv/bin/python3 start-jobs.py
 ```
 
 **Note:** This tool identifies config files by looking for a suffix of *-config.json*. This logic could be updated to instead look for tags or metadata, if files were appropriately identified as such within Azure.

@@ -75,7 +75,7 @@ print_configs(config_files)
 # Prompt the user for input in a loop, allowing them to select which config files they want to process
 val = '0'   # default value
 while val.upper() != '':        # loop until they enter nothing, which signifies continuing to the process step
-    val = input('Enter selection (or press enter to proceed): ')        # get user input
+    val = input('Provide selection (or press Enter to proceed): ')        # get user input
 
     try:
         index = int(val)        # attempt to convert the value to an integer
@@ -94,10 +94,16 @@ while val.upper() != '':        # loop until they enter nothing, which signifies
 
 # Collect the selected items and move on to processing step
 selected = get_selected(config_files)
+
+# If none were selected, exit
+if len(selected) == 0:
+    print("No files selected, exiting script.")
+    quit()
+
 print(f'Processing {len(selected)} files: {selected}.')
 val = input('Confirm to proceed (Y)? ')     # confirm the list with the user
 
-if val.upper() == 'Y':
+if val.upper() in ["Y", ""]:
     # Create some Azure SDK objects that are reused for each config file template
 
     # Setup environment variable objects
@@ -148,3 +154,6 @@ if val.upper() == 'Y':
 
         # Output the details on the new job and proceed to the next config file
         print(f'Job created: {response}')
+else:
+    # Output a message if the user chose to cancel
+    print("Confirmation not provided, exiting script.")
