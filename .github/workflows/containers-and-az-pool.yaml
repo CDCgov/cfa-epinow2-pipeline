@@ -138,7 +138,7 @@ jobs:
           CONTAINER_IMAGE_NAME: ${{ env.CONTAINER_IMAGE_NAME }}
           POOL_ID: ${{ env.POOL_ID }}
           SUBNET_ID: ${{ secrets.SUBNET_ID }}
-          PRD_RESOURCE_GROUP: ${{ secrets.PRD_RESOURCE_GROUP }}
+          RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
         id: create_batch_pool
 
         # This is a conditional step that will only run if the pool does not

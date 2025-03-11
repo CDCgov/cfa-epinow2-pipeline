@@ -23,7 +23,7 @@ CONTAINER_REGISTRY_URL="<container registry url>"
 CONTAINER_IMAGE_NAME="https://full-cr-server/<container image name>:tag"
 POOL_ID="<pool id>"
 SUBNET_ID="<subnet id>"
-PRD_RESOURCE_GROUP="<resource group name>"
+RESOURCE_GROUP="<resource group name>"
 
 If running in CI, all of the above environment variables should be set in the repo
 secrets.
@@ -126,7 +126,7 @@ def main() -> None:
     }
 
     batch_mgmt_client.pool.create(
-        resource_group_name=os.environ["PRD_RESOURCE_GROUP"],
+        resource_group_name=os.environ["RESOURCE_GROUP"],
         account_name=os.environ["BATCH_ACCOUNT"],
         pool_name=os.environ["POOL_ID"],
         parameters=pool_parameters,
