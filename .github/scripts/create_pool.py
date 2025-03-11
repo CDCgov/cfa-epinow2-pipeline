@@ -12,9 +12,9 @@ If running locally, use:
 uv run --env-file .env .github/scripts/create_pool.py
 Requires a `.env` file with at least the following:
 BATCH_ACCOUNT="<batch account name>"
-AZURE_SUBSCRIPTION_ID="<azure subscription id>"
-USER_ASSIGNED_IDENTITY="<user assigned identity>"
-AZURE_CLIENT_ID="<azure client id>"
+SUBSCRIPTION_ID="<azure subscription id>"
+BATCH_USER_ASSIGNED_IDENTITY="<user assigned identity>"
+AZURE_BATCH_ACCOUNT_CLIENT_ID="<azure client id>"
 PRINCIPAL_ID="<principal id>"
 CONTAINER_REGISTRY_SERVER="<container registry server>"
 CONTAINER_REGISTRY_USERNAME="<container registry username>"
@@ -23,7 +23,7 @@ CONTAINER_REGISTRY_URL="<container registry url>"
 CONTAINER_IMAGE_NAME="https://full-cr-server/<container image name>:tag"
 POOL_ID="<pool id>"
 SUBNET_ID="<subnet id>"
-AZURE_RESOURCE_GROUP_NAME="<resource group name>"
+PRD_RESOURCE_GROUP="<resource group name>"
 
 If running in CI, all of the above environment variables should be set in the repo
 secrets.
@@ -57,7 +57,7 @@ def main() -> None:
     # Create the BatchManagementClient
     batch_mgmt_client = BatchManagementClient(
         credential=DefaultAzureCredential(),
-        subscription_id=os.environ["AZURE_SUBSCRIPTION_ID"],
+        subscription_id=os.environ["SUBSCRIPTION_ID"],
     )
 
     # Assemble the pool parameters
@@ -65,8 +65,8 @@ def main() -> None:
         "identity": {
             "type": "UserAssigned",
             "userAssignedIdentities": {
-                os.environ["USER_ASSIGNED_IDENTITY"]: {
-                    "clientId": os.environ["AZURE_CLIENT_ID"],
+                os.environ["BATCH_USER_ASSIGNED_IDENTITY"]: {
+                    "clientId": os.environ["AZURE_BATCH_ACCOUNT_CLIENT_ID"],
                     "principalId": os.environ["PRINCIPAL_ID"],
                 }
             },
@@ -126,7 +126,7 @@ def main() -> None:
     }
 
     batch_mgmt_client.pool.create(
-        resource_group_name=os.environ["AZURE_RESOURCE_GROUP_NAME"],
+        resource_group_name=os.environ["PRD_RESOURCE_GROUP"],
         account_name=os.environ["BATCH_ACCOUNT"],
         pool_name=os.environ["POOL_ID"],
         parameters=pool_parameters,
