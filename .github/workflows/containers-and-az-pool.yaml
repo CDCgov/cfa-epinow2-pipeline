@@ -106,8 +106,6 @@ jobs:
         id: check_pool_id
         with:
           inlineScript: |
-            az login
-
             az batch account login \
               --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
               --name "${{ env.BATCH_ACCOUNT }}"
