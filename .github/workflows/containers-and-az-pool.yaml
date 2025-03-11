@@ -113,6 +113,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-pipeline-image
 
+    env:
+      TAG: ${{ needs.build-pipeline-image.outputs.tag }}
+      # Every Azure Batch Pool parameter can simply go here,
+      # no python module or config toml necessary
+      POOL_ID: "cfa-epinow2-${{ needs.build-pipeline-image.outputs.tag }}"
+      BATCH_ACCOUNT:     "cfaprdba"
+      BATCH_ENDPOINT:    "https://cfaprdba.eastus.batch.azure.com/"
+      VM_IMAGE_TAG:      "canonical:0001-com-ubuntu-server-focal:20_04-lts"
+      NODE_AGENT_SKU_ID: "batch.node.ubuntu 20.04"
+      VM_SIZE:           "standard_a4m_v2"
+      RESOURCE_GROUP:    ${{ secrets.PRD_RESOURCE_GROUP }}
+
     steps:
       - name: Checkout Repo
         id: checkout_repo
@@ -132,24 +144,6 @@ jobs:
           wait_for_completion: true
           print_logs: true
           script: |
-            TAG=${{ needs.build-pipeline-image.outputs.tag }}
-            echo "TAG='$TAG'"
-            # Every Azure Batch Pool parameter can simply go here,
-            # no python module or config toml necessary
-            POOL_ID="cfa-epinow2-$TAG"
-            echo "POOL_ID='$POOL_ID'"
-            BATCH_ACCOUNT="cfaprdba"
-            echo "BATCH_ACCOUNT='$BATCH_ACCOUNT'"
-            BATCH_ENDPOINT="https://cfaprdba.eastus.batch.azure.com/"
-            echo "BATCH_ENDPOINT='$BATCH_ENDPOINT'"
-            VM_IMAGE_TAG="canonical:0001-com-ubuntu-server-focal:20_04-lts"
-            echo "VM_IMAGE_TAG='$VM_IMAGE_TAG'"
-            NODE_AGENT_SKU_ID="batch.node.ubuntu 20.04"
-            echo "NODE_AGENT_SKU_ID='$NODE_AGENT_SKU_ID'"
-            VM_SIZE="standard_a4m_v2"
-            echo "VM_SIZE='$VM_SIZE'"
-            RESOURCE_GROUP="${{ secrets.PRD_RESOURCE_GROUP }}"
-            echo "RESOURCE_GROUP='$RESOURCE_GROUP'"
             CURRENT_BRANCH="${{ steps.get-branch.outputs.CURRENT_BRANCH }}"
             echo "CURRENT_BRANCH='$CURRENT_BRANCH'"
 
@@ -163,9 +157,9 @@ jobs:
             EOF
 
             # Replacing placeholders in the config file
-            sed -i "s|{{ IMAGE_NAME }}|$REGISTRY/$IMAGE_NAME:$TAG|g" pool-config-${{ github.sha }}.toml
-            sed -i "s|{{ VM_SIZE }}|$VM_SIZE|g" pool-config-${{ github.sha }}.toml
-            sed -i "s|{{ POOL_ID }}|$POOL_ID|g" pool-config-${{ github.sha }}.toml
+            sed -i "s|{{ IMAGE_NAME }}|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}|g" pool-config-${{ github.sha }}.toml
+            sed -i "s|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g" pool-config-${{ github.sha }}.toml
+            sed -i "s|{{ POOL_ID }}|${{ env.POOL_ID }}|g" pool-config-${{ github.sha }}.toml
 
 
             echo "Login to Azure with NNH Service Principal"
@@ -177,11 +171,11 @@ jobs:
             echo "Check if pool exists"
             az batch account login \
               --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-              --name "$BATCH_ACCOUNT"
+              --name "${{ env.BATCH_ACCOUNT }}"
 
             az batch pool list \
               --output tsv \
-              --filter "(id eq '$POOL_ID')" \
+              --filter "(id eq '${{ env.POOL_ID }}')" \
               --query "[].[id, allocationState, creationTime]" > \
               pool-list-${{ github.sha }}
 
@@ -193,5 +187,5 @@ jobs:
                 pool-config-${{ github.sha }}.toml \
                 batch-autoscale-formula.txt
             else
-              echo "Batch pool exists for pool id '$POOL_ID'"
+              echo "Batch pool exists for pool id '${{ env.POOL_ID }}'"
             fi
