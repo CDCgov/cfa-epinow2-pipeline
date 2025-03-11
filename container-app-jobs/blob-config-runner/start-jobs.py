@@ -75,7 +75,7 @@ print_configs(config_files)
 # Prompt the user for input in a loop, allowing them to select which config files they want to process
 val = '0'   # default value
 while val.upper() != '':        # loop until they enter nothing, which signifies continuing to the process step
-    val = input('Enter selection: ')        # get user input
+    val = input('Enter selection (or press enter to proceed): ')        # get user input
 
     try:
         index = int(val)        # attempt to convert the value to an integer
