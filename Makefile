@@ -36,7 +36,7 @@ config:
 	  -f state=all \
 	  -f job_id=$(JOB)
 
-run-batch: 
+run-batch:
 	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
 	$(CNTR_MGR) run --rm  \
 	--env-file .env \

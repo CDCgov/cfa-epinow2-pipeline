@@ -31,19 +31,19 @@ If you receive an error that you do not have the necessary permissions to run th
  `make test-batch`
 
 ### Rt Estimation Pipeline (Production)
-If you have succesfully setup the pre-requisites and are able to run `make config` and `make run CONGIF=test/test.json` you are ready to run the entire pipeline in production `make run-prod`. 
+If you have succesfully setup the pre-requisites and are able to run `make config` and `make run CONGIF=test/test.json` you are ready to run the entire pipeline in production `make run-prod`.
 This command will run `make config`, then followed by a docker build, and then will the `job.py` script from in Batch; you only need to run `make run-prod` all of the work is done for you inside the Makefile! In doing so you are connecting to Azure Batch and setup 102 unique tasks that Azure Batch will run. This command is intended to close after initializing the jobs in Azure Batch. Please open Azure Batch Explorer to view the progress of these tasks.
 
 #### Exclusions
 If you would like to re-run the entire pipeline with exclusions to the configurations you are able to do so. There are two main types of exclusions that users commonly will need to consider (task exclusions, and data exclusions).
 ##### Task Exclusions
-Task exclusions are state and disease pairs (ex. 'NY:COVID-19)' that users can specify when running so that tasks for specified state disease pairs are not generated unnecessarily. Users can specify more than one state and disease pair, so long as they are separate by a ',' (ex. 'NY:COVID-19,WA:Influenza'). To do so, a user will need to first, generate the configuration files and specify the state:disease pair to exclude (see example below) and second, run the pipeline for these configurations. 
-1. `TIMESTAMP=$(date -u +"%Y%m%d_%H%M%S"); JOB_ID=Rt-estimation-$(echo $TIMESTAMP)` 
-2. `gh workflow run -R cdcgov/cfa-config-generator run-workload.yaml -f job_id=$(echo $JOB_ID) -f task_exclusions='NY:COVID-19'` 
+Task exclusions are state and disease pairs (ex. 'NY:COVID-19)' that users can specify when running so that tasks for specified state disease pairs are not generated unnecessarily. Users can specify more than one state and disease pair, so long as they are separate by a ',' (ex. 'NY:COVID-19,WA:Influenza'). To do so, a user will need to first, generate the configuration files and specify the state:disease pair to exclude (see example below) and second, run the pipeline for these configurations.
+1. `TIMESTAMP=$(date -u +"%Y%m%d_%H%M%S"); JOB_ID=Rt-estimation-$(echo $TIMESTAMP)`
+2. `gh workflow run -R cdcgov/cfa-config-generator run-workload.yaml -f job_id=$(echo $JOB_ID) -f task_exclusions='NY:COVID-19'`
 3. `make run-batch JOB=$(echo $JOB_ID)`
 
 ##### Data Exclusions
-The process for handling data exclusions is currently being finalized adn this section will be finalized in April 2025. For the current procedure please reach out to Patrick Corbett (pyv3@cdc.gov). 
+The process for handling data exclusions is currently being finalized adn this section will be finalized in April 2025. For the current procedure please reach out to Patrick Corbett (pyv3@cdc.gov).
 
 ### Appendix
 #### Podman
