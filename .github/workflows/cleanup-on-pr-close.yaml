@@ -9,7 +9,7 @@ on:
 jobs:
 
   delete-pool:
-    runs-on: cfa-cdcgov-aca
+    runs-on: ubuntu-latest
     name: Delete Batch pool
 
     steps:
