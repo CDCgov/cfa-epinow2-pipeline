@@ -1,6 +1,7 @@
 name: Start Container App Job
 on:
   workflow_dispatch:
+  pull_request:
 defaults:
   run:
     shell: bash -ie {0}
