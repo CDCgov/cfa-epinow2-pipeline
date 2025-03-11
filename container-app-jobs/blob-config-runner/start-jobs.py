@@ -11,7 +11,7 @@ NAME = 'name'
 SELECTED = 'selected'
 
 # Prints the status of each config file in a formatted table
-# Each row will look something like: '1  [X]  config_file_1.json' 
+# Each row will look something like: '1  [X]  config_file_1.json'
 def print_configs(config_files):
     print('Index  Selected  Name')
     print('=====  ========  ====')
@@ -87,7 +87,7 @@ while val.upper() != '':        # loop until they enter nothing, which signifies
             set_all(config_files, True)     # select all
         elif val.upper() == 'N':
             set_all(config_files, False)    # deselect all
-    
+
     if val != '':   # dont print the last time
         # Print the dictionary
         print_configs(config_files)
@@ -99,7 +99,7 @@ val = input('Confirm to proceed (Y)? ')     # confirm the list with the user
 
 if val.upper() == 'Y':
     # Create some Azure SDK objects that are reused for each config file template
-    
+
     # Setup environment variable objects
     env_vars = []
     env_vars.append(EnvironmentVar(
@@ -114,7 +114,7 @@ if val.upper() == 'Y':
 
     # Setup container resources object
     container_resources = ContainerResources(
-        cpu=config.get('caj', 'cpu'), 
+        cpu=config.get('caj', 'cpu'),
         memory=config.get('caj', 'memory'))
 
     # Common Azure SDK object setup complete
@@ -128,7 +128,7 @@ if val.upper() == 'Y':
             args=[config_file],
             command=[config.get('caj', 'command')],
             env=env_vars,
-            image=config.get('caj', 'image'), 
+            image=config.get('caj', 'image'),
             name=config.get('caj', 'name'),
             resources=container_resources)
 
@@ -137,13 +137,13 @@ if val.upper() == 'Y':
 
         # Create the Azure SDK container apps client
         client = ContainerAppsAPIClient(
-            credential=credential, 
+            credential=credential,
             subscription_id=config.get('azure', 'subscription_id'))
 
         # Execute the container app job for the generated template
         response = client.jobs.begin_start(
-            resource_group_name=config.get('caj', 'resource_group'), 
-            job_name=config.get('caj', 'name'), 
+            resource_group_name=config.get('caj', 'resource_group'),
+            job_name=config.get('caj', 'name'),
             template=template).result()
 
         # Output the details on the new job and proceed to the next config file
