@@ -1,0 +1,57 @@
+name: Start Container App Job
+on:
+  workflow_dispatch:
+defaults:
+  run:
+    shell: bash -ie {0}
+
+jobs:
+  start-caj:
+    permissions:
+      id-token: 'write'
+      packages: 'read'
+      contents: 'write'
+    runs-on: cfa-cdcent-aca
+    name: start caj
+    steps:
+      - name: Azure login with OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          
+      - name: Trigger job start
+        run: |
+          REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          RESOURCE_GROUP="ext-edav-cfa-prd"
+          JOB_NAME="cfa-epinow2-test-caj"
+          
+          # workaround due to az cli issue: https://github.com/microsoft/azure-container-apps/issues/1360#issuecomment-2652178320
+          az containerapp job show \
+            --name "$JOB_NAME" \
+            --resource-group "$RESOURCE_GROUP" \
+            --query "properties.template" \
+            --output yaml > example-job-template.yaml
+          
+          # start job
+          RES=$(az containerapp job start \
+          --resource-group  "$RESOURCE_GROUP" \
+          --name "$JOB_NAME" \
+          --yaml example-job-template.yaml)
+          
+          JOB_ID=$(echo "$RES" | jq -r '.id' | awk -F/ '{print $NF}')
+          echo "JOB_ID: $JOB_ID"
+          
+          # sleeping to give container app time to start
+          # not sleeping will return a 404 container not found
+          sleep 5
+          
+          #stream logs to stdout
+          az containerapp job logs show \
+          --name "$JOB_NAME" \
+          --container "$JOB_NAME" \
+          --resource-group "$RESOURCE_GROUP" \
+          --execution "$JOB_ID" \
+          --follow
