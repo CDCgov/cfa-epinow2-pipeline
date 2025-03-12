@@ -1,7 +1,6 @@
 name: Start Container App Job
 on:
   workflow_dispatch:
-  pull_request:
 defaults:
   run:
     shell: bash -ie {0}
@@ -44,15 +43,3 @@ jobs:
 
           JOB_ID=$(echo "$RES" | jq -r '.id' | awk -F/ '{print $NF}')
           echo "JOB_ID: $JOB_ID"
-
-          # sleeping to give container app time to start
-          # not sleeping will return a 404 container not found
-          sleep 5
-
-          #stream logs to stdout
-          az containerapp job logs show \
-          --name "$JOB_NAME" \
-          --container "$JOB_NAME" \
-          --resource-group "$RESOURCE_GROUP" \
-          --execution "$JOB_ID" \
-          --follow
