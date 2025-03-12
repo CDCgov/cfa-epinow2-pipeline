@@ -16,11 +16,11 @@ jobs:
     name: start caj
     steps:
       - name: Azure login with OIDC
+        id: azure_login_2
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
+          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
       - name: Trigger job start
         run: |
