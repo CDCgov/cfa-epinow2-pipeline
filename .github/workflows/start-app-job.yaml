@@ -12,7 +12,7 @@ jobs:
       id-token: 'write'
       packages: 'read'
       contents: 'write'
-    runs-on: cfa-cdcent-aca
+    runs-on: cfa-cdcgov-aca
     name: start caj
     steps:
       - name: Azure login with OIDC
