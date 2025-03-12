@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Adding exclusions documentation and Makefile support
 * Building with ubuntu-latest
 * Add the blob storage container, if provided
 * Adding make command to test Azure batch
