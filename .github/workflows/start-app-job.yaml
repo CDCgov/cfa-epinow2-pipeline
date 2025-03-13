@@ -24,7 +24,7 @@ jobs:
 
       - name: Get container app job template
         run: az containerapp job show --name "cfa-epinow2-test-caj" --resource-group "ext-edav-cfa-prd" --query "properties.template" --output yaml > example-job-template.yaml
-      
+
       - name: Update template with input value
         uses: mikefarah/yq@master
         with:
