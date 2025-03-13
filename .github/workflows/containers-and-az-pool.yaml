@@ -55,10 +55,10 @@ jobs:
         with:
           container-file-1: ./Dockerfile-dependencies
           container-file-2: ./Dockerfile
-          registry: ghcr.io/cdcgov/
+          registry: ghcr.io/
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          image: ${{ env.IMAGE_NAME }}
+          image: cdcgov/${{ env.IMAGE_NAME }}
           first-step-cache-key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}
 
   acr-import:
