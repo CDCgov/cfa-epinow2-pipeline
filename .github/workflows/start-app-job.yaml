@@ -1,5 +1,6 @@
 name: Start Container App Job
 on:
+  pull_request:
   workflow_dispatch:
 defaults:
   run:
