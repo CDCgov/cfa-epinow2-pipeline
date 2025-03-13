@@ -1,6 +1,10 @@
 name: Start Container App Job
 on:
   workflow_dispatch:
+    inputs:
+      config_file:
+        description: "Config File"
+        default:
 defaults:
   run:
     shell: bash -ie {0}
@@ -35,7 +39,7 @@ jobs:
 
       - name: Update template with input value
         run: |
-          sed -i 's/<<config_file>>/caj-test\/configs\/cajtest-1-config.json/' job-template.yaml
+          sed -i 's/<<config_file>>/${{ github.event.inputs.config_file }}/' job-template.yaml
 
       - name: Run container app job
         run: |
