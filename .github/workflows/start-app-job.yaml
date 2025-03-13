@@ -36,7 +36,7 @@ jobs:
             --output yaml > example-job-template.yaml
 
           #echo "Updating template with specified values"
-          yq eval '.containers[0].command[1] = "${{ CONFIG_FILE }}"' example-template.yaml -i
+          yq eval '.containers[0].command[1] = "$CONFIG_FILE"' example-template.yaml -i
 
           #echo "Starting job"
           # start job
@@ -46,4 +46,4 @@ jobs:
           --yaml example-job-template.yaml)
 
           JOB_ID=$(echo "$RES" | jq -r '.id' | awk -F/ '{print $NF}')
-          #echo "Job created with ID ${{ JOB_ID }}"
+          #echo "Job created with ID $JOB_ID"
