@@ -25,7 +25,6 @@ jobs:
         run: |
           CONFIG_FILE="caj-test/configs/cajtest-3-config.json"
 
-          #echo "Getting template for job ${{ JOB_NAME }} from resource group ${{ RESOURCE_GROUP }}"
           # workaround due to az cli issue: https://github.com/microsoft/azure-container-apps/issues/1360#issuecomment-2652178320
           az containerapp job show \
             --name "cfa-epinow2-test-caj" \
@@ -33,10 +32,8 @@ jobs:
             --query "properties.template" \
             --output yaml > example-job-template.yaml
 
-          #echo "Updating template with specified values"
           yq eval '.containers[0].command[1] = "$CONFIG_FILE"' example-template.yaml -i
 
-          #echo "Starting job"
           # start job
           RES=$(az containerapp job start \
           --resource-group  "ext-edav-cfa-prd" \
@@ -44,4 +41,3 @@ jobs:
           --yaml example-job-template.yaml)
 
           JOB_ID=$(echo "$RES" | jq -r '.id' | awk -F/ '{print $NF}')
-          #echo "Job created with ID $JOB_ID"
