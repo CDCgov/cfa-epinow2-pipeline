@@ -68,7 +68,7 @@ jobs:
           else
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi
-      
+
       - name: Docker Login
         uses: docker/login-action@v3
         with:
