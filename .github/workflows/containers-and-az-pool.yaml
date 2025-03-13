@@ -87,32 +87,6 @@ jobs:
               echo "Failed to copy image"
             fi
 
-  acr-import:
-    needs: build-pipeline-image
-    runs-on: cfa-cdcgov
-    name: Copy image from GHCR to ACR
-    outputs:
-      tag: ${{ needs.build-pipeline-image.outputs.tag }}
-    steps:
-
-      - name: Azure login with OIDC
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
-
-      - name: Copy Image
-        run: |
-          IMAGE_TAG=${{ env.IMAGE_NAME }}:${{ needs.build-pipeline-image.outputs.tag }}
-          az acr import --name ${{ env.REGISTRY }} \
-            --source "ghcr.io/cdcgov/$IMAGE_TAG" \
-            --username ${{ github.actor }} \
-            --password ${{ secrets.GITHUB_TOKEN }} \
-            --image "$IMAGE_TAG" \
-            --force && echo 'Copied image!'
-            if [ $? -ne 0 ]; then
-              echo "Failed to copy image"
-            fi
-
   batch-pool:
 
     name: Create Batch Pool and Submit Jobs
