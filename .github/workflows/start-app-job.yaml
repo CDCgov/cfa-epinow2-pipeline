@@ -23,6 +23,10 @@ jobs:
 
       - name: Trigger job start
         run: |
+          sudo add-apt-repository ppa:rmescandon/yq
+          sudo apt update
+          sudo apt install yq -y
+
           CONFIG_FILE="caj-test/configs/cajtest-3-config.json"
 
           # workaround due to az cli issue: https://github.com/microsoft/azure-container-apps/issues/1360#issuecomment-2652178320
