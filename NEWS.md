@@ -1,7 +1,11 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+
+* Unified Dockerfile
 * Building with ubuntu-latest and using Container App runner for all else
+* Adding exclusions documentation and Makefile support
+* Add the blob storage container, if provided
 * Adding make command to test Azure batch
 * Updating subnet ID and pool VM to 22.04 from 20.04
 * Write model diagnostics to an output file, correcting an oversight
@@ -9,7 +13,8 @@
 * Creating SOP.md to document weekly run procedures
 * Allows unique job_ids for runs.
 * Makefile supports either docker or podman as arguments to setup & manage containers
-* Streamlined Container App Job execution provided by included start.sh script and job-template.yaml file
+* Streamlined configurable container execution provided by included start.sh script
+* Container App Job execution tools added including job-template.yaml file for single task and Python script for bulk tasks
 * Minor changes in removing unused container tags from Azure CR.
 
 # CFAEpiNow2Pipeline v0.1.0

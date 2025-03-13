@@ -72,6 +72,7 @@ jobs:
       - name: Docker Login
         uses: docker/login-action@v3
         with:
+
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
@@ -84,6 +85,7 @@ jobs:
   acr-import:
     needs: build-pipeline-image
     runs-on: cfa-cdcgov-aca
+
     name: Copy image from GHCR to ACR
     outputs:
       tag: ${{ needs.build-pipeline-image.outputs.tag }}
@@ -102,10 +104,11 @@ jobs:
             --username ${{ github.actor }} \
             --password ${{ secrets.GITHUB_TOKEN }} \
             --image "$IMAGE_TAG" \
-            --force # allows overwrite of existing tags
-          echo "Copied image!"
-     
-          
+            --force && echo 'Copied image!'
+            if [ $? -ne 0 ]; then
+              echo "Failed to copy image"
+            fi
+
   batch-pool:
 
     name: Create Batch Pool and Submit Jobs
