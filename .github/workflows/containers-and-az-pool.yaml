@@ -60,7 +60,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           image: ${{ env.IMAGE_NAME }}
           first-step-cache-key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./DESCRIPTION', './Dockerfile-dependencies') }}
-  
+
   acr-import:
     needs: build-pipeline-image
     runs-on: cfa-cdcgov-aca
