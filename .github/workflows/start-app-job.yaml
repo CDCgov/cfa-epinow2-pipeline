@@ -1,6 +1,10 @@
 name: Start Container App Job
 on:
   workflow_dispatch:
+    inputs:
+      config_file:
+        description: "Config file"
+        default: 
 defaults:
   run:
     shell: bash -ie {0}
@@ -23,11 +27,12 @@ jobs:
 
       - name: Trigger job start
         run: |
-          REPO_NAME=$(echo ${{ github.repository }} | cut -d'/' -f2)
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "Running job for config file ${{ github.event.inputs.config_file }}"
+
           RESOURCE_GROUP="ext-edav-cfa-prd"
           JOB_NAME="cfa-epinow2-test-caj"
 
+          echo "Getting template for job ${{ JOB_NAME }} from resource group ${{ RESOURCE_GROUP }}"
           # workaround due to az cli issue: https://github.com/microsoft/azure-container-apps/issues/1360#issuecomment-2652178320
           az containerapp job show \
             --name "$JOB_NAME" \
@@ -35,6 +40,10 @@ jobs:
             --query "properties.template" \
             --output yaml > example-job-template.yaml
 
+          echo "Updating template with specified values"
+          yq eval '.containers[0].command[1] = "config"' example-template.yaml -i
+
+          echo "Starting job"
           # start job
           RES=$(az containerapp job start \
           --resource-group  "$RESOURCE_GROUP" \
@@ -42,4 +51,4 @@ jobs:
           --yaml example-job-template.yaml)
 
           JOB_ID=$(echo "$RES" | jq -r '.id' | awk -F/ '{print $NF}')
-          echo "JOB_ID: $JOB_ID"
+          echo "Job created with ID ${{ JOB_ID }}"
