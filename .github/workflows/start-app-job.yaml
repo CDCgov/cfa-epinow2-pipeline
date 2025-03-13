@@ -1,4 +1,5 @@
 name: Start Container App Job
+
 on:
   workflow_dispatch:
     inputs:
@@ -6,9 +7,6 @@ on:
         description: "Config File"
         required: true
         default:
-defaults:
-  run:
-    shell: bash -ie {0}
 
 env:
   RESOURCE_GROUP: ext-edav-cfa-prd
