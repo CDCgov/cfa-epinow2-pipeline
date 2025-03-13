@@ -36,7 +36,14 @@ config:
 	  -f state=all \
 	  -f job_id=$(JOB)
 
-run-batch: config
+run-batch:
+	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
+	$(CNTR_MGR) run --rm  \
+	--env-file .env \
+	-it \
+	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+
+run-prod: config
 	@echo "Hanging for 15 seconds to wait for configs to generate"
 	sleep 15
 	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
@@ -56,11 +63,6 @@ up:
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) /bin/bash
-
-run-function:
-	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
-	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
-	Rscript -e "CFAEpiNow2Pipeline::run_pipeline('/cfa-epinow2-pipeline/configs/baa631b0a39111efbec600155d6da693_MS_Influenza_1731703176.json')"
 
 push:
 	$(CNTR_MGR) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
