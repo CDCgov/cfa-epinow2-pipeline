@@ -26,9 +26,7 @@ jobs:
         run: az containerapp job show --name "cfa-epinow2-test-caj" --resource-group "ext-edav-cfa-prd" --query "properties.template" --output yaml > example-job-template.yaml
       
       - name: Update template with input value
-        uses: mikefarah/yq@master
-        with:
-          cmd: yq eval '.containers[0].command[1] = "$CONFIG_FILE"' example-template.yaml -i
+        run: yq -iy '.containers[0].command[1] = "$CONFIG_FILE"' example-template.yaml
 
       - name: Run container app job
         run: az containerapp job start --resource-group  "ext-edav-cfa-prd" --name "cfa-epinow2-test-caj" --yaml example-job-template.yaml
