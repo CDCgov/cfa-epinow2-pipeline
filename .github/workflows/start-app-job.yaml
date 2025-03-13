@@ -21,27 +21,15 @@ jobs:
         # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
           creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
-      - name: Trigger job start
-        run: |
-          sudo add-apt-repository ppa:rmescandon/yq
-          sudo apt update
-          sudo apt install yq -y
+      - name: Get container app job template
+        with:
+          cmd: az containerapp job show --name "cfa-epinow2-test-caj" --resource-group "ext-edav-cfa-prd" --query "properties.template" --output yaml > example-job-template.yaml
+      
+      - name: Update template with input value
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq eval '.containers[0].command[1] = "$CONFIG_FILE"' example-template.yaml -i
 
-          CONFIG_FILE="caj-test/configs/cajtest-3-config.json"
-
-          # workaround due to az cli issue: https://github.com/microsoft/azure-container-apps/issues/1360#issuecomment-2652178320
-          az containerapp job show \
-            --name "cfa-epinow2-test-caj" \
-            --resource-group "ext-edav-cfa-prd" \
-            --query "properties.template" \
-            --output yaml > example-job-template.yaml
-
-          yq eval '.containers[0].command[1] = "$CONFIG_FILE"' example-template.yaml -i
-
-          # start job
-          RES=$(az containerapp job start \
-          --resource-group  "ext-edav-cfa-prd" \
-          --name "cfa-epinow2-test-caj" \
-          --yaml example-job-template.yaml)
-
-          JOB_ID=$(echo "$RES" | jq -r '.id' | awk -F/ '{print $NF}')
+      - name: Run container app job
+        with:
+          cmd: az containerapp job start --resource-group  "ext-edav-cfa-prd" --name "cfa-epinow2-test-caj" --yaml example-job-template.yaml
