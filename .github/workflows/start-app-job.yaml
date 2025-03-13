@@ -24,14 +24,12 @@ jobs:
       - name: Trigger job start
         run: |
           CONFIG_FILE="caj-test/configs/cajtest-3-config.json"
-          RESOURCE_GROUP="ext-edav-cfa-prd"
-          JOB_NAME="cfa-epinow2-test-caj"
 
           #echo "Getting template for job ${{ JOB_NAME }} from resource group ${{ RESOURCE_GROUP }}"
           # workaround due to az cli issue: https://github.com/microsoft/azure-container-apps/issues/1360#issuecomment-2652178320
           az containerapp job show \
-            --name "$JOB_NAME" \
-            --resource-group "$RESOURCE_GROUP" \
+            --name "cfa-epinow2-test-caj" \
+            --resource-group "ext-edav-cfa-prd" \
             --query "properties.template" \
             --output yaml > example-job-template.yaml
 
@@ -41,8 +39,8 @@ jobs:
           #echo "Starting job"
           # start job
           RES=$(az containerapp job start \
-          --resource-group  "$RESOURCE_GROUP" \
-          --name "$JOB_NAME" \
+          --resource-group  "ext-edav-cfa-prd" \
+          --name "cfa-epinow2-test-caj" \
           --yaml example-job-template.yaml)
 
           JOB_ID=$(echo "$RES" | jq -r '.id' | awk -F/ '{print $NF}')
