@@ -5,6 +5,10 @@ defaults:
   run:
     shell: bash -ie {0}
 
+env:
+  RESOURCE_GROUP: ext-edav-cfa-prd
+  JOB_NAME: cfa-epinow2-test-caj
+
 jobs:
   start-caj:
     permissions:
@@ -22,10 +26,17 @@ jobs:
           creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
       - name: Get container app job template
-        run: az containerapp job show --name "cfa-epinow2-test-caj" --resource-group "ext-edav-cfa-prd" --query "properties.template" --output yaml > job-template.yaml
+        run: az containerapp job show \
+              --resource-group  "${{ env.RESOURCE_GROUP }}" \
+              --name "${{ env.JOB_NAME }}" \
+              --query "properties.template" \
+              --output yaml > job-template.yaml
 
       - name: Update template with input value
         run: sed -i 's/<<config_file>>/caj-test\/configs\/cajtest-1-config.json/' job-template.yaml
 
       - name: Run container app job
-        run: az containerapp job start --resource-group  "ext-edav-cfa-prd" --name "cfa-epinow2-test-caj" --yaml job-template.yaml
+        run: az containerapp job start \
+              --resource-group  "${{ env.RESOURCE_GROUP }}" \
+              --name "${{ env.JOB_NAME }}" \
+              --yaml job-template.yaml
