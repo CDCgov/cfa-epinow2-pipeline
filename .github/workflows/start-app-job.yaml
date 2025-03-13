@@ -1,10 +1,6 @@
 name: Start Container App Job
 on:
   workflow_dispatch:
-    inputs:
-      config_file:
-        description: "Config file"
-        default: 
 defaults:
   run:
     shell: bash -ie {0}
@@ -27,8 +23,7 @@ jobs:
 
       - name: Trigger job start
         run: |
-          echo "Running job for config file ${{ github.event.inputs.config_file }}"
-
+          CONFIG_FILE="caj-test/configs/cajtest-3-config.json"
           RESOURCE_GROUP="ext-edav-cfa-prd"
           JOB_NAME="cfa-epinow2-test-caj"
 
@@ -41,7 +36,7 @@ jobs:
             --output yaml > example-job-template.yaml
 
           echo "Updating template with specified values"
-          yq eval '.containers[0].command[1] = "config"' example-template.yaml -i
+          yq eval '.containers[0].command[1] = "${{ CONFIG_FILE }}"' example-template.yaml -i
 
           echo "Starting job"
           # start job
