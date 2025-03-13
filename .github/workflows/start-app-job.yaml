@@ -25,7 +25,7 @@ jobs:
         run: az containerapp job show --name "cfa-epinow2-test-caj" --resource-group "ext-edav-cfa-prd" --query "properties.template" --output yaml > job-template.yaml
 
       - name: Update template with input value
-        run: sed -i 's/<<config_file>>/cat-test\/configs\/cajtest-1-config.json/' job-template.yaml
+        run: sed -i 's/<<config_file>>/caj-test\/configs\/cajtest-1-config.json/' job-template.yaml
 
       - name: Run container app job
         run: az containerapp job start --resource-group  "ext-edav-cfa-prd" --name "cfa-epinow2-test-caj" --yaml job-template.yaml
