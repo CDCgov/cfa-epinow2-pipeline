@@ -18,3 +18,6 @@ containers:
     secretRef: az-service-principal   # pragma: allowlist secret
   image: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:latest
   name: cfa-epinow2-test-caj
+  resources:
+    cpu: 4
+    memory: 8Gi
