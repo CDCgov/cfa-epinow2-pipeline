@@ -4,6 +4,7 @@ on:
     inputs:
       config_file:
         description: "Config File"
+        required: true
         default:
 defaults:
   run:
