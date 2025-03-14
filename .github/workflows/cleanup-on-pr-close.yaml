@@ -32,10 +32,7 @@ jobs:
           creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
       - name: Delete pool
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
+        run: |
             chmod +x $GITHUB_WORKSPACE/.github/scripts/cleanup-on-pr-close.sh
             $GITHUB_WORKSPACE/.github/scripts/cleanup-on-pr-close.sh \
               "${{ secrets.BATCH_ACCOUNT }}" \
