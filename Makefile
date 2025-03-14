@@ -15,7 +15,7 @@ TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
 JOB:=Rt-estimation-$(TIMESTAMP)
 
 deps:
-	$(CNTR_MGR) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
+	$(CNTR_MGR) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies .
 
 pull:
 	az acr login --name 'cfaprdbatchcr'
@@ -66,6 +66,13 @@ up:
 
 push:
 	$(CNTR_MGR) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
+
+
+interactive:
+	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--env-file .env \
+	--workdir /cfa-epinow2-pipeline \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 test-batch:
 	gh workflow run \
