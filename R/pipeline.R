@@ -13,7 +13,8 @@
 #' from which the config file will be downloaded.
 #' @param output_container Optional. The name of the blob storage
 #' container to which logs and outputs will be uploaded. If NULL, no upload
-#' will occur.
+#' will occur. If this is also set in the config file, and the value there is
+#' different, an eror will be thrown.
 #' @param input_dir A string specifying the directory to read inputs from. If
 #' passing storage containers, this is where the files will be downloaded to.
 #' @param output_dir A string specifying the directory where output, logs, and
@@ -85,7 +86,16 @@ orchestrate_pipeline <- function(config_path,
         blob_storage_container = config_container,
         dir = input_dir
       )
-      read_json_into_config(config_path, c("exclusions", "output_container"))
+      config <- read_json_into_config(
+        config_path, c("exclusions", "output_container")
+      )
+
+      # Check that the output container in the config file matches the one
+      # passed in, or one or the other is NULL. This function puts the correct
+      # output_container in the config object. Use that for future use of
+      # `output_container`
+      config <- pick_non_empty(output_container, config)
+      return(config)
     },
     error = function(con) {
       cli::cli_warn("Bad config file",
@@ -148,10 +158,12 @@ orchestrate_pipeline <- function(config_path,
   # TODO: Move metadata to outer wrapper
   cli::cli_alert_info("Finishing run at {Sys.time()}")
 
-  if (!rlang::is_null(output_container)) {
+  if (!rlang::is_null(config@output_container)) {
     outfiles <- file.path(output_dir, config@job_id, "*")
-    cli::cli_alert("Uploading {.path {outfiles}} to {.path {output_container}}")
-    cont <- fetch_blob_container(output_container)
+    cli::cli_alert(
+      "Uploading {.path {outfiles}} to {.path {config@output_container}}"
+    )
+    cont <- fetch_blob_container(config@output_container)
     AzureStor::multiupload_blob(
       container = cont,
       src = outfiles,
