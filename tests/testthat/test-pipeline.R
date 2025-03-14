@@ -78,7 +78,9 @@ test_that("Process pipeline produces expected outputs and returns success", {
   # Arrange
   input_dir <- "data"
   config_path <- file.path(input_dir, "sample_config_with_exclusion.json")
-  config <- read_json_into_config(config_path, c("exclusions"))
+  config <- read_json_into_config(
+    config_path, c("exclusions", "output_container")
+  )
   # Read from locally
   output_dir <- "pipeline_test"
   on.exit(unlink(output_dir, recursive = TRUE))
@@ -110,7 +112,7 @@ test_that("Runs on config from generator as of 2024-11-26", {
   input_dir <- test_path("data")
   config <- read_json_into_config(
     file.path(input_dir, config_path),
-    c("exclusions")
+    c("exclusions", "output_container")
   )
   # Read from locally
   output_dir <- test_path("pipeline_test")
