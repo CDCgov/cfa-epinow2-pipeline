@@ -23,7 +23,8 @@ Config(
   priors = list(),
   parameters = Parameters(),
   sampler_opts = list(),
-  exclusions = Exclusions()
+  exclusions = Exclusions(),
+  output_container = character(0)
 )
 }
 \arguments{
@@ -76,6 +77,9 @@ EpiNow2. It has required keys: \code{cores}, \code{chains}, \code{iter_warmup},
 
 \item{exclusions}{An instance of \code{Exclusions} class containing exclusion
 criteria.}
+
+\item{output_container}{An optional string specifying the output blob storage
+container.}
 }
 \description{
 Represents the complete configuration for the pipeline.
