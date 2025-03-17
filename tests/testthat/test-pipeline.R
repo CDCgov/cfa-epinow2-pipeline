@@ -148,7 +148,6 @@ test_that("Warning and exit for bad config file", {
   expect_warning(
     pipeline_success <- orchestrate_pipeline(
       config_path = config_path,
-      output_container = NULL,
       input_dir = input_dir,
       output_dir = output_dir
     ),

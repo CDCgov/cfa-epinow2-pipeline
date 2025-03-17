@@ -146,7 +146,7 @@ orchestrate_pipeline <- function(config_path,
   # TODO: Move metadata to outer wrapper
   cli::cli_alert_info("Finishing run at {Sys.time()}")
 
-  if (!rlang::is_null(config@output_container)) {
+  if (!rlang::is_empty(config@output_container)) {
     outfiles <- file.path(output_dir, config@job_id, "*")
     cli::cli_alert(
       "Uploading {.path {outfiles}} to {.path {config@output_container}}"
