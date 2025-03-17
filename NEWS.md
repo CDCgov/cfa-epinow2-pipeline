@@ -13,6 +13,7 @@
 * Makefile supports either docker or podman as arguments to setup & manage containers
 * Streamlined configurable container execution provided by included start.sh script
 * Container App Job execution tools added including job-template.yaml file for single task and Python script for bulk tasks
+* GitHub Actions workflow added to start Azure Container App Job
 * Minor changes in removing unused container tags from Azure CR.
 
 # CFAEpiNow2Pipeline v0.1.0
