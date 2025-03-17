@@ -12,7 +12,6 @@ test_that("Bad config throws warning and returns failure", {
   expect_warning(
     pipeline_success <- orchestrate_pipeline(
       config_path = config_path,
-      output_container = output_container,
       input_dir = input_dir,
       output_dir = output_dir
     ),
@@ -34,7 +33,6 @@ test_that("Pipeline run produces expected outputs with NO exclusions", {
   # Act
   pipeline_success <- orchestrate_pipeline(
     config_path = config_path,
-    output_container = output_container,
     input_dir = input_dir,
     output_dir = output_dir
   )
@@ -59,7 +57,6 @@ test_that("Pipeline run produces expected outputs with exclusions", {
   # Act
   pipeline_success <- orchestrate_pipeline(
     config_path = config_path,
-    output_container = output_container,
     input_dir = input_dir,
     output_dir = output_dir
   )

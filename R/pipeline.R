@@ -11,10 +11,6 @@
 #' configuration file.
 #' @param config_container Optional. The name of the blob storage container
 #' from which the config file will be downloaded.
-#' @param output_container Optional. The name of the blob storage
-#' container to which logs and outputs will be uploaded. If NULL, no upload
-#' will occur. If this is also set in the config file, and the value there is
-#' different, an eror will be thrown.
 #' @param input_dir A string specifying the directory to read inputs from. If
 #' passing storage containers, this is where the files will be downloaded to.
 #' @param output_dir A string specifying the directory where output, logs, and
@@ -75,7 +71,6 @@
 #' @family pipeline
 #' @export
 orchestrate_pipeline <- function(config_path,
-                                 output_container = NULL,
                                  config_container = NULL,
                                  input_dir = "/input",
                                  output_dir = "/output") {
@@ -86,16 +81,9 @@ orchestrate_pipeline <- function(config_path,
         blob_storage_container = config_container,
         dir = input_dir
       )
-      config <- read_json_into_config(
+      read_json_into_config(
         config_path, c("exclusions", "output_container")
       )
-
-      # Check that the output container in the config file matches the one
-      # passed in, or one or the other is NULL. This function puts the correct
-      # output_container in the config object. Use that for future use of
-      # `output_container`
-      config <- pick_non_empty(output_container, config)
-      return(config)
     },
     error = function(con) {
       cli::cli_warn("Bad config file",

@@ -57,7 +57,7 @@ run:
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
-	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt', output_container = 'zs-test-pipeline-update')"
+	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt')"
 
 
 up:
