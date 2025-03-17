@@ -1,0 +1,54 @@
+name: Start Container App Job
+
+# This GitHub Actions workflow executes a Container App Job for the cfa-epinow2-pipeline.
+# It requires a config file be provided as input.
+# Steps are to pull a template of the configured job from Azure, update the template with
+# the config file provided by the user, and start the job.
+# Operations are done through Azure CLI.
+
+on:
+  workflow_dispatch:
+    inputs:
+      config_file:
+        description: "Config File"
+        required: true
+        default:
+
+env:
+  RESOURCE_GROUP: ext-edav-cfa-prd
+  JOB_NAME: cfa-epinow2-test-caj
+
+jobs:
+  start-caj:
+    permissions:
+      id-token: 'write'
+      packages: 'read'
+      contents: 'write'
+    runs-on: cfa-cdcgov-aca
+    name: start caj
+    steps:
+      - name: Azure login with OIDC
+        id: azure_login_2
+        uses: azure/login@v2
+        with:
+        # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
+          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+
+      - name: Get container app job template
+        run: |
+          az containerapp job show \
+            --resource-group  "${{ env.RESOURCE_GROUP }}" \
+            --name "${{ env.JOB_NAME }}" \
+            --query "properties.template" \
+            --output yaml > job-template.yaml
+
+      - name: Update template with input value
+        run: |
+          sed -i 's|<<config_file>>|${{ github.event.inputs.config_file }}|' job-template.yaml
+
+      - name: Run container app job
+        run: |
+          az containerapp job start \
+            --resource-group  "${{ env.RESOURCE_GROUP }}" \
+            --name "${{ env.JOB_NAME }}" \
+            --yaml job-template.yaml
