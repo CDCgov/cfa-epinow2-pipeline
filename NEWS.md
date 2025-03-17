@@ -1,9 +1,8 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
-
 * Unified Dockerfile
-* Building with ubuntu-latest and using Container App runner for all else
+* Building with ubuntu-latest and using Container App runner for all else, remove azure-cli action
 * Adding exclusions documentation and Makefile support
 * Add the blob storage container, if provided
 * Adding make command to test Azure batch
