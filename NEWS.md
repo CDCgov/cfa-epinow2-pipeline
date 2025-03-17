@@ -15,6 +15,8 @@
 * Container App Job execution tools added including job-template.yaml file for single task and Python script for bulk tasks
 * GitHub Actions workflow added to start Azure Container App Job
 * Minor changes in removing unused container tags from Azure CR.
+* Changing EpiNow2 backend to use 'cmdstanr'
+* Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyverse (2.7 GB)
 
 # CFAEpiNow2Pipeline v0.1.0
 
