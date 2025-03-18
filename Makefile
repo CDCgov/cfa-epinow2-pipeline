@@ -34,7 +34,7 @@ config:
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
 	  -f state=all \
-	  -f output_container="zs-test-pipeline-update" \
+	  -f output_container="nssp-rt-v2" \
 	  -f job_id=$(JOB)
 
 run-batch:
@@ -73,7 +73,7 @@ test-batch:
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
 	  -f state=NY \
-	  -f output_container="zs-test-pipeline-update" \
+	  -f output_container="nssp-rt-testing" \
 	  -f job_id=$(JOB)
 	@echo "Hanging for 15 seconds to wait for configs to generate"
 	sleep 15
