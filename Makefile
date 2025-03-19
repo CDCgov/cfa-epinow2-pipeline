@@ -37,6 +37,13 @@ config:
 	  -f output_container="nssp-rt-v2" \
 	  -f job_id=$(JOB)
 
+rerun-config:
+	gh workflow run \
+	  -R cdcgov/cfa-config-generator re-run-workload.yaml  \
+	  -f output_container="nssp-rt-v2" \
+	  -f job_id=$(JOB) \
+	  -f data_exclusions_path="az://nssp-rt-testing/data_exclusions.csv"
+
 run-batch:
 	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
 	$(CNTR_MGR) run --rm  \
@@ -45,6 +52,15 @@ run-batch:
 	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 run-prod: config
+	@echo "Hanging for 15 seconds to wait for configs to generate"
+	sleep 15
+	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
+	$(CNTR_MGR) run --rm  \
+	--env-file .env \
+	-it \
+	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+
+rerun-prod: rerun-config
 	@echo "Hanging for 15 seconds to wait for configs to generate"
 	sleep 15
 	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
