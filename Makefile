@@ -34,6 +34,7 @@ config:
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
 	  -f state=all \
+	  -f output_container="nssp-rt-v2" \
 	  -f job_id=$(JOB)
 
 run-batch:
@@ -56,7 +57,7 @@ run:
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
-	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt', output_container = 'zs-test-pipeline-update')"
+	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt')"
 
 
 up:
@@ -72,6 +73,7 @@ test-batch:
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
 	  -f state=NY \
+	  -f output_container="nssp-rt-testing" \
 	  -f job_id=$(JOB)
 	@echo "Hanging for 15 seconds to wait for configs to generate"
 	sleep 15
