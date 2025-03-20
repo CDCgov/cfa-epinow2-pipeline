@@ -14,6 +14,9 @@ POOL="cfa-epinow2-$(TAG)"
 TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
 JOB:=Rt-estimation-$(TIMESTAMP)
 
+# The report date to use, in ISO format (YYY-MM-DD). Default is today
+REPORT_DATE?=$(shell date -u +%F)
+
 deps:
 	$(CNTR_MGR) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
 
@@ -35,14 +38,15 @@ config:
 	  -f disease=all \
 	  -f state=all \
 	  -f output_container="nssp-rt-v2" \
-	  -f job_id=$(JOB)
+	  -f job_id=$(JOB) \
+	  -f report_date=$(REPORT_DATE)
 
 rerun-config:
 	gh workflow run \
 	  -R cdcgov/cfa-config-generator re-run-workload.yaml  \
 	  -f output_container="nssp-rt-v2" \
 	  -f job_id=$(JOB) \
-	  -f data_exclusions_path="az://nssp-rt-testing/data_exclusions.csv"
+	  -f report_date=$(REPORT_DATE)
 
 run-batch:
 	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
