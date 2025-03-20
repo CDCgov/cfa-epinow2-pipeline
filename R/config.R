@@ -146,6 +146,8 @@ Data <- S7::new_class( # nolint: object_name_linter
 #' @param model A string specifying the model to be used.
 #' @param report_date A string representing the report date. Formatted as
 #' "YYYY-MM-DD".
+#' @param output_container An optional string specifying the output blob storage
+#' container.
 #' @family config
 #' @export
 Config <- S7::new_class( # nolint: object_name_linter
@@ -175,7 +177,8 @@ Config <- S7::new_class( # nolint: object_name_linter
     # because it reduces changes to the pipeline code.
     # Would add default values, but Roxygen isn't happy about them yet.
     sampler_opts = S7::class_list,
-    exclusions = S7::S7_class(Exclusions())
+    exclusions = S7::S7_class(Exclusions()),
+    output_container = character_or_null
   )
 )
 
