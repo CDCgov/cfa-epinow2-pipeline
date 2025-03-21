@@ -77,7 +77,7 @@ A **job** is a unique pipeline run, which consists of a set of configuration fil
 
 Downstream of this pipeline, the cfa-Rt-postprocessing repo provides additional tools to parse and evaluate the model's outputs.
 
-This may seem complicated, but once you have your dependencies and crednetials set up, the whole workflow can be run with a single call to `make run-prod` at the command line. This SOP will walk your through the required setup and the underlying steps.
+This may seem complicated, but once you have your dependencies and credentials set up, the whole workflow can be run with a single call to `make run-prod` at the command line. This SOP will walk your through the required setup and the underlying steps.
 
 ### Storage and related repos
 
