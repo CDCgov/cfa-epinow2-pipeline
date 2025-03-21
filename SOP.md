@@ -197,7 +197,7 @@ run to use the config files generated in steps 1. and 2. Without this option,
 run using those.
 
 ##### Data Exclusions
-The process for handling data exclusions is currently being finalized adn this section will be finalized in April 2025. For the current procedure please reach out to Patrick Corbett (pyv3@cdc.gov).
+The process for handling data exclusions is currently being finalized and this section will be finalized in April 2025. For the current procedure please reach out to Patrick Corbett (pyv3@cdc.gov).
 
 ## Non-production runs
 The config file uniquely defines a run. To kick off a non-production run, test,
