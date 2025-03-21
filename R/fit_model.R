@@ -63,7 +63,7 @@ fit_model <- function(
         rt = rt,
         gp = gp,
         stan = stan,
-        verbose = TRUE,
+        verbose = FALSE,
         # Dump logs to console to be caught by pipeline's logging instead of
         # EpiNow2's default through futile.logger
         logs = EpiNow2::setup_logging(
