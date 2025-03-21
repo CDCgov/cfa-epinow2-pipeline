@@ -4,6 +4,7 @@ This document is meant to guide someone in running the weekly Rt estimation pipe
 ## Introduction
 
 ### The whole workflow
+(For a production run on main)
 
 ```mermaid
 flowchart TD
@@ -56,7 +57,6 @@ flowchart TD
    acr_latest -- pull --> myjob
    azc -- pull --> myjob
    write -- production run --> outprod
-   write -- test run --> outtest
 ```
 
 
