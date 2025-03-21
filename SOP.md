@@ -95,7 +95,7 @@ This may seem complicated, but once you have your dependencies and credentials s
 ### Pre-requisites
 1. VAP environment & Account
 	- git (`sudo apt-get install git`)
-	- docker CLI ([follow this script](https://teams.microsoft.com/l/message/19:064fb29dee654148b647dc8b9bab0782@thread.tacv2/1728396548512?tenantId=9ce70869-60db-44fd-abe8-d2767077fc8f&groupId=4f34eba7-8fcb-4a26-9b34-a434ea777f0c&parentMessageId=1728396548512&teamName=CFA-Predict&channelName=Help&createdTime=1728396548512)). See the [appendix](#appendix) if you wish to use
+	- docker CLI ([follow this script](https://gist.github.com/jkislin/a575780249c3580a472e25c07d3fd68f#file-docker_setup-sh)). See the [appendix](#appendix) if you wish to use
 	podman instead for local runs.
 	- gh CLI (`sudo apt-get install gh`)
 
