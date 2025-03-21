@@ -73,7 +73,7 @@ A **job** is a unique pipeline run, which consists of a set of configuration fil
     - You may also pull these resources down to run a job locally, e.g. using the computing power of your VAP image. But we don't recommend this unless you are running a small job with few tasks, because your local machine does not provide the same parallelism as Batch.
     - If you are developing code on a branch in this repo, opening a PR or draft PR will trigger GH actions that will build a pool and container tagged with your branch name, "cfa-epinow2-pipeline:my_branch", and the makefile in this repo will automatically configure the job to run using the pool and image corresponding to your branch so that you can test your updates in Azure. Note, however, that the pool and container image will contain the latest version of the code pushed to the remote, not the latest version you have locally, and you will need to wait for the pool and image to rebuild in the cloud after each push to GitHub.
 3. Run the job. Once all the required inputs are on a computer, inside the appropriate container image, for each task, the epinow2 model will run, generate $R_t$ estimates, and write them to the container's file system.
-4. Upload the outputs from the container to a persistent storage location, such as Azure Batch (or for local runs, to your local filesystem).
+4. Upload the outputs from the container to a persistent storage location, such as Azure Blob (or for local runs, to your local filesystem).
 
 Downstream of this pipeline, the cfa-Rt-postprocessing repo provides additional tools to parse and evaluate the model's outputs.
 
