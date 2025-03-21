@@ -88,7 +88,7 @@ This may seem complicated, but once you have your dependencies and credentials s
    configuration files
 - `az://nssp-rt-v2/` an Azure blob storage container where we store production outputs
 - `az://nssp-rt-testing/` a blob storage container where we store non-production outputs
-- `az://nssp-rt-post-process/` a blob storage container where we store output from the post processor. 
+- `az://nssp-rt-post-process/` a blob storage container where we store output from the post processor.
 
 # Getting started
 
