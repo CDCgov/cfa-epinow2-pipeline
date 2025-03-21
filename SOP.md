@@ -84,10 +84,11 @@ This may seem complicated, but once you have your dependencies and credentials s
 - https://github.com/CDCgov/cfa-config-generator: a microservice that generates
   configuration files, and uploads them to Azure blob storage
 - https://github.com/CDCent/cfa-rt-postprocessing: a repo with tools for postprocessing of Rt estimates
-- `az:/rt-epinow2-config/` an Azure blob storage container that holds
+- `az://rt-epinow2-config/` an Azure blob storage container that holds
    configuration files
-- `az:/nssp-rt-v2/` an Azure blob storage container where we store production outputs
-- `az:/nssp-rt-testing/` a container where we store non-production outputs
+- `az://nssp-rt-v2/` an Azure blob storage container where we store production outputs
+- `az://nssp-rt-testing/` a blob storage container where we store non-production outputs
+- `az://nssp-rt-post-process/` a blob storage container where we store output from the post processor. 
 
 # Getting started
 
