@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Add ability to call `make rerun-prod` to rerun just the tasks that needed a data change.
 * Add output container as a new field in the config file.
 * Building with ubuntu-latest and using Container App runner for all else, remove azure-cli action
 * Adding exclusions documentation and Makefile support
