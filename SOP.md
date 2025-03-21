@@ -218,7 +218,7 @@ This will write a set of configs to `az:/rt-epinow2-config/{job_id}`. Then run
 ![screenshot of UI](image.png)
 2. Use the comand line
 `gh workflow run -R cdcgov/cfa-config-generator run-workload.yaml -f job_id='my_job_id' -f task_exclusions='NY:COVID-19', -f output_container='nssp-rt-testing'`
-Use -f flags to specify arugments different from the defaults
+Use -f flags to specify arguments different from the defaults
 
 3. (We recommend you do NOT) run `make config`.
 This will specify the production container, `nssp-rt-v2`, as the output destination.
