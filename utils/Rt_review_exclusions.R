@@ -12,6 +12,19 @@ pacman::p_load(
 source("R/azure.R")
 
 
+option_list <- list(
+  make_option(c("-d", "--dates"),
+              type = "character", default = gsub("-","",today(tzone = "UTC")),
+              help = "Reports Date in yyyymmdd format", metavar = "character"
+  )
+)
+opt_parser <- OptionParser(option_list = option_list)
+opt <- parse_args(opt_parser)
+#Get All Files Names to Download and Parse
+date_names <- opt$dates
+
+
+
 read_process_excel_func =function(
     sheet_name, 
     pathogen, 
@@ -36,7 +49,7 @@ read_process_excel_func =function(
 
 
 create_point_exclusions_from_rt_review_xslx <- function(
-    dates =  gsub("-","",today(tzone = "UTC")) #yyyymmdd format
+    dates =  date_names#yyyymmdd format
     ){
   
   #Connect to Sharepoint  via Microsoft365R library
