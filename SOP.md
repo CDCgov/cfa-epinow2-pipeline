@@ -221,7 +221,7 @@ This will write a set of configs to `az:/rt-epinow2-config/{job_id}`. Then run
 Use -f flags to specify arugments different from the defaults
 
 3. (We recommend you do NOT) run `make config`.
-This will speficy the production container, `nssp-rt-v2`, as the output destination.
+This will specify the production container, `nssp-rt-v2`, as the output destination.
 We don't want to contaminate the production output with test runs and experiments.
 Use this for production runs only.
 
