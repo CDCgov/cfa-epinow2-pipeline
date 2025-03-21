@@ -131,7 +131,7 @@ Verify that you can locate the configuration files in Azure blob storage.
 If you receive an error that you do not have the necessary permissions to run this command please reach out Agastya Mondal (ab59@cdc.gov) for assistance.
 
 #### Test make run command
-1. The following command will test your setup for using the `CFAEpiNow2Pipeline` package. This command will run the pipeline for a single state and disease locally (using the computing power of your VAP account). This will take a few minutes. (N.B. the test config runs a short chain. Running the sampler locally for 10,000 steps, as in a production run, would take longer.) `make run CONFIG=test/test.json`
+1. The following command will test your setup for using the `CFAEpiNow2Pipeline` package. This command will run the pipeline for a single state and disease locally (using the computing power of your VAP account). This will take a few minutes. (N.B. the test config runs a short chain, and will be faster than a run using the default chain length.) `make run CONFIG=test/test.json`
 
 	**Knowledge check:** Where can you find the `test/test.json` config file?
 
