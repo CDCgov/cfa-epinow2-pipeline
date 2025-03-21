@@ -62,7 +62,7 @@ flowchart TD
 
 ### Definitions
 
-A **job** is a unique pipeline run, which consists of a set of configuration files that fully define the run, and a set of outputs. The `job_id` a unique tag assigned by the config generator that links the configuration files to the run and the ouputs. A job may contain many tasks (e.g. a typical production job contains tasks for each of 51 jurisdictions * 2 diseases = 102 tasks, each with their own `task_id`). Each task is reproducible and defined by its own .json config file.
+A **job** is a unique pipeline run, which consists of a set of configuration files that fully define the run, and a set of outputs. The `job_id` a unique tag assigned by the config generator that links the configuration files to the run and the outputs. A job may contain many tasks (e.g. a typical production job contains tasks for each of 51 jurisdictions * 2 diseases = 102 tasks, each with their own `task_id`). Each task is reproducible and defined by its own .json config file.
 
 ### A full pipeline run consists of
 
