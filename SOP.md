@@ -215,8 +215,7 @@ click the "Run workflow" dropdown menu, specify your parameters, and hit "Run wo
 This will write a set of configs to `az:/rt-epinow2-config/{job_id}`. Then run
 `make run-batch JOB=job_id` to run the models using the configs you just generated.
 
-![alt text](image-1.png)
-
+![screenshot of UI](image.png)
 2. Use the comand line
 `gh workflow run -R cdcgov/cfa-config-generator run-workload.yaml -f job_id='my_job_id' -f task_exclusions='NY:COVID-19', -f output_container='nssp-rt-testing'`
 Use -f flags to specify arugments different from the defaults
