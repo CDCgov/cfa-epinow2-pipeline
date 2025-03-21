@@ -14,7 +14,7 @@ POOL="cfa-epinow2-$(TAG)"
 TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
 JOB:=Rt-estimation-$(TIMESTAMP)
 
-# The report date to use, in ISO format (YYY-MM-DD). Default is today
+# The report date to use, in ISO format (YYYY-MM-DD). Default is today
 REPORT_DATE?=$(shell date -u +%F)
 
 deps:
