@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Updating pre-commit CI/CD versoin
 * Building with ubuntu-latest and using Container App runner for all else, remove azure-cli action
 * Adding exclusions documentation and Makefile support
 * Add the blob storage container, if provided
