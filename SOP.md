@@ -90,7 +90,7 @@ This may seem complicated, but once you have your dependencies and credentials s
 - `az://nssp-rt-testing/` a blob storage container where we store non-production outputs
 - `az://nssp-rt-post-process/` a blob storage container where we store output from the post processor.
 
-# Getting started
+## Getting started
 
 ### Pre-requisites
 1. VAP environment & Account
@@ -197,7 +197,26 @@ run to use the config files generated in steps 1. and 2. Without this option,
 run using those.
 
 ##### Data Exclusions
-The process for handling data exclusions is currently being finalized and this section will be finalized in April 2025. For the current procedure please reach out to Patrick Corbett (pyv3@cdc.gov).
+During the anomaly review meeting, we sometimes deem some points anomalous; they are affecting the model in some undesired way. The result of this is that we usually want to re-run a state-disease pairs. So how do we re-run those state-disease pairs, and tell the pipeline to drop certain data points?
+
+The meeting attendees will fill in a spreadsheet which specifies which state-disease pairs will be rerun, and what specific data points will be removed. For the pipeline to know which data points to exclude when it loads the data, it needs to be pointed to a data "outliers" (a.k.a. "exclusions") CSV in its configuration file. So to get from the spreadsheet of decisions to running those particular cases again in Azure Batch, we use the following flow.
+
+```mermaid
+flowchart TD
+    A(Data Anomaly Review) -->|produces| B(Decisions Spreadhsheet)
+    B -->|PC's script| C(YYYY-MM-DD.csv on S drive)
+    C -->|Manually check and upload| D(YYYY-MM-DD.csv in Azure Blob: az://nssp-rt-v2/outliers/YYYY-MM-DD.csv)
+    D -->|make rerun-prod| E(New set of configs)
+    E -->F(Run those tasks in Azure Batch)
+```
+In this flowchart, each arrow with text represents a manual action. Writing out the above in more detail:
+1. The anomaly review team documents their decisions in the spreadsheet.
+1. The person running the pipeline uses Patrick Corbett's (PC) script located at `S:/CDC/NSSP_Rt/analyses/Rt_Review/Rt_review_machine_readable.R`. This saves the requisite file to `S:/CDC/NSSP_Rt/analyses/Rt_Review/Review_Decisions/`. This file has columns `state`, `disease`, `reference_date`, `report_date`. Those columns fully specify for the pipeline how to handle the data exclusions.
+1. The person running the pipeline manually verifies that the correct state-disease-reference_date pairings are as expected. Note that this set of data outliers corresponds to the NSSP report in use for this production run. If we ran again tomorrow, we would use tomorrow's report, the data would be different, and we would likely pick a different set of points (if any) to be marked as outliers. This means it is important to always use the date of this report as the name for this CSV. (It should correspond with the values in the `report_date` column).
+1. Upload the file to the blob storage "folder" `az://nssp-rt-v2/outliers/`. Can be done by either:
+    1. Manually uploading using the Web Portal or the Storage Explorer.
+    1. Running `az storage blob upload --file /path/to/data/outliers/YYYY-MM-DD.csv --container-name nssp-rt-v2 --name outilers/YYYY-MM-DD.csv`.
+1. The person running the pipeline runs `make rerun-prod`. This will create new configuration files based on the CSV just uploaded to Blob, and then kick off those tasks in Azure Batch.
 
 ## Non-production runs
 The config file uniquely defines a run. To kick off a non-production run, test,
@@ -212,11 +231,11 @@ There are three ways to generate configs:
 1. Use the GUI in the config generation repo
 Navigate to https://github.com/CDCgov/cfa-config-generator/actions/workflows/run-workload.yaml,
 click the "Run workflow" dropdown menu, specify your parameters, and hit "Run workflow".
-This will write a set of configs to `az:/rt-epinow2-config/{job_id}`. Then run
+This will write a set of configs to `az://rt-epinow2-config/{job_id}`. Then run
 `make run-batch JOB=job_id` to run the models using the configs you just generated.
 
 ![screenshot of UI](image.png)
-2. Use the comand line
+2. Use the command line
 `gh workflow run -R cdcgov/cfa-config-generator run-workload.yaml -f job_id='my_job_id' -f task_exclusions='NY:COVID-19', -f output_container='nssp-rt-testing'`
 Use -f flags to specify arguments different from the defaults
 
