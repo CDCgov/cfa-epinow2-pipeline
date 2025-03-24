@@ -37,6 +37,7 @@ Imports:
     duckdb,
     EpiNow2 (>= 1.4.0),
     jsonlite,
+    primarycensored,
     rlang,
     rstan,
     S7,
