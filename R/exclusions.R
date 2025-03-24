@@ -53,7 +53,7 @@ apply_exclusions <- function(cases, exclusions) {
 #' Expects to read a CSV with required columns:
 #' * `reference_date`
 #' * `report_date`
-#' * `state_abb`
+#' * `state`
 #' * `disease`
 #'
 #' These columns have the same meaning as in [read_data()]. Additional columns
@@ -75,7 +75,7 @@ read_exclusions <- function(path) {
       SELECT
         reference_date,
         report_date,
-        state_abb AS geo_value,
+        state AS geo_value,
         disease
       FROM read_csv(?)
         ",
