@@ -11,9 +11,6 @@
 #' configuration file.
 #' @param config_container Optional. The name of the blob storage container
 #' from which the config file will be downloaded.
-#' @param output_container Optional. The name of the blob storage
-#' container to which logs and outputs will be uploaded. If NULL, no upload
-#' will occur.
 #' @param input_dir A string specifying the directory to read inputs from. If
 #' passing storage containers, this is where the files will be downloaded to.
 #' @param output_dir A string specifying the directory where output, logs, and
@@ -74,7 +71,6 @@
 #' @family pipeline
 #' @export
 orchestrate_pipeline <- function(config_path,
-                                 output_container = NULL,
                                  config_container = NULL,
                                  input_dir = "/input",
                                  output_dir = "/output") {
@@ -85,7 +81,9 @@ orchestrate_pipeline <- function(config_path,
         blob_storage_container = config_container,
         dir = input_dir
       )
-      read_json_into_config(config_path, c("exclusions"))
+      read_json_into_config(
+        config_path, c("exclusions", "output_container")
+      )
     },
     error = function(con) {
       cli::cli_warn("Bad config file",
@@ -148,10 +146,12 @@ orchestrate_pipeline <- function(config_path,
   # TODO: Move metadata to outer wrapper
   cli::cli_alert_info("Finishing run at {Sys.time()}")
 
-  if (!rlang::is_null(output_container)) {
+  if (!rlang::is_empty(config@output_container)) {
     outfiles <- file.path(output_dir, config@job_id, "*")
-    cli::cli_alert("Uploading {.path {outfiles}} to {.path {output_container}}")
-    cont <- fetch_blob_container(output_container)
+    cli::cli_alert(
+      "Uploading {.path {outfiles}} to {.path {config@output_container}}"
+    )
+    cont <- fetch_blob_container(config@output_container)
     AzureStor::multiupload_blob(
       container = cont,
       src = outfiles,
@@ -279,7 +279,10 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     production_date = config@production_date,
     max_reference_date = config@max_reference_date,
     min_reference_date = config@min_reference_date,
-    exclusions = empty_str_if_non_existent(config@exclusions@path),
+    exclusions_path = empty_str_if_non_existent(config@exclusions@path),
+    exclusions_blob_container = empty_str_if_non_existent(
+      config@exclusions@blob_storage_container
+    ),
     # Add the config container here when refactoring out to outer func
     run_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
   )

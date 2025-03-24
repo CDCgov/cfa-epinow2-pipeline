@@ -18,7 +18,7 @@ Expects to read a CSV with required columns:
 \itemize{
 \item \code{reference_date}
 \item \code{report_date}
-\item \code{state_abb}
+\item \code{state}
 \item \code{disease}
 }
 }
