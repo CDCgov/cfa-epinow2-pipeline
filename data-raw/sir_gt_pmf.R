@@ -94,9 +94,9 @@ dpcens <- function(
 
   if (is.finite(D)) {
     if (max(unique_points) == D) {
-      cdf_D <- max(cdfs)
+      cdf_d <- max(cdfs)
     } else {
-      cdf_D <- pprimarycensored(
+      cdf_d <- pprimarycensored(
         D,
         pdist,
         pwindow,
@@ -106,7 +106,7 @@ dpcens <- function(
         ...
       )
     }
-    result <- result / cdf_D
+    result <- result / cdf_d
   }
 
   if (log) {
