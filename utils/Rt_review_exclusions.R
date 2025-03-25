@@ -9,7 +9,7 @@ pacman::p_load(
   "readr",
   "AzureStor"
 )
-source("R/azure.R")
+source("../R/azure.R")
 
 
 option_list <- list(
@@ -28,7 +28,8 @@ date_names <- opt$dates
 read_process_excel_func =function(
     sheet_name, 
     pathogen, 
-    file_name
+    file_name,
+    report_date
     )
   {
   # sheet_name="Rt_Review_COVID"
@@ -49,13 +50,12 @@ read_process_excel_func =function(
 
 
 create_point_exclusions_from_rt_review_xslx <- function(
-    dates =  date_names#yyyymmdd format
+    dates #yyyymmdd format
     ){
   
   #Connect to Sharepoint  via Microsoft365R library
-  get_business_onedrive()  #Run and the browser opens to log into sharepoint
-  list_sharepoint_sites() # lists teams in the Rstudio console. Seems to only show teams that you have followed. Go to this link and click "follow" https://cdc.sharepoint.com/teams/CenterforForecastingandOutbreakAnalytics 
-  site <- get_sharepoint_site("OD-OCoS-Center for Forecasting and Outbreak Analytics") #Provide team name here
+  #get_business_onedrive(auth_type = "device_code")  #Run and the browser opens to log into sharepoint
+  site <- get_sharepoint_site(auth_type = "device_code", "OD-OCoS-Center for Forecasting and Outbreak Analytics") #Provide team name here
   drv <- site$get_drive("Documents")# Set drive to Documents (vs Wiki)
   Rt_review_path = "General/02 - Predict/Real Time Monitoring (RTM) Branch/Nowcasting and Natural History/Rt/NSSP-Rt/Rt_Review_Notes/Review_Decisions/"
   
@@ -71,11 +71,13 @@ create_point_exclusions_from_rt_review_xslx <- function(
     #read and process the COVID sheet
     covid_df = read_process_excel_func(sheet_name = "Rt_Review_COVID",
                                        pathogen="covid",
-                                       file_name=fname)
+                                       file_name=fname,
+                                       report_date=report_date)
     #read and process the Influenza sheet
     influenza_df = read_process_excel_func(sheet_name = "Rt_Review_Influenza",
                                            pathogen="influenza",
-                                           file_name=fname)
+                                           file_name=fname,
+                                           report_date=report_date)
     #Overall Rt_review machine readable format
     combined_df = rbind(covid_df, influenza_df)
     if (file.exists(paste0(fname))) {
@@ -111,6 +113,7 @@ create_point_exclusions_from_rt_review_xslx <- function(
 }
 
 
+create_point_exclusions_from_rt_review_xslx(dates=date_names)
 
   
 
