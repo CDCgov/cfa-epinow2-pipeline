@@ -216,7 +216,7 @@ In this flowchart, each arrow with text represents a manual action. Writing out 
 1. Upload the file to the blob storage "folder" `az://nssp-rt-v2/outliers/`. Can be done by either:
     1. Manually uploading using the Web Portal or the Storage Explorer.
     1. Running `az storage blob upload --file /path/to/data/outliers/YYYY-MM-DD.csv --container-name nssp-rt-v2 --name outilers/YYYY-MM-DD.csv`.
-1. The person running the pipeline runs `make rerun-prod`. This will create new configuration files based on the CSV just uploaded to Blob, and then kick off those tasks in Azure Batch.
+1. The person running the pipeline runs `make rerun-prod`. This will create new configuration files that include the path to the outlier CSV just uploaded to Blob, and then kick off those tasks in Azure Batch.
 
 ## Non-production runs
 The config file uniquely defines a run. To kick off a non-production run, test,
