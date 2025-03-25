@@ -9,7 +9,7 @@ Exclusions(path = character(0), blob_storage_container = character(0))
 \arguments{
 \item{path}{A string specifying the path to a CSV file containing exclusion
 data. It should include at least the columns: \code{reference_date},
-\code{report_date}, \code{state_abb}, \code{disease}.}
+\code{report_date}, \code{state}, \code{disease}.}
 
 \item{blob_storage_container}{Optional. The name of the blob storage
 container to get it from. If NULL, will look locally.}
