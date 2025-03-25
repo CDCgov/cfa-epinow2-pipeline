@@ -2,6 +2,7 @@
 
 ## Features
 * Unified Dockerfile
+* Add instructions for data outliers reruns to the SOP.
 * Add ability to call `make rerun-prod` to rerun just the tasks that needed a data change.
 * Add output container as a new field in the config file.
 * Building with ubuntu-latest and using Container App runner for all else, remove azure-cli action
