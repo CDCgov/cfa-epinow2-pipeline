@@ -11,4 +11,4 @@ time docker buildx build --push -t "$IMAGE" \
 	--cache-from "type=registry,ref=$IMAGE:$TAG" \
 	--cache-from "type=registry,ref=$IMAGE:latest" \
 	--cache-to "type=registry,ref=$IMAGE:$TAG,mode=max" \
-	-f Dockerfile.unified .
+	-f Dockerfile .
