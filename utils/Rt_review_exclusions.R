@@ -1,3 +1,15 @@
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(
+  "Microsoft365R", # for accessing onedrive #https://stackoverflow.com/questions/28048979/accessing-excel-file-from-sharepoint-with-r
+  "readxl", # for reading excel files
+  "optparse",
+  "lubridate",
+  "tidyr",
+  "dplyr",
+  "readr",
+  "AzureStor"
+)
+
 source("../R/azure.R")
 
 
@@ -19,9 +31,6 @@ read_process_excel_func <- function(
     pathogen,
     file_name,
     report_date) {
-  # sheet_name="Rt_Review_COVID"
-  # pathogen="covid"
-  # file_name=fname
   df <- read_excel(paste0(file_name), # may neeed to edit path where saved
     sheet = sheet_name,
     skip = 3
@@ -43,7 +52,6 @@ create_point_exclusions_from_rt_review_xslx <- function(
     dates # yyyymmdd format
     ) {
   # Connect to Sharepoint  via Microsoft365R library
-  # get_business_onedrive(auth_type = "device_code")  #Run and the browser opens to log into sharepoint
   site <- get_sharepoint_site(auth_type = "device_code", "OD-OCoS-Center for Forecasting and Outbreak Analytics") # Provide team name here
   drv <- site$get_drive("Documents") # Set drive to Documents (vs Wiki)
   Rt_review_path <- "General/02 - Predict/Real Time Monitoring (RTM) Branch/Nowcasting and Natural History/Rt/NSSP-Rt/Rt_Review_Notes/Review_Decisions/"
@@ -96,9 +104,9 @@ create_point_exclusions_from_rt_review_xslx <- function(
         raw_confirm = NA,
         clean_confirm = NA
       ) |>
-      select(reference_date, report_date, "state" = "geo_value", "disease" = "pathogen", raw_confirm, clean_confirm)
+      select(reference_date, report_date, "state" = "geo_value", "disease" = "pathogen")
 
-    cont <- fetch_blob_container("nssp-etl-2")
+    cont <- fetch_blob_container("nssp-rt-v2")
 
     storage_write_csv(
       cont = cont,
