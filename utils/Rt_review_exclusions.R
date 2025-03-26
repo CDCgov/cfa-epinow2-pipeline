@@ -1,14 +1,3 @@
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(
-  "Microsoft365R", # for accessing onedrive #https://stackoverflow.com/questions/28048979/accessing-excel-file-from-sharepoint-with-r
-  "readxl", # for reading excel files
-  "optparse",
-  "lubridate",
-  "tidyr",
-  "dplyr",
-  "readr",
-  "AzureStor"
-)
 source("../R/azure.R")
 
 
