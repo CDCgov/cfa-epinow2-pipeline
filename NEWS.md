@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Automate creation of outlier csv for nssp-elt-2/outliers
 * Unified Dockerfile
 * Add instructions for data outliers reruns to the SOP.
 * Add ability to call `make rerun-prod` to rerun just the tasks that needed a data change.
