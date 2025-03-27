@@ -76,7 +76,10 @@ read_exclusions <- function(path) {
         reference_date,
         report_date,
         state AS geo_value,
-        disease
+        CASE
+          WHEN disease = 'COVID-19/Omicron' THEN 'COVID-19'
+          ELSE disease
+        END AS disease
       FROM read_csv(?)
         ",
       params = list(path)
