@@ -27,3 +27,8 @@ $Dockerfile-batch^
 ^pkgdown$
 ^rules_of_behavior.md$
 ^thanks.md$
+^Dockerfile.unified$
+^SOP.md$
+^container-app-jobs$
+^start.sh$
+^image.png$
