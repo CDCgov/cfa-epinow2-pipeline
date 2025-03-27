@@ -5,8 +5,10 @@ $Dockerfile-batch^
 ^Dockerfile$
 ^Dockerfile-batch$
 ^Dockerfile-dependencies$
+^Dockerfile.unified$
 ^LICENSE.md$
 ^Makefile$
+^SOP.md$
 ^\.github$
 ^\.lintr$
 ^\.pre-commit-config\.yaml$
@@ -18,12 +20,10 @@ $Dockerfile-batch^
 ^batch-autoscale-formula.txt$
 ^code-of-conduct.md$
 ^codecov\.yml$
+^container-app-jobs$
 ^data-raw$
 ^docs$
 ^open_practices.md$
 ^pkgdown$
 ^rules_of_behavior.md$
 ^thanks.md$
-^Dockerfile.unified$
-^SOP.md$
-^container-app-jobs$
