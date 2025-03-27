@@ -6,7 +6,6 @@ $Dockerfile-batch^
 ^Dockerfile-batch$
 ^Dockerfile-dependencies$
 ^Dockerfile.unified$
-^Dockerfile.unified$
 ^LICENSE.md$
 ^Makefile$
 ^SOP.md$
