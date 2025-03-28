@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyverse (2.7 GB)
 * Updating makefile to represent unified Dockerfile approach (not two-step build)
 * Make sure we change "COVID-19/Omicron" to "COVID-19" when reading NSSP data.
 * Unified Dockerfile
