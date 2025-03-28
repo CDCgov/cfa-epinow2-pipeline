@@ -53,7 +53,7 @@ test_that("Can read exclusions on happy path", {
       SELECT
         reference_date,
         report_date,
-        geo_value AS state_abb,
+        geo_value AS state,
         disease
        FROM exclusions
      ) TO 'test.csv'")
@@ -68,7 +68,7 @@ test_that("Empty read errors", {
   expected <- data.frame(
     reference_date = character(),
     report_date = character(),
-    state_abb = character(),
+    state = character(),
     disease = character()
   )
 

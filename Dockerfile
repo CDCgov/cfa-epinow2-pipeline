@@ -1,8 +1,18 @@
-# Adding arguments
-ARG TAG=local
+FROM docker.io/rocker/geospatial:4.4.1
+
+# Will copy the package to the container preserving the directory structure
+RUN mkdir -p pkg
+
+COPY ./DESCRIPTION pkg/
+
+# Installing missing dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
+RUN install2.r pak
+# dependencies = TRUE means we install `suggests` too
+RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
 
 # This requires access to the Azure Container Registry
-FROM cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:${TAG}
+# FROM ghcr.io/cdcgov/cfa-epinow2-pipeline:${TAG}
 
 # Will copy the package to the container preserving the directory structure
 COPY . pkg/

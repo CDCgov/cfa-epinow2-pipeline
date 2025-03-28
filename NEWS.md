@@ -2,12 +2,27 @@
 
 ## Features
 * Updating R CMD check to use rocker image
+* Updating makefile to represent unified Dockerfile approach (not two-step build)
+* Make sure we change "COVID-19/Omicron" to "COVID-19" when reading NSSP data.
+* Unified Dockerfile
+* Add instructions for data outliers reruns to the SOP.
+* Add ability to call `make rerun-prod` to rerun just the tasks that needed a data change.
+* Add output container as a new field in the config file.
+* Building with ubuntu-latest and using Container App runner for all else, remove azure-cli action
+* Adding exclusions documentation and Makefile support
+* Add the blob storage container, if provided
+* Adding make command to test Azure batch
+* Updating subnet ID and pool VM to 22.04 from 20.04
 * Write model diagnostics to an output file, correcting an oversight
 * Refactored GH Actions container build to cfa-actions 2-step build
-* Creating SOP.md to document weekly run procedures
+* Creating SOP.md to document weekly run procedures, including diagram
 * Allows unique job_ids for runs.
 * Makefile supports either docker or podman as arguments to setup & manage containers
-* Minor changes in removing unused container tags from Azure CR.
+* Streamlined configurable container execution provided by included start.sh script
+* Container App Job execution tools added including job-template.yaml file for single task and Python script for bulk tasks
+* GitHub Actions workflow added to start Azure Container App Job
+* Minor changes in removing unused container tags from Azure CR
+* Reactivated DEBUG level logs from EpiNow2 so that sampler progress is visible
 
 # CFAEpiNow2Pipeline v0.1.0
 

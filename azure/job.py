@@ -86,7 +86,7 @@ if __name__ == "__main__":
     )
 
     for config_path in task_configs:
-        command = f"Rscript -e \"CFAEpiNow2Pipeline::orchestrate_pipeline('{config_path}', config_container = '{config_container}', input_dir = '/mnt/input', output_dir = '/mnt/output', output_container = 'zs-test-pipeline-update')\""
+        command = f"Rscript -e \"CFAEpiNow2Pipeline::orchestrate_pipeline('{config_path}', config_container = '{config_container}', input_dir = '/mnt/input', output_dir = '/mnt/output')\""
         task = batchmodels.TaskAddParameter(
             id=str(uuid.uuid4()),
             command_line=command,

@@ -1,7 +1,9 @@
 test_that("Data read for one state works on happy path", {
   data_path <- test_path("data/test_data.parquet")
   con <- DBI::dbConnect(duckdb::duckdb())
-  expected <- DBI::dbGetQuery(con, "
+  expected <- DBI::dbGetQuery(
+    con,
+    "
                          SELECT
                            report_date,
                            reference_date,
@@ -14,7 +16,8 @@ test_that("Data read for one state works on happy path", {
   )
   DBI::dbDisconnect(con)
 
-  actual <- read_data(data_path,
+  actual <- read_data(
+    data_path,
     disease = "test",
     geo_value = "test",
     report_date = "2023-10-28",
@@ -28,7 +31,9 @@ test_that("Data read for one state works on happy path", {
 test_that("Data read for US overall works on happy path", {
   data_path <- test_path("data/us_overall_test_data.parquet")
   con <- DBI::dbConnect(duckdb::duckdb())
-  expected <- DBI::dbGetQuery(con, "
+  expected <- DBI::dbGetQuery(
+    con,
+    "
                          SELECT
                            report_date,
                            reference_date,
@@ -41,7 +46,8 @@ test_that("Data read for US overall works on happy path", {
   )
   DBI::dbDisconnect(con)
 
-  actual <- read_data(data_path,
+  actual <- read_data(
+    data_path,
     disease = "test",
     geo_value = "US",
     report_date = "2023-10-28",
@@ -55,7 +61,8 @@ test_that("Data read for US overall works on happy path", {
 test_that("Reading a file that doesn't exist fails", {
   data_path <- "not_a_real_file"
   expect_error(
-    read_data(data_path,
+    read_data(
+      data_path,
       disease = "test",
       geo_value = "not_a_real_state",
       report_date = "2023-10-28",
@@ -69,7 +76,8 @@ test_that("Reading a file that doesn't exist fails", {
 test_that("A query with no matching return fails", {
   data_path <- test_path("data/us_overall_test_data.parquet")
   expect_error(
-    read_data(data_path,
+    read_data(
+      data_path,
       disease = "test",
       geo_value = "not_a_real_state",
       report_date = "2023-10-28",
@@ -84,7 +92,8 @@ test_that("An invalid query throws a wrapped error", {
   # point the query at a non-parquet file
   data_path <- test_path("test-read_data.R")
   expect_error(
-    read_data(data_path,
+    read_data(
+      data_path,
       disease = "test",
       geo_value = "not_a_real_state",
       report_date = "2023-10-28",
@@ -100,7 +109,8 @@ test_that("Incomplete return throws warning", {
 
   # Two missing dates
   expect_snapshot_warning(
-    read_data(data_path,
+    read_data(
+      data_path,
       disease = "test",
       geo_value = "test",
       report_date = "2023-10-28",
@@ -109,4 +119,41 @@ test_that("Incomplete return throws warning", {
     ),
     class = "incomplete_return"
   )
+})
+
+test_that("Replace COVID-19/Omicron with COVID-19, one state", {
+  data_path <- test_path("data/CA_test.parquet")
+
+  actual <- read_data(
+    data_path,
+    disease = "COVID-19",
+    geo_value = "CA",
+    report_date = "2024-11-26",
+    min_reference_date = as.Date("2024-06-01"),
+    max_reference_date = "2024-11-25"
+  )
+
+  # Expect that there should be no "COVID-19/Omicron" in the data,
+  # only "COVID-19"
+  expect_false("COVID-19/Omicron" %in% actual$disease)
+  expect_true(all(actual$disease == "COVID-19"))
+})
+
+
+test_that("Replace COVID-19/Omicron with COVID-19, US", {
+  data_path <- test_path("data/CA_test.parquet")
+
+  actual <- read_data(
+    data_path,
+    disease = "COVID-19",
+    geo_value = "US",
+    report_date = "2024-11-26",
+    min_reference_date = as.Date("2024-06-01"),
+    max_reference_date = "2024-11-25"
+  )
+
+  # Expect that there should be no "COVID-19/Omicron" in the data,
+  # only "COVID-19"
+  expect_false("COVID-19/Omicron" %in% actual$disease)
+  expect_true(all(actual$disease == "COVID-19"))
 })

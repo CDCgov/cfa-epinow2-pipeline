@@ -10,7 +10,7 @@ env:
 
 jobs:
   delete-container:
-    runs-on: cfa-cdcgov
+    runs-on: cfa-cdcgov-aca
     name: Deleting the container
 
     steps:
@@ -31,10 +31,7 @@ jobs:
           creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
       - name: Azure CLI script
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
+        run: |
             chmod +x $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh
             $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh \
               ${{ secrets.CONTAINER_REGISTRY_URL }} \
