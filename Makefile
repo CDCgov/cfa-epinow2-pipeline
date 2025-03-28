@@ -17,12 +17,8 @@ JOB:=Rt-estimation-$(TIMESTAMP)
 # The report date to use, in ISO format (YYYY-MM-DD). Default is today
 REPORT_DATE?=$(shell date -u +%F)
 
-deps:
-	$(CNTR_MGR) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
-
 pull:
 	az acr login --name 'cfaprdbatchcr'
-	$(CNTR_MGR) pull $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG)
 	$(CNTR_MGR) pull $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 build:
