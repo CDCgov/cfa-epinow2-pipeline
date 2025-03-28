@@ -2,6 +2,10 @@
 
 ## Features
 * Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyverse (2.7 GB)
+* Updating makefile to represent unified Dockerfile approach (not two-step build)
+* Make sure we change "COVID-19/Omicron" to "COVID-19" when reading NSSP data.
+* Unified Dockerfile
+* Add instructions for data outliers reruns to the SOP.
 * Add ability to call `make rerun-prod` to rerun just the tasks that needed a data change.
 * Add output container as a new field in the config file.
 * Building with ubuntu-latest and using Container App runner for all else, remove azure-cli action
