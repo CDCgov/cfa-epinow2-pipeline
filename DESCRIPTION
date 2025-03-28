@@ -17,7 +17,7 @@ Description: Add logging, metadata handling, and data handling
 License: Apache License (>= 2)
 Encoding: UTF-8
 Remotes:
-    github::epiforecasts/EpiNow2,
+    github::epiforecasts/EpiNow2@82f90b994ede5b6b2ea32c4aef2de6dba5133483,
     github::stan-dev/cmdstanr@12fe0f8fd35226dadf3abc50de726537dc9ea475,
     github::epinowcast/primarycensored
 Roxygen: list(markdown = TRUE)
@@ -43,6 +43,8 @@ Imports:
     rstan,
     S7,
     tidybayes
+Additional_repositories:
+	https://stan-dev.r-universe.dev
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
 Depends:
     R (>= 3.50)
