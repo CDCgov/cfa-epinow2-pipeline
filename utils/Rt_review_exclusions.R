@@ -33,13 +33,13 @@ read_process_excel_func <- function(
     "initial_thoughts", "state_abb", "review_1_decision", "reviewer_2_decision",
     "final_decision", "drop_dates", "additional_reasoning"
   )
-  df <- data.frame(separate_rows(df, 10, sep = "\\|")) |>
-    filter(!is.na(state)) |>
-    mutate(
+  df <- data.frame(tidyr::separate_rows(df, 10, sep = "\\|")) |>
+    dplyr::filter(!is.na(state)) |>
+    dplyr::mutate(
       report_date = report_date,
       pathogen = pathogen
     ) |>
-    select(
+    dplyr::select(
       "report_date", "state", "state_abb", "pathogen", "review_1_decision",
       "reviewer_2_decision", "final_decision", "drop_dates"
     )
@@ -51,7 +51,7 @@ read_process_excel_func <- function(
 create_pt_excl_from_rt_xslx <- function(dates) {
   # Connect to Sharepoint via Microsoft365R library
   # Provide team name here
-  site <- get_sharepoint_site(
+  site <- Microsoft365R::get_sharepoint_site(
     auth_type = "device_code",
     "OD-OCoS-Center for Forecasting and Outbreak Analytics"
   )
@@ -61,10 +61,11 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     "Nowcasting and Natural History",
     "Rt", "NSSP-Rt", "Rt_Review_Notes", "Review_Decisions"
   )
+  
 
   for (report_date in dates) {
     fname <- paste0("Rt_Review_", report_date, ".xlsx")
-    drv$get_item(paste0(rt_review_path, fname))$download(
+    drv$get_item(file.path(rt_review_path, fname))$download(
       dest = paste0(fname),
       overwrite = TRUE
     )
@@ -107,10 +108,10 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         raw_confirm = NA,
         clean_confirm = NA
       ) |>
-      select(reference_date, report_date,
+      dplyr::select(reference_date, report_date,
         "state" = "geo_value", "disease" = "pathogen"
       )
-
+    containter_name = "nssp-etl"
     cont <- fetch_blob_container(containter_name)
 
     message(paste0(
