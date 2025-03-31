@@ -61,7 +61,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     "Nowcasting and Natural History",
     "Rt", "NSSP-Rt", "Rt_Review_Notes", "Review_Decisions"
   )
-  
+
 
   for (report_date in dates) {
     fname <- paste0("Rt_Review_", report_date, ".xlsx")
@@ -111,7 +111,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
       dplyr::select(reference_date, report_date,
         "state" = "geo_value", "disease" = "pathogen"
       )
-    containter_name = "nssp-etl"
+    containter_name <- "nssp-etl"
     cont <- fetch_blob_container(containter_name)
 
     message(paste0(
