@@ -3,7 +3,11 @@ source("../R/azure.R")
 
 option_list <- list(
   optparse::make_option(c("-d", "--dates"),
-    type = "character", default = gsub("-", "", lubridate::today(tzone = "UTC")),
+    type = "character", default = gsub(
+      "-",
+      "",
+      lubridate::today(tzone = "UTC")
+    ),
     help = "Reports Date in yyyymmdd format", metavar = "character"
   )
 )
@@ -19,20 +23,11 @@ read_process_excel_func <- function(
     pathogen,
     file_name,
     report_date) {
-  df <- readxl::read_excel(paste0(file_name), # may neeed to edit path where saved
+  df <- readxl::read_excel(
+    paste0(file_name), # path where saved
     sheet = sheet_name,
     skip = 3
   )
-<<<<<<< HEAD
-  colnames(df) <- c("state", "dates_affected", "observed volume", "expected volume", "initial_thoughts", "state_abb", "review_1_decision", "reviewer_2_decision", "final_decision", "drop_dates", "additional_reasoning")
-  df <- data.frame(tidyr::separate_rows(df, 10, sep = "\\|")) |>
-    dplyr::filter(!is.na(state)) |>
-    dplyr::mutate(
-      report_date = report_date,
-      pathogen = pathogen
-    ) |>
-    dplyr::select("report_date", "state", "state_abb", "pathogen", "review_1_decision", "reviewer_2_decision", "final_decision", "drop_dates")
-=======
   colnames(df) <- c(
     "state", "dates_affected", "observed volume", "expected volume",
     "initial_thoughts", "state_abb", "review_1_decision", "reviewer_2_decision",
@@ -48,19 +43,11 @@ read_process_excel_func <- function(
       "report_date", "state", "state_abb", "pathogen", "review_1_decision",
       "reviewer_2_decision", "final_decision", "drop_dates"
     )
->>>>>>> 634b8ab899285fcb993b455fe4d28efcf8ed6057
   return(df)
 }
 
 
 
-<<<<<<< HEAD
-create_point_exclusions_from_rt_review_xslx <- function(
-    dates # yyyymmdd format
-    ) {
-  # Connect to Sharepoint  via Microsoft365R library
-  site <- Microsoft365R::get_sharepoint_site(auth_type = "device_code", "OD-OCoS-Center for Forecasting and Outbreak Analytics") # Provide team name here
-=======
 create_pt_excl_from_rt_xslx <- function(dates) {
   # Connect to Sharepoint via Microsoft365R library
   # Provide team name here
@@ -68,7 +55,6 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     auth_type = "device_code",
     "OD-OCoS-Center for Forecasting and Outbreak Analytics"
   )
->>>>>>> 634b8ab899285fcb993b455fe4d28efcf8ed6057
   drv <- site$get_drive("Documents") # Set drive to Documents (vs Wiki)
   rt_review_path <- file.path(
     "General", "02 - Predict", "Real Time Monitoring (RTM) Branch",
@@ -121,22 +107,25 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         raw_confirm = NA,
         clean_confirm = NA
       ) |>
-<<<<<<< HEAD
-      dplyr::select(reference_date, report_date, "state" = "geo_value", "disease" = "pathogen")
-    containter_name <- "nssp-etl"
-=======
       select(reference_date, report_date,
         "state" = "geo_value", "disease" = "pathogen"
       )
->>>>>>> 634b8ab899285fcb993b455fe4d28efcf8ed6057
 
     cont <- fetch_blob_container(containter_name)
 
-    message(paste0("saving ", paste0(lubridate::ymd(report_date), ".csv"), " in ", containter_name, "/outliers-v2"))
+    message(paste0(
+      "saving ",
+      paste0(lubridate::ymd(report_date), ".csv"),
+      " in ", containter_name,
+      "/outliers-v2"
+    ))
     AzureStor::storage_write_csv(
       cont = cont,
       object = point_exclusions,
-      file = file.path("outliers-v2", paste0(lubridate::ymd(report_date), ".csv"))
+      file = file.path(
+        "outliers-v2",
+        paste0(lubridate::ymd(report_date), ".csv")
+      )
     )
   }
 }
