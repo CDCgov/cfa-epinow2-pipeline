@@ -2,13 +2,13 @@ source("../R/azure.R")
 
 
 option_list <- list(
-  make_option(c("-d", "--dates"),
-    type = "character", default = gsub("-", "", today(tzone = "UTC")),
+  optparse::make_option(c("-d", "--dates"),
+    type = "character", default = gsub("-", "", lubridate::today(tzone = "UTC")),
     help = "Reports Date in yyyymmdd format", metavar = "character"
   )
 )
-opt_parser <- OptionParser(option_list = option_list)
-opt <- parse_args(opt_parser)
+opt_parser <- optparse::OptionParser(option_list = option_list)
+opt <- optparse::parse_args(opt_parser)
 # Get All Files Names to Download and Parse
 date_names <- opt$dates
 
@@ -19,18 +19,18 @@ read_process_excel_func <- function(
     pathogen,
     file_name,
     report_date) {
-  df <- read_excel(paste0(file_name), # may neeed to edit path where saved
+  df <- readxl::read_excel(paste0(file_name), # may neeed to edit path where saved
     sheet = sheet_name,
     skip = 3
   )
   colnames(df) <- c("state", "dates_affected", "observed volume", "expected volume", "initial_thoughts", "state_abb", "review_1_decision", "reviewer_2_decision", "final_decision", "drop_dates", "additional_reasoning")
-  df <- data.frame(separate_rows(df, 10, sep = "\\|")) |>
-    filter(!is.na(state)) |>
-    mutate(
+  df <- data.frame(tidyr::separate_rows(df, 10, sep = "\\|")) |>
+    dplyr::filter(!is.na(state)) |>
+    dplyr::mutate(
       report_date = report_date,
       pathogen = pathogen
     ) |>
-    select("report_date", "state", "state_abb", "pathogen", "review_1_decision", "reviewer_2_decision", "final_decision", "drop_dates")
+    dplyr::select("report_date", "state", "state_abb", "pathogen", "review_1_decision", "reviewer_2_decision", "final_decision", "drop_dates")
   return(df)
 }
 
@@ -40,7 +40,7 @@ create_point_exclusions_from_rt_review_xslx <- function(
     dates # yyyymmdd format
     ) {
   # Connect to Sharepoint  via Microsoft365R library
-  site <- get_sharepoint_site(auth_type = "device_code", "OD-OCoS-Center for Forecasting and Outbreak Analytics") # Provide team name here
+  site <- Microsoft365R::get_sharepoint_site(auth_type = "device_code", "OD-OCoS-Center for Forecasting and Outbreak Analytics") # Provide team name here
   drv <- site$get_drive("Documents") # Set drive to Documents (vs Wiki)
   Rt_review_path <- "General/02 - Predict/Real Time Monitoring (RTM) Branch/Nowcasting and Natural History/Rt/NSSP-Rt/Rt_Review_Notes/Review_Decisions/"
 
@@ -75,11 +75,11 @@ create_point_exclusions_from_rt_review_xslx <- function(
     }
     # Further processing
     combined_df <- combined_df |>
-      mutate(
-        reference_date = ymd(drop_dates),
-        report_date = ymd(report_date),
+      dplyr::mutate(
+        reference_date = lubridate::ymd(drop_dates),
+        report_date = lubridate::ymd(report_date),
         geo_value = state_abb,
-        pathogen = case_when(pathogen == "influenza" ~ "Influenza",
+        pathogen = dplyr::case_when(pathogen == "influenza" ~ "Influenza",
           pathogen == "covid" ~ "COVID-19",
           .default = as.character(pathogen)
         )
@@ -87,19 +87,21 @@ create_point_exclusions_from_rt_review_xslx <- function(
 
     # point exclusions in outlier.csv format
     point_exclusions <- combined_df |>
-      filter(!is.na(drop_dates)) |>
-      mutate(
+      dplyr::filter(!is.na(drop_dates)) |>
+      dplyr::mutate(
         raw_confirm = NA,
         clean_confirm = NA
       ) |>
-      select(reference_date, report_date, "state" = "geo_value", "disease" = "pathogen")
+      dplyr::select(reference_date, report_date, "state" = "geo_value", "disease" = "pathogen")
+    containter_name <- "nssp-etl"
 
-    cont <- fetch_blob_container("nssp-rt-v2")
+    cont <- fetch_blob_container(containter_name)
 
-    storage_write_csv(
+    message(paste0("saving ", paste0(lubridate::ymd(report_date), ".csv"), " in ", containter_name, "/outliers-v2"))
+    AzureStor::storage_write_csv(
       cont = cont,
       object = point_exclusions,
-      file = file.path("outliers", paste0(ymd(report_date), ".csv"))
+      file = file.path("outliers-v2", paste0(lubridate::ymd(report_date), ".csv"))
     )
   }
 }
