@@ -23,33 +23,43 @@ read_process_excel_func <- function(
     sheet = sheet_name,
     skip = 3
   )
-  colnames(df) <- c("state", "dates_affected", "observed volume", "expected volume", "initial_thoughts", "state_abb", "review_1_decision", "reviewer_2_decision", "final_decision", "drop_dates", "additional_reasoning")
+  colnames(df) <- c(
+    "state", "dates_affected", "observed volume", "expected volume",
+    "initial_thoughts", "state_abb", "review_1_decision", "reviewer_2_decision",
+    "final_decision", "drop_dates", "additional_reasoning"
+  )
   df <- data.frame(separate_rows(df, 10, sep = "\\|")) |>
     filter(!is.na(state)) |>
     mutate(
       report_date = report_date,
       pathogen = pathogen
     ) |>
-    select("report_date", "state", "state_abb", "pathogen", "review_1_decision", "reviewer_2_decision", "final_decision", "drop_dates")
+    select(
+      "report_date", "state", "state_abb", "pathogen", "review_1_decision",
+      "reviewer_2_decision", "final_decision", "drop_dates"
+    )
   return(df)
 }
 
 
 
-create_point_exclusions_from_rt_review_xslx <- function(
-    dates # yyyymmdd format
-    ) {
-  # Connect to Sharepoint  via Microsoft365R library
-  site <- get_sharepoint_site(auth_type = "device_code", "OD-OCoS-Center for Forecasting and Outbreak Analytics") # Provide team name here
+create_pt_excl_from_rt_xslx <- function(dates) {
+  # Connect to Sharepoint via Microsoft365R library
+  # Provide team name here
+  site <- get_sharepoint_site(
+    auth_type = "device_code",
+    "OD-OCoS-Center for Forecasting and Outbreak Analytics"
+  )
   drv <- site$get_drive("Documents") # Set drive to Documents (vs Wiki)
-  Rt_review_path <- "General/02 - Predict/Real Time Monitoring (RTM) Branch/Nowcasting and Natural History/Rt/NSSP-Rt/Rt_Review_Notes/Review_Decisions/"
-
+  rt_review_path <- file.path(
+    "General", "02 - Predict", "Real Time Monitoring (RTM) Branch",
+    "Nowcasting and Natural History",
+    "Rt", "NSSP-Rt", "Rt_Review_Notes", "Review_Decisions"
+  )
 
   for (report_date in dates) {
-    # report_date="20240922"
     fname <- paste0("Rt_Review_", report_date, ".xlsx")
-    # report_date = readr::parse_number(fname)
-    drv$get_item(paste0(Rt_review_path, fname))$download(
+    drv$get_item(paste0(rt_review_path, fname))$download(
       dest = paste0(fname),
       overwrite = TRUE
     )
@@ -92,7 +102,9 @@ create_point_exclusions_from_rt_review_xslx <- function(
         raw_confirm = NA,
         clean_confirm = NA
       ) |>
-      select(reference_date, report_date, "state" = "geo_value", "disease" = "pathogen")
+      select(reference_date, report_date,
+        "state" = "geo_value", "disease" = "pathogen"
+      )
 
     cont <- fetch_blob_container("nssp-rt-v2")
 
@@ -105,4 +117,4 @@ create_point_exclusions_from_rt_review_xslx <- function(
 }
 
 
-create_point_exclusions_from_rt_review_xslx(dates = date_names)
+create_pt_excl_from_rt_xslx(dates = date_names)
