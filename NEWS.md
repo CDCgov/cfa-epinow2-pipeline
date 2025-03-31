@@ -2,6 +2,8 @@
 
 ## Features
 * Automate creation of outlier csv for nssp-elt-2/outliers
+* Updating makefile to represent unified Dockerfile approach (not two-step build)
+* Make sure we change "COVID-19/Omicron" to "COVID-19" when reading NSSP data.
 * Unified Dockerfile
 * Add instructions for data outliers reruns to the SOP.
 * Add ability to call `make rerun-prod` to rerun just the tasks that needed a data change.
