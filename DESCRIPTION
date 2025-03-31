@@ -38,6 +38,8 @@ Imports:
     rlang,
     rstan,
     S7,
+    lubridate,
+    readxl,
     tidybayes,
     optparse,
     Microsoft365R
