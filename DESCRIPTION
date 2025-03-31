@@ -40,6 +40,7 @@ Imports:
     S7,
     lubridate,
     readxl,
+    tidyr,
     tidybayes,
     optparse,
     Microsoft365R
