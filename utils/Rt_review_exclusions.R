@@ -108,8 +108,11 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         raw_confirm = NA,
         clean_confirm = NA
       ) |>
-      dplyr::select(reference_date, report_date,
-        "state" = "geo_value", "disease" = "pathogen"
+      dplyr::select(
+        reference_date,
+        report_date,
+        "state" = "geo_value",
+        "disease" = "pathogen"
       )
     containter_name <- "nssp-etl"
     cont <- fetch_blob_container(containter_name)
