@@ -1,6 +1,3 @@
-source("../R/azure.R")
-
-
 option_list <- list(
   optparse::make_option(c("-d", "--dates"),
     type = "character", default = gsub(
@@ -115,7 +112,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         "disease" = "pathogen"
       )
     containter_name <- "nssp-etl"
-    cont <- fetch_blob_container(containter_name)
+    cont <- CFAEpiNow2Pipeline ::fetch_blob_container(containter_name)
 
     message(paste0(
       "saving ",
