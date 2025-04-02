@@ -98,3 +98,20 @@ test_that("Bad query errors", {
     class = "wrapped_invalid_query"
   )
 })
+
+test_that("Works as expected on large exclusions file", {
+  # Read in the large exclusions file
+  excl_path <- test_path("data", "test_big_exclusions.csv")
+  exclusions <- read_exclusions(excl_path)
+
+  # Load some sample case data
+  # BIG ISSUE, MAY NEED TO ALTER THE TEST DATA TO MATCH DATES IN THE
+  # EXCLUISIONS, OR VICE VERSA
+  data_path <- test_path("data", "test_CA.parquet")
+  cases <- read_data(data_path)
+
+  # Apply the exclusions
+  got <- apply_exclusions(cases, exclusions)
+
+  # Check that the exclusions were applied as expected
+})
