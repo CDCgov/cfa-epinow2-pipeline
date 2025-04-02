@@ -107,11 +107,20 @@ test_that("Works as expected on large exclusions file", {
   # Load some sample case data
   # BIG ISSUE, MAY NEED TO ALTER THE TEST DATA TO MATCH DATES IN THE
   # EXCLUISIONS, OR VICE VERSA
-  data_path <- test_path("data", "test_CA.parquet")
-  cases <- read_data(data_path)
+  data_path <- test_path("data", "2025-04-02_test.parquet")
+  cases <- read_data(data_path, 
+                     disease = "COVID-19", 
+                     geo_value = "OH", 
+                     report_date = "2025-04-02", 
+                     max_reference_date = "2025-04-02", 
+                     min_reference_date = "1970-01-01")
 
   # Apply the exclusions
   got <- apply_exclusions(cases, exclusions)
 
   # Check that the exclusions were applied as expected
+  expect_equal(
+    got$confirm[179:181],
+    c(54, NA, NA)
+  )
 })
