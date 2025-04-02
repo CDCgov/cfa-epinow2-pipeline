@@ -112,7 +112,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         "disease" = "pathogen"
       )
     containter_name <- "nssp-etl"
-    cont <- CFAEpiNow2Pipeline ::fetch_blob_container(containter_name)
+    cont <- CFAEpiNow2Pipeline::fetch_blob_container(containter_name)
 
     message(paste0(
       "saving ",
@@ -128,6 +128,44 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         paste0(lubridate::ymd(report_date), ".csv")
       )
     )
+    
+    
+    #### Temp old-pipeline csv generator#####
+    point_exclusions <- combined_df |>
+      dplyr::filter(!is.na(drop_dates)) |>
+      dplyr::mutate(
+        raw_confirm = NA,
+        clean_confirm = NA
+      ) |>
+      dplyr::select(
+        reference_date,
+        report_date,
+        "geo_value",
+        "pathogen"
+      ) |>
+      dplyr::mutate(geo_value = tolower(geo_value),
+             pathogen = dplyr::case_when(pathogen == "Influenza" ~ "flu",
+                                         pathogen == "COVID-19" ~ "covid",
+                                         .default = as.character(pathogen)
+                                         )
+      )
+    
+    message(paste0(
+      "saving ",
+      paste0(lubridate::ymd(report_date), ".csv"),
+      " in ", containter_name,
+      "/outliers"
+    ))
+    AzureStor::storage_write_csv(
+      cont = cont,
+      object = point_exclusions,
+      file = file.path(
+        "outliers",
+        paste0(lubridate::ymd(report_date), ".csv")
+      )
+    )
+             
+    
   }
 }
 
