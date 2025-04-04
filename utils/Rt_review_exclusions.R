@@ -128,9 +128,11 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         paste0(lubridate::ymd(report_date), ".csv")
       )
     )
-    
-    
+
+
     #### Temp old-pipeline csv generator#####
+    # Save a version in temp folder.
+    # Need to copy and paste this in current blank outlier csv file
     point_exclusions <- combined_df |>
       dplyr::filter(!is.na(drop_dates)) |>
       dplyr::mutate(
@@ -143,29 +145,28 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         "geo_value",
         "pathogen"
       ) |>
-      dplyr::mutate(geo_value = tolower(geo_value),
-             pathogen = dplyr::case_when(pathogen == "Influenza" ~ "flu",
-                                         pathogen == "COVID-19" ~ "covid",
-                                         .default = as.character(pathogen)
-                                         )
+      dplyr::mutate(
+        geo_value = tolower(geo_value),
+        pathogen = dplyr::case_when(pathogen == "Influenza" ~ "flu",
+          pathogen == "COVID-19" ~ "covid",
+          .default = as.character(pathogen)
+        )
       )
-    
+
     message(paste0(
       "saving ",
       paste0(lubridate::ymd(report_date), ".csv"),
       " in ", containter_name,
-      "/outliers"
+      "/temp_outliers_for_old"
     ))
     AzureStor::storage_write_csv(
       cont = cont,
       object = point_exclusions,
       file = file.path(
-        "outliers",
+        "temp_outliers_for_old",
         paste0(lubridate::ymd(report_date), ".csv")
       )
     )
-             
-    
   }
 }
 
