@@ -105,8 +105,6 @@ test_that("Works as expected on large exclusions file", {
   exclusions <- read_exclusions(excl_path)
 
   # Load some sample case data
-  # BIG ISSUE, MAY NEED TO ALTER THE TEST DATA TO MATCH DATES IN THE
-  # EXCLUISIONS, OR VICE VERSA
   data_path <- test_path("data", "2025-04-02_test.parquet")
   cases <- read_data(data_path,
     disease = "COVID-19",
