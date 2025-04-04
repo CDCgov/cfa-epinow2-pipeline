@@ -205,7 +205,7 @@ The meeting attendees will fill in a spreadsheet which specifies which state-dis
 flowchart TD
     A(Data Anomaly Review) -->|produces| B(Decisions Spreadhsheet)
     B -->|PC's script| C(YYYY-MM-DD.csv on S drive)
-    C -->|Manually check and upload| D(YYYY-MM-DD.csv in Azure Blob: az://nssp-rt-v2/outliers/YYYY-MM-DD.csv)
+    C -->|Manually check and upload| D(YYYY-MM-DD.csv in Azure Blob: az://nssp-etl/outliers-v2/YYYY-MM-DD.csv)
     D -->|make rerun-prod| E(New set of configs)
     E -->F(Run those tasks in Azure Batch)
 ```
@@ -213,9 +213,9 @@ In this flowchart, each arrow with text represents a manual action. Writing out 
 1. The anomaly review team documents their decisions in the spreadsheet.
 1. The person running the pipeline uses Patrick Corbett's (PC) script located at `S:/CDC/NSSP_Rt/analyses/Rt_Review/Rt_review_machine_readable.R`. This saves the requisite file to `S:/CDC/NSSP_Rt/analyses/Rt_Review/Review_Decisions/`. This file has columns `state`, `disease`, `reference_date`, `report_date`. Those columns fully specify for the pipeline how to handle the data exclusions.
 1. The person running the pipeline manually verifies that the correct state-disease-reference_date pairings are as expected. Note that this set of data outliers corresponds to the NSSP report in use for this production run. If we ran again tomorrow, we would use tomorrow's report, the data would be different, and we would likely pick a different set of points (if any) to be marked as outliers. This means it is important to always use the date of this report as the name for this CSV. (It should correspond with the values in the `report_date` column).
-1. Upload the file to the blob storage "folder" `az://nssp-rt-v2/outliers/`. Can be done by either:
+1. Upload the file to the blob storage "folder" `az://nssp-etl/outliers-v2/`. Can be done by either:
     1. Manually uploading using the Web Portal or the Storage Explorer.
-    1. Running `az storage blob upload --file /path/to/data/outliers/YYYY-MM-DD.csv --container-name nssp-rt-v2 --name outilers/YYYY-MM-DD.csv`.
+    1. Running `az storage blob upload --file /path/to/data/outliers/YYYY-MM-DD.csv --container-name nssp-etl --name outliers-v2/YYYY-MM-DD.csv`.
 1. The person running the pipeline runs `make rerun-prod`. This will create new configuration files that include the path to the outlier CSV just uploaded to Blob, and then kick off those tasks in Azure Batch.
 
 ## Non-production runs
