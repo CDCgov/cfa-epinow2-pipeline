@@ -128,8 +128,8 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         paste0(lubridate::ymd(report_date), ".csv")
       )
     )
-    
-    
+
+
     #### Temp old-pipeline csv generator#####
     point_exclusions <- combined_df |>
       dplyr::filter(!is.na(drop_dates)) |>
@@ -143,13 +143,14 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         "geo_value",
         "pathogen"
       ) |>
-      dplyr::mutate(geo_value = tolower(geo_value),
-             pathogen = dplyr::case_when(pathogen == "Influenza" ~ "flu",
-                                         pathogen == "COVID-19" ~ "covid",
-                                         .default = as.character(pathogen)
-                                         )
+      dplyr::mutate(
+        geo_value = tolower(geo_value),
+        pathogen = dplyr::case_when(pathogen == "Influenza" ~ "flu",
+          pathogen == "COVID-19" ~ "covid",
+          .default = as.character(pathogen)
+        )
       )
-    
+
     message(paste0(
       "saving ",
       paste0(lubridate::ymd(report_date), ".csv"),
@@ -164,8 +165,6 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         paste0(lubridate::ymd(report_date), ".csv")
       )
     )
-             
-    
   }
 }
 
