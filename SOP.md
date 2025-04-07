@@ -236,7 +236,7 @@ There are three ways to generate configs:
 
 Note that if you need to modify a config, you may download it from blob, edit, and re-upload to overwrite the copy in blob.
 
-### Appendix {#appendix}
+### Appendix
 
 #### Podman
 
