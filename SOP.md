@@ -126,7 +126,7 @@ make config
 
 Verify that you can locate the configuration files in Azure blob storage.
 
-If you receive an error that you do not have the necessary permissions to run this command please reach out Agastya Mondal ([ab59\@cdc.gov](mailto:ab59@cdc.gov){.email}) for assistance.
+If you receive an error that you do not have the necessary permissions to run this command please reach out Nate McIntosh ([ute2@cdc.gov](mailto:ute2@cdc.gov)) or Micah Wiesner ([zqmk6\@cdc.gov](mailto:zqmk6@cdc.gov)) for assistance.
 
 #### Test make run command
 
