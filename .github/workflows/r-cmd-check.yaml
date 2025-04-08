@@ -13,6 +13,7 @@ on:
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
+
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
     strategy:
@@ -45,14 +46,7 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      # - name: r cmd check
-      #   run: |
-      #     Rscript -e 'cmdstanr::set_cmdstan_path("/root/.cmdstan/cmdstan-2.36.0")' && \
-      #       R CMD build --no-build-vignettes --no-manual . && \
-      #       R CMD INSTALL CFAEpiNow2Pipeline_*.tar.gz && \
-      #       R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
-
       - uses: r-lib/actions/check-r-package@v2
         with:
-        upload-snapshots: true
-        build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+          upload-snapshots: true
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
