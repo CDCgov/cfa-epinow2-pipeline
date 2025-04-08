@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
 RUN install2.r pak
 # dependencies = TRUE means we install `suggests` too
 RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
-
+RUN Rscript -e 'cmdstanr::install_cmdstan()'
 # This requires access to the Azure Container Registry
 # FROM ghcr.io/cdcgov/cfa-epinow2-pipeline:${TAG}
 
