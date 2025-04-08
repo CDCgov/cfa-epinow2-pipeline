@@ -63,8 +63,8 @@ jobs:
         shell: bash
         id: image-tag
         run: |
-          if [ "${{ steps.branch-name.outputs.branch }}" = "${{ inputs.main-branch-name }}" ]; then
-            echo "tag=${{ inputs.main-branch-tag }}" >> $GITHUB_OUTPUT
+          if [ "${{ steps.branch-name.outputs.branch }}" = "main" ]; then
+            echo "tag=latest" >> $GITHUB_OUTPUT
           else
             echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
           fi

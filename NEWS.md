@@ -2,6 +2,9 @@
 
 ## Features
 * Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyverse (2.7 GB)
+* Automate creation of outlier csv for nssp-elt-2/outliers
+* Fix 'latest' tag for CI
+* Updated path for read/write of data outliers
 * Updating makefile to represent unified Dockerfile approach (not two-step build)
 * Make sure we change "COVID-19/Omicron" to "COVID-19" when reading NSSP data.
 * Unified Dockerfile
@@ -23,6 +26,7 @@
 * GitHub Actions workflow added to start Azure Container App Job
 * Minor changes in removing unused container tags from Azure CR
 * Reactivated DEBUG level logs from EpiNow2 so that sampler progress is visible
+* Added new test data and unit tests for point exclusions
 
 # CFAEpiNow2Pipeline v0.1.0
 
