@@ -1,3 +1,5 @@
+cmdstanr::set_cmdstan_path()
+
 test_that("Minimal model fit all params runs", {
   # Parameters
   parameters <- list(
