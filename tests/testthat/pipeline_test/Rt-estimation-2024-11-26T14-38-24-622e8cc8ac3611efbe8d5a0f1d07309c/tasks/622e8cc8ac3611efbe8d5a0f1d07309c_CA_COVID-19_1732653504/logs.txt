@@ -6,7 +6,7 @@
 Warning message:
 Pipeline run failed
 Caused by error in `check_file_exists()`:
-! Cannot read data. File './CA_test.parquet' doesn't exist 
+! Cannot read data. File './CA_test.parquet' doesn't exist
 Error in `test_path()`:
 ! Can't find 'tests/testthat'.
 Run `rlang::last_trace()` to see where the error occurred.
@@ -22,5 +22,5 @@ Warning messages:
   cannot open file './sample_config_with_exclusion.json': No such file or directory
 2: Bad config file
 Caused by error in `open.connection()`:
-! cannot open the connection 
+! cannot open the connection
 ℹ Optional field not in config file: `output_container`
