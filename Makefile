@@ -45,25 +45,16 @@ rerun-config:
 	  -f report_date=$(REPORT_DATE)
 
 run-batch:
-	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
-	$(CNTR_MGR) run --rm  \
-	--env-file .env \
-	-it \
-	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	uv run --env-file .env \
+	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 run-prod: config
-	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
-	$(CNTR_MGR) run --rm  \
-	--env-file .env \
-	-it \
-	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	uv run --env-file .env \
+	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 rerun-prod: rerun-config
-	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
-	$(CNTR_MGR) run --rm  \
-	--env-file .env \
-	-it \
-	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	uv run --env-file .env \
+	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 run:
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
@@ -87,11 +78,8 @@ test-batch:
 	  -f state=NY \
 	  -f output_container="nssp-rt-testing" \
 	  -f job_id=$(JOB)
-	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
-	$(CNTR_MGR) run --rm  \
-	--env-file .env \
-	-it \
-	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	uv run --env-file .env \
+	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 test:
 	Rscript -e "testthat::test_local()"
