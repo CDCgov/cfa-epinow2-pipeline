@@ -1,10 +1,10 @@
 # /// script
 # requires-python = ">=3.13"
 # dependencies = [
-#     "azure-batch",
-#     "azure-identity",
-#     "azure-storage-blob",
-#     "msrest",
+#     "azure-batch==14.2.0",
+#     "azure-identity==1.21.0",
+#     "azure-storage-blob==12.25.1",
+#     "msrest==0.7.1",
 # ]
 # ///
 import datetime
