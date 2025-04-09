@@ -57,21 +57,22 @@ if __name__ == "__main__":
     container_client = blob_service_client.get_container_client(container=config_container)
 
     query_timer = 0
-    while query_timer < 180:
+    query_limit = 120
+    while query_timer < query_limit:
         task_configs: list[str] = [
             b.name
             for b in container_client.list_blobs()
             if job_id in b.name
         ]
-        if len(task_configs) == 0:
+        if len(task_configs) == 0 and query_timer < query_limit:
             query_timer+=15
             time.sleep(15)
             print("No tasks currently found...Waiting 15 seconds to re-query")
-        else:
+        elif len(task_configs) > 0:
             print(f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}")
             query_timer = 999
-    else:
-        raise ValueError("No tasks found")
+        elif len(task_configs) == 0 and query_timer >= query_limit: 
+            raise ValueError("No tasks found")
 
     ###########
     # Set up tasks on job
