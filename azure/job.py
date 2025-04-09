@@ -80,7 +80,7 @@ if __name__ == "__main__":
                 f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}"
             )
             break
-        elif len(task_configs) == 0 and datetime.datetime.now() < end_time:
+        elif len(task_configs) == 0 and datetime.datetime.now() > end_time:
             raise ValueError("No tasks found")
 
     ###########
