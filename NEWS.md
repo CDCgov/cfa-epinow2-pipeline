@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Adding sleep_time as parameter to Makefile
 * Automate creation of outlier csv for nssp-elt-2/outliers
 * Fix 'latest' tag for CI
 * Updated path for read/write of data outliers
