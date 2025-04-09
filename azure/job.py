@@ -4,6 +4,7 @@ import datetime
 import sys
 import os
 import uuid
+import time
 
 from azure.identity import DefaultAzureCredential
 from msrest.authentication import BasicTokenAuthentication
@@ -54,15 +55,23 @@ if __name__ == "__main__":
     # Get tasks
     blob_service_client = BlobServiceClient(blob_url, credential_v2)
     container_client = blob_service_client.get_container_client(container=config_container)
-    task_configs: list[str] = [
-        b.name
-        for b in container_client.list_blobs()
-        if job_id in b.name
-    ]
-    if len(task_configs) == 0:
-        raise ValueError("No tasks found")
-    else:
-        print(f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}")
+
+    start_time = datetime.datetime.now()
+    end_time = start_time + datetime.timedelta(seconds=120)
+    while datetime.datetime.now() < end_time:
+        task_configs: list[str] = [
+            b.name
+            for b in container_client.list_blobs()
+            if job_id in b.name
+        ]
+        if len(task_configs) == 0 and datetime.datetime.now() < end_time:
+            print("No tasks currently found...Waiting 15 seconds to re-query")
+            time.sleep(15)
+        elif len(task_configs) > 0:
+            print(f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}")
+            break
+        elif len(task_configs) == 0 and datetime.datetime.now() < end_time:
+            raise ValueError("No tasks found")
 
     ###########
     # Set up tasks on job
