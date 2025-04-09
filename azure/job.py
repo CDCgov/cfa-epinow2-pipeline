@@ -71,7 +71,7 @@ if __name__ == "__main__":
         elif len(task_configs) > 0:
             print(f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}")
             query_timer = 999
-        elif len(task_configs) == 0 and query_timer >= query_limit: 
+        elif len(task_configs) == 0 and query_timer >= query_limit:
             raise ValueError("No tasks found")
 
     ###########
