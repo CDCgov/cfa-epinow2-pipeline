@@ -2,6 +2,7 @@
 
 ## Features
 * Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyverse (2.7 GB)
+* Adding dynamic logic to re-query for configs in blob
 * Automate creation of outlier csv for nssp-elt-2/outliers
 * Fix 'latest' tag for CI
 * Updated path for read/write of data outliers
