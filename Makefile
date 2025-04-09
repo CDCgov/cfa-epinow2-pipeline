@@ -3,7 +3,6 @@ IMAGE_NAME=cfa-epinow2-pipeline
 BRANCH=$(shell git branch --show-current)
 CONFIG_CONTAINER=rt-epinow2-config
 CNTR_MGR=docker
-SLEEP_TIME=400
 ifeq ($(BRANCH), main)
 TAG=latest
 else
@@ -53,8 +52,6 @@ run-batch:
 	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 run-prod: config
-	@echo "Hanging for $(SLEEP_TIME) seconds to wait for configs to generate"
-	sleep $(SLEEP_TIME)
 	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
 	$(CNTR_MGR) run --rm  \
 	--env-file .env \
@@ -62,8 +59,6 @@ run-prod: config
 	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 rerun-prod: rerun-config
-	@echo "Hanging for $(SLEEP_TIME) seconds to wait for configs to generate"
-	sleep $(SLEEP_TIME)
 	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
 	$(CNTR_MGR) run --rm  \
 	--env-file .env \
@@ -92,8 +87,6 @@ test-batch:
 	  -f state=NY \
 	  -f output_container="nssp-rt-testing" \
 	  -f job_id=$(JOB)
-	@echo "Hanging for 15 seconds to wait for configs to generate"
-	sleep 15
 	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
 	$(CNTR_MGR) run --rm  \
 	--env-file .env \
