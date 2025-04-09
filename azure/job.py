@@ -70,7 +70,7 @@ if __name__ == "__main__":
         else:
             print(f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}")
             query_timer = 999
-    else: 
+    else:
         raise ValueError("No tasks found")
 
     ###########
