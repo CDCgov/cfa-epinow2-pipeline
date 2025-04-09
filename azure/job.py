@@ -65,8 +65,8 @@ if __name__ == "__main__":
             if job_id in b.name
         ]
         if len(task_configs) == 0 and datetime.datetime.now() < end_time:
-            time.sleep(15)
             print("No tasks currently found...Waiting 15 seconds to re-query")
+            time.sleep(15)
         elif len(task_configs) > 0:
             print(f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}")
             break
