@@ -1,5 +1,3 @@
-cmdstanr::set_cmdstan_path()
-
 test_that("Bad config throws warning and returns failure", {
   # Arrange
   config_path <- test_path("data", "bad_config.json")
