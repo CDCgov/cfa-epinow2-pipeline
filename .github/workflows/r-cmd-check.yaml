@@ -46,9 +46,13 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - name: Investigate _temp/Library
+      - name: Investigate _temp/Library cmdstan
         run: |
-          ls /home/runner/work/_temp/Library
+          ls -a /home/runner/work/_temp/Library | grep cmdstan
+
+      - name: Investigate _temp/Library cmdstanr
+        run: |
+          ls -a /home/runner/work/_temp/Library/cmdstanr
 
       - name: Investigate site-library
         run: |
