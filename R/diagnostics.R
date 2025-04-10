@@ -134,7 +134,7 @@ extract_diagnostics_cmdstanr <- function(fit,
                                          model) {
   low_case_count <- low_case_count_diagnostic(data)
   
-  sampler_df <- posterior::as_draws_df(fit$sampler_diagnostics())
+  sampler_df <- fit$sampler_diagnostics(format = "df")
 
   iterations       <- length(sampler_df$divergent__)
   mean_accept_stat <- mean(sampler_df$accept_stat__)
@@ -143,13 +143,10 @@ extract_diagnostics_cmdstanr <- function(fit,
   # choosing 10 as max treepdepth here
   p_max_treedepth  <- sum(sampler_df$treedepth__ > 10) / iterations
   # p_high_rhat <- mean(
-  #    rstan::summary(fit$estimates$fit)$summary[, "Rhat"] > 1.05,
-  #    na.rm = TRUE
-  #  )
+  #    fit$cmdstanr::summary(1.05)$rhat
 
   # n_high_rhat <- sum(
-  #   rstan::summary(fit$estimates$fit)$summary[, "Rhat"] > 1.05,
-  #   na.rm = TRUE
+  #   fit$cmdstanr::summary()$rhat > 1.05,
   # )
 
   # Combine all diagnostic flags into one flag
@@ -175,8 +172,8 @@ extract_diagnostics_cmdstanr <- function(fit,
     p_divergent,
     n_divergent,
     p_max_treedepth,
-    p_high_rhat,
-    n_high_rhat,
+    # p_high_rhat,
+    #n_high_rhat,
     diagnostic_flag,
     low_case_count
   )
