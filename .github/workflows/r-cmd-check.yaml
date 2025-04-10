@@ -47,7 +47,7 @@ jobs:
           needs: check
 
       - run: |
-          Rcript -e 'cmdstanr::set_cmdstan_path()' && \
+          Rscript -e 'cmdstanr::set_cmdstan_path()' && \
             R CMD build --no-build-vignettes --no-manual . && \
             R CMD INSTALL CFAEpiNow2Pipeline_*.tar.gz && \
             R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
