@@ -46,7 +46,8 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          upload-snapshots: true
-          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+      - run: |
+          Rcript -e 'cmdstanr::set_cmdstan_path()' && \
+            R CMD build --no-build-vignettes --no-manual . && \
+            R CMD INSTALL CFAEpiNow2Pipeline_*.tar.gz && \
+            R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
