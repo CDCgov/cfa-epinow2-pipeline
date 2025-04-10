@@ -123,6 +123,75 @@ extract_diagnostics <- function(fit,
   )
 }
 
+#' @family diagnostics
+#' @export
+extract_diagnostics_cmdstanr <- function(fit,
+                                         data,
+                                         job_id,
+                                         task_id,
+                                         disease,
+                                         geo_value,
+                                         model) {
+  low_case_count <- low_case_count_diagnostic(data)
+  
+  sampler_df <- posterior::as_draws_df(fit$sampler_diagnostics())
+
+  iterations       <- length(sampler_df$divergent__)
+  mean_accept_stat <- mean(sampler_df$accept_stat__)
+  n_divergent      <- sum(sampler_df$divergent__)
+  p_divergent      <- n_divergent / iterations
+  # choosing 10 as max treepdepth here
+  p_max_treedepth  <- sum(sampler_df$treedepth__ > 10) / iterations
+  # p_high_rhat <- mean(
+  #    rstan::summary(fit$estimates$fit)$summary[, "Rhat"] > 1.05,
+  #    na.rm = TRUE
+  #  )
+
+  # n_high_rhat <- sum(
+  #   rstan::summary(fit$estimates$fit)$summary[, "Rhat"] > 1.05,
+  #   na.rm = TRUE
+  # )
+
+  # Combine all diagnostic flags into one flag
+  diagnostic_flag <- any(
+    mean_accept_stat < 0.1,
+    p_divergent > 0.0075, # 0.0075 = 15 in 2000 samples are divergent
+    p_max_treedepth > 0.05,
+    # p_high_rhat > 0.0075
+  )
+  # Create individual vectors for the columns of the diagnostics data frame
+  diagnostic_names <- c(
+    "mean_accept_stat",
+    "p_divergent",
+    "n_divergent",
+    "p_max_treedepth",
+    # "p_high_rhat",
+    # "n_high_rhat",
+    "diagnostic_flag",
+    "low_case_count_flag"
+  )
+  diagnostic_values <- c(
+    mean_accept_stat,
+    p_divergent,
+    n_divergent,
+    p_max_treedepth,
+    p_high_rhat,
+    n_high_rhat,
+    diagnostic_flag,
+    low_case_count
+  )
+
+  data.frame(
+    diagnostic = diagnostic_names,
+    value = diagnostic_values,
+    job_id = job_id,
+    task_id = task_id,
+    disease = disease,
+    geo_value = geo_value,
+    model = model
+  )
+}
+
 #' Calculate low case count diagnostic flag
 #'
 #' The diagnostic flag is TRUE if either of the _last_ two weeks of the dataset
