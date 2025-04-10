@@ -46,21 +46,13 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - name: Investigate _temp/Library cmdstan
+      - name: Install cmdstan
         run: |
-          ls -a /home/runner/work/_temp/Library | grep cmdstan
-
-      - name: Investigate _temp/Library cmdstanr
-        run: |
-          ls -a /home/runner/work/_temp/Library/cmdstanr
-
-      - name: Investigate site-library
-        run: |
-          ls /opt/R/4.4.3/lib/R/site-library
-
-      - run: |
           Rscript -e 'cmdstanr::install_cmdstan()' && \
-            Rscript -e 'cmdstanr::set_cmdstan_path()' && \
-            R CMD build --no-build-vignettes --no-manual . && \
+            Rscript -e 'cmdstanr::set_cmdstan_path()'
+
+      - name: R CMD Check
+        run: |
+          R CMD build --no-build-vignettes --no-manual . && \
             R CMD INSTALL CFAEpiNow2Pipeline_*.tar.gz && \
             R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
