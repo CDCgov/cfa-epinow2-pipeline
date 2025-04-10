@@ -100,6 +100,7 @@ This may seem complicated, but once you have your dependencies and credentials s
     -   git (`sudo apt-get install git`)
     -   docker CLI ([follow this script](https://gist.github.com/jkislin/a575780249c3580a472e25c07d3fd68f#file-docker_setup-sh)). See the [appendix](#appendix) if you wish to use podman instead for local runs.
     -   gh CLI (`sudo apt-get install gh`)
+    -   `uv` command line tool. If not already installed, install with `curl -LsSf https://astral.sh/uv/install.sh | sh` (which does not require `sudo` permissions).
 2.  cfa-epinow2-pipeline repository in VAP
     -   Navigate to where you would like to clone the repository code
     -   Clone the repository (`git clone https://www.github.com/cdcgov/cfa-epinow2-pipeline` OR `gh auth login` and then `gh repo clone cdcgov/cfa-epinow2-pipeline`)
