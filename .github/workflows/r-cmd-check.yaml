@@ -59,7 +59,8 @@ jobs:
           ls /opt/R/4.4.3/lib/R/site-library
 
       - run: |
-          Rscript -e 'cmdstanr::set_cmdstan_path()' && \
+          Rscript -e 'cmdstanr::install_cmdstan()' && \
+            Rscript -e 'cmdstanr::set_cmdstan_path()' && \
             R CMD build --no-build-vignettes --no-manual . && \
             R CMD INSTALL CFAEpiNow2Pipeline_*.tar.gz && \
             R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
