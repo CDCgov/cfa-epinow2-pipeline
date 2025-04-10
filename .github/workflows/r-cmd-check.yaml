@@ -46,6 +46,14 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      - name: Investigate _temp/Library
+        run: |
+          ls /home/runner/work/_temp/Library
+
+      - name: Investigate site-library
+        run: |
+          ls /opt/R/4.4.3/lib/R/site-library
+
       - run: |
           Rscript -e 'cmdstanr::set_cmdstan_path()' && \
             R CMD build --no-build-vignettes --no-manual . && \
