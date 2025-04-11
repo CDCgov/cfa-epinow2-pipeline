@@ -1,0 +1,19 @@
+{
+  "job_id": "6183da58-89bc-455f-8562-4f607257a876",
+  "task_id": "bc0c3eb3-7158-4631-a2a9-86b97357f97e",
+  "data_path": "test_data.parquet",
+  "model": "EpiNow2_test",
+  "disease": "test",
+  "geo_value": "test",
+  "report_date": "2023-10-28",
+  "production_date": "2024-10-28",
+  "max_reference_date": "2023-01-07",
+  "min_reference_date": "2023-01-02",
+  "exclusions_path": "test_exclusions.csv",
+  "exclusions_blob_container": "",
+  "run_at": "2025-04-11T15:33:09+0000",
+  "samples_path": "pipeline_test/6183da58-89bc-455f-8562-4f607257a876/samples/bc0c3eb3-7158-4631-a2a9-86b97357f97e.parquet",
+  "summaries_path": "pipeline_test/6183da58-89bc-455f-8562-4f607257a876/summaries/bc0c3eb3-7158-4631-a2a9-86b97357f97e.parquet",
+  "model_path": "pipeline_test/6183da58-89bc-455f-8562-4f607257a876/tasks/bc0c3eb3-7158-4631-a2a9-86b97357f97e/model.rds",
+  "diagnostics_path": "pipeline_test/6183da58-89bc-455f-8562-4f607257a876/tasks/bc0c3eb3-7158-4631-a2a9-86b97357f97e/diagnostics.parquet"
+}
