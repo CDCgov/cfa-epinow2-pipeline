@@ -1,4 +1,4 @@
-test_that("Fitted model extracts diagnostics", {
+test_that("Fitted model extracts diagnostics (rstan)", {
   # Arrange
   data_path <- test_path("data/test_data.parquet")
   con <- DBI::dbConnect(duckdb::duckdb())
@@ -53,7 +53,8 @@ test_that("Fitted model extracts diagnostics", {
     "test",
     "test",
     "test",
-    "test"
+    "test",
+    backend = "rstan"
   )
 
   testthat::expect_equal(
@@ -99,7 +100,7 @@ test_that("Cases above threshold returns FALSE", {
 })
 
 
-test_that("Only the last two weeks are evalated", {
+test_that("Only the last two weeks are evaluated", {
   # Arrange
   # 3 weeks, first week would pass but last week does not
   df <- data.frame(
@@ -152,6 +153,32 @@ test_that("NAs are evalated as 0", {
 
   # Act
   diagnostic <- low_case_count_diagnostic(df)
+
+  # Assert
+  expect_true(diagnostic)
+})
+
+test_that("Cmdstanr diagnostics can be extracted from synthetic data", {
+  # Arrange
+  # fit <- cmdstanr::cmdstanr_example("schools")
+  data_path <- test_path("data/test_data.parquet")
+  con <- DBI::dbConnect(duckdb::duckdb())
+  data <- DBI::dbGetQuery(con, "
+                         SELECT
+                           report_date,
+                           reference_date,
+                           disease,
+                           geo_value AS state_abb,
+                           value AS confirm
+                         FROM read_parquet(?)
+                         WHERE reference_date <= '2023-01-22'",
+    params = list(data_path)
+  )
+  DBI::dbDisconnect(con)
+  fit_path <- test_path("data", "sample_fit_cmdstanr.rds")
+  fit <- readRDS(fit_path)
+  
+  extract_diagnostics_cmdstanr(fit)
 
   # Assert
   expect_true(diagnostic)
