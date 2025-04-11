@@ -140,7 +140,7 @@ test_that("write_output_dir_structure generates dirs", {
 
 test_that("process_quantiles works as expected", {
   # Load the sample fit object
-  fit <- readRDS(test_path("data", "sample_fit.rds"))
+  fit <- readRDS(test_path("data", "sample_fit_rstan.rds"))
 
   # Run the function on the fit object
   result <- process_quantiles(
@@ -222,7 +222,7 @@ test_that("process_quantiles works as expected", {
 
 test_that("process_samples works as expected", {
   # Load the sample fit object
-  fit <- readRDS(test_path("data", "sample_fit.rds"))
+  fit <- readRDS(test_path("data", "sample_fit_rstan.rds"))
 
   # Run the function on the fit object
   result <- process_samples(fit, "test_geo", "test_model", "test_disease")
