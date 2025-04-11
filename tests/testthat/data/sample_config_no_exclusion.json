@@ -41,6 +41,7 @@
         }
     },
     "sampler_opts": {
+        "backend": "cmdstanr",
         "cores": 1,
         "chains": 1,
         "iter_warmup": 50,
