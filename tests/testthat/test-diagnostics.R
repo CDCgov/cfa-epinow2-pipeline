@@ -177,7 +177,7 @@ test_that("Cmdstanr diagnostics can be extracted from synthetic data", {
   DBI::dbDisconnect(con)
   fit_path <- test_path("data", "sample_fit_cmdstanr.rds")
   fit <- readRDS(fit_path)
-  
+
   extract_diagnostics_cmdstanr(fit)
 
   # Assert
