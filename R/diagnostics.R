@@ -86,7 +86,8 @@ extract_diagnostics <- function(fit,
       na.rm = TRUE
     )
   } else {
-    sampler_df <- fit$sampler_diagnostics(format = "df")
+    sampler_df <- fit$estimates$fit$sampler_diagnostics(format = "df")
+    summary_df <- fit$estimates$fit$summary()
 
     iterations <- length(sampler_df$divergent__)
     mean_accept_stat <- mean(sampler_df$accept_stat__)
@@ -94,73 +95,11 @@ extract_diagnostics <- function(fit,
     p_divergent <- n_divergent / iterations
     # choosing 10 as max treepdepth here
     p_max_treedepth <- sum(sampler_df$treedepth__ > 10) / iterations
-    # this should be number of Rt predictions with rhat > 1.05
-    n_high_rhat <- sum(fit$summary()$rhat > 1.05)
-    p_high_rhat <- n_high_rhat / nrow(fit$summary())
+    # TODO: MPW
+    # this should be number of Rt predictions with rhat > 1.05 
+    n_high_rhat <- sum(summary_df$rhat > 1.05, na.rm = T)
+    p_high_rhat <- n_high_rhat / nrow(summary_df)
   }
-
-  # Combine all diagnostic flags into one flag
-  diagnostic_flag <- any(
-    mean_accept_stat < 0.1,
-    p_divergent > 0.0075, # 0.0075 = 15 in 2000 samples are divergent
-    p_max_treedepth > 0.05,
-    p_high_rhat > 0.0075
-  )
-  # Create individual vectors for the columns of the diagnostics data frame
-  diagnostic_names <- c(
-    "mean_accept_stat",
-    "p_divergent",
-    "n_divergent",
-    "p_max_treedepth",
-    "p_high_rhat",
-    "n_high_rhat",
-    "diagnostic_flag",
-    "low_case_count_flag"
-  )
-  diagnostic_values <- c(
-    mean_accept_stat,
-    p_divergent,
-    n_divergent,
-    p_max_treedepth,
-    p_high_rhat,
-    n_high_rhat,
-    diagnostic_flag,
-    low_case_count
-  )
-
-  data.frame(
-    diagnostic = diagnostic_names,
-    value = diagnostic_values,
-    job_id = job_id,
-    task_id = task_id,
-    disease = disease,
-    geo_value = geo_value,
-    model = model
-  )
-}
-
-#' @family diagnostics
-#' @export
-extract_diagnostics_cmdstanr <- function(fit,
-                                         data,
-                                         job_id,
-                                         task_id,
-                                         disease,
-                                         geo_value,
-                                         model) {
-  low_case_count <- low_case_count_diagnostic(data)
-
-  sampler_df <- fit$sampler_diagnostics(format = "df")
-
-  iterations <- length(sampler_df$divergent__)
-  mean_accept_stat <- mean(sampler_df$accept_stat__)
-  n_divergent <- sum(sampler_df$divergent__)
-  p_divergent <- n_divergent / iterations
-  # choosing 10 as max treepdepth here
-  p_max_treedepth <- sum(sampler_df$treedepth__ > 10) / iterations
-  # this should be number of Rt predictions with rhat > 1.05
-  n_high_rhat <- sum(fit$summary()$rhat > 1.05)
-  p_high_rhat <- n_high_rhat / nrow(fit$summary())
 
   # Combine all diagnostic flags into one flag
   diagnostic_flag <- any(

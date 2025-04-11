@@ -14,7 +14,7 @@ test_that("Fitted model extracts diagnostics (rstan)", {
     params = list(data_path)
   )
   DBI::dbDisconnect(con)
-  fit_path <- test_path("data", "sample_fit.rds")
+  fit_path <- test_path("data", "sample_fit_rstan.rds")
   fit <- readRDS(fit_path)
 
   # Expected diagnostics
@@ -57,6 +57,73 @@ test_that("Fitted model extracts diagnostics (rstan)", {
     backend = "rstan"
   )
 
+  testthat::expect_equal(
+    actual,
+    expected
+  )
+})
+
+# TODO: create FIT object from the test_data.parquet
+test_that("Fitted model extracts diagnostics (cmdstanr)", {
+  # Arrange
+  data_path <- test_path("data/test_data.parquet")
+  con <- DBI::dbConnect(duckdb::duckdb())
+  data <- DBI::dbGetQuery(con, "
+                         SELECT
+                           report_date,
+                           reference_date,
+                           disease,
+                           geo_value AS state_abb,
+                           value AS confirm
+                         FROM read_parquet(?)
+                         WHERE reference_date <= '2023-01-22'",
+    params = list(data_path)
+  )
+  DBI::dbDisconnect(con)
+
+  fit_path <- test_path("data", "sample_fit_cmdstanr.rds")
+  fit <- readRDS(fit_path)
+  # Expected diagnostics
+  expected <- data.frame(
+    diagnostic = c(
+      "mean_accept_stat",
+      "p_divergent",
+      "n_divergent",
+      "p_max_treedepth",
+      "p_high_rhat",
+      "n_high_rhat",
+      "diagnostic_flag",
+      "low_case_count_flag"
+    ),
+    value = c(
+      0.9685711,
+      0.0000000,
+      0.0000000,
+      0.0000000,
+      0.3166667,
+      57.0000000,
+      1.0000000,
+      0.0000000
+    ),
+    job_id = rep("test", 8),
+    task_id = rep("test", 8),
+    disease = rep("test", 8),
+    geo_value = rep("test", 8),
+    model = rep("test", 8),
+    stringsAsFactors = FALSE
+  )
+  actual <- extract_diagnostics(
+    fit,
+    data,
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    backend = "cmdstanr"
+  )
+
+  # Assert
   testthat::expect_equal(
     actual,
     expected
