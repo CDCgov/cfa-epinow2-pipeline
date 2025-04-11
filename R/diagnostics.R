@@ -18,7 +18,7 @@
 #'   \item \code{value}: The value of the diagnostic metric.
 #'   \item \code{job_id}: The unique identifier for the job.
 #'   \item \code{task_id}: The unique identifier for the task.
-#'   \item \code{disease,geo_value,model}: Metadata for downstream processing.
+#'   \item \code{disease,geo_value,model,backend}: Metadata for downstream processing.
 #' }
 #'
 #' @details
