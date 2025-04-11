@@ -251,7 +251,8 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     task_id = config@task_id,
     disease = config@disease,
     geo_value = config@geo_value,
-    model = config@model
+    model = config@model,
+    backend = "cmdstanr"
   )
   samples <- process_samples(
     fit = fit,
