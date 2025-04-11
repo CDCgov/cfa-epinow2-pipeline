@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">CFAEpiNow2Pipeline</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -152,7 +152,7 @@
 <div class="section level4">
 <h4 id="test-configuration-generation">Test Configuration Generation<a class="anchor" aria-label="anchor" href="#test-configuration-generation"></a></h4>
 <ol style="list-style-type: decimal"><li>
-<code>make config</code> Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a suite of configuration files, following the default settings for a production run, and saves it into <code>az:/rt-epinow2-config/{job_id}</code>. If successful, something like this output will print to your command line. Make a note of the <code>job_id</code>, which you will need to identify your configs (and eventually your model outputs) in Azure blob storage.</li>
+<code>make config</code> Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a suite of configuration files, following the default settings for a production run, and saves it into <code>az://rt-epinow2-config/{job_id}</code>. If successful, something like this output will print to your command line. Make a note of the <code>job_id</code>, which you will need to identify your configs (and eventually your model outputs) in Azure blob storage.</li>
 </ol><pre><code>make config
 &gt; gh workflow run \
 &gt;   -R cdcgov/cfa-config-generator run-workload.yaml \
@@ -171,7 +171,7 @@
 <details><summary><p>Hint</p>
 </summary><p>Look somewhere in Azure blob storage.</p>
 </details><details><summary><p>Answer</p>
-</summary><p><code>az:/rt-epinow2-config/test/</code>. This is the same pattern as in the config generation step, except that “test” is the job_id in this case.</p>
+</summary><p><code>az://rt-epinow2-config/test/</code>. This is the same pattern as in the config generation step, except that “test” is the job_id in this case.</p>
 </details><p><br></p>
 <p><strong>Knowledge check:</strong> Where can you find the outputs of a local run?</p>
 <details><summary><p>Answer</p>
@@ -182,7 +182,7 @@
 <p>The following command will test your connection to Azure Batch resources. This command will run the pipeline for a single state (NY) and run using Azure Batch resources. To track the status of the nodes and pool, open Azure Batch Explorer. The outputs will write to the <code>nssp-rt-testing</code> container, in a directory labeled with the job_id printed to your command line. <code>make test-batch</code></p>
 <p><strong>Knowledge check:</strong> Verify that you know how to track the jobs running in the batch explorer. Locate the outputs in Azure blob storage. Explore the contents, and open <code>tasks/{taks_id}/logs.txt</code> which is useful for debugging.</p>
 <details><summary><p>Hint</p>
-</summary><p>The outputs will be written to <code>az:/nssp-rt-testing/{job_id}/</code></p>
+</summary><p>The outputs will be written to <code>az://nssp-rt-testing/{job_id}/</code></p>
 </details></li>
 </ol></div>
 </div>
