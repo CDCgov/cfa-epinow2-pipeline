@@ -53,14 +53,14 @@ extract_diagnostics <- function(fit,
                                 disease,
                                 geo_value,
                                 model,
-                                # could pass in backend through config but 
+                                # could pass in backend through config but
                                 # then we're dependent on another parameter
                                 backend = "cmdstanr") {
   low_case_count <- low_case_count_diagnostic(data)
 
-  if (backend == "rstan"){
+  if (backend == "rstan") {
     epinow2_diagnostics <- rstan::get_sampler_params(fit$estimates$fit,
-    inc_warmup = FALSE
+      inc_warmup = FALSE
     )
     mean_accept_stat <- mean(
       sapply(epinow2_diagnostics, function(x) mean(x[, "accept_stat__"]))
@@ -85,20 +85,18 @@ extract_diagnostics <- function(fit,
       rstan::summary(fit$estimates$fit)$summary[, "Rhat"] > 1.05,
       na.rm = TRUE
     )
-  }
-  else {
+  } else {
     sampler_df <- fit$sampler_diagnostics(format = "df")
 
-    iterations       <- length(sampler_df$divergent__)
+    iterations <- length(sampler_df$divergent__)
     mean_accept_stat <- mean(sampler_df$accept_stat__)
-    n_divergent      <- sum(sampler_df$divergent__)
-    p_divergent      <- n_divergent / iterations
+    n_divergent <- sum(sampler_df$divergent__)
+    p_divergent <- n_divergent / iterations
     # choosing 10 as max treepdepth here
-    p_max_treedepth  <- sum(sampler_df$treedepth__ > 10) / iterations
+    p_max_treedepth <- sum(sampler_df$treedepth__ > 10) / iterations
     # this should be number of Rt predictions with rhat > 1.05
     n_high_rhat <- sum(fit$summary()$rhat > 1.05)
     p_high_rhat <- n_high_rhat / nrow(fit$summary())
-
   }
 
   # Combine all diagnostic flags into one flag
@@ -151,15 +149,15 @@ extract_diagnostics_cmdstanr <- function(fit,
                                          geo_value,
                                          model) {
   low_case_count <- low_case_count_diagnostic(data)
-  
+
   sampler_df <- fit$sampler_diagnostics(format = "df")
 
-  iterations       <- length(sampler_df$divergent__)
+  iterations <- length(sampler_df$divergent__)
   mean_accept_stat <- mean(sampler_df$accept_stat__)
-  n_divergent      <- sum(sampler_df$divergent__)
-  p_divergent      <- n_divergent / iterations
+  n_divergent <- sum(sampler_df$divergent__)
+  p_divergent <- n_divergent / iterations
   # choosing 10 as max treepdepth here
-  p_max_treedepth  <- sum(sampler_df$treedepth__ > 10) / iterations
+  p_max_treedepth <- sum(sampler_df$treedepth__ > 10) / iterations
   # this should be number of Rt predictions with rhat > 1.05
   n_high_rhat <- sum(fit$summary()$rhat > 1.05)
   p_high_rhat <- n_high_rhat / nrow(fit$summary())
