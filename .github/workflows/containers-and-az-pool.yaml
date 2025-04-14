@@ -82,7 +82,7 @@ jobs:
         run: |
           chmod +x $GITHUB_WORKSPACE/.github/scripts/docker_build_and_push.sh
           $GITHUB_WORKSPACE/.github/scripts/docker_build_and_push.sh ${{ env.IMAGE_NAME }} ${{ steps.image-tag.outputs.tag }}
-          
+
       - name: Login to Azure CLI with OIDC using EDAV_CFA_PREDICT_NNHT_SP
         id: az_cli_auth
         uses: azure/login@v2
