@@ -224,4 +224,3 @@ test_that("NAs are evalated as 0", {
   # Assert
   expect_true(diagnostic)
 })
-
