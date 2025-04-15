@@ -1,3 +1,6 @@
+# CFAEpiNow2Pipeline v0.2.1
+* Fix minor typos in `SOP.md`.
+
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
