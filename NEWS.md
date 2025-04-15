@@ -2,7 +2,7 @@
 
 ## Features
 * Pin r-version at 4.4.3 for CI/CD
-* Fix minor typos in `SOP.md`. 
+* Fix minor typos in `SOP.md`.
 * Swap from `Dockerfile-batch` to using an inline-metadata script, managed by `uv`.
 * Adding dynamic logic to re-query for configs in blob
 * Automate creation of outlier csv for nssp-elt-2/outliers
