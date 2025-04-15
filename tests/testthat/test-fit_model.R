@@ -117,10 +117,11 @@ test_that("Minimal model fit same between rstan or cmdstanr backend", {
     sampler = c(backend = "rstan", sampler_opts)
   )
 
-  rstan_rt <- rstan$summary[measure == "Effective reproduction no."]
-  cmdstanr_rt <- cmdstanr$summary[measure == "Effective reproduction no."]
+  test_measure <- "Expected change in daily reports"
+  rstan_rt <- rstan$summary[measure == test_measure]
+  cmdstanr_rt <- cmdstanr$summary[measure == test_measure]
 
-  expect_equal(rstan_rt[, numeric_estimate], cmdstanr_rt[, numeric_estimate])
+  expect_equal(rstan_rt[, estimate], cmdstanr_rt[, estimate])
 })
 
 test_that("Minimal model fit with no right trunc or delay runs", {
