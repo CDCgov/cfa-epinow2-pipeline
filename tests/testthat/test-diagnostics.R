@@ -96,14 +96,14 @@ test_that("Fitted model extracts diagnostics (cmdstanr)", {
       "low_case_count_flag"
     ),
     value = c(
-      0.9685711,
-      0.0000000,
-      0.0000000,
-      0.0000000,
-      0.3166667,
+      0.96857106,
+      0.00000000,
+      0.00000000,
+      0.00000000,
+      0.31666667,
       57.0000000,
-      1.0000000,
-      0.0000000
+      1.00000000,
+      0.00000000
     ),
     job_id = rep("test", 8),
     task_id = rep("test", 8),
@@ -224,3 +224,4 @@ test_that("NAs are evalated as 0", {
   # Assert
   expect_true(diagnostic)
 })
+
