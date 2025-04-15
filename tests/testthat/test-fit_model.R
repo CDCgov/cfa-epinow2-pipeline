@@ -118,8 +118,8 @@ test_that("Minimal model fit same between rstan or cmdstanr backend", {
   )
 
   test_measure <- "Expected change in daily reports"
-  rstan_rt     <- rstan$summary[rstan$summary$measure==test_measure, ]
-  cmdstanr_rt  <- cmdstanr$summary[cmdstanr$summary$measure==test_measure, ]
+  rstan_rt <- rstan$summary[rstan$summary$measure == test_measure, ]
+  cmdstanr_rt <- cmdstanr$summary[cmdstanr$summary$measure == test_measure, ]
 
   expect_equal(rstan_rt$estimate, cmdstanr_rt$estimate)
 })
