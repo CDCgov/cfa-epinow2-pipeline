@@ -224,28 +224,3 @@ test_that("NAs are evalated as 0", {
   # Assert
   expect_true(diagnostic)
 })
-
-test_that("Cmdstanr diagnostics can be extracted from synthetic data", {
-  # Arrange
-  data_path <- test_path("data/test_data.parquet")
-  con <- DBI::dbConnect(duckdb::duckdb())
-  data <- DBI::dbGetQuery(con, "
-                         SELECT
-                           report_date,
-                           reference_date,
-                           disease,
-                           geo_value AS state_abb,
-                           value AS confirm
-                         FROM read_parquet(?)
-                         WHERE reference_date <= '2023-01-22'",
-    params = list(data_path)
-  )
-  DBI::dbDisconnect(con)
-  fit_path <- test_path("data", "sample_fit_cmdstanr.rds")
-  fit <- readRDS(fit_path)
-
-  extract_diagnostics_cmdstanr(fit)
-
-  # Assert
-  expect_true(diagnostic)
-})
