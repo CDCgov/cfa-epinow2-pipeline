@@ -117,8 +117,8 @@ test_that("Minimal model fit same between rstan or cmdstanr backend", {
     sampler = c(backend = "rstan", sampler_opts)
   )
 
-  rstan_re_no   <- fit_rstan$summary[measure == 'Effective reproduction no.', numeric_estimate]
-  cmdstanr_re_no <- fit_cmdstanr$summary[measure == 'Effective reproduction no.', numeric_estimate]
+  rstan_re_no <- fit_rstan$summary[measure == "Effective reproduction no.", numeric_estimate]
+  cmdstanr_re_no <- fit_cmdstanr$summary[measure == "Effective reproduction no.", numeric_estimate]
 
   expect_equal(rstan_re_no, cmdstanr_re_no)
 })
