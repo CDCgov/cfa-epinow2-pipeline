@@ -167,10 +167,8 @@ jobs:
       # pool-exists will be ''.
       #########################################################################
       - name: Check if pool exists
-        uses: azure/CLI@v2
         id: check_pool_id
-        with:
-          inlineScript: |
+        run: |
             az batch account login \
               --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
               --name "${{ env.BATCH_ACCOUNT }}"
