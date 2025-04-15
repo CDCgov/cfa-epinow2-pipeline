@@ -136,23 +136,6 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v4
 
-      # This step is only needed during the action to write the
-      # config file. Users can have a config file stored in their VAP
-      # sessions. In the future, we will have the config.toml file
-      # distributed with the repo (encrypted).
-      - name: Writing out config file
-        run: |
-          cat <<EOF > pool-config-${{ github.sha }}.toml
-          ${{ secrets.POOL_CONFIG_TOML }}
-          EOF
-
-          # Replacing placeholders in the config file
-          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}${{ env.IMAGE_NAME }}:${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
-          sed -i 's|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g' pool-config-${{ github.sha }}.toml
-          sed -i 's|{{ BATCH_SUBNET_ID }}|${{ env.BATCH_SUBNET_ID }}|g' pool-config-${{ github.sha }}.toml
-          sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
-
-
       - name: Login to Azure with NNH Service Principal
         id: azure_login_2
         uses: azure/login@v2
