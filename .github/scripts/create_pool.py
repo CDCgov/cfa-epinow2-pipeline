@@ -91,7 +91,6 @@ def main() -> None:
                         "containerImageNames": [os.environ["CONTAINER_IMAGE_NAME"]],
                         "containerRegistries": [
                             {
-                                "registryServer": os.environ["CONTAINER_REGISTRY_URL"],
                                 "userName": os.environ["CONTAINER_REGISTRY_USERNAME"],
                                 "password": os.environ["CONTAINER_REGISTRY_PASSWORD"],
                                 "registryServer": os.environ[
@@ -126,14 +125,12 @@ def main() -> None:
         },
     }
 
-    created_pool_result = batch_mgmt_client.pool.create(
+    batch_mgmt_client.pool.create(
         resource_group_name=os.environ["RESOURCE_GROUP"],
         account_name=os.environ["BATCH_ACCOUNT"],
         pool_name=os.environ["POOL_ID"],
         parameters=pool_parameters,
     )
-    print("Pool Creation Result:")
-    print(created_pool_result)
 
 
 if __name__ == "__main__":
