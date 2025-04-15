@@ -98,7 +98,7 @@ extract_diagnostics <- function(fit,
     p_max_treedepth <- sum(sampler_df$treedepth__ > 10) / iterations
     # TODO: MPW
     # this should be number of Rt predictions with rhat > 1.05
-    n_high_rhat <- sum(summary_df$rhat > 1.05, na.rm = T)
+    n_high_rhat <- sum(summary_df$rhat > 1.05, na.rm = TRUE)
     p_high_rhat <- n_high_rhat / nrow(summary_df)
   }
 
