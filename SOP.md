@@ -113,7 +113,7 @@ This may seem complicated, but once you have your dependencies and credentials s
 
 #### Test Configuration Generation
 
-1.  `make config` Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a suite of configuration files, following the default settings for a production run, and saves it into `az:/rt-epinow2-config/{job_id}`. If successful, something like this output will print to your command line. Make a note of the `job_id`, which you will need to identify your configs (and eventually your model outputs) in Azure blob storage.
+1.  `make config` Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a suite of configuration files, following the default settings for a production run, and saves it into `az://rt-epinow2-config/{job_id}`. If successful, something like this output will print to your command line. Make a note of the `job_id`, which you will need to identify your configs (and eventually your model outputs) in Azure blob storage.
 
 ```
 make config
@@ -147,7 +147,7 @@ If you receive an error that you do not have the necessary permissions to run th
 
     <summary>Answer</summary>
 
-    `az:/rt-epinow2-config/test/`. This is the same pattern as in the config generation step, except that "test" is the job_id in this case.
+    `az://rt-epinow2-config/test/`. This is the same pattern as in the config generation step, except that "test" is the job_id in this case.
 
     </details>
 
@@ -173,7 +173,7 @@ If you receive an error that you do not have the necessary permissions to run th
 
     <summary>Hint</summary>
 
-    The outputs will be written to `az:/nssp-rt-testing/{job_id}/`
+    The outputs will be written to `az://nssp-rt-testing/{job_id}/`
 
     </details>
 
