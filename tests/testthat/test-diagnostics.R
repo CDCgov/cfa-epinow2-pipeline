@@ -227,7 +227,6 @@ test_that("NAs are evalated as 0", {
 
 test_that("Cmdstanr diagnostics can be extracted from synthetic data", {
   # Arrange
-  # fit <- cmdstanr::cmdstanr_example("schools")
   data_path <- test_path("data/test_data.parquet")
   con <- DBI::dbConnect(duckdb::duckdb())
   data <- DBI::dbGetQuery(con, "
