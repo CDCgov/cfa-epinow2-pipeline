@@ -99,7 +99,7 @@ test_that("Minimal model fit same between rstan or cmdstanr backend", {
     iter_sampling = 25
   )
 
-  fit_cmdstanr <- fit_model(
+  cmdstanr <- fit_model(
     data = data,
     parameters = parameters,
     seed = 12345,
@@ -108,7 +108,7 @@ test_that("Minimal model fit same between rstan or cmdstanr backend", {
     sampler = c(backend = "cmdstanr", sampler_opts)
   )
 
-  fit_rstan <- fit_model(
+  rstan <- fit_model(
     data = data,
     parameters = parameters,
     seed = 12345,
@@ -117,10 +117,10 @@ test_that("Minimal model fit same between rstan or cmdstanr backend", {
     sampler = c(backend = "rstan", sampler_opts)
   )
 
-  rstan_re_no <- fit_rstan$summary[measure == "Effective reproduction no.", numeric_estimate]
-  cmdstanr_re_no <- fit_cmdstanr$summary[measure == "Effective reproduction no.", numeric_estimate]
+  rstan_re_no   <- rstan$summary[measure == 'Effective reproduction no.']
+  cmdstanr_re_no <- cmdstanr$summary[measure == 'Effective reproduction no.']
 
-  expect_equal(rstan_re_no, cmdstanr_re_no)
+  expect_equal(rstan_re_no[, numeric_estimate], cmdstanr_re_no[, numeric_estimate])
 })
 
 test_that("Minimal model fit with no right trunc or delay runs", {
