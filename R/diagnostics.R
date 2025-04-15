@@ -9,6 +9,7 @@
 #'
 #' @param fit The model fit object from `EpiNow2`
 #' @param data A data frame containing the input data used in the model fit.
+#' @param backend Either 'cmdstanr' or 'rstan'. Default is 'cmdstanr'
 #' @inheritParams Config
 #'
 #' @return A \code{data.frame} containing the extracted diagnostic metrics. The
@@ -18,7 +19,7 @@
 #'   \item \code{value}: The value of the diagnostic metric.
 #'   \item \code{job_id}: The unique identifier for the job.
 #'   \item \code{task_id}: The unique identifier for the task.
-#'   \item \code{disease,geo_value,model,backend}: Metadata for downstream processing.
+#'   \item \code{disease,geo_value,model}: Metadata for downstream processing.
 #' }
 #'
 #' @details
