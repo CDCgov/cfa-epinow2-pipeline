@@ -82,14 +82,14 @@ jobs:
         run: |
           chmod +x $GITHUB_WORKSPACE/.github/scripts/docker_build_and_push.sh
           $GITHUB_WORKSPACE/.github/scripts/docker_build_and_push.sh ${{ env.IMAGE_NAME }} ${{ steps.image-tag.outputs.tag }}
-          
+
       - name: Login to Azure CLI with OIDC using EDAV_CFA_PREDICT_NNHT_SP
         id: az_cli_auth
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: ACR Import
         uses: CDCgov/cfa-actions/runner-action@v1.3.0
