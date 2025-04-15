@@ -30,6 +30,7 @@ secrets.
 """
 
 import os
+
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.batch import BatchManagementClient
 
@@ -125,12 +126,14 @@ def main() -> None:
         },
     }
 
-    batch_mgmt_client.pool.create(
+    created_pool_result = batch_mgmt_client.pool.create(
         resource_group_name=os.environ["RESOURCE_GROUP"],
         account_name=os.environ["BATCH_ACCOUNT"],
         pool_name=os.environ["POOL_ID"],
         parameters=pool_parameters,
     )
+    print("Pool Creation Result:")
+    print(created_pool_result)
 
 
 if __name__ == "__main__":
