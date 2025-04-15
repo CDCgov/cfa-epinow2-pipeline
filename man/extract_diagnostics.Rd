@@ -4,7 +4,16 @@
 \alias{extract_diagnostics}
 \title{Extract diagnostic metrics from model fit and data}
 \usage{
-extract_diagnostics(fit, data, job_id, task_id, disease, geo_value, model)
+extract_diagnostics(
+  fit,
+  data,
+  job_id,
+  task_id,
+  disease,
+  geo_value,
+  model,
+  backend = "cmdstanr"
+)
 }
 \arguments{
 \item{fit}{The model fit object from \code{EpiNow2}}
@@ -22,6 +31,8 @@ extract_diagnostics(fit, data, job_id, task_id, disease, geo_value, model)
 value, usually a state or \code{"US"} for national data.}
 
 \item{model}{A string specifying the model to be used.}
+
+\item{backend}{Either 'cmdstanr' or 'rstan'. Default is 'cmdstanr'}
 }
 \value{
 A \code{data.frame} containing the extracted diagnostic metrics. The

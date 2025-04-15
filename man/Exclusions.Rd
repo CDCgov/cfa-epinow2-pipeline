@@ -4,7 +4,7 @@
 \alias{Exclusions}
 \title{Exclusions Class}
 \usage{
-Exclusions(path = character(0), blob_storage_container = character(0))
+Exclusions(path = class_missing, blob_storage_container = class_missing)
 }
 \arguments{
 \item{path}{A string specifying the path to a CSV file containing exclusion
