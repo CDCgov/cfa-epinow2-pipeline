@@ -60,7 +60,10 @@ read_data <- function(data_path,
    SELECT
      report_date,
      reference_date,
-     disease,
+     CASE
+       WHEN disease = 'COVID-19/Omicron' THEN 'COVID-19'
+       ELSE disease
+     END AS disease,
      -- We want to inject the 'US' as our abbrevation here bc data is not agg'd
      'US' AS geo_value,
       sum(value) AS confirm
@@ -80,7 +83,10 @@ read_data <- function(data_path,
   SELECT
     report_date,
     reference_date,
-    disease,
+    CASE
+     WHEN disease = 'COVID-19/Omicron' THEN 'COVID-19'
+     ELSE disease
+    END AS disease,
     geo_value AS geo_value,
     sum(value) AS confirm,
   FROM read_parquet(?)

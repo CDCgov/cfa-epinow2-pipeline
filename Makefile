@@ -14,12 +14,11 @@ POOL="cfa-epinow2-$(TAG)"
 TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
 JOB:=Rt-estimation-$(TIMESTAMP)
 
-deps:
-	$(CNTR_MGR) build -t $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG) -f Dockerfile-dependencies
+# The report date to use, in ISO format (YYYY-MM-DD). Default is today
+REPORT_DATE?=$(shell date -u +%F)
 
 pull:
 	az acr login --name 'cfaprdbatchcr'
-	$(CNTR_MGR) pull $(REGISTRY)$(IMAGE_NAME)-dependencies:$(TAG)
 	$(CNTR_MGR) pull $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 build:
@@ -34,29 +33,34 @@ config:
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
 	  -f state=all \
-	  -f job_id=$(JOB)
+	  -f output_container="nssp-rt-v2" \
+	  -f job_id=$(JOB) \
+	  -f report_date=$(REPORT_DATE)
+
+rerun-config:
+	gh workflow run \
+	  -R cdcgov/cfa-config-generator re-run-workload.yaml  \
+	  -f output_container="nssp-rt-v2" \
+	  -f job_id=$(JOB) \
+	  -f report_date=$(REPORT_DATE)
 
 run-batch:
-	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
-	$(CNTR_MGR) run --rm  \
-	--env-file .env \
-	-it \
-	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	uv run --env-file .env \
+	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 run-prod: config
-	@echo "Hanging for 15 seconds to wait for configs to generate"
-	sleep 15
-	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
-	$(CNTR_MGR) run --rm  \
-	--env-file .env \
-	-it \
-	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	uv run --env-file .env \
+	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+
+rerun-prod: rerun-config
+	uv run --env-file .env \
+	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 run:
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
-	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt', output_container = 'zs-test-pipeline-update')"
+	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt')"
 
 
 up:
@@ -72,14 +76,10 @@ test-batch:
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
 	  -f state=NY \
+	  -f output_container="nssp-rt-testing" \
 	  -f job_id=$(JOB)
-	@echo "Hanging for 15 seconds to wait for configs to generate"
-	sleep 15
-	$(CNTR_MGR) build -f Dockerfile-batch -t batch . --no-cache
-	$(CNTR_MGR) run --rm  \
-	--env-file .env \
-	-it \
-	batch python job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	uv run --env-file .env \
+	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
 
 test:
 	Rscript -e "testthat::test_local()"
