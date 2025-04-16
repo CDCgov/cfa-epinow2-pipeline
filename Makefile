@@ -36,6 +36,8 @@ config:
 	  -f output_container="nssp-rt-v2" \
 	  -f job_id=$(JOB) \
 	  -f report_date=$(REPORT_DATE)
+	@sleep 5
+	bash azure/poll_for_gh_status.sh
 
 rerun-config:
 	gh workflow run \
@@ -43,6 +45,8 @@ rerun-config:
 	  -f output_container="nssp-rt-v2" \
 	  -f job_id=$(JOB) \
 	  -f report_date=$(REPORT_DATE)
+	@sleep 5
+	bash azure/poll_for_gh_status.sh
 
 run-batch:
 	uv run --env-file .env \
