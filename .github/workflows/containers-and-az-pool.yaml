@@ -183,7 +183,7 @@ jobs:
           CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
           CONTAINER_IMAGE_NAME: ${{ secrets.CONTAINER_IMAGE_NAME }}
           POOL_ID: ${{ env.POOL_ID }}
-          SUBNET_ID: ${{ env.SUBNET_ID }}
+          SUBNET_ID: ${{ secrets.BATCH_SUBNET_ID }}
           RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
         id: create_batch_pool
 
