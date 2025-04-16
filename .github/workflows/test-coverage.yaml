@@ -27,6 +27,11 @@ jobs:
           extra-packages: any::covr
           needs: coverage
 
+      - name: Install cmdstan
+        run: |
+          Rscript -e 'cmdstanr::install_cmdstan()' && \
+            Rscript -e 'cmdstanr::set_cmdstan_path()'
+
       - name: Test coverage
         shell: Rscript {0}
         run: |
