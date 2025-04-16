@@ -3,6 +3,7 @@
 ## Features
 * Switching base rocker image from geospatial (4.7 GB) to tidyverse (2.7 GB)
 * Adding cmdstanr as back-end and updating diagnostic extraction as such
+* Updating EpiNow2 package from v1.4.0 to v1.6.0
 * Pin r-version at 4.4.3 for CI/CD
 * Fix minor typos in `SOP.md
 * Swap from `Dockerfile-batch` to using an inline-metadata script, managed by `uv`
