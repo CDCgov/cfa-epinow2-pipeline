@@ -4,8 +4,12 @@
 #     "azure-batch==14.2.0",
 #     "azure-identity==1.21.0",
 #     "azure-storage-blob==12.25.1",
+#     "cfa-config-generator",
 #     "msrest==0.7.1",
 # ]
+#
+# [tool.uv.sources]
+# cfa-config-generator = { git = "https://github.com/CDCgov/cfa-config-generator" }
 # ///
 import datetime
 import os
@@ -13,6 +17,7 @@ import sys
 import time
 import uuid
 
+from cfa_config_generator.utils.epinow2.driver_functions import generate_config
 from msrest.authentication import BasicTokenAuthentication
 
 import azure.batch.models as batchmodels
