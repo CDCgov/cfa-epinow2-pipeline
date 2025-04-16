@@ -1,7 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
-* Switching base rocker image from geospatial (4.7 GB) to tidyverse (2.7 GB) 
+* Switching base rocker image from geospatial (4.7 GB) to tidyverse (2.7 GB)
 * Adding cmdstanr as back-end and updating diagnostic extraction as such
 * Pin r-version at 4.4.3 for CI/CD
 * Fix minor typos in `SOP.md
