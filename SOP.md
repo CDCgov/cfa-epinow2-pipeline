@@ -127,7 +127,7 @@ make config
 
 Verify that you can locate the configuration files in Azure blob storage.
 
-If you receive an error that you do not have the necessary permissions to run this command please reach out Nate McIntosh ([ute2\@cdc.gov](mailto:ute2@cdc.gov)) or Micah Wiesner ([zqmk6\@cdc.gov](mailto:zqmk6@cdc.gov)) for assistance.
+If you receive an error that you do not have the necessary permissions to run this command please reach out Nate McIntosh ([ute2@cdc.gov](mailto:ute2@cdc.gov)) or Micah Wiesner ([zqmk6\@cdc.gov](mailto:zqmk6@cdc.gov)) for assistance.
 
 #### Test make run command
 
@@ -212,7 +212,12 @@ flowchart TD
     E -->F(Run those tasks in Azure Batch)
 ```
 
-In this flowchart, each arrow with text represents a manual action. Writing out the above in more detail: 1. The anomaly review team documents their decisions in the spreadsheet 1. The person running the pipeline pulls an updated docker using `make pull` and open's the docker with `make up` 1. Then the user enters `cd cfa-epinow2-pipeline/utils` into the terminal as well as `Rscript Rt_review_exclusions.R -d yyymmdd` where yyyymmdd is the date in the name of the Rt_review_yyymmdd.xlsx excel file on sharepoint. The -d argument's default is today's date 1. The terminal will prompt you to login using a provided url and a code. Copy the url and paste into a browser where you are logged onto your CDC account (not ext account). Then paste the provided code. Then confirm your login by hitting continue. Once confirmed, the script will download the sharepoint excel file, process it, and upload it as the outlier csv file to the blob storage "folder" [`az://nssp-etl/outliers-v2/`](az://nssp-etl/outliers-v2/) 1. The person running the pipeline runs `make rerun-prod`. This will create new configuration files that include the path to the outlier CSV just uploaded to Blob, and then kick off those tasks in Azure Batch
+In this flowchart, each arrow with text represents a manual action. Writing out the above in more detail:
+1. The anomaly review team documents their decisions in the spreadsheet
+1. The person running the pipeline pulls an updated docker using `make pull` and open's the docker with `make up`
+1. Then the user enters `cd cfa-epinow2-pipeline/utils` into the terminal as well as `Rscript Rt_review_exclusions.R -d yyymmdd` where yyyymmdd is the date in the name of the Rt_review_yyymmdd.xlsx excel file on sharepoint. The -d argument's default is today's date
+1. The terminal will prompt you to login using a provided url and a code. Copy the url and paste into a browser where you are logged onto your CDC account (not ext account). Then paste the provided code. Then confirm your login by hitting continue. Once confirmed, the script will download the sharepoint excel file, process it, and upload it as the outlier csv file to the blob storage "folder" [`az://nssp-etl/outliers-v2/`](az://nssp-etl/outliers-v2/)
+1. The person running the pipeline runs `make rerun-prod`. This will create new configuration files that include the path to the outlier CSV just uploaded to Blob, and then kick off those tasks in Azure Batch
 
 The outlier file will have these columns: `state`, `disease`, `reference_date`, `report_date`. Those columns fully specify for the pipeline how to handle the data exclusions. Note that this set of data outliers corresponds to the NSSP report in use for this production run. If we ran again tomorrow, we would use tomorrow's report, the data would be different, and we would likely pick a different set of points (if any) to be marked as outliers. This means it is important to always use the date of this report as the name for this CSV. (It should correspond with the values in the `report_date` column).
 
