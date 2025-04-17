@@ -222,10 +222,9 @@ jobs:
               --filter "(id eq '${{ env.POOL_ID }}')" \
               --query "[].[id, allocationState, creationTime]" > pool-list-${{ github.sha }}
 
-
             if [ -s pool-list-${{ github.sha }} ]; then
+              echo "Pool already exists!"
+            else
               echo "Running create pool script"
               uv run .github/scripts/create_pool.py
-            else
-              echo "Pool already exists!"
             fi
