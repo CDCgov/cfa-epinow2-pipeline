@@ -91,7 +91,9 @@ def main() -> None:
                         "containerImageNames": [os.environ["CONTAINER_IMAGE_NAME"]],
                         "containerRegistries": [
                             {
-                                "identityReference": os.environ["BATCH_USER_ASSIGNED_IDENTITY"],
+                                "identityReference": {
+                                    "resourceId": os.environ["BATCH_USER_ASSIGNED_IDENTITY"]
+                                },
                                 "registryServer": os.environ[
                                     "CONTAINER_REGISTRY_SERVER"
                                 ],
