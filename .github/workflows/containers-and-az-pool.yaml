@@ -204,6 +204,7 @@ jobs:
             export SUBNET_ID=${{ secrets.BATCH_SUBNET_ID }}
             export RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}
 
+
             echo "Logging into Azure CLI"
             az login --service-principal \
             --username ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }} \
@@ -225,6 +226,10 @@ jobs:
             if [ -s pool-list-${{ github.sha }} ]; then
               echo "Pool already exists!"
             else
+              echo "Cloning repo at branch '$CURRENT_BRANCH'"
+              git clone -b "$CURRENT_BRANCH" https://github.com/${{ github.repository }}.git
+              cd cfa-epinow2-pipeline
+
               echo "Running create pool script"
               uv run .github/scripts/create_pool.py
             fi
