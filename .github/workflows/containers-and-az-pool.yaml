@@ -147,7 +147,7 @@ jobs:
 
     permissions:
       contents: read
-      packages: write
+      id-token: write
 
     env:
       TAG: ${{ needs.acr-import.outputs.tag }}
