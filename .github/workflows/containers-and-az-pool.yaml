@@ -123,8 +123,8 @@ jobs:
             echo "Logging into Azure CLI"
             az login --service-principal \
             --username ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }} \
+            --password ${{ fromJSON(secrets.AZURE_NNHT_SP).clientSecret }} \
             --tenant ${{ secrets.TENANT_ID }} \
-            --federated-token ${{ steps.idtoken.outputs.id_token }} \
             --output none
 
             IMAGE_TAG=${{ env.IMAGE_NAME }}:${{ needs.build-pipeline-image.outputs.tag }}
