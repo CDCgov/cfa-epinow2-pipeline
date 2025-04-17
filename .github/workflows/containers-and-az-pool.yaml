@@ -123,8 +123,8 @@ jobs:
             echo "Logging into Azure CLI"
             az login --service-principal \
             --username ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }} \
-            --password ${{ fromJSON(secrets.AZURE_NNHT_SP).clientSecret }} \
             --tenant ${{ secrets.TENANT_ID }} \
+            --federated-token ${{ steps.idtoken.outputs.id_token }} \
             --output none
 
             IMAGE_TAG=${{ env.IMAGE_NAME }}:${{ needs.build-pipeline-image.outputs.tag }}
@@ -183,9 +183,7 @@ jobs:
         uses: azure/login@v2
         with:
         # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
-          client-id: ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }}
-          tenant-id: ${{ secrets.TENANT_ID }}
-          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
+          creds: ${{ secrets.AZURE_NNHT_SP }}
 
       #########################################################################
       # Checking if the pool exists
@@ -237,8 +235,8 @@ jobs:
             echo "Logging into Azure CLI"
             az login --service-principal \
             --username ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }} \
-            --password ${{ fromJSON(secrets.AZURE_NNHT_SP).clientSecret }} \
             --tenant ${{ secrets.TENANT_ID }} \
+            --federated-token ${{ steps.idtoken.outputs.id_token }} \
             --output none
 
             echo "Running create pool script"
