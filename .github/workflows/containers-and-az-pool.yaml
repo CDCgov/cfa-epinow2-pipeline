@@ -178,12 +178,6 @@ jobs:
             const id_token = await coredemo.getIDToken('api://AzureADTokenExchange')
             coredemo.setOutput('id_token', id_token)
 
-      - name: Login to Azure with NNH Service Principal
-        id: azure_login_2
-        uses: azure/login@v2
-        with:
-        # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
 
       #########################################################################
       # Checking if the pool exists
@@ -234,10 +228,26 @@ jobs:
 
             echo "Logging into Azure CLI"
             az login --service-principal \
-            --username ${{ fromJSON(secrets.EDAV_CFA_PREDICT_NNHT_SP).clientId }} \
-            --password ${{ fromJSON(secrets.EDAV_CFA_PREDICT_NNHT_SP).clientSecret }} \
+            --username ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }} \
             --tenant ${{ secrets.TENANT_ID }} \
+            --federated-token ${{ steps.idtoken.outputs.id_token }} \
             --output none
 
-            echo "Running create pool script"
-            uv run .github/scripts/create_pool.py
+            echo "Logging into batch"
+            az batch account login \
+              --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
+              --name "${{ env.BATCH_ACCOUNT }}"
+
+            echo "Listing batch pools"
+            az batch pool list \
+              --output tsv \
+              --filter "(id eq '${{ env.POOL_ID }}')" \
+              --query "[].[id, allocationState, creationTime]" > pool-list-${{ github.sha }}
+
+
+            if [ -s pool-list${{ github.sha }} ]; then
+              echo "Running create pool script"
+              uv run .github/scripts/create_pool.py
+            else
+              echo "Pool already exists!"
+            fi
