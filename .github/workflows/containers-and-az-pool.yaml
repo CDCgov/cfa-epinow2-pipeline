@@ -179,28 +179,6 @@ jobs:
             coredemo.setOutput('id_token', id_token)
 
 
-      #########################################################################
-      # Checking if the pool exists
-      # This is done via az batch pool list. If there is no pool matching the
-      # pool id (which is a function of the tag, i.e., branch name), then we
-      # pool-exists will be ''.
-      #########################################################################
-      - name: Check if pool exists
-        id: check_pool_id
-        run: |
-            az batch account login \
-              --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-              --name "${{ env.BATCH_ACCOUNT }}"
-
-            az batch pool list \
-              --output tsv \
-              --filter "(id eq '${{ env.POOL_ID }}')" \
-              --query "[].[id, allocationState, creationTime]" > \
-              pool-list-${{ github.sha }}
-
-            echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
-              $GITHUB_OUTPUT
-
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
         if: ${{ steps.check_pool_id.outputs.pool-exists == '' }}
