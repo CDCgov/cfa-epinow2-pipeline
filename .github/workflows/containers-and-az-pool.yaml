@@ -223,7 +223,7 @@ jobs:
               --query "[].[id, allocationState, creationTime]" > pool-list-${{ github.sha }}
 
 
-            if [ -s pool-list${{ github.sha }} ]; then
+            if [ -s pool-list-${{ github.sha }} ]; then
               echo "Running create pool script"
               uv run .github/scripts/create_pool.py
             else
