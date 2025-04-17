@@ -166,6 +166,12 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v4
 
+      # From: https://stackoverflow.com/a/58035262/2097171
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: get-branch
+
       # From: https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#requesting-the-jwt-using-the-actions-core-toolkit
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
@@ -226,6 +232,7 @@ jobs:
             if [ -s pool-list-${{ github.sha }} ]; then
               echo "Pool already exists!"
             else
+              CURRENT_BRANCH="${{ steps.get-branch.outputs.branch }}"
               echo "Cloning repo at branch '$CURRENT_BRANCH'"
               git clone -b "$CURRENT_BRANCH" https://github.com/${{ github.repository }}.git
               cd cfa-epinow2-pipeline
