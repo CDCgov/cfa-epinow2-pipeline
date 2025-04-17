@@ -115,8 +115,8 @@ jobs:
       - name: ACR Import
         uses: CDCgov/cfa-actions/runner-action@v1.3.0
         with:
-          github_app_id: ${{ secrets.REPO_CDCENT_ACTOR_APP_ID }}
-          github_app_pem: ${{ secrets.REPO_CDCENT_ACTOR_APP_PEM }}
+          github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
+          github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
           wait_for_completion: true
           print_logs: true
           script: |
@@ -214,8 +214,8 @@ jobs:
         if: ${{ steps.check_pool_id.outputs.pool-exists == '' }}
         uses: CDCgov/cfa-actions/runner-action@v1.3.0
         with:
-          github_app_id: ${{ secrets.REPO_CDCENT_ACTOR_APP_ID }}
-          github_app_pem: ${{ secrets.REPO_CDCENT_ACTOR_APP_PEM }}
+          github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
+          github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
           wait_for_completion: true
           print_logs: true
           script: |
