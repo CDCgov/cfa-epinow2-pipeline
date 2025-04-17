@@ -144,7 +144,7 @@ jobs:
     name: Create Batch Pool and Submit Jobs
     runs-on: ubuntu-latest
     needs: acr-import
-
+    environment: production
     permissions:
       contents: read
       id-token: write
