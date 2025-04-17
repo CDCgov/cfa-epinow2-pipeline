@@ -93,7 +93,9 @@ def main() -> None:
                             {
                                 "userName": os.environ["CONTAINER_REGISTRY_USERNAME"],
                                 "password": os.environ["CONTAINER_REGISTRY_PASSWORD"],
-                                "registryServer": os.environ["CONTAINER_REGISTRY_URL"],
+                                "registryServer": os.environ[
+                                    "CONTAINER_REGISTRY_SERVER"
+                                ],
                             }
                         ],
                     },
