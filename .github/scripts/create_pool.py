@@ -91,11 +91,9 @@ def main() -> None:
                         "containerImageNames": [os.environ["CONTAINER_IMAGE_NAME"]],
                         "containerRegistries": [
                             {
-                                # "identityReference": {
-                                #     "resourceId": os.environ["BATCH_USER_ASSIGNED_IDENTITY"]
-                                # },
-                                "userName": "cfaprdbatchcr",
-                                "password": os.environ["CONTAINER_REGISTRY_PASSWORD"],
+                                "identityReference": {
+                                    "resourceId": os.environ["BATCH_USER_ASSIGNED_IDENTITY"]
+                                },
                                 "registryServer": os.environ[
                                     "CONTAINER_REGISTRY_SERVER"
                                 ],
