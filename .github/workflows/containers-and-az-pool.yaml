@@ -38,6 +38,10 @@ env:
 jobs:
 
   build-pipeline-image:
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read  # This is required for actions/checkout
+      packages: write # This is required for ACR import
     runs-on: ubuntu-latest
     name: Build image
 
@@ -84,40 +88,66 @@ jobs:
 
   acr-import:
     needs: build-pipeline-image
-    runs-on: cfa-cdcgov-aca
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read  # This is required for actions/checkout
+      packages: write # This is required for ACR import
 
     name: Copy image from GHCR to ACR
     outputs:
       tag: ${{ needs.build-pipeline-image.outputs.tag }}
     steps:
 
-      - name: Azure login with OIDC
-        uses: azure/login@v2
+      # From: https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#requesting-the-jwt-using-the-actions-core-toolkit
+      - name: Install OIDC Client from Core Package
+        run: npm install @actions/core@1.6.0 @actions/http-client
+      - name: Get Id Token
+        uses: actions/github-script@v7
+        id: idtoken
         with:
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+          script: |
+            const coredemo = require('@actions/core')
+            const id_token = await coredemo.getIDToken('api://AzureADTokenExchange')
+            coredemo.setOutput('id_token', id_token)
 
-      - name: Copy Image
-        run: |
-          IMAGE_TAG=${{ env.IMAGE_NAME }}:${{ needs.build-pipeline-image.outputs.tag }}
-          az acr import --name ${{ env.REGISTRY }} \
-            --source "ghcr.io/cdcgov/$IMAGE_TAG" \
-            --username ${{ github.actor }} \
-            --password ${{ secrets.GITHUB_TOKEN }} \
-            --image "$IMAGE_TAG" \
-            --force && echo 'Copied image!'
-            if [ $? -ne 0 ]; then
-              echo "Failed to copy image"
-            fi
+      - name: ACR Import
+        uses: CDCgov/cfa-actions/runner-action@v1.3.0
+        with:
+          github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
+          github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
+          wait_for_completion: true
+          print_logs: true
+          script: |
+            echo "Logging into Azure CLI"
+            az login --service-principal \
+            --username ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }} \
+            --tenant ${{ secrets.TENANT_ID }} \
+            --federated-token ${{ steps.idtoken.outputs.id_token }} \
+            --output none
+
+            IMAGE_TAG=${{ env.IMAGE_NAME }}:${{ needs.build-pipeline-image.outputs.tag }}
+            az acr import --name ${{ env.REGISTRY }} \
+              --source "ghcr.io/cdcgov/$IMAGE_TAG" \
+              --username ${{ github.actor }} \
+              --password ${{ secrets.GITHUB_TOKEN }} \
+              --image "$IMAGE_TAG" \
+              --force && echo 'Copied image!'
+
+              if [ $? -ne 0 ]; then
+                echo "Failed to copy image"
+              fi
 
   batch-pool:
 
     name: Create Batch Pool and Submit Jobs
-    runs-on: cfa-cdcgov-aca
+    runs-on: ubuntu-latest
     needs: acr-import
-
+    environment: production
     permissions:
       contents: read
-      packages: write
+      id-token: write
 
     env:
       TAG: ${{ needs.acr-import.outputs.tag }}
@@ -136,65 +166,77 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v4
 
-      # This step is only needed during the action to write the
-      # config file. Users can have a config file stored in their VAP
-      # sessions. In the future, we will have the config.toml file
-      # distributed with the repo (encrypted).
-      - name: Writing out config file
-        run: |
-          cat <<EOF > pool-config-${{ github.sha }}.toml
-          ${{ secrets.POOL_CONFIG_TOML }}
-          EOF
+      # From: https://stackoverflow.com/a/58035262/2097171
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: get-branch
 
-          # Replacing placeholders in the config file
-          sed -i 's|{{ IMAGE_NAME }}|${{ env.REGISTRY }}${{ env.IMAGE_NAME }}:${{ env.TAG }}|g' pool-config-${{ github.sha }}.toml
-          sed -i 's|{{ VM_SIZE }}|${{ env.VM_SIZE }}|g' pool-config-${{ github.sha }}.toml
-          sed -i 's|{{ BATCH_SUBNET_ID }}|${{ env.BATCH_SUBNET_ID }}|g' pool-config-${{ github.sha }}.toml
-          sed -i 's|{{ POOL_ID }}|${{ env.POOL_ID }}|g' pool-config-${{ github.sha }}.toml
-
-
-      - name: Login to Azure with NNH Service Principal
-        id: azure_login_2
-        uses: azure/login@v2
+      # From: https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#requesting-the-jwt-using-the-actions-core-toolkit
+      - name: Install OIDC Client from Core Package
+        run: npm install @actions/core@1.6.0 @actions/http-client
+      - name: Get Id Token
+        uses: actions/github-script@v7
+        id: idtoken
         with:
-        # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+          script: |
+            const coredemo = require('@actions/core')
+            const id_token = await coredemo.getIDToken('api://AzureADTokenExchange')
+            coredemo.setOutput('id_token', id_token)
 
-      #########################################################################
-      # Checking if the pool exists
-      # This is done via az batch pool list. If there is no pool matching the
-      # pool id (which is a function of the tag, i.e., branch name), then we
-      # pool-exists will be ''.
-      #########################################################################
-      - name: Check if pool exists
-        id: check_pool_id
-        run: |
-
-          az batch account login \
-            --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
-            --name "${{ env.BATCH_ACCOUNT }}"
-
-          az batch pool list \
-            --output tsv \
-            --filter "(id eq '${{ env.POOL_ID }}')" \
-            --query "[].[id, allocationState, creationTime]" > \
-            pool-list-${{ github.sha }}
-
-          echo "pool-exists=$(cat pool-list-${{ github.sha }})" >> \
-            $GITHUB_OUTPUT
 
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
+        # Removed invalid condition referencing steps.check_pool_id.outputs.pool-exists
+        uses: CDCgov/cfa-actions/runner-action@v1.3.0
+        with:
+          github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
+          github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
+          wait_for_completion: true
+          print_logs: true
+          script: |
+            echo "Setting env vars"
+            export BATCH_ACCOUNT=${{ secrets.BATCH_ACCOUNT }}
+            export SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }}
+            export BATCH_USER_ASSIGNED_IDENTITY=${{ secrets.BATCH_USER_ASSIGNED_IDENTITY }}
+            export AZURE_BATCH_ACCOUNT_CLIENT_ID=${{ secrets.AZURE_BATCH_ACCOUNT_CLIENT_ID }}
+            export PRINCIPAL_ID=${{ secrets.PRINCIPAL_ID }}
+            export CONTAINER_REGISTRY_SERVER=${{ secrets.CONTAINER_REGISTRY_SERVER }}
+            export CONTAINER_REGISTRY_USERNAME=${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+            export CONTAINER_REGISTRY_PASSWORD=${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
+            export CONTAINER_REGISTRY_URL=${{ secrets.CONTAINER_REGISTRY_URL }}
+            export CONTAINER_IMAGE_NAME=${{ env.REGISTRY }}${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            export POOL_ID=${{ env.POOL_ID }}
+            export SUBNET_ID=${{ secrets.BATCH_SUBNET_ID }}
+            export RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}
 
-        # This is a conditional step that will only run if the pool does not
-        # exist
-        if: ${{ steps.check_pool_id.outputs.pool-exists == '' }}
 
-        # The call to the az cli that actually generates the pool
-        run: |
-          # Running the python script azure/pool.py passing the config file
-          # as an argument
-          pip install -r azure/requirements.txt
-          python3 azure/pool.py \
-            pool-config-${{ github.sha }}.toml \
-            batch-autoscale-formula.txt
+            echo "Logging into Azure CLI"
+            az login --service-principal \
+            --username ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }} \
+            --tenant ${{ secrets.TENANT_ID }} \
+            --federated-token ${{ steps.idtoken.outputs.id_token }} \
+            --output none
+
+            echo "Logging into batch"
+            az batch account login \
+              --resource-group ${{ secrets.PRD_RESOURCE_GROUP }} \
+              --name "${{ env.BATCH_ACCOUNT }}"
+
+            echo "Listing batch pools"
+            az batch pool list \
+              --output tsv \
+              --filter "(id eq '${{ env.POOL_ID }}')" \
+              --query "[].[id, allocationState, creationTime]" > pool-list-${{ github.sha }}
+
+            if [ -s pool-list-${{ github.sha }} ]; then
+              echo "Pool already exists!"
+            else
+              CURRENT_BRANCH="${{ steps.get-branch.outputs.branch }}"
+              echo "Cloning repo at branch '$CURRENT_BRANCH'"
+              git clone -b "$CURRENT_BRANCH" https://github.com/${{ github.repository }}.git
+              cd cfa-epinow2-pipeline
+
+              echo "Running create pool script"
+              uv run .github/scripts/create_pool.py
+            fi
