@@ -92,7 +92,6 @@ jobs:
 
     permissions:
       contents: read
-      packages: write
 
     runs-on: cfa-cdcgov-aca
 
