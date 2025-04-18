@@ -1,3 +1,21 @@
+suppress_ess_warning <- function(.f, pattern = NULL) {
+  if (is.null(pattern)) {
+    pattern <- "The ESS has been capped to avoid unstable"
+  }
+  force(.f) # ensure .f is evaluated once
+  function(...) {
+    withCallingHandlers(
+      .f(...),
+      warning = function(w) {
+        if (grepl(pattern, conditionMessage(w))) {
+          invokeRestart("muffleWarning")
+        }
+      }
+    )
+  }
+}
+orch_pipeline_clean <- suppress_ess_warning(orchestrate_pipeline)
+
 test_that("Bad config throws warning and returns failure", {
   # Arrange
   config_path <- test_path("data", "bad_config.json")
@@ -31,7 +49,7 @@ test_that("Pipeline run produces expected outputs with NO exclusions", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- orchestrate_pipeline(
+  pipeline_success <- orch_pipeline_clean(
     config_path = config_path,
     input_dir = input_dir,
     output_dir = output_dir
