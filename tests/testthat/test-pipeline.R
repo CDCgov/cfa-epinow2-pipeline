@@ -28,7 +28,7 @@ test_that("Bad config throws warning and returns failure", {
 
   # Act
   expect_warning(
-    pipeline_success <- orch_pipeline_clean(
+    pipeline_success <- orch_pipeline(
       config_path = config_path,
       input_dir = input_dir,
       output_dir = output_dir
