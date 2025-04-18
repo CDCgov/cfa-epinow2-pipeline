@@ -38,6 +38,11 @@ env:
 jobs:
 
   build-pipeline-image:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      
     runs-on: ubuntu-latest
     name: Build image
 
