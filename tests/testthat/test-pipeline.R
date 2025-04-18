@@ -1,8 +1,8 @@
-suppress_ess_warning <- function(.f, pattern=NULL) {
-  if (is.NULL(pattern)){
-    pattern = "The ESS has been capped to avoid unstable"
+suppress_ess_warning <- function(.f, pattern = NULL) {
+  if (is.NULL(pattern)) {
+    pattern <- "The ESS has been capped to avoid unstable"
   }
-  force(.f)  # ensure .f is evaluated once
+  force(.f) # ensure .f is evaluated once
   function(...) {
     withCallingHandlers(
       .f(...),
@@ -31,7 +31,8 @@ test_that("Bad config throws warning and returns failure", {
       orchestrate_pipeline(
         config_path = config_path,
         input_dir = input_dir,
-        output_dir = output_dir)
+        output_dir = output_dir
+      )
     ),
     class = "Bad_config"
   )
@@ -53,7 +54,8 @@ test_that("Pipeline run produces expected outputs with NO exclusions", {
     orchestrate_pipeline(
       config_path = config_path,
       input_dir = input_dir,
-      output_dir = output_dir)
+      output_dir = output_dir
+    )
   )
   expect_true(pipeline_success)
   expect_pipeline_files_written(
