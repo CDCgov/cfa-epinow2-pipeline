@@ -84,7 +84,7 @@ jobs:
 
   acr-import:
     needs: build-pipeline-image
-    
+
     permissions:
       contents: read
       packages: write
