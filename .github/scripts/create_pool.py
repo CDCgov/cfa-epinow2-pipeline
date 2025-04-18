@@ -17,9 +17,6 @@ BATCH_USER_ASSIGNED_IDENTITY="<user assigned identity>"
 AZURE_BATCH_ACCOUNT_CLIENT_ID="<azure client id>"
 PRINCIPAL_ID="<principal id>"
 CONTAINER_REGISTRY_SERVER="<container registry server>"
-CONTAINER_REGISTRY_USERNAME="<container registry username>"
-CONTAINER_REGISTRY_PASSWORD="<container registry password>"
-CONTAINER_REGISTRY_URL="<container registry url>"
 CONTAINER_IMAGE_NAME="https://full-cr-server/<container image name>:tag"
 POOL_ID="<pool id>"
 SUBNET_ID="<subnet id>"
@@ -92,7 +89,9 @@ def main() -> None:
                         "containerRegistries": [
                             {
                                 "identityReference": {
-                                    "resourceId": os.environ["BATCH_USER_ASSIGNED_IDENTITY"]
+                                    "resourceId": os.environ[
+                                        "BATCH_USER_ASSIGNED_IDENTITY"
+                                    ]
                                 },
                                 "registryServer": os.environ[
                                     "CONTAINER_REGISTRY_SERVER"
