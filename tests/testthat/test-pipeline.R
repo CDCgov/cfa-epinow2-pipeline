@@ -1,6 +1,5 @@
-
-suppress_ess_warning <- function(.f, pattern=NULL) {
-  if (is.null(pattern)){
+suppress_ess_warning <- function(.f, pattern = NULL) {
+  if (is.null(pattern)) {
     pattern <- "The ESS has been capped to avoid unstable"
   }
   force(.f) # ensure .f is evaluated once
