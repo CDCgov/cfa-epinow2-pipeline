@@ -34,7 +34,7 @@
 
 <div class="section level2">
 <h2 id="epinow2-rt-pipeline">Epinow2 Rt Pipeline<a class="anchor" aria-label="anchor" href="#epinow2-rt-pipeline"></a></h2>
-<p>This document is meant to guide someone in running the weekly Rt estimation pipeline from within the VAP (Virtual Analytic Platform). The main command for running the weekly pipeline (found in the Makefile) is <code>make run-prod</code>. Running this will create and utilize a suite of configuration files (.json) specified from within the associated blob storage account and will produce outputs in the <code>rt-epinow2-output</code> Azure blob storage account.</p>
+<p>This document is a guide to running the weekly Rt estimation pipeline from within the VAP (Virtual Analyst Platform). The main command to run the weekly pipeline (found in the Makefile) is <code>make run-prod</code>. Running this will create and utilize a suite of configuration files (.json) specified from within the associated blob storage account and will produce outputs in the <code>rt-epinow2-output</code> Azure blob storage account.</p>
 </div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a></h2>
@@ -94,11 +94,11 @@
 </div>
 <div class="section level3">
 <h3 id="definitions">Definitions<a class="anchor" aria-label="anchor" href="#definitions"></a></h3>
-<p>A <strong>job</strong> is a unique pipeline run, which consists of a set of configuration files that fully define the run, and a set of outputs. The <code>job_id</code> a unique tag assigned by the config generator that links the configuration files to the run and the outputs. A job may contain many tasks (e.g. a typical production job contains tasks for each of 51 jurisdictions * 2 diseases = 102 tasks, each with their own <code>task_id</code>). Each task is reproducible and defined by its own .json config file.</p>
+<p>A <strong>job</strong> is a unique pipeline run, which consists of a set of configuration files that fully define the run, and a set of outputs. The <code>job_id</code> is a unique tag assigned by the config generator that links the configuration files to the run and the outputs. A job may contain many tasks (e.g. a typical production job contains tasks for each of 51 jurisdictions * 2 diseases = 102 tasks, each with their own <code>task_id</code>). Each task is reproducible and defined by its own .json config file.</p>
 </div>
 <div class="section level3">
 <h3 id="a-full-pipeline-run-consists-of">A full pipeline run consists of<a class="anchor" aria-label="anchor" href="#a-full-pipeline-run-consists-of"></a></h3>
-<ol style="list-style-type: decimal"><li><p>Use the <a href="https://github.com/CDCgov/cfa-config-generator" class="external-link">cfa-config-generator</a> to create a new job_id, generate configuration files for your job and upload them to blob.</p></li>
+<ol style="list-style-type: decimal"><li><p>Use the <a href="https://github.com/CDCgov/cfa-config-generator" class="external-link">cfa-config-generator</a> to create a new <code>job_id</code>, generate configuration files for your job and upload them to blob.</p></li>
 <li>
 <p>Set up the job</p>
 <ul><li>In Azure, this involves pulling the appropriate container image, configuration files, and data into the appropriate Azure Batch pool. Usually, we use the “cfa-epinow2-pipeline:latest” image and pool, which correspond to the main branch of the cfa-epinow2-pipeline repo. We have set up continuous deployment workflows in this repo so that the image should be pre-loaded in the container registry, and the pool should be idling and ready to run a job without any action from you.</li>
@@ -107,8 +107,8 @@
 </ul></li>
 <li><p>Run the job. Once all the required inputs are on a computer, inside the appropriate container image, for each task, the epinow2 model will run, generate <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mi>t</mi></msub><annotation encoding="application/x-tex">R_t</annotation></semantics></math> estimates, and write them to the container’s file system.</p></li>
 <li><p>Upload the outputs from the container to a persistent storage location, such as Azure Blob (or for local runs, to your local filesystem).</p></li>
-</ol><p>Downstream of this pipeline, the cfa-Rt-postprocessing repo provides additional tools to parse and evaluate the model’s outputs.</p>
-<p>This may seem complicated, but once you have your dependencies and credentials set up, the whole workflow can be run with a single call to <code>make run-prod</code> at the command line. This SOP will walk your through the required setup and the underlying steps.</p>
+</ol><p>Downstream of this pipeline, the cfa-rt-postprocessing repo provides additional tools to parse and evaluate the model’s outputs.</p>
+<p>This may seem complicated, but once you have your dependencies and credentials set up, the whole workflow can be run with a single call to <code>make run-prod</code> at the command line. This SOP will walk you through the required setup and the underlying steps.</p>
 </div>
 <div class="section level3">
 <h3 id="storage-and-related-repos">Storage and related repos<a class="anchor" aria-label="anchor" href="#storage-and-related-repos"></a></h3>
@@ -121,27 +121,27 @@
 <li>
 <code>az://nssp-rt-v2/</code> an Azure blob storage container where we store production outputs</li>
 <li>
-<code>az://nssp-rt-testing/</code> a blob storage container where we store non-production outputs</li>
+<code>az://nssp-rt-testing/</code> an Azure blob storage container where we store non-production outputs</li>
 <li>
-<code>az://nssp-rt-post-process/</code> a blob storage container where we store output from the post processor.</li>
+<code>az://nssp-rt-post-process/</code> an Azure blob storage container where we store output from the post processor</li>
 </ul></div>
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a></h2>
 <div class="section level3">
 <h3 id="pre-requisites">Pre-requisites<a class="anchor" aria-label="anchor" href="#pre-requisites"></a></h3>
-<ol style="list-style-type: decimal"><li>VAP environment &amp; Account
+<ol style="list-style-type: decimal"><li>VAP environment and account
 <ul><li>git (<code>sudo apt-get install git</code>)</li>
-<li>docker CLI (<a href="https://gist.github.com/jkislin/a575780249c3580a472e25c07d3fd68f#file-docker_setup-sh" class="external-link">follow this script</a>). See the <a href="#appendix">appendix</a> if you wish to use podman instead for local runs.</li>
+<li>docker CLI (<a href="https://gist.github.com/jkislin/a575780249c3580a472e25c07d3fd68f#file-docker_setup-sh" class="external-link">follow this script</a>). See the <a href="#appendix">appendix</a> if you wish to use podman instead for local runs</li>
 <li>gh CLI (<code>sudo apt-get install gh</code>)</li>
 <li>
-<code>uv</code> command line tool. If not already installed, install with <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code> (which does not require <code>sudo</code> permissions).</li>
+<code>uv</code> command line tool. If not already installed, install following <a href="https://docs.astral.sh/uv/getting-started/installation/" class="external-link">these</a> instructions</li>
 </ul></li>
 <li>cfa-epinow2-pipeline repository in VAP
 <ul><li>Navigate to where you would like to clone the repository code</li>
 <li>Clone the repository (<code>git clone https://www.github.com/cdcgov/cfa-epinow2-pipeline</code> OR <code>gh auth login</code> and then <code>gh repo clone cdcgov/cfa-epinow2-pipeline</code>)</li>
 </ul></li>
-<li>Authentication to Azure To authenticate to the requisite Azure resources provide a <code>.env</code> file containing the secrets necessary for authentication.
+<li>Authentication to Azure. To authenticate to the requisite Azure resources provide a <code>.env</code> file containing the secrets necessary for authentication.
 <ul><li>Request access to necessary Azure credential file (.env) from any of the admins listed in the README.md</li>
 <li>decrypt the file (<code>gpg --decrypt .env</code>)</li>
 <li>Place the decrypted file in your <code>cfa-epinow2-pipeline</code> directory</li>
@@ -152,7 +152,7 @@
 <div class="section level4">
 <h4 id="test-configuration-generation">Test Configuration Generation<a class="anchor" aria-label="anchor" href="#test-configuration-generation"></a></h4>
 <ol style="list-style-type: decimal"><li>
-<code>make config</code> Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a suite of configuration files, following the default settings for a production run, and saves it into <code>az://rt-epinow2-config/{job_id}</code>. If successful, something like this output will print to your command line. Make a note of the <code>job_id</code>, which you will need to identify your configs (and eventually your model outputs) in Azure blob storage.</li>
+<code>make config</code> Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a suite of configuration files, following the default settings for a production run, and saves them into <code>az://rt-epinow2-config/{job_id}</code>. If successful, something like this output will print to your command line. Make a note of the <code>job_id</code>, which you will need to identify your configs (and eventually your model outputs) in Azure blob storage.</li>
 </ol><pre><code>make config
 &gt; gh workflow run \
 &gt;   -R cdcgov/cfa-config-generator run-workload.yaml \
