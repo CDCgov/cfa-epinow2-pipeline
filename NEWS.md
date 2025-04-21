@@ -1,6 +1,8 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+
+* Editing of `SOP.md`
 * Pin r-version at 4.4.3 for CI/CD
 * Fix minor typos in `SOP.md`.
 * Swap from `Dockerfile-batch` to using an inline-metadata script, managed by `uv`.
