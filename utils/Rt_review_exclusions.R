@@ -131,16 +131,16 @@ create_pt_excl_from_rt_xslx <- function(dates) {
 
     #### State exclusions #####
     state_exclusions <- combined_df |>
-      filter(final_decision %in% c(
+      dplyr::filter(final_decision %in% c(
         "Exclude State (Data)",
         "Exclude State (Model)",
         "Exclude State"
       )) |>
-      mutate(type = case_when(
+      dplyr::mutate(type = dplyr::case_when(
         final_decision == "Exclude State (Data)" ~ "Data",
         final_decision == "Exclude State (Model)" ~ "Model"
       )) |>
-      select(state_abb, pathogen, type)
+      dplyr::select(state_abb, pathogen, type)
 
     containter_name <- "nssp-etl"
     cont <- CFAEpiNow2Pipeline::fetch_blob_container(containter_name)
