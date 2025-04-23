@@ -153,7 +153,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     ))
     AzureStor::storage_write_csv(
       cont = cont,
-      object = point_exclusions,
+      object = state_exclusions,
       file = file.path(
         "state_exclusions",
         file
