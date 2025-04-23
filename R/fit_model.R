@@ -24,13 +24,7 @@ fit_model <- function(
     priors,
     sampler_opts) {
   # Priors ------------------------------------------------------------------
-  rt <- EpiNow2::rt_opts(
-    list(
-      mean = priors[["rt"]][["mean"]],
-      sd = priors[["rt"]][["sd"]],
-      rw = 7
-    )
-  )
+  rt <- EpiNow2::rt_opts(rw = 7)
 
   # Distributions -----------------------------------------------------------
   generation_time <- format_generation_interval(
