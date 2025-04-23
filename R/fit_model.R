@@ -27,11 +27,9 @@ fit_model <- function(
   rt <- EpiNow2::rt_opts(
     list(
       mean = priors[["rt"]][["mean"]],
-      sd = priors[["rt"]][["sd"]]
+      sd = priors[["rt"]][["sd"]],
+      rw = 7
     )
-  )
-  gp <- EpiNow2::gp_opts(
-    alpha_sd = priors[["gp"]][["alpha_sd"]]
   )
 
   # Distributions -----------------------------------------------------------
@@ -61,7 +59,7 @@ fit_model <- function(
         truncation = truncation,
         horizon = horizon,
         rt = rt,
-        gp = gp,
+        gp = NULL,
         stan = stan,
         verbose = TRUE,
         # Dump logs to console to be caught by pipeline's logging instead of
