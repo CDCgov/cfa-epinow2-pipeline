@@ -165,6 +165,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     #### Temp old-pipeline csv generator#####
     # Save a version in temp folder.
     # Need to copy and paste this in current blank outlier csv file
+    # Can get rid of this once we end old pipeline support
     point_exclusions <- combined_df |>
       dplyr::filter(!is.na(drop_dates)) |>
       dplyr::mutate(
