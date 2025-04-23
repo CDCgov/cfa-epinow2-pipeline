@@ -74,6 +74,7 @@ read_data <- function(data_path,
       AND reference_date >= ? :: DATE
       AND reference_date <= ? :: DATE
       AND report_date = ? :: DATE
+      AND geo_value != 'GA'
     GROUP BY reference_date, report_date, disease
     ORDER BY reference_date
    "
