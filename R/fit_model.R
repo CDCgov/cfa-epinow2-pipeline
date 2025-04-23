@@ -28,7 +28,7 @@ fit_model <- function(
     mean = priors[["rt"]][["mean"]],
     sd = priors[["rt"]][["sd"]],
     rw = 7
-    )
+  )
 
   # Distributions -----------------------------------------------------------
   generation_time <- format_generation_interval(
