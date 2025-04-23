@@ -128,6 +128,36 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         paste0(lubridate::ymd(report_date), ".csv")
       )
     )
+    
+    #### State exclusions #####
+    state_exclusions <- combined_df |>
+      filter(final_decision %in% c("Exclude State (Data)",
+                                   "Exclude State (Model)",
+                                   "Exclude State")
+             ) |>
+      mutate(type = case_when(final_decision=="Exclude State (Data)"~"Data",
+                              final_decision=="Exclude State (Model)"~"Model"
+                              ))|>
+      select(state_abb, pathogen, type)
+    
+    containter_name <- "nssp-etl"
+    cont <- CFAEpiNow2Pipeline::fetch_blob_container(containter_name)
+    file = paste0(lubridate::ymd(report_date), "_state_exclusions.csv")
+    message(paste0(
+      "saving ",
+      file,
+      " in ", containter_name,
+      "/state_exclusions"
+    ))
+    AzureStor::storage_write_csv(
+      cont = cont,
+      object = point_exclusions,
+      file = file.path(
+        "state_exclusions",
+        file
+      )
+    )
+    
 
 
     #### Temp old-pipeline csv generator#####
