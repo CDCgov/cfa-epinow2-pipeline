@@ -63,11 +63,6 @@ run:
 	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt')"
 
 
-up:
-	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
-	--env-file .env \
-	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) /bin/bash
-
 push:
 	$(CNTR_MGR) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
 

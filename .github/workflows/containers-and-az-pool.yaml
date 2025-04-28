@@ -38,6 +38,11 @@ env:
 jobs:
 
   build-pipeline-image:
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
     runs-on: ubuntu-latest
     name: Build image
 
@@ -84,6 +89,10 @@ jobs:
 
   acr-import:
     needs: build-pipeline-image
+
+    permissions:
+      contents: read
+
     runs-on: cfa-cdcgov-aca
 
     name: Copy image from GHCR to ACR
