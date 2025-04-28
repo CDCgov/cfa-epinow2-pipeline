@@ -25,7 +25,7 @@ suppress_ess_warning <- function(.f, pattern = NULL) {
 }
 
 orch_pipeline_clean <- suppress_ess_warning(orchestrate_pipeline)
-exec_mod_log_clean  <- suppress_ess_warning(execute_model_logic)
+exec_mod_log_clean <- suppress_ess_warning(execute_model_logic)
 
 test_that("Bad config throws warning and returns failure", {
   # Arrange
