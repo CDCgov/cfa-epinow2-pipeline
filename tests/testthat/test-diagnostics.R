@@ -219,7 +219,7 @@ test_that("Mean accept state approximately equal between cmdstanr and rstan", {
 
   # Assert
   testthat::expect_true(
-    rstan_ma_stat > 0.9 && cmdstanr_ma_stat
+    rstan_ma_stat > 0.9 && cmdstanr_ma_stat > 0.9
   )
 })
 
