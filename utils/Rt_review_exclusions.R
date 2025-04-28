@@ -111,15 +111,13 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         "state" = "geo_value",
         "disease" = "pathogen"
       )
-    containter_name <- "nssp-etl"
-    cont <- CFAEpiNow2Pipeline::fetch_blob_container(containter_name)
+    container_name <- "nssp-etl"
+    cont <- CFAEpiNow2Pipeline::fetch_blob_container(container_name)
 
-    message(paste0(
-      "saving ",
-      paste0(lubridate::ymd(report_date), ".csv"),
-      " in ", containter_name,
-      "/outliers-v2"
-    ))
+    cli::cli_alert_info(
+      "saving {lubridate::ymd(report_date)}.csv in
+      {container_name}/outliers-v2"
+    )
     AzureStor::storage_write_csv(
       cont = cont,
       object = point_exclusions,
@@ -142,15 +140,12 @@ create_pt_excl_from_rt_xslx <- function(dates) {
       )) |>
       dplyr::select(state_abb, pathogen, type)
 
-    containter_name <- "nssp-etl"
-    cont <- CFAEpiNow2Pipeline::fetch_blob_container(containter_name)
+    container_name <- "nssp-etl"
+    cont <- CFAEpiNow2Pipeline::fetch_blob_container(container_name)
     file <- paste0(lubridate::ymd(report_date), "_state_exclusions.csv")
-    message(paste0(
-      "saving ",
-      file,
-      " in ", containter_name,
-      "/state_exclusions"
-    ))
+    cli::cli_alert_info(
+      "saving {file} in {container_name}/state_exclusions"
+    )
     AzureStor::storage_write_csv(
       cont = cont,
       object = state_exclusions,
@@ -185,13 +180,10 @@ create_pt_excl_from_rt_xslx <- function(dates) {
           .default = as.character(pathogen)
         )
       )
-
-    message(paste0(
-      "saving ",
-      paste0(lubridate::ymd(report_date), ".csv"),
-      " in ", containter_name,
-      "/temp_outliers_for_old"
-    ))
+    cli::cli_alert_info(
+      "saving {lubridate::ymd(report_date)}.csv in
+      {container_name}/temp_outliers_for_old"
+    )
     AzureStor::storage_write_csv(
       cont = cont,
       object = point_exclusions,
