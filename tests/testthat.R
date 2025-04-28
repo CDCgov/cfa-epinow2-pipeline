@@ -24,7 +24,7 @@ suppress_ess_warning <- function(.f, pattern = NULL) {
 }
 
 orch_pipeline_clean <- suppress_ess_warning(orchestrate_pipeline)
-fit_model_clean     <- suppress_ess_warning(fit_model)
+fit_model_clean <- suppress_ess_warning(fit_model)
 
 library(testthat)
 library(CFAEpiNow2Pipeline)
