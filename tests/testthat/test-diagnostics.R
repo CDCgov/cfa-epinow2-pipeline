@@ -130,6 +130,12 @@ test_that("Fitted model extracts diagnostics (cmdstanr)", {
 })
 
 test_that("Extracted diagnostics same between cmdstanr and rstan", {
+  # Parameters
+  parameters <- list(
+    generation_interval = sir_gt_pmf,
+    delay_interval = c(0.2, 0.8),
+    right_truncation = c(0.7, 0.3)
+  )
   # Arrange
   data_path <- test_path("data/test_data.parquet")
   con <- DBI::dbConnect(duckdb::duckdb())
