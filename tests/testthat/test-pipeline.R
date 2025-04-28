@@ -6,6 +6,7 @@
 # * https://r-pkgs.org/testing-design.html#sec-tests-files-overview
 # * https://testthat.r-lib.org/articles/special-files.html
 
+# Suppress common warning in tests from model fit due to cmdstanr
 suppress_ess_warning <- function(.f, pattern = NULL) {
   if (is.null(pattern)) {
     pattern <- "The ESS has been capped to avoid unstable"
@@ -24,6 +25,7 @@ suppress_ess_warning <- function(.f, pattern = NULL) {
 }
 
 orch_pipeline_clean <- suppress_ess_warning(orchestrate_pipeline)
+exec_mod_log_clean  <- suppress_ess_warning(execute_model_logic)
 
 test_that("Bad config throws warning and returns failure", {
   # Arrange
@@ -110,7 +112,7 @@ test_that("Process pipeline produces expected outputs and returns success", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- execute_model_logic(
+  pipeline_success <- exec_mod_log_clean(
     config = config,
     input_dir = input_dir,
     output_dir = output_dir
@@ -143,7 +145,7 @@ test_that("Runs on config from generator as of 2024-11-26", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- execute_model_logic(
+  pipeline_success <- exec_mod_log_clean(
     config = config,
     output_dir = output_dir,
     input_dir = input_dir
