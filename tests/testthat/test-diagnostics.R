@@ -209,12 +209,12 @@ test_that("Mean accept state approximately equal between cmdstanr and rstan", {
     backend = "rstan"
   )
 
-  rstan_ma_stat <- rstan_diagnostics |> 
-    dplyr::filter(diagnostic == "mean_accept_stat") |> 
+  rstan_ma_stat <- rstan_diagnostics |>
+    dplyr::filter(diagnostic == "mean_accept_stat") |>
     dplyr::pull(value)
 
-  cmdstanr_ma_stat <- cmdstanr_diagnostics |> 
-    dplyr::filter(diagnostic == "mean_accept_stat") |> 
+  cmdstanr_ma_stat <- cmdstanr_diagnostics |>
+    dplyr::filter(diagnostic == "mean_accept_stat") |>
     dplyr::pull(value)
 
   # Assert
