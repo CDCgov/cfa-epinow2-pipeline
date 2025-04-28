@@ -63,7 +63,6 @@ test_that("Fitted model extracts diagnostics (rstan)", {
   )
 })
 
-# TODO: create FIT object from the test_data.parquet
 test_that("Fitted model extracts diagnostics (cmdstanr)", {
   # Arrange
   data_path <- test_path("data/test_data.parquet")
@@ -127,6 +126,88 @@ test_that("Fitted model extracts diagnostics (cmdstanr)", {
   testthat::expect_equal(
     actual,
     expected
+  )
+})
+
+test_that("Extracted diagnostics same between cmdstanr and rstan", {
+  # Arrange
+  data_path <- test_path("data/test_data.parquet")
+  con <- DBI::dbConnect(duckdb::duckdb())
+  data <- DBI::dbGetQuery(con, "
+                         SELECT
+                           report_date,
+                           reference_date,
+                           disease,
+                           geo_value AS state_abb,
+                           value AS confirm
+                         FROM read_parquet(?)
+                         WHERE reference_date <= '2023-01-22'",
+    params = list(data_path)
+  )
+  DBI::dbDisconnect(con)
+
+  priors <- list(
+    rt = list(
+      mean = 1,
+      sd = 0.2
+    ),
+    gp = list(
+      alpha_sd = 0.05
+    )
+  )
+  # Sampler
+  sampler_opts <- list(
+    cores = 1,
+    chains = 1,
+    adapt_delta = 0.8,
+    max_treedepth = 10,
+    iter_warmup = 25,
+    iter_sampling = 25
+  )
+
+  # fit cmdstanr
+  fit_cmdstanr <- fit_model(
+    data = data,
+    parameters = parameters,
+    seed = 12345,
+    horizon = 0,
+    priors = priors,
+    sampler = c(backend = "cmdstanr", sampler_opts)
+  )
+  # fit rstan
+  fit_rstan <- fit_model(
+    data = data,
+    parameters = parameters,
+    seed = 12345,
+    horizon = 0,
+    priors = priors,
+    sampler = c(backend = "rstan", sampler_opts)
+  )
+  cmdstanr_diagnostics <- extract_diagnostics(
+    fit_cmdstanr,
+    data,
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    backend = "cmdstanr"
+  )
+  rstan_diagnostics <- extract_diagnostics(
+    fit_rstan,
+    data,
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    backend = "rstan"
+  )
+
+  # Assert
+  testthat::expect_equal(
+    rstan_diagnostics,
+    cmdstanr_diagnostics
   )
 })
 
