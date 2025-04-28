@@ -82,7 +82,7 @@ test_that("Pipeline run produces expected outputs with exclusions", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- orchestrate_pipeline(
+  pipeline_success <- orch_pipeline_clean(
     config_path = config_path,
     input_dir = input_dir,
     output_dir = output_dir
