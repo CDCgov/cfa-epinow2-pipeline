@@ -11,7 +11,7 @@ on:
 
 env:
   IMAGE_NAME: cfa-epinow2-pipeline
-  IMAGE_TAG: ${{ inputs.tag || github.head_ref || github.ref_name }} 
+  IMAGE_TAG: ${{ inputs.tag || github.head_ref || github.ref_name }}
   # getting tag from input or branch name https://stackoverflow.com/a/71158878
 
 jobs:
