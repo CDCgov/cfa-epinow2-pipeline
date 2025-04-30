@@ -1,39 +1,67 @@
-name: Delete tag from container registry
+name: Delete tag from container registries
 
 on:
   pull_request:
     types: [closed]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: The name of the tag to delete. Usually the branch name.
+        type: string
 
 env:
   IMAGE_NAME: cfa-epinow2-pipeline
+  IMAGE_TAG: ${{ inputs.tag || github.head_ref || github.ref_name }}
+  # getting tag from input or branch name https://stackoverflow.com/a/71158878
 
 jobs:
-  delete-container:
+  delete-tag-ghcr:
+    continue-on-error: true # allow other tag deletion to happen even if one fails
+    permissions:
+      packages: write
+    runs-on: ubuntu-latest
+    name: Delete image tag from GHCR
+
+    steps:
+      # Deleting a package from GHCR by tag name is surprising complex
+      # This action has been approved for use on cdcent/cdcgov by the CDC Github Team
+      # https://github.com/snok/container-retention-policy
+      - name: Delete image tag
+        uses: snok/container-retention-policy@v3.0.0
+        with:
+          account: ${{ github.repository_owner }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          image-names: ${{ env.IMAGE_NAME }}
+          image-tags: ${{ env.IMAGE_TAG }},${{ env.IMAGE_TAG }}-cache
+          cut-off: 1s # required, minimum package age to be a candidate for deletion
+
+  delete-tag-acr:
+    environment: production
+    continue-on-error: true # allow other tag deletion to happen even if one fails
+    permissions:
+      id-token: write
+      contents: read
     runs-on: cfa-cdcgov-aca
-    name: Deleting the container
+    name: Delete image tag from ACR
 
     steps:
       - name : Checkout code
         uses: actions/checkout@v4
 
-      - name: Figure out tag (either latest if it is main or the branch name)
-        id: image-tag
-        run: echo "tag=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-
-      - name: Login to Azure with NNH Service Principal
+      - name: Login to Azure with NNH Service Principal using OIDC
         id: azure_login_2
         uses: azure/login@v2
         with:
           # managed by EDAV. Contact Amit Mantri or Jon Kislin if you
           # have issues. Also, this is documented in the Predict
           # handbook.
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+          client-id: ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Azure CLI script
         run: |
-            chmod +x $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh
-            $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh \
+            bash $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh \
               ${{ secrets.CONTAINER_REGISTRY_URL }} \
               ${{ env.IMAGE_NAME }} \
-              ${{ steps.image-tag.outputs.tag }}
+              ${{ env.IMAGE_TAG }}
