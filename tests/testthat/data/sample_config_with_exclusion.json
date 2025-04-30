@@ -41,7 +41,8 @@
             "sd": 0.2
         },
         "gp": {
-            "alpha_sd": 0.01
+            "alpha_sd": 0.01,
+            "ls_mean": 21
         }
     },
     "sampler_opts": {
