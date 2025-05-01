@@ -1,10 +1,10 @@
 # /// script
 # requires-python = ">=3.13"
 # dependencies = [
-#     "azure-batch",
-#     "azure-identity",
-#     "azure-mgmt-batch",
-#     "msrest",
+#     "azure-batch==14.2",
+#     "azure-identity==1.21",
+#     "azure-mgmt-batch==18.0",
+#     "msrest==0.7",
 # ]
 # ///
 """
