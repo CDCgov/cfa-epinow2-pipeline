@@ -215,7 +215,7 @@ flowchart TD
 In this flowchart, each arrow with text represents a manual action. Writing out the above in more detail:
 1. The anomaly review team documents their decisions in the spreadsheet
 1. The person running the pipeline pulls an updated docker using `make pull` and open's the docker with `make up`
-1. Then the user enters `cd cfa-epinow2-pipeline/utils` into the terminal as well as `Rscript Rt_review_exclusions.R -d yyymmdd` where yyyymmdd is the date in the name of the Rt_review_yyymmdd.xlsx excel file on sharepoint. The -d argument's default is today's date
+1. Then the user enters `cd cfa-epinow2-pipeline/utils` into the terminal as well as `Rscript Rt_review_exclusions.R -d yyyymmdd` where yyyymmdd is the date in the name of the Rt_review_yyymmdd.xlsx excel file on sharepoint. The -d argument's default is today's date
 1. The terminal will prompt you to login using a provided url and a code. Copy the url and paste into a browser where you are logged onto your CDC account (not ext account). Then paste the provided code. Then confirm your login by hitting continue. Once confirmed, the script will download the sharepoint excel file, process it, and upload it as the outlier csv file to the blob storage "folder" [`az://nssp-etl/outliers-v2/`](az://nssp-etl/outliers-v2/)
 1. The person running the pipeline runs `make rerun-prod`. This will create new configuration files that include the path to the outlier CSV just uploaded to Blob, and then kick off those tasks in Azure Batch
 
