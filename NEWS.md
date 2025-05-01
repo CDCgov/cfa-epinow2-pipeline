@@ -44,3 +44,4 @@ This initial release establishes minimal feature parity with the internal EpiNow
 * Comprehensive documentation of pipeline code and validation of input data, parameters, and model run configs
 * Set up comprehensive logging of model runs and handle pipeline failures to preserve logs where possible
 * Automatically download and upload inputs and outputs from Azure Blob Storage
+* A new script for building the pool. Runnable from CLI or GHA. Requires `uv` be installed, and then `uv` handles the python and dependency management based on the inline script metadata.
