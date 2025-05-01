@@ -2,6 +2,7 @@
 
 ## Features
 
+* Automate tag deletion from ghcr.io
 * Editing of `SOP.md`
 * Pin r-version at 4.4.3 for CI/CD
 * Fix minor typos in `SOP.md`.
