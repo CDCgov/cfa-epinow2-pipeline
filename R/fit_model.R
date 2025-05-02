@@ -25,7 +25,7 @@ fit_model <- function(
     sampler_opts) {
   # Priors ------------------------------------------------------------------
   rt <- EpiNow2::rt_opts(
-    list(
+    prior = list(
       mean = priors[["rt"]][["mean"]],
       sd = priors[["rt"]][["sd"]]
     )
@@ -100,6 +100,7 @@ fit_model <- function(
 #' @export
 format_stan_opts <- function(sampler_opts, seed) {
   expected_stan_args <- c(
+    "backend",
     "cores",
     "chains",
     "iter_warmup",
@@ -117,6 +118,7 @@ format_stan_opts <- function(sampler_opts, seed) {
     ))
   }
   EpiNow2::stan_opts(
+    backend = sampler_opts[["backend"]],
     cores = sampler_opts[["cores"]],
     chains = sampler_opts[["chains"]],
     seed = seed,
