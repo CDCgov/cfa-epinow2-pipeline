@@ -76,6 +76,7 @@ interactive:
 test-batch:
 	gh workflow run \
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
+	  -r dev-add_backend_mpw \
 	  -f disease=all \
 	  -f state=NY \
 	  -f output_container="nssp-rt-testing" \
