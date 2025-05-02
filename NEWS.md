@@ -4,7 +4,9 @@
 * Switching base rocker image from geospatial (4.7 GB) to tidyverse (2.7 GB)
 * Adding cmdstanr as back-end and updating diagnostic extraction as such
 * Updating EpiNow2 package from v1.4.0 to v1.6.0
-
+* Lock dependencies for creating the pool
+* Saving state exclusions to nssp-rt/state_exclusions
+* Automate tag deletion from ghcr.io
 * Editing of `SOP.md`
 * Pin r-version at 4.4.3 for CI/CD
 * Fix minor typos in `SOP.md
@@ -50,3 +52,4 @@ This initial release establishes minimal feature parity with the internal EpiNow
 * Comprehensive documentation of pipeline code and validation of input data, parameters, and model run configs
 * Set up comprehensive logging of model runs and handle pipeline failures to preserve logs where possible
 * Automatically download and upload inputs and outputs from Azure Blob Storage
+* A new script for building the pool. Runnable from CLI or GHA. Requires `uv` be installed, and then `uv` handles the python and dependency management based on the inline script metadata.
