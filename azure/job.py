@@ -9,7 +9,6 @@
 # ///
 import datetime
 import os
-import sys
 import time
 import uuid
 
@@ -20,17 +19,27 @@ from azure.batch import BatchServiceClient
 from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
 
-blob_account = os.environ["BLOB_ACCOUNT"]
-blob_url = f"https://{blob_account}.blob.core.windows.net"
-batch_account = os.environ["BATCH_ACCOUNT"]
-batch_url = f"https://{batch_account}.eastus.batch.azure.com"
-image_name = sys.argv[1]
-config_container = sys.argv[2]
-pool_id = sys.argv[3]
-# Re-use Azure Pool name unless otherwise specified
-job_id = sys.argv[4] if len(sys.argv) > 3 else pool_id
 
-if __name__ == "__main__":
+def main(image_name: str, config_container: str, pool_id: str, job_id: str):
+    """
+    Submit a job
+
+    Arguments
+    ----------
+    image_name: str
+        The name of the container image (and tag) to use for the job
+    config_container: str
+        The name of the storage container for the job to output to
+    pool_id: str
+        The name of the pool to use for the job
+    job_id: str
+        The name of the job to use for the job.
+    """
+    blob_account = os.environ["BLOB_ACCOUNT"]
+    blob_url = f"https://{blob_account}.blob.core.windows.net"
+    batch_account = os.environ["BATCH_ACCOUNT"]
+    batch_url = f"https://{batch_account}.eastus.batch.azure.com"
+
     # Authenticate with workaround because Batch is the one remaining
     # service that doesn't yet support Azure auth flow v2 :) :)
     # https://github.com/Azure/azure-sdk-for-python/issues/30468
@@ -120,3 +129,50 @@ if __name__ == "__main__":
         )
 
         batch_client.task.add(batch_job_id, task)
+
+
+if __name__ == "__main__":
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser(
+        description="Submit a job to Azure Batch with the specified image and config container"
+    )
+    parser.add_argument(
+        "--image_name",
+        type=str,
+        help="The name of the container image (and tag) to use for the job",
+        required=True,
+    )
+    parser.add_argument(
+        "--config_container",
+        type=str,
+        help="The name of the storage container for the job to output to",
+        required=True,
+    )
+    parser.add_argument(
+        "--pool_id",
+        type=str,
+        help="The name of the pool to use for the job",
+        required=True,
+    )
+    parser.add_argument(
+        "--job_id",
+        type=str,
+        help="The name of the job to use for the job. Defaults to pool_id",
+        default=None,
+    )
+
+    # Parse the args
+    args = parser.parse_args()
+    image_name = args.image_name
+    config_container = args.config_container
+    pool_id = args.pool_id
+    # Use pool_id as job_id if not specified
+    job_id = args.job_id or pool_id
+
+    main(
+        image_name=image_name,
+        config_container=config_container,
+        pool_id=pool_id,
+        job_id=job_id,
+    )

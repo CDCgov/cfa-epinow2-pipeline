@@ -46,15 +46,27 @@ rerun-config:
 
 run-batch:
 	uv run --env-file .env \
-	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	azure/job.py \
+		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+		--config_container="$(CONFIG_CONTAINER)" \
+		--pool_id="$(POOL)" \
+		--job_id="$(JOB)"
 
 run-prod: config
 	uv run --env-file .env \
-	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	azure/job.py \
+		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+		--config_container="$(CONFIG_CONTAINER)" \
+		--pool_id="$(POOL)" \
+		--job_id="$(JOB)"
 
 rerun-prod: rerun-config
 	uv run --env-file .env \
-	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	azure/job.py \
+		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+		--config_container="$(CONFIG_CONTAINER)" \
+		--pool_id="$(POOL)" \
+		--job_id="$(JOB)"
 
 run:
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
@@ -79,7 +91,11 @@ test-batch:
 	  -f output_container="nssp-rt-testing" \
 	  -f job_id=$(JOB)
 	uv run --env-file .env \
-	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	azure/job.py \
+		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+		--config_container="$(CONFIG_CONTAINER)" \
+		--pool_id="$(POOL)" \
+		--job_id="$(JOB)"
 
 test:
 	Rscript -e "testthat::test_local()"
