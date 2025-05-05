@@ -94,7 +94,6 @@ def main(image_name: str, config_container: str, pool_id: str, job_id: str):
 
     ###########
     # Set up tasks on job
-    registry = os.environ["AZURE_CONTAINER_REGISTRY"]
     task_container_settings = batchmodels.TaskContainerSettings(
         image_name=image_name, container_run_options="--rm --workdir /"
     )
@@ -164,11 +163,11 @@ if __name__ == "__main__":
 
     # Parse the args
     args = parser.parse_args()
-    image_name = args.image_name
-    config_container = args.config_container
-    pool_id = args.pool_id
+    image_name: str = args.image_name
+    config_container: str = args.config_container
+    pool_id: str = args.pool_id
     # Use pool_id as job_id if not specified
-    job_id = args.job_id or pool_id
+    job_id: str = args.job_id or pool_id
 
     main(
         image_name=image_name,
