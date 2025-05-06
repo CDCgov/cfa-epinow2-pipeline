@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Add RSV specifications
 * Lock dependencies for creating the pool
 * Saving state exclusions to nssp-rt/state_exclusions
 * Automate tag deletion from ghcr.io
