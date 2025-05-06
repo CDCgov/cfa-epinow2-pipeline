@@ -38,7 +38,7 @@ read_data <- function(data_path,
   disease_map <- c(
     "COVID-19" = "COVID-19/Omicron",
     "Influenza" = "Influenza",
-    "RSV"="RSV",
+    "RSV" = "RSV",
     "test" = "test"
   )
   mapped_disease <- disease_map[[disease]]
