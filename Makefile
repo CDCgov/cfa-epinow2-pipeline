@@ -29,13 +29,12 @@ tag:
 	$(CNTR_MGR) tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 config:
-	gh workflow run \
-	  -R cdcgov/cfa-config-generator run-workload.yaml  \
-	  -f disease=all \
-	  -f state=all \
-	  -f output_container="nssp-rt-v2" \
-	  -f job_id=$(JOB) \
-	  -f report_date=$(REPORT_DATE)
+	uv run azure/generate_configs.py \
+		--disease=COVID-19 \
+		--state=all \
+		--output-container=nssp-rt-testing \
+		--job-id=RSV-testing \
+		--report-date-str=$(REPORT_DATE)
 
 rerun-config:
 	gh workflow run \
@@ -91,11 +90,11 @@ test-batch:
 	  -f output_container="nssp-rt-testing" \
 	  -f job_id=$(JOB)
 	uv run --env-file .env \
-	azure/job.py \
-		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
-		--config_container="$(CONFIG_CONTAINER)" \
-		--pool_id="$(POOL)" \
-		--job_id="$(JOB)"
+		azure/job.py \
+			--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+			--config_container="$(CONFIG_CONTAINER)" \
+			--pool_id="$(POOL)" \
+			--job_id="$(JOB)"
 
 test:
 	Rscript -e "testthat::test_local()"
