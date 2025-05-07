@@ -30,18 +30,17 @@ tag:
 
 config:
 	uv run azure/generate_configs.py \
-		--disease=COVID-19 \
+		--disease=all \
 		--state=all \
-		--output-container=nssp-rt-testing \
-		--job-id=RSV-testing \
+		--output-container=nssp-rt-v2 \
+		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
 
 rerun-config:
-	gh workflow run \
-	  -R cdcgov/cfa-config-generator re-run-workload.yaml  \
-	  -f output_container="nssp-rt-v2" \
-	  -f job_id=$(JOB) \
-	  -f report_date=$(REPORT_DATE)
+	uv run azure/generate_rerun_configs.py \
+		--output-container="nssp-rt-v2" \
+		--job-id=$(JOB) \
+		--report-date-str=$(REPORT_DATE)
 
 run-batch:
 	uv run --env-file .env \
