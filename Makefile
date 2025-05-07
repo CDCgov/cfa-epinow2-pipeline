@@ -38,7 +38,7 @@ config:
 
 rerun-config:
 	uv run azure/generate_rerun_configs.py \
-		--output-container="nssp-rt-v2" \
+		--output-container=nssp-rt-v2 \
 		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
 
