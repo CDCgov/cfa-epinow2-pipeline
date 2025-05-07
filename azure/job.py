@@ -75,22 +75,13 @@ def main(image_name: str, config_container: str, pool_id: str, job_id: str):
         container=config_container
     )
 
-    start_time = datetime.datetime.now()
-    end_time = start_time + datetime.timedelta(seconds=120)
-    while datetime.datetime.now() < end_time:
-        task_configs: list[str] = [
-            b.name for b in container_client.list_blobs() if job_id in b.name
-        ]
-        if len(task_configs) == 0 and datetime.datetime.now() < end_time:
-            print("No tasks currently found...Waiting 15 seconds to re-query")
-            time.sleep(15)
-        elif len(task_configs) > 0:
-            print(
-                f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}"
-            )
-            break
-        elif len(task_configs) == 0 and datetime.datetime.now() > end_time:
-            raise ValueError("No tasks found")
+    task_configs: list[str] = [
+        b.name for b in container_client.list_blobs() if job_id in b.name
+    ]
+    if len(task_configs) > 0:
+        print(f"Creating {len(task_configs)} tasks in job {job_id} on pool {pool_id}")
+    elif len(task_configs) == 0:
+        raise ValueError("No tasks found")
 
     ###########
     # Set up tasks on job
