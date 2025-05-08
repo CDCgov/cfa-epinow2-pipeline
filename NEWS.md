@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Add RSV specifications
 * Create the config files locally to speed things up
 * Lock dependencies for creating the pool
 * Saving state exclusions to nssp-rt/state_exclusions

@@ -24,7 +24,7 @@
 #' @family read_data
 #' @export
 read_data <- function(data_path,
-                      disease = c("COVID-19", "Influenza", "test"),
+                      disease = c("COVID-19", "Influenza", "RSV", "test"),
                       geo_value,
                       report_date,
                       max_reference_date,
@@ -38,6 +38,7 @@ read_data <- function(data_path,
   disease_map <- c(
     "COVID-19" = "COVID-19/Omicron",
     "Influenza" = "Influenza",
+    "RSV" = "RSV",
     "test" = "test"
   )
   mapped_disease <- disease_map[[disease]]
