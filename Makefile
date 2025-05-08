@@ -29,32 +29,42 @@ tag:
 	$(CNTR_MGR) tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 config:
-	gh workflow run \
-	  -R cdcgov/cfa-config-generator run-workload.yaml  \
-	  -f disease=all \
-	  -f state=all \
-	  -f output_container="nssp-rt-v2" \
-	  -f job_id=$(JOB) \
-	  -f report_date=$(REPORT_DATE)
+	uv run azure/generate_configs.py \
+		--disease=all \
+		--state=all \
+		--output-container=nssp-rt-v2 \
+		--job-id=$(JOB) \
+		--report-date-str=$(REPORT_DATE)
 
 rerun-config:
-	gh workflow run \
-	  -R cdcgov/cfa-config-generator re-run-workload.yaml  \
-	  -f output_container="nssp-rt-v2" \
-	  -f job_id=$(JOB) \
-	  -f report_date=$(REPORT_DATE)
+	uv run azure/generate_rerun_configs.py \
+		--output-container=nssp-rt-v2 \
+		--job-id=$(JOB) \
+		--report-date-str=$(REPORT_DATE)
 
 run-batch:
 	uv run --env-file .env \
-	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	azure/job.py \
+		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+		--config_container="$(CONFIG_CONTAINER)" \
+		--pool_id="$(POOL)" \
+		--job_id="$(JOB)"
 
 run-prod: config
 	uv run --env-file .env \
-	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	azure/job.py \
+		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+		--config_container="$(CONFIG_CONTAINER)" \
+		--pool_id="$(POOL)" \
+		--job_id="$(JOB)"
 
 rerun-prod: rerun-config
 	uv run --env-file .env \
-	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+	azure/job.py \
+		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+		--config_container="$(CONFIG_CONTAINER)" \
+		--pool_id="$(POOL)" \
+		--job_id="$(JOB)"
 
 run:
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
@@ -79,7 +89,11 @@ test-batch:
 	  -f output_container="nssp-rt-testing" \
 	  -f job_id=$(JOB)
 	uv run --env-file .env \
-	azure/job.py "$(REGISTRY)$(IMAGE_NAME):$(TAG)" "$(CONFIG_CONTAINER)" "$(POOL)" "$(JOB)"
+		azure/job.py \
+			--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+			--config_container="$(CONFIG_CONTAINER)" \
+			--pool_id="$(POOL)" \
+			--job_id="$(JOB)"
 
 test:
 	Rscript -e "testthat::test_local()"
