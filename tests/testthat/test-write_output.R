@@ -222,7 +222,7 @@ test_that("process_quantiles works as expected (rstan)", {
 
 test_that("process_quantiles works as expected (cmdstanr)", {
   # Load the sample fit object
-  fit <- readRDS(test_path("data", "sample_fit_cmdstanr.rds"))
+  fit <- readRDS(test_path("data", "sample_fit_cmdstanr_v2.rds"))
 
   # Run the function on the fit object
   result <- process_quantiles(
