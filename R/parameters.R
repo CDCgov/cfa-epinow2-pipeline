@@ -115,7 +115,12 @@ path_is_specified <- function(path) {
 #' @family parameters
 #' @export
 read_interval_pmf <- function(path,
-                              disease = c("COVID-19", "Influenza", "test"),
+                              disease = c(
+                                "COVID-19",
+                                "Influenza",
+                                "RSV",
+                                "test"
+                              ),
                               as_of_date,
                               parameter = c(
                                 "generation_interval",
