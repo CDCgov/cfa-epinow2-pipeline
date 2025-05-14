@@ -265,7 +265,7 @@ post_process_and_merge <- function(
   )
 
   # Step 1.5 Merge as_of_cases with merged_dt to get time variable
-  processed_obs_data_time_init <- unique(
+  processed_obs_data_time <- unique(
     merge(
       processed_obs_data,
       merged_dt[, c("date", "time"), with = FALSE],
@@ -274,9 +274,6 @@ post_process_and_merge <- function(
       all.y = FALSE
     )
   )
-  # MPW: testing
-  # Step 1.65 ensure that the rows for time don't get duplicated
-  processed_obs_data_time <- processed_obs_data_time_init[processed_obs_data_time_init[, time == data.table::max(time), .(date, .value, .variable)]$V1, ]
   # Step 1.75 rbind as_of_cases with merged_dt and sort
   merged_dt <- rbind(merged_dt, processed_obs_data_time, fill = TRUE)
   sort_cols <- c("time", ".variable")
