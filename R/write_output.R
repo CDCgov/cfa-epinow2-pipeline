@@ -178,7 +178,7 @@ extract_draws_from_fit <- function(fit) {
   # (a posterior pred of the final observed value). Obs reports is the
   # expected value actually observed in real time but without obs error.
   # Get the dates for `obs_reports` by pulling out the `imputed_reports`
-  # dates and update the associated variable name in-place. Bind it back
+  # dates and update the associatftimeed variable name in-place. Bind it back
   # to the original fact table to have all desired variable-date combinations.
   data.table::set(obs_fact_table, j = "parameter", value = factor(
     obs_fact_table[["parameter"]],
@@ -265,7 +265,7 @@ post_process_and_merge <- function(
   )
 
   # Step 1.5 Merge as_of_cases with merged_dt to get time variable
-  processed_obs_data_time <- unique(
+  processed_obs_data_time_init <- unique(
     merge(
       processed_obs_data,
       merged_dt[, c("date", "time"), with = FALSE],
@@ -274,6 +274,9 @@ post_process_and_merge <- function(
       all.y = FALSE
     )
   )
+  # MPW: testing
+  # Step 1.65 ensure that the rows for time don't get duplicated
+  processed_obs_data_time <- processed_obs_data_time_init[processed_obs_data_time_init[, time == max(time), .(date, .value, .variable)]$V1, ]
   # Step 1.75 rbind as_of_cases with merged_dt and sort
   merged_dt <- rbind(merged_dt, processed_obs_data_time, fill = TRUE)
   sort_cols <- c("time", ".variable")
