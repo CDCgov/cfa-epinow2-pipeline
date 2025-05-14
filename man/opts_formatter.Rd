@@ -24,7 +24,7 @@ An EpiNow2::*_opts() formatted object or NA with a message
 }
 \description{
 Opinionated wrappers around EpiNow2::generation_time_opts(),
-EpiNow2::delay_opts(), or EpiNow2::dist_spec() that formats the generation
+EpiNow2::delay_opts(), or EpiNow2::NonParametric() that format generation
 interval, delay, or right truncation parameters as an object ready for input
 to EpiNow2.
 }
@@ -33,6 +33,7 @@ Delays or right truncation are optional and can be skipped by passing \code{pmf 
 }
 \seealso{
 Other parameters: 
+\code{\link{check_returned_pmf}()},
 \code{\link{read_disease_parameters}()},
 \code{\link{read_interval_pmf}()}
 }
