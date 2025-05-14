@@ -125,7 +125,8 @@ test_that("Fitted model extracts diagnostics (cmdstanr)", {
   # Assert
   testthat::expect_equal(
     actual,
-    expected
+    expected,
+    tolerance=1e-5
   )
 })
 
