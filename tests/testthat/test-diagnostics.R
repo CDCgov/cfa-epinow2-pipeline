@@ -80,7 +80,7 @@ test_that("Fitted model extracts diagnostics (cmdstanr)", {
   )
   DBI::dbDisconnect(con)
 
-  fit_path <- test_path("data", "sample_fit_cmdstanr.rds")
+  fit_path <- test_path("data", "sample_fit_cmdstanr_v2.rds")
   fit <- readRDS(fit_path)
   # Expected diagnostics
   expected <- data.frame(
@@ -95,14 +95,14 @@ test_that("Fitted model extracts diagnostics (cmdstanr)", {
       "low_case_count_flag"
     ),
     value = c(
-      0.96857106,
-      0.00000000,
-      0.00000000,
-      0.00000000,
-      0.31666667,
-      57.0000000,
-      1.00000000,
-      0.00000000
+      0.9147865,
+      0.0000000,
+      0.0000000,
+      0.0000000,
+      0.1960784,
+      20.000000,
+      1.0000000,
+      0.0000000
     ),
     job_id = rep("test", 8),
     task_id = rep("test", 8),
