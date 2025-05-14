@@ -276,7 +276,7 @@ post_process_and_merge <- function(
   )
   # MPW: testing
   # Step 1.65 ensure that the rows for time don't get duplicated
-  processed_obs_data_time <- processed_obs_data_time_init[processed_obs_data_time_init[, time == max(time), .(date, .value, .variable)]$V1, ]
+  processed_obs_data_time <- processed_obs_data_time_init[processed_obs_data_time_init[, time == data.table::max(time), .(date, .value, .variable)]$V1, ]
   # Step 1.75 rbind as_of_cases with merged_dt and sort
   merged_dt <- rbind(merged_dt, processed_obs_data_time, fill = TRUE)
   sort_cols <- c("time", ".variable")
