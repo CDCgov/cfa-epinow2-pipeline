@@ -30,7 +30,7 @@ tag:
 
 config:
 	uv run azure/generate_configs.py \
-		--disease=all \
+		--disease="COVID-19,Influenza" \
 		--state=all \
 		--output-container=nssp-rt-v2 \
 		--job-id=$(JOB) \
