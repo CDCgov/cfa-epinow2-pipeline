@@ -19,7 +19,7 @@ value, usually a state or \code{"US"} for national data.}
 \item{model}{A string specifying the model to be used.}
 
 \item{disease}{A string specifying the disease being modeled. One of
-\code{"COVID-19"} or \code{"Influenza"}.}
+\code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
 
 \item{quantile_width}{A vector of numeric values representing the desired
 quantiles. Passed to \code{\link[tidybayes:reexports]{tidybayes::median_qi()}}.}

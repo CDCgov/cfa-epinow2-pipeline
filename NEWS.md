@@ -4,6 +4,9 @@
 * Switching base rocker image from geospatial (4.7 GB) to tidyverse (2.7 GB)
 * Adding cmdstanr as back-end and updating diagnostic extraction as such
 * Updating EpiNow2 package from v1.4.0 to v1.6.0
+* Fix production diseases
+* Add RSV specifications
+* Create the config files locally to speed things up
 * Lock dependencies for creating the pool
 * Saving state exclusions to nssp-rt/state_exclusions
 * Automate tag deletion from ghcr.io

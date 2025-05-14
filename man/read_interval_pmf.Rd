@@ -6,7 +6,7 @@
 \usage{
 read_interval_pmf(
   path,
-  disease = c("COVID-19", "Influenza", "test"),
+  disease = c("COVID-19", "Influenza", "RSV", "test"),
   as_of_date,
   parameter = c("generation_interval", "delay", "right_truncation"),
   geo_value = NA,
@@ -17,7 +17,7 @@ read_interval_pmf(
 \item{path}{A path to a local file}
 
 \item{disease}{A string specifying the disease being modeled. One of
-\code{"COVID-19"} or \code{"Influenza"}.}
+\code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
 
 \item{as_of_date}{Use the parameters that were used in production on this
 date. Set for the current date for the most up-to-to date version of the
