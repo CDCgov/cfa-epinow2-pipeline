@@ -2,6 +2,7 @@
 
 ## Features
 
+* Change code owner
 * Fix mismatch between R code and documentation
 * Fix production diseases
 * Add RSV specifications
