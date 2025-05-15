@@ -9,7 +9,7 @@ Authors@R: c(
     person("Nathan", "McIntosh", , "ute2@cdc.gov", role = "ctb"),
     person("Patrick", "Corbett", , "pyv3@cdc.gov", role = "ctb"),
     person("Adam", "Howes", , "xwg3@cdc.gov", role = "ctb"),
-    person("Micah", "Wiesner", "zqm6@cdc.gov", role = c("aut", "cre"))
+    person("Micah", "Wiesner", , "zqm6@cdc.gov", role = c("aut", "cre"))
     )
 Description: Add logging, metadata handling, and data handling
     functions to use EpiNow2 in a pipeline. This pipeline is optimized
