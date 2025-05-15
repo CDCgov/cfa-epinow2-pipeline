@@ -5,6 +5,7 @@
 * Replace remaining self-hosted runner workflows with ubuntu-latest
 * Fix mismatch between R code and documentation
 * Change code owner
+* Fix mismatch between R code and documentation
 * Fix production diseases
 * Add RSV specifications
 * Create the config files locally to speed things up
