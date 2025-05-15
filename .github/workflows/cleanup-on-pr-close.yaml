@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Protect 'latest'
         run: |
-          if [ "${{ env.IMAGE_TAG }} = "latest" ]; then
+          if [ "${{ env.IMAGE_TAG }}" = "latest" ]; then
             echo "Cannot delete pool for 'latest'"
             exit 1
           fi
