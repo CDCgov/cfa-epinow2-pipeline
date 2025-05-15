@@ -2,6 +2,7 @@
 
 ## Features
 
+* Add documentation to the Makefile
 * Fix mismatch between R code and documentation
 * Fix production diseases
 * Add RSV specifications
