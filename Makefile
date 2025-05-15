@@ -86,7 +86,7 @@ up: ## Uploads something
 push: ## Push container to registry
 	$(CNTR_MGR) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
-test-batch: 
+test-batch:
 	gh workflow run \
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
