@@ -20,6 +20,7 @@ env:
 
 jobs:
   start-caj:
+    environment: production
     permissions:
       id-token: 'write'
       packages: 'read'
