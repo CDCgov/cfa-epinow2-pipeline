@@ -71,8 +71,9 @@ jobs:
           wait_for_completion: true
           print_logs: true
           script: |
-              echo "Cloning repo at commit '${{ github.event.pull_request.head.sha }}'"
-              git clone -b ${{ github.event.pull_request.head.sha }} https://github.com/${{ github.repository }}.git
+              CURRENT_BRANCH='${{ github.event.pull_request.head.sha || github.ref_name }}'
+              echo "Cloning repo at commit '$CURRENT_BRANCH'"
+              git clone -b $CURRENT_BRANCH https://github.com/${{ github.repository }}.git
               cd ${{ github.event.repository.name }}
 
               echo "Logging into Azure CLI"
