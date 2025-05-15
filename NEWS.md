@@ -1,6 +1,8 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+
+* Fix mismatch between R code and documentation
 * Fix production diseases
 * Add RSV specifications
 * Create the config files locally to speed things up
