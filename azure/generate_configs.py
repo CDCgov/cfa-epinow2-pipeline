@@ -51,7 +51,12 @@ def main(
     """
     report_date: date = date.fromisoformat(report_date_str)
     production_date: date = date.fromisoformat(production_date_str)
-    now: datetime = datetime.now(timezone.utc)
+    # Use the report date to generate the as_of_date string.
+    as_of_datetime_str: str = (
+        datetime(report_date.year, report_date.month, report_date.day)
+        .replace(tzinfo=timezone.utc)
+        .isoformat()
+    )
 
     # Make sure the job ID is not empty.
     if not job_id:
@@ -70,7 +75,7 @@ def main(
         data_container=input_container,
         production_date=production_date,
         job_id=job_id,
-        as_of_date=now.isoformat(),
+        as_of_date=as_of_datetime_str,
         output_container=output_container,
     )
 
