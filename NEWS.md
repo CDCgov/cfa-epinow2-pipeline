@@ -2,6 +2,7 @@
 
 ## Features
 
+* Replace remaining self-hosted runner usage with ubuntu-latest
 * Fix mismatch between R code and documentation
 * Fix production diseases
 * Add RSV specifications
