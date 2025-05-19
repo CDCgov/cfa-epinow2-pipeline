@@ -302,12 +302,106 @@ test_that("process_quantiles works as expected (cmdstanr)", {
   )
 })
 
-test_that("process_samples works as expected", {
+test_that("draws table same between cmdstanr and rstan", {
+  # Load the sample fit object
+  fit_cmdstanr <- readRDS(test_path("data", "sample_fit_cmdstanr_v2.rds"))
+  fit_rstan <- readRDS(test_path("data", "sample_fit_rstan.rds"))
+
+  # Run the function on the fit object
+  draws_list_cmdstanr <- extract_draws_from_fit(fit_cmdstanr)
+  draws_list_rstan <- extract_draws_from_fit(fit_rstan)
+  
+  # Test 1: fact_table is equal
+  expect_equal(
+    draws_list_cmdstanr$fact_table, 
+    draws_list_rstan$fact_table,
+    tolerance = 1e-2
+  )
+  
+})
+
+test_that("process_samples works as expected (rstan)", {
   # Load the sample fit object
   fit <- readRDS(test_path("data", "sample_fit_rstan.rds"))
 
   # Run the function on the fit object
   result <- process_samples(fit, "test_geo", "test_model", "test_disease")
+
+  # Test 1: Check if the result is a data.table
+  expect_true(
+    data.table::is.data.table(result),
+    "The result should be a data.table"
+  )
+
+  # Test 2: Check if the necessary columns exist in the result
+  expected_columns <- c(
+    "time",
+    "_variable",
+    "_chain",
+    "_iteration",
+    "_draw",
+    "value",
+    "reference_date",
+    "geo_value",
+    "model",
+    "disease"
+  )
+  expect_setequal(
+    colnames(result), expected_columns
+  )
+
+  # Test 3: Check if the result contains the correct number of rows
+  expected_num_rows <- 2505 # Replace with actual expected value
+  expect_equal(nrow(result), expected_num_rows,
+    info = paste("The result should have", expected_num_rows, "rows")
+  )
+
+  # Test 4: Check if the `parameter` column contains the expected values
+  expected_parameters <- c(
+    "Rt",
+    "expected_nowcast_cases",
+    "expected_obs_cases",
+    "growth_rate",
+    "pp_nowcast_cases",
+    "processed_obs_data"
+  )
+  unique_parameters <- sort(unique(as.character(result[["_variable"]])))
+  expect_equal(
+    unique_parameters, expected_parameters
+  )
+
+  # Test 5: Check if there are no missing values
+  expect_false(
+    anyNA(result[result[["_variable"]] != "processed_obs_data", ]),
+    "Columns have NA values"
+  )
+
+  # Test 6: Verify the left join: all `time` values from
+  # `stan_draws` should exist in the result
+  stan_draws <- tidybayes::gather_draws(
+    fit[["estimates"]][["fit"]],
+    imputed_reports[time],
+    obs_reports[time],
+    R[time],
+    r[time]
+  ) |>
+    tidybayes::median_qi(.width = c(0.5, 0.95)) |>
+    data.table::as.data.table()
+
+  expect_true(
+    all(stan_draws$time %in% result$time),
+    "All time values from the Stan fit should be present in the result"
+  )
+})
+
+test_that("extract draws from fit same between rstan & cmdstanr", {
+  # Load the sample fit object
+  fit_rstan    <- readRDS(test_path("data", "sample_fit_rstan.rds"))
+  fit_cmdstanr <- readRDS(test_path("data", "sample_fit_cmdstanr_v2.rds"))
+
+  # Run the function on the fit object
+  result_rstan    <- process_samples(fit_rstan, "test_geo", "test_model", "test_disease")
+  result_cmdstanr <- process_samples(fit_cmdstanr, "test_geo", "test_model", "test_disease")
 
   # Test 1: Check if the result is a data.table
   expect_true(
