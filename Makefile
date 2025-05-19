@@ -22,18 +22,18 @@ REPORT_DATE?=$(shell date -u +%F)
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-pull: ## Pulls something
+pull: ## Login to Azure Container Registry and pull the latest container image
 	az acr login --name 'cfaprdbatchcr'
 	$(CNTR_MGR) pull $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
-build: ## Builds something
+build: ## Build the Docker image with given tag
 	$(CNTR_MGR) build -t $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 		--build-arg TAG=$(TAG) -f Dockerfile .
 
-tag: ## Tags something
+tag: ## Tags the local image for pushing to the container registry
 	$(CNTR_MGR) tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
-config: ## Generates a configuration file
+config: ## Generates a configuration file for running the model
 	uv run azure/generate_configs.py \
 		--disease="COVID-19,Influenza" \
 		--state=all \
@@ -41,7 +41,7 @@ config: ## Generates a configuration file
 		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
 
-rerun-config: ## Reruns generating a configuration file (why?)
+rerun-config: ## Generate a configuration file to rerun a previous model
 	uv run azure/generate_rerun_configs.py \
 		--output-container=nssp-rt-v2 \
 		--job-id=$(JOB) \
@@ -55,38 +55,27 @@ run-batch: ## Runs job.py on Azure Batch
 		--pool_id="$(POOL)" \
 		--job_id="$(JOB)"
 
-run-prod: config ## Runs job.py with config?
-	uv run --env-file .env \
-	azure/job.py \
-		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
-		--config_container="$(CONFIG_CONTAINER)" \
-		--pool_id="$(POOL)" \
-		--job_id="$(JOB)"
+run-prod: config ## Calls config and run-batch
+	run-batch
 
-rerun-prod: rerun-config ## Reruns job.py with config (why?)
-	uv run --env-file .env \
-	azure/job.py \
-		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
-		--config_container="$(CONFIG_CONTAINER)" \
-		--pool_id="$(POOL)" \
-		--job_id="$(JOB)"
+rerun-prod: rerun-config ## Calls rerun-config and run-batch
+	run-batch
 
-run: ## Runs something?
+run: ## Run pipeline from R interactively in the container
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt')"
 
-
-up: ## Uploads something
+up: ## Start an interactive bash shell in the container with project directory mounted
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) /bin/bash
 
-push: ## Push container to registry
+push: ## Push the tagged image to the container registry
 	$(CNTR_MGR) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
-test-batch:
+test-batch: ## Run GitHub Actions workflow and then job.py for testing on Azure Batch
 	gh workflow run \
 	  -R cdcgov/cfa-config-generator run-workload.yaml  \
 	  -f disease=all \
@@ -100,11 +89,11 @@ test-batch:
 			--pool_id="$(POOL)" \
 			--job_id="$(JOB)"
 
-test: ## Tests the CFAEpiNow2Pipeline R package
+test: ## Run unit tests for the CFAEpiNow2Pipeline R package
 	Rscript -e "testthat::test_local()"
 
-document: ## Document the CFAEpiNow2Pipeline R package
+document: ## Generate roxygen2 documentation for the CFAEpiNow2Pipeline R package
 	Rscript -e "roxygen2::roxygenize()"
 
-check: ## Checks the CFAEpiNow2Pipeline R package
+check: ## Perform R CMD check for the CFAEpiNow2Pipeline R package
 	Rscript -e "rcmdcheck::rcmdcheck()"
