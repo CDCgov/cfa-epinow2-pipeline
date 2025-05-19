@@ -53,8 +53,9 @@ jobs:
           script: |
               CURRENT_BRANCH='${{ github.event.pull_request.head.sha || github.ref_name }}'
               echo "Cloning repo at commit '$CURRENT_BRANCH'"
-              git clone -b $CURRENT_BRANCH https://github.com/${{ github.repository }}.git
+              git clone https://github.com/${{ github.repository }}.git
               cd ${{ github.event.repository.name }}
+              git checkout $CURRENT_BRANCH
 
               echo "Logging into Azure CLI"
               az login --service-principal \
