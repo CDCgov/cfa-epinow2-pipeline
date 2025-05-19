@@ -10,7 +10,10 @@ on:
     branches:
       - main
 
-jobs:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
@@ -45,6 +48,12 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+      
+      - run: |
+          Rscript -e "roxygen2::roxygenize()"
+      - name: Check that roxygen documentation is up to date
+        run: |
+          git diff --exit-code || ("::error::Documentation is not up to date. Run `roxgen2::roxygenize()` locally to re-render." && exit 1)
 
       - uses: r-lib/actions/check-r-package@v2
         with:
