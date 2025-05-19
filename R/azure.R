@@ -1,7 +1,5 @@
 #' Download if specified
 #'
-#' TEST TEST TEST
-#'
 #' @param blob_path The name of the blob to download
 #' @param blob_storage_container The name of the container to donwload from
 #' @param dir The directory to which to write the downloaded file
