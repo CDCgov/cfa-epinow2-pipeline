@@ -48,7 +48,7 @@ concurrency:
         with:
           extra-packages: any::rcmdcheck
           needs: check
-      
+
       - run: |
           Rscript -e "roxygen2::roxygenize()"
       - name: Check that roxygen documentation is up to date
