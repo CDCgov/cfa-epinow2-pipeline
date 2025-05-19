@@ -304,12 +304,72 @@ test_that("process_quantiles works as expected (cmdstanr)", {
 
 test_that("draws table same between cmdstanr and rstan", {
   # Load the sample fit object
-  fit_cmdstanr <- readRDS(test_path("data", "sample_fit_cmdstanr_v2.rds"))
-  fit_rstan <- readRDS(test_path("data", "sample_fit_rstan.rds"))
+  # fit_cmdstanr <- readRDS(test_path("data", "sample_fit_cmdstanr_v2.rds"))
+  # fit_rstan <- readRDS(test_path("data", "sample_fit_rstan.rds"))
+
+  parameters <- list(
+    generation_interval = sir_gt_pmf,
+    delay_interval = c(0.2, 0.8),
+    right_truncation = c(0.7, 0.3)
+  )
+  # Data -- 5 points only
+  data_path <- test_path("data", "test_data.parquet")
+  con <- DBI::dbConnect(duckdb::duckdb())
+  data <- DBI::dbGetQuery(con, "
+                         SELECT
+                           report_date,
+                           reference_date,
+                           disease,
+                           geo_value AS state_abb,
+                           value AS confirm
+                         FROM read_parquet(?)
+                         ORDER BY reference_date
+                         LIMIT 5
+                          ",
+    params = list(data_path)
+  )
+  DBI::dbDisconnect(con)
+  # Priors
+  priors <- list(
+    rt = list(
+      mean = 1,
+      sd = 0.2
+    ),
+    gp = list(
+      alpha_sd = 0.05
+    )
+  )
+  # Sampler
+  sampler_opts <- list(
+    cores = 1,
+    chains = 1,
+    adapt_delta = 0.8,
+    max_treedepth = 10,
+    iter_warmup = 25,
+    iter_sampling = 25
+  )
+
+  fit_cmdstanr <- fit_model(
+    data = data,
+    parameters = parameters,
+    seed = 12345,
+    horizon = 0,
+    priors = priors,
+    sampler = c(backend = "cmdstanr", sampler_opts)
+  )
+
+  fit_rstan <- fit_model(
+    data = data,
+    parameters = parameters,
+    seed = 12345,
+    horizon = 0,
+    priors = priors,
+    sampler = c(backend = "rstan", sampler_opts)
+  )
 
   # Run the function on the fit object
   draws_list_cmdstanr <- extract_draws_from_fit(fit_cmdstanr)
-  draws_list_rstan <- extract_draws_from_fit(fit_rstan)
+  draws_list_rstan    <- extract_draws_from_fit(fit_rstan)
   
   # Test 1: fact_table is equal
   expect_equal(
@@ -317,7 +377,14 @@ test_that("draws table same between cmdstanr and rstan", {
     draws_list_rstan$fact_table,
     tolerance = 1e-2
   )
-  
+
+  # Test 2: stan_draws is equal
+  expect_equal(
+    draws_list_cmdstanr$stan_draws, 
+    draws_list_rstan$stan_draws,
+    tolerance = 1e-2
+  )
+
 })
 
 test_that("process_samples works as expected (rstan)", {
@@ -326,82 +393,6 @@ test_that("process_samples works as expected (rstan)", {
 
   # Run the function on the fit object
   result <- process_samples(fit, "test_geo", "test_model", "test_disease")
-
-  # Test 1: Check if the result is a data.table
-  expect_true(
-    data.table::is.data.table(result),
-    "The result should be a data.table"
-  )
-
-  # Test 2: Check if the necessary columns exist in the result
-  expected_columns <- c(
-    "time",
-    "_variable",
-    "_chain",
-    "_iteration",
-    "_draw",
-    "value",
-    "reference_date",
-    "geo_value",
-    "model",
-    "disease"
-  )
-  expect_setequal(
-    colnames(result), expected_columns
-  )
-
-  # Test 3: Check if the result contains the correct number of rows
-  expected_num_rows <- 2505 # Replace with actual expected value
-  expect_equal(nrow(result), expected_num_rows,
-    info = paste("The result should have", expected_num_rows, "rows")
-  )
-
-  # Test 4: Check if the `parameter` column contains the expected values
-  expected_parameters <- c(
-    "Rt",
-    "expected_nowcast_cases",
-    "expected_obs_cases",
-    "growth_rate",
-    "pp_nowcast_cases",
-    "processed_obs_data"
-  )
-  unique_parameters <- sort(unique(as.character(result[["_variable"]])))
-  expect_equal(
-    unique_parameters, expected_parameters
-  )
-
-  # Test 5: Check if there are no missing values
-  expect_false(
-    anyNA(result[result[["_variable"]] != "processed_obs_data", ]),
-    "Columns have NA values"
-  )
-
-  # Test 6: Verify the left join: all `time` values from
-  # `stan_draws` should exist in the result
-  stan_draws <- tidybayes::gather_draws(
-    fit[["estimates"]][["fit"]],
-    imputed_reports[time],
-    obs_reports[time],
-    R[time],
-    r[time]
-  ) |>
-    tidybayes::median_qi(.width = c(0.5, 0.95)) |>
-    data.table::as.data.table()
-
-  expect_true(
-    all(stan_draws$time %in% result$time),
-    "All time values from the Stan fit should be present in the result"
-  )
-})
-
-test_that("extract draws from fit same between rstan & cmdstanr", {
-  # Load the sample fit object
-  fit_rstan    <- readRDS(test_path("data", "sample_fit_rstan.rds"))
-  fit_cmdstanr <- readRDS(test_path("data", "sample_fit_cmdstanr_v2.rds"))
-
-  # Run the function on the fit object
-  result_rstan    <- process_samples(fit_rstan, "test_geo", "test_model", "test_disease")
-  result_cmdstanr <- process_samples(fit_cmdstanr, "test_geo", "test_model", "test_disease")
 
   # Test 1: Check if the result is a data.table
   expect_true(
