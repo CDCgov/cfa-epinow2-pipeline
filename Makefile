@@ -9,7 +9,8 @@ else
 TAG=$(BRANCH)
 endif
 
-CONFIG=test.json
+# CONFIG=test.json
+CONFIG=test_w_backend.json
 POOL="cfa-epinow2-$(TAG)"
 TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
 JOB:=Rt-estimation-$(TIMESTAMP)
