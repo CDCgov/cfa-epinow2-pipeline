@@ -20,29 +20,30 @@ All PRs must pass R CMD CHECK as part of the CI pipeline before merging to main.
 See `CONTRIBUTING.md` for details on contributing to the repository.
 
 The package provides adapters and wrappers to run multiple `{EpiNow2}` models in parallel using cloud resources.
-The adapters read from datasets with standardized formats and produces outputs as flat files with standard names.
-The wrapper functions enhance `{EpiNow2}` functionality to support cloud deployments, adding more logging and standardizing the R environment.
+It reads from a standardized input format and writes to a standardized output format.
+It enhances the `{EpiNow2}` package to support cloud deployments, adding logging, and standardizing the R environment.
 
-This package standardizes the interface to `{EpiNow2}` for purposes of deployment in a pipeline as part of a suite of models.
-This package does _not_ manage pipeline deployment or kickoff, data extraction and transformation, or model output visualization.
+Note: This package standardizes how `{EpiNow2}` integrates into CFA's pipeline but does _not_ manage pipeline deployment or kickoff, data extraction and transformation, or output visualization.
 
 ## Components
 
 This package implements functions for:
 
-1. **Configuration**: Loads parameters such as prior distributions, generation intervals, and right-truncation from a config in a standard schema, with the path to this config passed at runtime.
-    - The config is validated at runtime, but config generation is specified at pipeline runtime and not part of this package.
-1. **Data load**: Loads data from the CFA data lake or from a local environment and translates it from CFA's schema to the expected `{EpiNow2}` format.
-    - Paths are specified via the config
-1. **Parameters**: Loads pre-specified and -validated generation interval, delay interval, and right-truncation distributions from from the CFA data lake or from a local environment and formats them for use in EpiNow2.
-1. **Model run**: Manages R environment to run `{EpiNow2}` from a fixed random seed, both for `{EpiNow2}` initialization and Stan sampling.
-1. **Outputs**: Provides functionality to process `{EpiNow2}` model fits to a standardised flat output format (as described in forthcoming link). Within the pipeline, model fits are saved both in their entirety as `.rds` files, as well as via this flat output format.
-1. **Logging**: Steps in the pipeline have comprehensive R-style logging, with the the [cli](https://github.com/r-lib/cli) package
-1. **Metadata**: Extract comprehensive metadata on the model run and store alongside outputs
+1. **Configuration**: Loads parameters (e.g. prior distributions, generation intervals, right truncation) from a config passed at runtime.
+    - Configs are validated at runtime, but generated outside this package.
+1. **Data load**: Reads input data from the CFA data lake or from a local environment and formats it for input to `{EpiNow2}`.
+    - Paths are specified via the config.
+1. **Parameters**: Loads validated generation interval, delay interval, and right truncation distributions from from the CFA data lake or from a local environment and formats them for use in `{EpiNow2}`.
+1. **Model run**: Manages R environment to run `{EpiNow2}` from a fixed random seed for both `{EpiNow2}` initialization and Stan sampling.
+1. **Outputs**: Processes `{EpiNow2}` model fits to a standardized flat output format.
+    - In the pipeline, full model fits are saved as `.rds` files, as well as via this flat output format.
+1. **Logging**: Uses the [`{cli}`](https://github.com/r-lib/cli) package for detailed R-style logging at each pipeline step.
+1. **Metadata**: Extracts and saves metadata on the model run alongside model outputs.
 
 ## Output format
 
-The end goals of this package is to standardize the raw outputs from EpiNow2 into samples and summaries tables, and to write those standardized outputs, along with relevant metadata, logs, etc. to a standard directory structure. Once in CFA's standard format, the outputs can be passed into a separate pipeline that handles post-processing (e.g. plotting, scoring, analysis) of Rt estimates from several different Rt estimation models.
+This package standardizes `{EpiNow2}` outputs into samples and summary tables, saving them (along with relevant metadata and logs) in a consistent directory structure.
+Outputs feed into downstream post-processing (e.g. plotting, scoring, analysis) pipelines.
 
 ### Directories
 
@@ -77,7 +78,7 @@ In this workflow, task IDs correspond to location specific model runs (which are
     - `diagnostic_<task_id>.parquet`: A file with diagnostics relevant to a specific task identifier.  This file has columns `diagnostic`, `value`, `job_id`, `task_id`, `geo_value`, `disease`, and `model`.
   - `tasks/`: This directory contains subdirectories for each task within a job. These are files that are less likely to require globbing from the data lake than manual investigation, so are stored togehter.
     - `task_<task_id>/`: Each task has its own folder identified by the task ID, which includes several files:
-      - `model.rds`: An RDS file storing the EpiNow2 model object fit to the data.
+      - `model.rds`: An RDS file storing the `{EpiNow2}` model object fit to the data.
       - `metadata.json`: A JSON file containing additional metadata about the model run for this task.
       - `stdout.log`: A log file capturing standard output from the model run process.
       - `stderr.log`: A log file capturing standard error output from the model run process.
@@ -85,35 +86,41 @@ In this workflow, task IDs correspond to location specific model runs (which are
 
 ### Model-estimated quantities
 
-EpiNow2 estimates the incident cases $\hat y_{td}$ for timepoint $t \in \{1, ..., T\}$ and delay $d \in \{1, ..., D\}$ where $D \le T$. In the single vintage we're providing to EpiNow2, the delay $d$ moves inversely to timepoints, so $d = T - t + 1$.
+`{EpiNow2}` estimates the incident cases $\hat y_{td}$ for timepoint $t \in \{1, ..., T\}$ and delay $d \in \{1, ..., D\}$ where $D \le T$.
+In the single vintage we're providing to `{EpiNow2}`, the delay $d$ moves inversely to timepoints, so $d = T - t + 1$.
 
-The observed data vector of length $T$ is $y_{td} \in W$. We supply a nowcasting correction PMF $\nu$ for the last $D$ timepoints where $\nu_d \in [0, 1],$ and $\sum_{d=1}^D\nu_d = 1$. We also have some priors $\Theta$.
+The observed data vector of length $T$ is $y_{td} \in W$.
+We supply a nowcasting correction PMF $\nu$ for the last $D$ timepoints where $\nu_d \in [0, 1],$ and $\sum_{d=1}^D\nu_d = 1$.
+We also have some priors $\Theta$.
 
-We use EpiNow2's generative model $f(y, \nu, \Theta)$.
+We use `{EpiNow2}`'s generative model $f(y, \nu, \Theta)$.
 
-EpiNow2 is a forward model that produces an expected nowcasted case count for each $t$ and $d$ pair: $\hat \gamma_{td}$.
- It applies the nowcasting correction $\nu$ to the last $D$ timepoints of $\hat \gamma$ to produce the expected right-truncated case count $\hat y$. Note that these _expected_ case counts (with and without right-truncation) don't have observation noise included.
+`{EpiNow2}` is a forward model that produces an expected nowcasted case count for each $t$ and $d$ pair: $\hat \gamma_{td}$.
+It applies the nowcasting correction $\nu$ to the last $D$ timepoints of $\hat \gamma$ to produce the expected right-truncated case count $\hat y$.
+Note that these _expected_ case counts (with and without right-truncation) don't have observation noise included.
 
-We can apply negative binomial observation noise using EpiNow2's estimate of the negative binomial overdispersion parameter $\hat \phi$ and the expected case counts. The posterior predictive distributions of nowcasted case counts is $\tilde \gamma \sim \text{NB}(\hat \gamma, \hat \phi)$. The posterior predicted right-truncated case count is $\tilde y \sim \text{NB}(\hat y, \hat \phi)$.
+We can apply negative binomial observation noise using `{EpiNow2}`'s estimate of the negative binomial overdispersion parameter $\hat \phi$ and the expected case counts.
+The posterior predictive distributions of nowcasted case counts is $\tilde \gamma \sim \text{NB}(\hat \gamma, \hat \phi)$.
+The posterior predicted right-truncated case count is $\tilde y \sim \text{NB}(\hat y, \hat \phi)$.
 
-We can get 3 of these 4 quantities pre-generated from the returned EpiNow2 Stan model:
+We can get 3 of these 4 quantities pre-generated from the returned `{EpiNow2}` Stan model:
 
 - $\hat \gamma$: The expected nowcasted case count is `reports[t]`
 - $\hat y$: The expected right-truncated case count is `obs_reports[t]`
 - $\tilde \gamma$: The posterior-predicted nowcasted case count is `imputed_reports[t]`
-- $\tilde y$: The posterior-predicted right-truncated case count isn't returned by EpiNow2.
+- $\tilde y$: The posterior-predicted right-truncated case count isn't returned by `{EpiNow2}`.
 
 We also save the $R_t$ estimate at time $t$ and the intrinsic growth rate at time $t$.
 
 ## Automation
 
-The project has multiple GitHub Actions workflows to automate the CI/CD process. Notably, the [`containers-and-az-pool.yaml`](.github/workflows/containers-and-az-pool.yaml) workflow executes jobs using a self-hosted runner, and serves as an entry point for starting the pipeline. The workflow has the following three jobs:
+The project has multiple GitHub Actions workflows to automate the CI/CD process.
+Notably, the [`containers-and-az-pool.yaml`](.github/workflows/containers-and-az-pool.yaml) workflow executes jobs using a self-hosted runner, and serves as an entry point for starting the pipeline.
+The workflow has the following three jobs:
 
-- **Build dependencies image** (`build-dependencies-image`): Creates a container image with all the dependencies required to build the R package. This job is cached to speed up the process, so it only updates the image if the [`Dockerfile-dependencies`](Dockerfile-dependencies) or the [`DESCRIPTION`](DESCRIPTION) file changes. The image is pushed to the Azure container registry: `cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:[branch name]`.
-
-- **Build pipeline image** (`build-pipeline-image`): Using the previous image as a base, this job installs the R package and pushes the image to the Azure container registry: `cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:[branch name]`.
-
-- **Create Batch Pool and Submit Jobs** (`batch-pool`): This final job creates a new Azure batch pool with id `cfa-epinow2-pool-[branch name]` if it doesn't already exist. Additionally, if the commit message contains the string "`[delete pool]`", the pool is deleted.
+1. **Build dependencies image** (`build-dependencies-image`): Creates a container image with all the dependencies required to build the R package. This job is cached to speed up the process, so it only updates the image if the [`Dockerfile-dependencies`](Dockerfile-dependencies) or the [`DESCRIPTION`](DESCRIPTION) file changes. The image is pushed to the Azure container registry: `cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:[branch name]`.
+1. **Build pipeline image** (`build-pipeline-image`): Using the previous image as a base, this job installs the R package and pushes the image to the Azure container registry: `cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:[branch name]`.
+1. **Create Batch Pool and Submit Jobs** (`batch-pool`): This final job creates a new Azure batch pool with id `cfa-epinow2-pool-[branch name]` if it doesn't already exist. Additionally, if the commit message contains the string "`[delete pool]`", the pool is deleted.
 
 Both container tags and pool ids are based on the branch name, making it compatible with having multiple pipelines running simultaneously. The pool creation depends on Azure's Python SDK (see the file [.github/scripts/create_pool.py](.github/scripts/create_pool.py)), with the necessary credentials listed in a string at the top of the script.
 
@@ -159,13 +166,16 @@ flowchart LR
 
 ## Container images
 
-The project includes container images for running the pipelines. Particularly, the GitHub Action workflow located in [.github/workflows/containers-and-az-pool.yaml](.github/workflows/containers-and-az-pool.yaml) automatically builds an image based on [Dockerfile](Dockerfile) and pushes it to Azure Container Registry. The images can also be built locally, in which case the [Makefile](Makefile) included in the project contains the following targets:
+The project includes container images for running the pipelines.
+Particularly, the GitHub Action workflow located in [.github/workflows/containers-and-az-pool.yaml](.github/workflows/containers-and-az-pool.yaml) automatically builds an image based on [Dockerfile](Dockerfile) and pushes it to Azure Container Registry.
+The images can also be built locally, in which case the [Makefile](Makefile) included in the project contains the following targets:
 
 - `make deps` will build the image with the required dependencies for the package.
 - `make build` will build the image containing the R package.
 - `make interactive` will lunch the image in interactive mode.
 
-All three targets depend on the environment variables `CNTR_MGR` (defults to `docker`) and `TAG` (defaults to `local`). The default repository is cfaprdbatchcr.azurecr.io. For instance, if you wanted to build the dependency image using `podman` and the `latest` tag, you can do the following:
+All three targets depend on the environment variables `CNTR_MGR` (defults to `docker`) and `TAG` (defaults to `local`).
+The default repository is cfaprdbatchcr.azurecr.io. For instance, if you wanted to build the dependency image using `podman` and the `latest` tag, you can do the following:
 
 ```bash
 make build CNTR_MGR=podman TAG=zs-pipeline
@@ -191,7 +201,6 @@ docker run \
     -v/wherever/your/pwd/is:/cfa-epinow2-pipeline -it --rm \
     cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline
 ```
-
 
 ## Project Admin
 
