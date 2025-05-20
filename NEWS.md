@@ -2,6 +2,7 @@
 
 ## Features
 
+* Add commands for generating backfill configurations.
 * Replace remaining self-hosted runner usage with ubuntu-latest
 * Fix mismatch between R code and documentation
 * Fix production diseases
