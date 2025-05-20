@@ -3,7 +3,9 @@
 ## Features
 
 * Add commands for generating backfill configurations.
-* Replace remaining self-hosted runner usage with ubuntu-latest
+* Replace remaining self-hosted runner workflows with ubuntu-latest
+* Fix mismatch between R code and documentation
+* Change code owner
 * Fix mismatch between R code and documentation
 * Fix production diseases
 * Add RSV specifications
