@@ -92,12 +92,12 @@ def main(
             )
         ),
     ] = "match_report_dates",
-    report_date_fstring: Annotated[
+    data_paths_template: Annotated[
         str | None,
         typer.Option(
             help=(
                 "Use this option over --str-data-paths most of the time. "
-                "A string representing the f-string format for data paths. "
+                "A string representing the f-string template for data paths. "
                 "The '{}' section will be replaced with the report date "
                 "for each report date. This is most useful when pulling from the NSSP gold "
                 "data. For example, 'gold/{}.parquet' would become 'gold/2025-01-01.parquet' "
@@ -136,13 +136,13 @@ def main(
         date.fromisoformat(s.strip()) for s in str_report_dates.split(",")
     ]
 
-    # Check if both data_paths and report_date_fstring are provided, and error out if so
-    if str_data_paths and report_date_fstring:
+    # Check if both data_paths and data_paths_template are provided, and error out if so
+    if str_data_paths and data_paths_template:
         raise ValueError(
             "Cannot use both --data-paths and --report-date-fstring options at the same time."
         )
-    # Check that at least one of data_paths or report_date_fstring is provided
-    if (not str_data_paths) and (not report_date_fstring):
+    # Check that at least one of data_paths or data_paths_template is provided
+    if (not str_data_paths) and (not data_paths_template):
         raise ValueError(
             "Must provide either --data-paths or --report-date-fstring option."
         )
@@ -150,8 +150,11 @@ def main(
     # If data_paths is provided, split on commas and remove empty strings
     data_paths: list[str] = (
         [s.strip() for s in str_data_paths.split(",")]
-        if str_data_paths and (not report_date_fstring)
-        else [report_date_fstring.format(report_date) for report_date in report_dates]  # type: ignore
+        if str_data_paths and (not data_paths_template)
+        else [
+            data_paths_template.format(report_date.isoformat())  # type: ignore
+            for report_date in report_dates
+        ]
     )
 
     as_of_dates: list[date] = (
