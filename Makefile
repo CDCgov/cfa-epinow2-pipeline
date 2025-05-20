@@ -55,11 +55,9 @@ run-batch: ## Runs job.py on Azure Batch
 		--pool_id="$(POOL)" \
 		--job_id="$(JOB)"
 
-run-prod: config ## Calls config and run-batch
-	run-batch
+run-prod: config run-batch ## Calls config and run-batch
 
-rerun-prod: rerun-config ## Calls rerun-config and run-batch
-	run-batch
+rerun-prod: rerun-config run-batch ## Calls rerun-config and run-batch
 
 run: ## Run pipeline from R interactively in the container
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
