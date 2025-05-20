@@ -369,22 +369,21 @@ test_that("draws table same between cmdstanr and rstan", {
 
   # Run the function on the fit object
   draws_list_cmdstanr <- extract_draws_from_fit(fit_cmdstanr)
-  draws_list_rstan    <- extract_draws_from_fit(fit_rstan)
-  
+  draws_list_rstan <- extract_draws_from_fit(fit_rstan)
+
   # Test 1: fact_table is equal
   expect_equal(
-    draws_list_cmdstanr$fact_table, 
+    draws_list_cmdstanr$fact_table,
     draws_list_rstan$fact_table,
     tolerance = 1e-2
   )
 
   # Test 2: stan_draws is equal
   expect_equal(
-    draws_list_cmdstanr$stan_draws, 
+    draws_list_cmdstanr$stan_draws,
     draws_list_rstan$stan_draws,
     tolerance = 1e-2
   )
-
 })
 
 test_that("process_samples works as expected (rstan)", {
