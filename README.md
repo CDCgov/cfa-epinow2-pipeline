@@ -2,21 +2,24 @@
 
 ## Overview
 
-A lightweight wrapper around [{EpiNow2}](https://github.com/epiforecasts/EpiNow2) to add functionality for deployment in Azure Batch.
-It holds some helper functions to interface with Azure services, convert input data to EpiNow2's expected input format, and save expected outputs.
-It also adds metadata and logging.
+This lightweight wrapper around [{EpiNow2}](https://github.com/epiforecasts/EpiNow2) adds functionality for deployment in Azure Batch.
+It includes helper functions to:
 
-This package is meant to enhance the `{EpiNow2}` package to support deployment in CFA's computational environment.
-The code is open source as part of CFA's goals around development, but it may not be possible to support extensions to additional environments.
+* Interface with Azure services
+* Convert input data to the expected `{EpiNow2}` input format
+* Save outputs in standardized formats
+* Add logging and metadata
+
+The package supports deployment in CFA's computational environment.
+While the code is open source, it may not support use outside CFA's infrastructure.
 
 ## Structure
 
-This repository holds an R package, `{CFAEpiNow2Pipeline}`.
-The repository is structured as a standard R package.
-All PRs pass R CMD check as part of the CI suite as a pre-condition for merge to main.
-If interested in contributing see `CONTRIBUTING.md` and open an issue or a PR.
+This repository contains the R package `{CFAEpiNow2Pipeline}` and follows standard R package conventions.
+All PRs must pass R CMD CHECK as part of the CI pipeline before merging to main.
+See `CONTRIBUTING.md` for details on contributing to the repository.
 
-The package contains contains some adapters and wrappers to run to run many independent `{EpiNow2}` models in parallel with cloud resources.
+The package provides adapters and wrappers to run multiple `{EpiNow2}` models in parallel using cloud resources.
 The adapters read from datasets with standardized formats and produces outputs as flat files with standard names.
 The wrapper functions enhance `{EpiNow2}` functionality to support cloud deployments, adding more logging and standardizing the R environment.
 
