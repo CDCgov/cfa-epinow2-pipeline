@@ -76,7 +76,7 @@ In this workflow, task IDs correspond to location specific model runs (which are
     - `summarized_<task_id>.parquet`: A file with summarized quantiles relevant to a specific task identifier.  This file has columns `job_id`, `task_id`, `geo_value`, `disease`, `model`, `value`, `_lower`, `_upper`, `_width`, `_point`, `_interval`, and `reference_date`. These variables follow the [{tidybayes}](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
   - `diagnostics/`: A subdirectory for storing model fit diagnostics. Task-specific *diagnostic* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
     - `diagnostic_<task_id>.parquet`: A file with diagnostics relevant to a specific task identifier.  This file has columns `diagnostic`, `value`, `job_id`, `task_id`, `geo_value`, `disease`, and `model`.
-  - `tasks/`: This directory contains subdirectories for each task within a job. These are files that are less likely to require globbing from the data lake than manual investigation, so are stored togehter.
+  - `tasks/`: This directory contains subdirectories for each task within a job. These are files that are less likely to require globbing from the data lake than manual investigation, so are stored together.
     - `task_<task_id>/`: Each task has its own folder identified by the task ID, which includes several files:
       - `model.rds`: An RDS file storing the `{EpiNow2}` model object fit to the data.
       - `metadata.json`: A JSON file containing additional metadata about the model run for this task.
@@ -172,9 +172,9 @@ The images can also be built locally, in which case the [Makefile](Makefile) inc
 
 - `make deps` will build the image with the required dependencies for the package.
 - `make build` will build the image containing the R package.
-- `make interactive` will lunch the image in interactive mode.
+- `make interactive` will launch the image in interactive mode.
 
-All three targets depend on the environment variables `CNTR_MGR` (defults to `docker`) and `TAG` (defaults to `local`).
+All three targets depend on the environment variables `CNTR_MGR` (defaults to `docker`) and `TAG` (defaults to `local`).
 The default repository is cfaprdbatchcr.azurecr.io. For instance, if you wanted to build the dependency image using `podman` and the `latest` tag, you can do the following:
 
 ```bash
