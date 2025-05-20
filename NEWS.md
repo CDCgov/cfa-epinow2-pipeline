@@ -4,6 +4,10 @@
 * Switching base rocker image from geospatial (4.7 GB) to tidyverse (2.7 GB)
 * Adding cmdstanr as back-end and updating diagnostic extraction as such
 * Updating EpiNow2 package from v1.4.0 to v1.6.0
+* Replace remaining self-hosted runner workflows with ubuntu-latest
+* Fix mismatch between R code and documentation
+* Change code owner
+* Fix mismatch between R code and documentation
 * Fix production diseases
 * Add RSV specifications
 * Create the config files locally to speed things up

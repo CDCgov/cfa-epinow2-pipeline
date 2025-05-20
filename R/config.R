@@ -124,7 +124,7 @@ Data <- S7::new_class( # nolint: object_name_linter
 #' @param production_date A string representing the production date.
 #' Formatted as "YYYY-MM-DD".
 #' @param disease A string specifying the disease being modeled. One of
-#'    `"COVID-19"` or `"Influenza"`.
+#'    `"COVID-19"` or `"Influenza"` or `"RSV"`.
 #' @param geo_value An uppercase, two-character string specifying the geographic
 #'   value, usually a state or `"US"` for national data.
 #' @param geo_type A string specifying the geographic type, usually "state".
