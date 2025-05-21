@@ -3,7 +3,8 @@
 shape <- 2
 rate <- 1 / 4
 
-sir_gt_pmf <- primarycensored::dpcens(0:26,
+sir_gt_pmf <- primarycensored::dpcens(
+  0:26,
   pgamma,
   shape = shape,
   rate = rate,

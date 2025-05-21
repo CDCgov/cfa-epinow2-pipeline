@@ -17,12 +17,13 @@
 #' @family pipeline
 #' @export
 fit_model <- function(
-    data,
-    parameters,
-    seed,
-    horizon,
-    priors,
-    sampler_opts) {
+  data,
+  parameters,
+  seed,
+  horizon,
+  priors,
+  sampler_opts
+) {
   # Priors ------------------------------------------------------------------
   rt <- EpiNow2::rt_opts(
     list(
@@ -46,7 +47,8 @@ fit_model <- function(
     data
   )
   stan <- format_stan_opts(
-    sampler_opts, seed
+    sampler_opts,
+    seed
   )
   df <- data.frame(
     confirm = data[["confirm"]],

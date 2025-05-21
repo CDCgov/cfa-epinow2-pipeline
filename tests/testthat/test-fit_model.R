@@ -8,7 +8,9 @@ test_that("Minimal model fit all params runs", {
   # Data -- 5 points only
   data_path <- test_path("data", "test_data.parquet")
   con <- DBI::dbConnect(duckdb::duckdb())
-  data <- DBI::dbGetQuery(con, "
+  data <- DBI::dbGetQuery(
+    con,
+    "
                          SELECT
                            report_date,
                            reference_date,
@@ -64,7 +66,9 @@ test_that("Minimal model fit with no right trunc or delay runs", {
   # Data -- 5 points only
   data_path <- test_path("data", "test_data.parquet")
   con <- DBI::dbConnect(duckdb::duckdb())
-  data <- DBI::dbGetQuery(con, "
+  data <- DBI::dbGetQuery(
+    con,
+    "
                          SELECT
                            report_date,
                            reference_date,
@@ -125,7 +129,9 @@ test_that("Bad params w/ failing fit issues warning and returns NA", {
   # Data -- 5 points only
   data_path <- test_path("data", "test_data.parquet")
   con <- DBI::dbConnect(duckdb::duckdb())
-  data <- DBI::dbGetQuery(con, "
+  data <- DBI::dbGetQuery(
+    con,
+    "
                          SELECT
                            report_date,
                            reference_date,
@@ -185,9 +191,7 @@ test_that("Right truncation longer than data throws error", {
 })
 
 test_that("Missing GI throws error", {
-  expect_error(format_generation_interval(NA),
-    class = "Missing_GI"
-  )
+  expect_error(format_generation_interval(NA), class = "Missing_GI")
 })
 
 test_that("Missing keys throws error", {
