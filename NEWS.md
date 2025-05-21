@@ -11,6 +11,7 @@
 * Remove out-of-date demo folder
 * Add automated check that docs are up to date
 * Rewrite README for simplification and clarity
+* Switch to the `air` code formatter
 * Replace remaining self-hosted runner workflows with ubuntu-latest
 * Fix mismatch between R code and documentation
 * Change code owner and include authors in R package
