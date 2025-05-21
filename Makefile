@@ -42,20 +42,23 @@ rerun-config:
 		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
 
-backfill-config:
+backfill-config-and-run:
 	# More and other options are available, see the script for details if these
 	# basic arguments are not sufficient. It is expected that backfill configs
 	# will be relatively different from one another, so it is likely these arguments
 	# will be different for each backfill.
-	uv run azure/generate_backfill_configs.py \
+	# To see those options, run `uv run azure/backfill_generate_and_run.py --help`
+	uv run --env-file .env azure/backfill_generate_and_run.py \
 		--state=all \
 		--disease="COVID-19,Influenza" \
-		--str-report-dates="2025-01-29,2025-02-26,2025-03-05,2025-03-12,2025-03-19,2025-03-26,2025-04-02,2025-04-09,2025-04-16,2025-04-23,2025-04-30,2025-05-07,2025-05-14" \
+		--str-report-dates="2025-04-30,2025-05-07,2025-05-14" \
 		--reference-date-time-span="8w" \
 		--data-paths-template="gold/{}.parquet" \
 		--data-container="nssp-etl" \
 		--backfill-name="your-backfill-name" \
 		--output-container="nssp-rt-testing" \
+		--image-name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+		--pool-id="$(POOL)"
 
 run-batch:
 	uv run --env-file .env \
