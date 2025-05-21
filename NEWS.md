@@ -2,6 +2,7 @@
 
 ## Features
 
+* Switch to the `air` code formatter
 * Replace remaining self-hosted runner workflows with ubuntu-latest
 * Fix mismatch between R code and documentation
 * Change code owner
