@@ -3,6 +3,7 @@
 ## Features
 
 * Add commands for generating backfill configurations.
+* Add automated check that docs are up to date
 * Replace remaining self-hosted runner workflows with ubuntu-latest
 * Fix mismatch between R code and documentation
 * Change code owner
