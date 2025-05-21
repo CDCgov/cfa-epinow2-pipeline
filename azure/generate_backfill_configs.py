@@ -127,7 +127,7 @@ def main(
     ] = None,
 ) -> None:
     """
-    Generate and upload config files for the epinow2 pipeline.
+    Generate and upload config files for the EpiNow2 pipeline.
     """
     # Split on commas and spaces, and remove empty strings
     # This will handle cases like "2025-01-01, 2025-01-02 2025-01-03,2025-01-04".
