@@ -12,8 +12,8 @@ Parameters(
 )
 }
 \arguments{
-\item{as_of_date}{A string representing the as-of date. Formatted as
-"YYYY-MM-DD".}
+\item{as_of_date}{A string representing the date as-of which to fetch the
+parameters for. Formatted as "YYYY-MM-DD".}
 
 \item{generation_interval}{An instance of \code{GenerationInterval} class.}
 
