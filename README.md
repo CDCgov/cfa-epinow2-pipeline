@@ -16,12 +16,12 @@ While the code is open source, it may not support use outside CFA's infrastructu
 ## Structure
 
 This repository contains the R package `{CFAEpiNow2Pipeline}` and follows standard R package conventions.
-All PRs must pass R CMD CHECK as part of the CI pipeline before merging to main.
+All PRs must pass `R CMD CHECK` as part of the CI pipeline before merging to main.
 See `CONTRIBUTING.md` for details on contributing to the repository.
 
 The package provides adapters and wrappers to run multiple `{EpiNow2}` models in parallel using cloud resources.
 It reads from a standardized input format and writes to a standardized output format.
-It enhances the `{EpiNow2}` package to support cloud deployments, adding logging, and standardizing the R environment.
+It enhances `{EpiNow2}` to support cloud deployments, further logging, and standardization of the R environment.
 
 Note: This package standardizes how `{EpiNow2}` integrates into CFA's pipeline but does _not_ manage pipeline deployment or kickoff, data extraction and transformation, or output visualization.
 
@@ -29,16 +29,17 @@ Note: This package standardizes how `{EpiNow2}` integrates into CFA's pipeline b
 
 This package implements functions for:
 
-1. **Configuration**: Loads parameters (e.g. prior distributions, generation intervals, right truncation) from a config passed at runtime.
+1. [**Configuration**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#configuration): Loads parameters (e.g. prior distributions, generation intervals, right truncation) from a config passed at runtime.
     - Configs are validated at runtime, but generated outside this package.
-1. **Data load**: Reads input data from the CFA data lake or from a local environment and formats it for input to `{EpiNow2}`.
+1. [**Data load**]((https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#azure)): Reads input data from the CFA data lake or from a local environment and formats it for input to `{EpiNow2}`.
     - Paths are specified via the config.
-1. **Parameters**: Loads validated generation interval, delay interval, and right truncation distributions from from the CFA data lake or from a local environment and formats them for use in `{EpiNow2}`.
-1. **Model run**: Manages R environment to run `{EpiNow2}` from a fixed random seed for both `{EpiNow2}` initialization and Stan sampling.
-1. **Outputs**: Processes `{EpiNow2}` model fits to a standardized flat output format.
+1. [**Parameters**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#parameter): Loads validated generation interval, delay interval, and right truncation distributions from from the CFA data lake or from a local environment and formats them for use in `{EpiNow2}`.
+1. [**Model run**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#pipeline): Manages R environment to run `{EpiNow2}` from a fixed random seed for both `{EpiNow2}` initialization and Stan sampling.
+1. [**Outputs**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#write-output): Processes `{EpiNow2}` model fits to a standardized flat output format.
     - In the pipeline, full model fits are saved as `.rds` files, as well as via this flat output format.
-1. **Logging**: Uses the [`{cli}`](https://github.com/r-lib/cli) package for detailed R-style logging at each pipeline step.
 1. **Metadata**: Extracts and saves metadata on the model run alongside model outputs.
+
+The [`{cli}`](https://github.com/r-lib/cli) package is used for detailed R-style logging throughout.
 
 ## Output format
 
@@ -47,8 +48,13 @@ Outputs feed into downstream post-processing (e.g. plotting, scoring, analysis) 
 
 ### Directories
 
-The nested partitioning structure of the outputs is designed to facilitate both automated processes and manual investigation: files are organized by job and task IDs, allowing for efficient file operations using glob patterns, while also maintaining a clear hierarchy that aids human users in navigating to specific results or logs. Files meant primarily for machine-readable consumption (i.e., draws, summaries, diagnostics) are structured together to make globbing easier. Files meant primarily for human investigation (i.e., logs, model fit object) are grouped together by task to facilitate manual workflows.
-In this workflow, task IDs correspond to location specific model runs (which are independent of one another) and the jobid refers to a unique model run and disease. For example, a production job should contain task IDs for each of the 50 states and the US, but a job submitted for testing or experimentation might contain a smaller number of tasks/locations.
+Outputs are organized by job and task IDs to support automated and manual review workflows.
+Primarily machine-readable files (e.g., draws, summaries, diagnostics) are stored together for globbing.
+Human-readable files (e.g. logs, model fit objects) are stored together by task.
+
+<!-- Confusing! -->
+The task ID corresponds to a location-specific model run e.g. 50 states.
+The job ID refers to a unique model run and disease.
 
 ```bash
 <output>/
