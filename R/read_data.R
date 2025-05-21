@@ -38,7 +38,8 @@ read_data <- function(
   # upstream in the ETL job and standardize on "COVID-19", but that's beyond
   # scope here and we need to do _something_ in the meantime so this runs.
   disease_map <- c(
-    "COVID-19" = "COVID-19/Omicron", "Influenza" = "Influenza",
+    "COVID-19" = "COVID-19/Omicron",
+    "Influenza" = "Influenza",
     "RSV" = "RSV",
     "test" = "test"
   )
