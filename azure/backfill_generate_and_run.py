@@ -163,7 +163,7 @@ def main(
         else report_dates
     )
 
-    generate_backfill_config(
+    job_ids: list[str] = generate_backfill_config(
         state=state,
         disease=disease,
         report_dates=report_dates,
