@@ -56,12 +56,11 @@ Outputs feed into downstream post-processing (e.g. plotting, scoring, analysis) 
 ### Structure
 
 Outputs are organized by job and task IDs to support automated and manual review workflows.
+The job ID refers to a collection of models run together.
+The task ID corresponds to a specific model instance.
+
 Primarily machine-readable files (e.g., draws, summaries, diagnostics) are stored together for globbing.
 Human-readable files (e.g. logs, model fit objects) are stored together by task.
-
-<!-- Confusing! -->
-The task ID corresponds to a location-specific model run e.g. 50 states.
-The job ID refers to a unique model run and disease.
 
 ```bash
 <output>/
