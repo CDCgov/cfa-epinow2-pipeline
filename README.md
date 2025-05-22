@@ -30,27 +30,27 @@ The package provides adapters and wrappers to run multiple `{EpiNow2}` models in
 It reads from a standardized input format and writes to a standardized output format.
 It enhances `{EpiNow2}` to support cloud deployments, further logging, and standardization of the R environment.
 
-Note: This package standardizes how `{EpiNow2}` integrates into CFA's pipeline but does _not_ manage pipeline deployment or kickoff, data extraction and transformation, or output visualization.
+Note: This package standardizes how `{EpiNow2}` integrates into CFA's pipeline but does _not_ manage postprocessing, data extraction and transformation, or output visualization.
 
 ## Components
 
 This package implements functions for:
 
 1. [**Configuration**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#configuration): Loads parameters (e.g. prior distributions, generation intervals, right truncation) from a config passed at runtime.
-    - Configs are validated at runtime, but generated outside this package.
-1. [**Data load**]((https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#azure)): Reads input data from the CFA data lake or from a local environment and formats it for input to `{EpiNow2}`.
-    - Paths are specified via the config.
+    - Configs are validated at runtime, but generated in [a separate microservice](https://github.com/CDCgov/cfa-config-generator).
+1. [**Data load**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#azure): Reads input data from the CFA data lake or from a local environment and formats it for input to `{EpiNow2}`.
+    - Paths to data files are specified via the config.
 1. [**Parameters**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#parameter): Loads validated generation interval, delay interval, and right truncation distributions from from the CFA data lake or from a local environment and formats them for use in `{EpiNow2}`.
 1. [**Model run**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#pipeline): Manages R environment to run `{EpiNow2}` from a fixed random seed for both `{EpiNow2}` initialization and Stan sampling.
 1. [**Outputs**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#write-output): Processes `{EpiNow2}` model fits to a standardized flat output format.
-    - In the pipeline, full model fits are saved as `.rds` files, as well as via this flat output format.
+    - In the pipeline, full model fits are saved as `.rds` files, as well as via this flat output format (in parquet).
 1. **Metadata**: Extracts and saves metadata on the model run alongside model outputs.
 
 The [`{cli}`](https://github.com/r-lib/cli) package is used for detailed R-style logging throughout.
 
 ## Output format
 
-This package standardizes `{EpiNow2}` outputs into samples and summary tables, saving them (along with relevant metadata and logs) in a consistent directory structure.
+This package standardizes `{EpiNow2}` outputs into samples and summary tables, saving them along with metadata and logs in a consistent directory structure.
 Outputs feed into downstream post-processing (e.g. plotting, scoring, analysis) pipelines.
 
 ### Structure
@@ -92,9 +92,7 @@ Human-readable files (e.g. logs, model fit objects) are stored together by task.
     - `task_<task_id>/`: A task-specific folder with:
       - `model.rds`: The fitted `{EpiNow2}` model object.
       - `metadata.json`: Metadata about the task run.
-      - `stdout.log`: Standard output log file.
-      - `stderr.log`: Standard error log file.
-- `job_metadata.json`: Metadata about the overall job, stored at the top level of the job directory.
+      - `logs.txt`: Log file of all stdout and stderr.
 
 ### Model-estimated quantities
 
@@ -121,7 +119,7 @@ The [`Makefile`](Makefile) may be used to build containers and run the pipeline 
 These targets depend on the environment variables:
 
 1. `CNTR_MGR`: The container manager. Defaults to `docker`. Other options include `podman`.
-2. `TAG`: A tag used for the container. Defaults to `local`.
+2. `TAG`: The tag used for the image. Defaults to the name of the branch.
 
 The default repository is cfaprdbatchcr.azurecr.io.
 
@@ -129,20 +127,20 @@ The default repository is cfaprdbatchcr.azurecr.io.
 For example, to build a dependency image using `podman` and the `latest` tag:
 
 ```bash
-make build CNTR_MGR=podman TAG=zs-pipeline
+make build CNTR_MGR=podman TAG=latest
 ```
 
 This is equivalent to running:
 
 ```bash
 podman build -t cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline \
-    --build-arg TAG=zs-pipeline -f Dockerfile
+    --build-arg TAG=latest -f Dockerfile
 ```
 
 Then, to run interactively:
 
 ```bash
-make interactive TAG=zs-pipeline
+make interactive TAG=latest
 ```
 
 <!--- Is it not a problem that we use docker now after making the image with podman --->
@@ -151,7 +149,7 @@ This is equivalent to running:
 ```bash
 docker run \
     -v/wherever/your/pwd/is:/cfa-epinow2-pipeline -it --rm \
-    cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline
+    cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:latest
 ```
 
 **Note**: The default value of `CNTR_MGR` is `docker`!
