@@ -15,10 +15,10 @@ While the code is open source, it may not support use outside CFA's infrastructu
 
 ## Project Admin
 
-- @micahwiesner67
-- @zsusswein
-- @natemcintosh
-- @kgostic
+- [@micahwiesner67](https://github.com/micahwiesner67)
+- [@zsusswein](https://github.com/zsusswein)
+- [@natemcintosh](https://github.com/natemcintosh)
+- [@kgostic](https://github.com/kgostic)
 
 ## Structure
 
