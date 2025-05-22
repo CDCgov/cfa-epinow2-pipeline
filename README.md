@@ -74,21 +74,21 @@ The job ID refers to a unique model run and disease.
 │   ├── job_metadata.json
 ```
 
-- `<output>/`: The base output directory. This could, for example, be `/` in a Docker container or dedicated output directory.
-- `job_<job_id>/`: A directory named after the specific job identifier, containing all outputs related to that job. All tasks within a job share this same top-level directory.
-  - `raw_samples/`: A subdirectory within each job folder that holds the raw sample files from all tasks in the job. Task-specific *draws* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
-    - `samples_<task_id>.parquet`: A file containing raw samples from the model, associated with a particular task identifier. This file has columns `job_id`, `task_id`, `geo_value`, `disease`, `model`, `_draw`, `_chain`, `_iteration`, `_variable`, `value`, and `reference_date`. These variables follow the [{tidybayes}](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
-  - `summarized_quantiles/`: A subdirectory for storing summarized quantile data. Task-specific *summarized* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
-    - `summarized_<task_id>.parquet`: A file with summarized quantiles relevant to a specific task identifier.  This file has columns `job_id`, `task_id`, `geo_value`, `disease`, `model`, `value`, `_lower`, `_upper`, `_width`, `_point`, `_interval`, and `reference_date`. These variables follow the [{tidybayes}](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
-  - `diagnostics/`: A subdirectory for storing model fit diagnostics. Task-specific *diagnostic* output files all live together in this directory to enable easy globbing over task-partitioned outputs.
-    - `diagnostic_<task_id>.parquet`: A file with diagnostics relevant to a specific task identifier.  This file has columns `diagnostic`, `value`, `job_id`, `task_id`, `geo_value`, `disease`, and `model`.
-  - `tasks/`: This directory contains subdirectories for each task within a job. These are files that are less likely to require globbing from the data lake than manual investigation, so are stored together.
-    - `task_<task_id>/`: Each task has its own folder identified by the task ID, which includes several files:
-      - `model.rds`: An RDS file storing the `{EpiNow2}` model object fit to the data.
-      - `metadata.json`: A JSON file containing additional metadata about the model run for this task.
-      - `stdout.log`: A log file capturing standard output from the model run process.
-      - `stderr.log`: A log file capturing standard error output from the model run process.
-- `job_metadata.json`: A JSON file located in the root of each job's directory, providing metadata about the entire job.
+- `<output>/`: Base output directory e.g. `/` in a Docker container or another specified path.
+- `job_<job_id>/`: A directory named after the job ID, containing all related outputs. All tasks for a job are grouped here.
+  - `raw_samples/`: Contains raw sample files for all tasks in the job.
+    - `samples_<task_id>.parquet`: Raw model samples for a specific task ID. Columns are: `job_id`, `task_id`, `geo_value`, `disease`, `model`, `_draw`, `_chain`, `_iteration`, `_variable`, `value`, and `reference_date`, following the [`{tidybayes}`](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
+  - `summarized_quantiles/`: Contains summarized quantile data for all tasks in the job.
+    - `summarized_<task_id>.parquet`: Summarized quantiles for a specific task ID.  Columns are: `job_id`, `task_id`, `geo_value`, `disease`, `model`, `value`, `_lower`, `_upper`, `_width`, `_point`, `_interval`, and `reference_date`, following the [`{tidybayes}`](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
+  - `diagnostics/`: Contains model fit diagnostics for all tasks in the job.
+    - `diagnostic_<task_id>.parquet`: Diagnostics relevant for a specific task ID. Columns are: `diagnostic`, `value`, `job_id`, `task_id`, `geo_value`, `disease`, and `model`.
+  - `tasks/`: Contains one folder per task. These are primarily for manual review rather than automated processing.
+    - `task_<task_id>/`: A task-specific folder with:
+      - `model.rds`: The fitted `{EpiNow2}` model object.
+      - `metadata.json`: Metadata about the task run.
+      - `stdout.log`: Standard output log file.
+      - `stderr.log`: Standard error log file.
+- `job_metadata.json`: Metadata about the overall job, stored at the top level of the job directory.
 
 ### Model-estimated quantities
 
