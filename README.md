@@ -113,7 +113,7 @@ In our outputs, we include the following quantities:
 
 ### Locally
 
-The [`Makefile`](Makefile) may be used to build containers and run the pipeline locally using: 
+The [`Makefile`](Makefile) may be used to build containers and run the pipeline locally using:
 
 1. `make deps` builds a container image with all the dependencies required to build the R package.
 1. `make build` builds the R package.
