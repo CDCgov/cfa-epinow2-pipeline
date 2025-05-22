@@ -60,8 +60,9 @@ def main(
         str,
         typer.Option(
             help=(
-                "A string representing the time span for the earliest reference date relative to"
-                " the report date. This should be formatted following the conventions of polars"
+                "A string representing the time span of data passed to each model. In the data, the final reference date 
+                will be equal to the model-specific report date, and the earliest reference date will be determined by the"
+                " time span. This should be formatted following the conventions of polars"
                 " `.dt.offset_by()`. Usually, this will be a string like '8w' or '1d' (for 8 weeks"
                 " or 1 day)."
             ),
