@@ -111,7 +111,7 @@ In our outputs, we include the following quantities:
 
 ## Running the pipeline
 
-## Locally
+### Locally
 
 The [`Makefile`](Makefile) may be used to build containers and run the pipeline locally using: 
 
@@ -158,7 +158,7 @@ docker run \
 **Note**: The default value of `CNTR_MGR` is `docker`!
 This means that...
 
-## Automation
+### Automation
 
 The project uses GitHub Actions workflows to automate CI/CD.
 Notably, the [`containers-and-az-pool.yaml`](.github/workflows/containers-and-az-pool.yaml) workflow executes jobs using a self-hosted runner, and serves as an entry point for starting the pipeline.
