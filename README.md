@@ -13,6 +13,13 @@ It includes helper functions to:
 The package supports deployment in CFA's computational environment.
 While the code is open source, it may not support use outside CFA's infrastructure.
 
+## Project Admin
+
+- @micahwiesner67
+- @zsusswein
+- @natemcintosh
+- @kgostic
+
 ## Structure
 
 This repository contains the R package `{CFAEpiNow2Pipeline}` and follows standard R package conventions.
@@ -126,9 +133,9 @@ The workflow has the following three jobs:
 
 1. **Build dependencies image** (`build-dependencies-image`): Creates a container image with all the dependencies required to build the R package. This job is cached to speed up the process, so it only updates the image if the [`Dockerfile-dependencies`](Dockerfile-dependencies) or the [`DESCRIPTION`](DESCRIPTION) file changes. The image is pushed to the Azure container registry: `cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:[branch name]`.
 1. **Build pipeline image** (`build-pipeline-image`): Using the previous image as a base, this job installs the R package and pushes the image to the Azure container registry: `cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:[branch name]`.
-1. **Create Batch Pool and Submit Jobs** (`batch-pool`): This final job creates a new Azure batch pool with id `cfa-epinow2-pool-[branch name]` if it doesn't already exist. Additionally, if the commit message contains the string "`[delete pool]`", the pool is deleted.
+1. **Create Batch Pool and Submit Jobs** (`batch-pool`): This final job creates a new Azure batch pool with ID `cfa-epinow2-pool-[branch name]` if it doesn't already exist. Additionally, if the commit message contains the string "`[delete pool]`", the pool is deleted.
 
-Both container tags and pool ids are based on the branch name, making it compatible with having multiple pipelines running simultaneously. The pool creation depends on Azure's Python SDK (see the file [.github/scripts/create_pool.py](.github/scripts/create_pool.py)), with the necessary credentials listed in a string at the top of the script.
+Both container tags and pool IDs are based on the branch name, making it compatible with having multiple pipelines running simultaneously. The pool creation depends on Azure's Python SDK (see the file [.github/scripts/create_pool.py](.github/scripts/create_pool.py)), with the necessary credentials listed in a string at the top of the script.
 
 > [!IMPORTANT]
 > The CI will fail with branch names that are not valid tag names for containers. For more information, see the official Azure documentation [here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry).
@@ -207,13 +214,6 @@ docker run \
     -v/wherever/your/pwd/is:/cfa-epinow2-pipeline -it --rm \
     cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline
 ```
-
-## Project Admin
-
-- @micahwiesner67
-- @zsusswein
-- @natemcintosh
-- @kgostic
 
 ## General Disclaimer
 This repository was created for use by CDC programs to collaborate on public health related projects in support of the [CDC mission](https://www.cdc.gov/about/organization/mission.htm).  GitHub is not hosted by the CDC, but is a third party website used by CDC and its partners to share information and collaborate on software. CDC use of GitHub does not imply an endorsement of any one particular service, product, or enterprise.
