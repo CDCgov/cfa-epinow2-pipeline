@@ -6,7 +6,9 @@
 * Add automated check that docs are up to date
 * Replace remaining self-hosted runner workflows with ubuntu-latest
 * Fix mismatch between R code and documentation
+* Change code owner and include authors in R package
 * Change code owner
+* Add documentation to the Makefile
 * Fix mismatch between R code and documentation
 * Fix production diseases
 * Add RSV specifications
