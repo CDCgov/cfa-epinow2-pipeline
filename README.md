@@ -53,7 +53,7 @@ The [`{cli}`](https://github.com/r-lib/cli) package is used for detailed R-style
 This package standardizes `{EpiNow2}` outputs into samples and summary tables, saving them (along with relevant metadata and logs) in a consistent directory structure.
 Outputs feed into downstream post-processing (e.g. plotting, scoring, analysis) pipelines.
 
-### Directories
+### Structure
 
 Outputs are organized by job and task IDs to support automated and manual review workflows.
 Primarily machine-readable files (e.g., draws, summaries, diagnostics) are stored together for globbing.
@@ -99,35 +99,68 @@ The job ID refers to a unique model run and disease.
 
 ### Model-estimated quantities
 
-`{EpiNow2}` estimates the incident cases $\hat y_{td}$ for timepoint $t \in \{1, ..., T\}$ and delay $d \in \{1, ..., D\}$ where $D \le T$.
-In the single vintage we're providing to `{EpiNow2}`, the delay $d$ moves inversely to timepoints, so $d = T - t + 1$.
+We use the `{EpiNow2}` model to correct for reporting delays in the observed time series data.
+For more details about the model, see the vignette for [`EpiNow2::estimate_infections()`](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html).
 
-The observed data vector of length $T$ is $y_{td} \in W$.
-We supply a nowcasting correction PMF $\nu$ for the last $D$ timepoints where $\nu_d \in [0, 1],$ and $\sum_{d=1}^D\nu_d = 1$.
-We also have some priors $\Theta$.
+In our outputs, we include the following quantities:
 
-We use `{EpiNow2}`'s generative model $f(y, \nu, \Theta)$.
+1. `stan_name`: What the quantity is
+1. `stan_name`: What the quantity is
+1. `stan_name`: What the quantity is
+1. `stan_name`: What the quantity is
 
-`{EpiNow2}` is a forward model that produces an expected nowcasted case count for each $t$ and $d$ pair: $\hat \gamma_{td}$.
-It applies the nowcasting correction $\nu$ to the last $D$ timepoints of $\hat \gamma$ to produce the expected right-truncated case count $\hat y$.
-Note that these _expected_ case counts (with and without right-truncation) don't have observation noise included.
+## Running the pipeline
 
-We can apply negative binomial observation noise using `{EpiNow2}`'s estimate of the negative binomial overdispersion parameter $\hat \phi$ and the expected case counts.
-The posterior predictive distributions of nowcasted case counts is $\tilde \gamma \sim \text{NB}(\hat \gamma, \hat \phi)$.
-The posterior predicted right-truncated case count is $\tilde y \sim \text{NB}(\hat y, \hat \phi)$.
+## Locally
 
-We can get 3 of these 4 quantities pre-generated from the returned `{EpiNow2}` Stan model:
+The [`Makefile`](Makefile) may be used to build containers and run the pipeline locally using: 
 
-- $\hat \gamma$: The expected nowcasted case count is `reports[t]`
-- $\hat y$: The expected right-truncated case count is `obs_reports[t]`
-- $\tilde \gamma$: The posterior-predicted nowcasted case count is `imputed_reports[t]`
-- $\tilde y$: The posterior-predicted right-truncated case count isn't returned by `{EpiNow2}`.
+1. `make deps` builds a container image with all the dependencies required to build the R package.
+1. `make build` builds the R package.
+1. `make interactive` launches the image in interactive mode.
 
-We also save the $R_t$ estimate at time $t$ and the intrinsic growth rate at time $t$.
+These targets depend on the environment variables:
+
+1. `CNTR_MGR`: The container manager. Defaults to `docker`. Other options include `podman`.
+2. `TAG`: A tag used for the container. Defaults to `local`.
+
+The default repository is cfaprdbatchcr.azurecr.io.
+
+<!--- Don't we need to do `make deps` first? --->
+For example, to build a dependency image using `podman` and the `latest` tag:
+
+```bash
+make build CNTR_MGR=podman TAG=zs-pipeline
+```
+
+This is equivalent to running:
+
+```bash
+podman build -t cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline \
+    --build-arg TAG=zs-pipeline -f Dockerfile
+```
+
+Then, to run interactively:
+
+```bash
+make interactive TAG=zs-pipeline
+```
+
+<!--- Is it not a problem that we use docker now after making the image with podman --->
+This is equivalent to running:
+
+```bash
+docker run \
+    -v/wherever/your/pwd/is:/cfa-epinow2-pipeline -it --rm \
+    cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline
+```
+
+**Note**: The default value of `CNTR_MGR` is `docker`!
+This means that...
 
 ## Automation
 
-The project has multiple GitHub Actions workflows to automate the CI/CD process.
+The project uses GitHub Actions workflows to automate CI/CD.
 Notably, the [`containers-and-az-pool.yaml`](.github/workflows/containers-and-az-pool.yaml) workflow executes jobs using a self-hosted runner, and serves as an entry point for starting the pipeline.
 The workflow has the following three jobs:
 
@@ -175,44 +208,6 @@ flowchart LR
     CREATE_POOL---END_POOL
 
   end
-```
-
-## Container images
-
-The project includes container images for running the pipelines.
-Particularly, the GitHub Action workflow located in [.github/workflows/containers-and-az-pool.yaml](.github/workflows/containers-and-az-pool.yaml) automatically builds an image based on [Dockerfile](Dockerfile) and pushes it to Azure Container Registry.
-The images can also be built locally, in which case the [Makefile](Makefile) included in the project contains the following targets:
-
-- `make deps` will build the image with the required dependencies for the package.
-- `make build` will build the image containing the R package.
-- `make interactive` will launch the image in interactive mode.
-
-All three targets depend on the environment variables `CNTR_MGR` (defaults to `docker`) and `TAG` (defaults to `local`).
-The default repository is cfaprdbatchcr.azurecr.io. For instance, if you wanted to build the dependency image using `podman` and the `latest` tag, you can do the following:
-
-```bash
-make build CNTR_MGR=podman TAG=zs-pipeline
-```
-
-```bash
-podman build -t cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline \
-    --build-arg TAG=zs-pipeline -f Dockerfile
-```
-
-To run interactively, you can use the following target:
-
-```bash
-make interactive TAG=zs-pipeline
-```
-
-which is equivalent to run:
-
-**NOTICE docker IS THE DEFAULT CNTR_MGR**
-
-```bash
-docker run \
-    -v/wherever/your/pwd/is:/cfa-epinow2-pipeline -it --rm \
-    cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline
 ```
 
 ## General Disclaimer
