@@ -11,7 +11,7 @@ It includes helper functions to:
 * Add logging and metadata
 
 The package supports deployment in CFA's computational environment.
-While the code is open source, it may not support use outside CFA's infrastructure.
+While the code is open source, it may not easily support use outside CFA's infrastructure.
 
 ## Project Admin
 
