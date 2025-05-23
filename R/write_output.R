@@ -269,7 +269,7 @@ post_process_and_merge <- function(
   processed_obs_data_time <- unique(
     merge(
       processed_obs_data,
-      merged_dt[!(.variable == "r"), c("date", "time"), with = FALSE],
+      merged_dt[!(".variable" == "r"), c("date", "time"), with = FALSE],
       by = c("date"),
       all.x = TRUE,
       all.y = FALSE
