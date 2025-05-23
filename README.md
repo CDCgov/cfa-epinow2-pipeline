@@ -98,6 +98,8 @@ Human-readable files (e.g. logs, model fit objects) are stored together by task.
 
 We use the `{EpiNow2}` model to correct for reporting delays in the observed time series data.
 For more details about the model, see the vignette for [`EpiNow2::estimate_infections()`](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html).
+In particular, the section on [dealing with truncation](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html#truncation) may be helpful.
+
 
 In our outputs, we include the following quantities:
 
