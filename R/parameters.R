@@ -78,7 +78,7 @@ read_disease_parameters <- function(
     delay_interval = delay_interval,
     right_truncation = right_truncation
   )
-  return(parameters)
+  parameters
 }
 
 path_is_specified <- function(path) {
@@ -216,7 +216,7 @@ read_interval_pmf <- function(path,
 
   cli::cli_alert_success("{.arg {parameter}} loaded")
 
-  return(pmf)
+  pmf
 }
 
 #' Run validity checks on the PMF returned from the file
@@ -293,7 +293,7 @@ check_returned_pmf <- function(
     )
   }
 
-  return(pmf)
+  pmf
 }
 
 #' Format PMFs for EpiNow2
