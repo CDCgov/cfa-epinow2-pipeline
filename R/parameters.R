@@ -231,7 +231,7 @@ read_interval_pmf <- function(path,
 #'
 #' @return The unpacked `value` column, which is a valid PMF
 #' @family parameters
-#' @noRd
+#' @export
 check_returned_pmf <- function(
     pmf_df,
     parameter,
@@ -299,7 +299,7 @@ check_returned_pmf <- function(
 #' Format PMFs for EpiNow2
 #'
 #' Opinionated wrappers around EpiNow2::generation_time_opts(),
-#' EpiNow2::delay_opts(), or EpiNow2::dist_spec() that formats the generation
+#' EpiNow2::delay_opts(), or EpiNow2::NonParametric() that format generation
 #' interval, delay, or right truncation parameters as an object ready for input
 #' to EpiNow2.
 #'
@@ -336,7 +336,7 @@ format_generation_interval <- function(pmf) {
   }
   suppressWarnings({
     EpiNow2::generation_time_opts(
-      dist = EpiNow2::dist_spec(
+      dist = EpiNow2::NonParametric(
         pmf = pmf
       )
     )
@@ -354,7 +354,7 @@ format_delay_interval <- function(pmf) {
   } else {
     suppressWarnings({
       EpiNow2::delay_opts(
-        dist = EpiNow2::dist_spec(
+        dist = EpiNow2::NonParametric(
           pmf = pmf
         )
       )
@@ -389,7 +389,7 @@ format_right_truncation <- function(pmf, data) {
     )
     suppressWarnings({
       EpiNow2::trunc_opts(
-        dist = EpiNow2::dist_spec(
+        dist = EpiNow2::NonParametric(
           pmf = pmf[seq_len(trunc_len)]
         )
       )
@@ -397,7 +397,7 @@ format_right_truncation <- function(pmf, data) {
   } else {
     suppressWarnings({
       EpiNow2::trunc_opts(
-        dist = EpiNow2::dist_spec(
+        dist = EpiNow2::NonParametric(
           pmf = pmf
         )
       )
