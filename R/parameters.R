@@ -78,7 +78,7 @@ read_disease_parameters <- function(
     delay_interval = delay_interval,
     right_truncation = right_truncation
   )
-  return(parameters)
+  parameters
 }
 
 path_is_specified <- function(path) {
