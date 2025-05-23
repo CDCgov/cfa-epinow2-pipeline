@@ -1,3 +1,5 @@
+// Document the purpose of this txt file here (or delete it if not relevant)
+
 // In this example, the pool size is adjusted based on the number of tasks in the queue.
 // Note that both comments and line breaks are acceptable in formula strings.
 
