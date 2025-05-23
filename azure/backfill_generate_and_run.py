@@ -32,20 +32,21 @@ def main(
     state: Annotated[
         str,
         typer.Option(
-            help=(
-                "State(s). Can be '*', 'all', a single state, or"
-                " multiple states, separated by commas."
-            ),
+            help="""
+                State(s) abbreviations. Can be '*', 'all', a single state, or
+                multiple states, separated by commas. Whitespace is stripped.
+                For example, 'NY, NJ,CA', 'OH' or 'all' are all valid inputs.
+                """,
             show_default=False,
         ),
     ],
     disease: Annotated[
         str,
         typer.Option(
-            help=(
-                "Disease(s). Can be '*', 'all', a single disease, or"
-                " multiple diseases, separated by commas."
-            ),
+            help="""
+                Disease(s). Can be '*', 'all', a single disease, or
+                multiple diseases, separated by commas. Whitespace is stripped.
+                """,
             show_default=False,
         ),
     ],
