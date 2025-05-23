@@ -120,7 +120,7 @@ The [`Makefile`](Makefile) may be used to build containers and run the pipeline 
 
 These targets depend on the environment variables:
 
-1. `CNTR_MGR`: The container manager. Defaults to `docker`. Other options include `podman`.
+1. `CNTR_MGR`: The container manager. Defaults to `docker`. The option `podman` is also allowed if present locally on the system. Note that there can be some incompatibilities between `podman` and Azure services.
 2. `TAG`: The tag used for the image. Defaults to the name of the branch.
 
 The default repository is cfaprdbatchcr.azurecr.io.
