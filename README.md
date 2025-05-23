@@ -83,9 +83,9 @@ Human-readable files (e.g. logs, model fit objects) are stored together by task.
 - `<output>/`: Base output directory e.g. `/` in a Docker container or another specified path.
 - `<job_id>/`: A directory named after the job ID, containing all related outputs. All tasks for a job are grouped here.
   - `raw_samples/`: Contains raw sample files for all tasks in the job.
-    - `samples_<task_id>.parquet`: Raw model samples for a specific task ID. Columns are: `job_id`, `task_id`, `geo_value`, `disease`, `model`, `_draw`, `_chain`, `_iteration`, `_variable`, `value`, and `reference_date`, following the [`{tidybayes}`](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
+    - `samples_<task_id>.parquet`: Raw model samples for a specific task ID. See [`process_samples()`](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/sample_processing_functions.html).
   - `summarized_quantiles/`: Contains summarized quantile data for all tasks in the job.
-    - `summarized_<task_id>.parquet`: Summarized quantiles for a specific task ID.  Columns are: `job_id`, `task_id`, `geo_value`, `disease`, `model`, `value`, `_lower`, `_upper`, `_width`, `_point`, `_interval`, and `reference_date`, following the [`{tidybayes}`](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
+    - `summarized_<task_id>.parquet`: Summarized quantiles for a specific task ID.  See [`process_quantiles()`](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/sample_processing_functions.html).
   - `diagnostics/`: Contains model fit diagnostics for all tasks in the job.
     - `diagnostic_<task_id>.parquet`: Diagnostics relevant for a specific task ID. Columns are: `diagnostic`, `value`, `job_id`, `task_id`, `geo_value`, `disease`, and `model`.
   - `tasks/`: Contains one folder per task. These are primarily for manual review rather than automated processing.
@@ -99,14 +99,6 @@ Human-readable files (e.g. logs, model fit objects) are stored together by task.
 We use the `{EpiNow2}` model to correct for reporting delays in the observed time series data.
 For more details about the model, see the vignette for [`EpiNow2::estimate_infections()`](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html).
 In particular, the section on [dealing with truncation](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html#truncation) may be helpful.
-
-
-In our outputs, we include the following quantities:
-
-1. `stan_name`: What the quantity is
-1. `stan_name`: What the quantity is
-1. `stan_name`: What the quantity is
-1. `stan_name`: What the quantity is
 
 ## Running the pipeline
 
