@@ -298,5 +298,5 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     diagnostics = diagnostics
   )
 
-  return(TRUE)
+  TRUE
 }

@@ -45,7 +45,7 @@ apply_exclusions <- function(cases, exclusions) {
 
   cli::cli_alert_info("{.val {sum(is.na(df[['confirm']]))}} exclusions applied")
 
-  return(df)
+  df
 }
 
 #' Read exclusions from an external file
@@ -100,5 +100,5 @@ read_exclusions <- function(path) {
 
   cli::cli_alert_success("Exclusions file read")
 
-  return(df)
+  df
 }

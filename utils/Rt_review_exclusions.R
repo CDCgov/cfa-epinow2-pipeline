@@ -40,7 +40,7 @@ read_process_excel_func <- function(
       "report_date", "state", "state_abb", "pathogen", "review_1_decision",
       "reviewer_2_decision", "final_decision", "drop_dates"
     )
-  return(df)
+  df
 }
 
 

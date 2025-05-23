@@ -171,5 +171,5 @@ read_data <- function(data_path,
   }
 
   cli::cli_alert_success("Read {nrow(df)} rows from {.path {data_path}}")
-  return(df)
+  df
 }

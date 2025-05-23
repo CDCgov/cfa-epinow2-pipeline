@@ -222,7 +222,7 @@ extract_draws_from_fit <- function(fit) {
   ) |>
     data.table::as.data.table()
 
-  return(list(stan_draws = stan_draws, fact_table = fact_table))
+  list(stan_draws = stan_draws, fact_table = fact_table)
 }
 
 #' Post-process and merge posterior draws with a fact table.
@@ -320,7 +320,7 @@ post_process_and_merge <- function(
   data.table::set(merged_dt, j = "model", value = factor(model))
   data.table::set(merged_dt, j = "disease", value = factor(disease))
 
-  return(merged_dt)
+  merged_dt
 }
 
 #' Process posterior samples from a Stan fit object (raw draws).
@@ -351,7 +351,7 @@ process_samples <- function(fit, geo_value, model, disease) {
     model,
     disease
   )
-  return(raw_processed_output)
+  raw_processed_output
 }
 
 #' @rdname sample_processing_functions

@@ -150,7 +150,7 @@ fetch_blob_container <- function(container_name) {
 
   cli::cli_alert_success("Authenticated connection to {.var {container_name}}")
 
-  return(container)
+  container
 }
 
 #' Fetch Azure credential from environment variable
@@ -175,5 +175,5 @@ fetch_credential_from_env_var <- function(env_var) {
     )
   }
 
-  return(credential)
+  credential
 }
