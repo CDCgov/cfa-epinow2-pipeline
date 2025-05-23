@@ -81,7 +81,7 @@ Human-readable files (e.g. logs, model fit objects) are stored together by task.
 ```
 
 - `<output>/`: Base output directory e.g. `/` in a Docker container or another specified path.
-- `job_<job_id>/`: A directory named after the job ID, containing all related outputs. All tasks for a job are grouped here.
+- `<job_id>/`: A directory named after the job ID, containing all related outputs. All tasks for a job are grouped here.
   - `raw_samples/`: Contains raw sample files for all tasks in the job.
     - `samples_<task_id>.parquet`: Raw model samples for a specific task ID. Columns are: `job_id`, `task_id`, `geo_value`, `disease`, `model`, `_draw`, `_chain`, `_iteration`, `_variable`, `value`, and `reference_date`, following the [`{tidybayes}`](https://mjskay.github.io/tidybayes/articles/tidybayes.html) specification.
   - `summarized_quantiles/`: Contains summarized quantile data for all tasks in the job.
