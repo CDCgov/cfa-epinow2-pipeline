@@ -299,9 +299,9 @@ check_returned_pmf <- function(
 #' Format PMFs for EpiNow2
 #'
 #' Opinionated wrappers around [EpiNow2::generation_time_opts()],
-#' [EpiNow2::delay_opts()], or [EpiNow2::dist_spec()] which format the generation
-#' interval, delay, or right truncation parameters as an object ready for input
-#' to `EpiNow2`.
+#' [EpiNow2::delay_opts()], or [EpiNow2::dist_spec()] which format the
+#' generation interval, delay, or right truncation parameters as an object ready
+#' for input to `EpiNow2`.
 #'
 #' Delays or right truncation are optional and can be skipped by passing `pmf =
 #' NA`.
