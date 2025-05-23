@@ -60,33 +60,34 @@ def main(
     reference_date_time_span: Annotated[
         str,
         typer.Option(
-            help=(
-                "A string representing the time span of data passed to each model. In the data, the final reference date
-                will be equal to the model-specific report date, and the earliest reference date will be determined by the"
-                " time span. This should be formatted following the conventions of polars"
-                " `.dt.offset_by()`. Usually, this will be a string like '8w' or '1d' (for 8 weeks"
-                " or 1 day)."
-            ),
+            help="""
+                A string representing the time span of data passed to each model.
+                In the data, the final reference date will be equal to the
+                model-specific report date, and the earliest reference date will
+                be determined by the time span. This should be formatted following
+                the conventions of polars `.dt.offset_by()`. Usually, this will
+                be a string like '8w' or '1d' (for 8 weeks or 1 day).
+                """,
             show_default=False,
         ),
     ],
     data_container: Annotated[
         str,
         typer.Option(
-            help=(
-                "The name of the blob storage container for input data. "
-                "Usually 'nssp-etl'"
-            ),
+            help="""
+                The name of the blob storage container for input data.
+                Usually 'nssp-etl'
+                """,
             show_default=False,
         ),
     ],
     backfill_name: Annotated[
         str,
         typer.Option(
-            help=(
-                "Name of the backfill run. This will be used to generate the job IDs for each"
-                "report date in the format `<backfill_name>_<report_date>`."
-            ),
+            help="""
+                Name of the backfill run. This will be used to generate the job IDs for each
+                report date in the format `<backfill_name>_<report_date>`.
+                """,
             show_default=False,
         ),
     ],
@@ -100,43 +101,43 @@ def main(
     str_as_of_dates: Annotated[
         str,
         typer.Option(
-            help=(
-                "The parameter as-of dates. Default is to match the report dates. "
-                "Otherwise, a comma separated list of dates in ISO format. "
-            )
+            help="""
+                The parameter as-of dates. Default is to match the report dates.
+                Otherwise, a comma separated list of dates in ISO format.
+                """,
         ),
     ] = "match_report_dates",
     data_paths_template: Annotated[
         str | None,
         typer.Option(
-            help=(
-                "Use this option over --str-data-paths most of the time. "
-                "A string representing the f-string template for data paths. "
-                "The '{}' section will be replaced with the report date "
-                "for each report date. This is most useful when pulling from the NSSP gold "
-                "data. For example, 'gold/{}.parquet' would become 'gold/2025-01-01.parquet' "
-                "for the report date 2025-01-01. "
-                "Cannot be used in conjunction with the --data-paths option."
-            ),
+            help="""
+                Use this option over --str-data-paths most of the time.
+                A string representing the f-string template for data paths.
+                The '{}' section will be replaced with the report date
+                for each report date. This is most useful when pulling from the NSSP gold
+                data. For example, 'gold/{}.parquet' would become 'gold/2025-01-01.parquet'
+                for the report date 2025-01-01.
+                Cannot be used in conjunction with the --data-paths option.
+                """,
         ),
     ] = None,
     str_data_paths: Annotated[
         str | None,
         typer.Option(
-            help=(
-                "Comma separated paths to the data. One path for each report date. "
-                "If the data is in blob, these should be the names of the blobs. "
-                "Cannot be used in conjunction with the --report-date-fstring option."
-            ),
+            help="""
+                Comma separated paths to the data. One path for each report date.
+                If the data is in blob, these should be the names of the blobs.
+                Cannot be used in conjunction with the --report-date-fstring option.
+                """,
         ),
     ] = None,
     task_exclusions: Annotated[
         str | None,
         typer.Option(
-            help=(
-                "Comma separated state:disease pairs."
-                " Will be applied to all report dates."
-            )
+            help="""
+                Comma separated state:disease pairs.
+                Will be applied to all report dates.
+                """,
         ),
     ] = None,
     config_only: Annotated[
@@ -145,10 +146,10 @@ def main(
     image_name: Annotated[
         str | None,
         typer.Option(
-            help=(
-                "The name of the container image (and tag) to use for the job. "
-                "This should be in the format 'registry/image:tag'."
-            ),
+            help="""
+                The name of the container image (and tag) to use for the job.
+                This should be in the format 'registry/image:tag'.
+                """,
             show_default=False,
         ),
     ] = None,
