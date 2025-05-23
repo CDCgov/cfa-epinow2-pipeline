@@ -114,7 +114,7 @@ In our outputs, we include the following quantities:
 
 The [`Makefile`](Makefile) may be used to build containers and run the pipeline locally using:
 
-1. `make deps` builds a container image with all the dependencies required to build the R package.
+1. `make up` builds a container image with all the dependencies required to build the R package.
 1. `make build` builds the R package.
 1. `make interactive` launches the image in interactive mode.
 
@@ -125,7 +125,7 @@ These targets depend on the environment variables:
 
 The default repository is cfaprdbatchcr.azurecr.io.
 
-<!--- Don't we need to do `make deps` first? --->
+<!--- Don't we need to do `make up` first? --->
 For example, to build a dependency image using `podman` and the `latest` tag:
 
 ```bash
