@@ -2,7 +2,7 @@
 
 ## Features
 
-* Move batch autoscale text file
+* Remove duplicate batch autoscale text file
 * Add automated check that docs are up to date
 * Replace remaining self-hosted runner workflows with ubuntu-latest
 * Fix mismatch between R code and documentation
