@@ -42,8 +42,8 @@ This package implements functions for:
     - Paths to data files are specified via the config.
 1. [**Parameters**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#parameter): Loads validated generation interval, delay interval, and right truncation distributions from from the CFA data lake or from a local environment and formats them for use in `{EpiNow2}`.
 1. [**Model run**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#pipeline): Manages R environment to run `{EpiNow2}` from a fixed random seed for both `{EpiNow2}` initialization and Stan sampling.
-1. [**Outputs**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#write-output): Processes `{EpiNow2}` model fits to a standardized flat output format.
-    - In the pipeline, full model fits are saved as `.rds` files, as well as via this flat output format (in parquet).
+1. [**Outputs**](https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#write-output): Processes `{EpiNow2}` model fits to standardized posterior sample and quantile parquet files.
+    - In the pipeline, the full model fits are also saved as `.rds` files (alongside these processed outputs).
 1. **Metadata**: Extracts and saves metadata on the model run alongside model outputs.
 
 The [`{cli}`](https://github.com/r-lib/cli) package is used for detailed R-style logging throughout.
