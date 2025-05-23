@@ -51,7 +51,7 @@ The [`{cli}`](https://github.com/r-lib/cli) package is used for detailed R-style
 ## Output format
 
 This package standardizes `{EpiNow2}` outputs into samples and summary tables, saving them along with metadata and logs in a consistent directory structure.
-Outputs feed into downstream post-processing (e.g. plotting, scoring, analysis) pipelines.
+Outputs feed into a downstream post-processing pipeline (for e.g. plotting, scoring, and further analysis).
 
 ### Structure
 
