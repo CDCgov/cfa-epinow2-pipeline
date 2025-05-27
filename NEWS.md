@@ -2,6 +2,7 @@
 
 ## Features
 
+* Update runner action version
 * Update version of deploy action
 * Update github checkout action from V2 to V4
 * Setting up dependabot yaml file
