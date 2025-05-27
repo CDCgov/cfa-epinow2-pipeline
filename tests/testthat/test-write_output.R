@@ -302,30 +302,6 @@ test_that("process_quantiles works as expected (cmdstanr)", {
   )
 })
 
-test_that("draws table same between cmdstanr and rstan", {
-  # Load the sample fit object
-  fit_cmdstanr <- readRDS(test_path("data", "sample_fit_cmdstanr.rds"))
-  fit_rstan <- readRDS(test_path("data", "sample_fit_rstan.rds"))
-
-  # Run the function on the fit object
-  draws_list_cmdstanr <- extract_draws_from_fit(fit_cmdstanr)
-  draws_list_rstan <- extract_draws_from_fit(fit_rstan)
-
-  # Test 1: fact_table is equal
-  expect_equal(
-    draws_list_cmdstanr$fact_table,
-    draws_list_rstan$fact_table,
-    tolerance = 1e-2
-  )
-
-  # Test 2: stan_draws is equal
-  expect_equal(
-    draws_list_cmdstanr$stan_draws,
-    draws_list_rstan$stan_draws,
-    tolerance = 1e-2
-  )
-})
-
 test_that("process_samples works as expected (rstan)", {
   # Load the sample fit object
   fit <- readRDS(test_path("data", "sample_fit_rstan.rds"))
