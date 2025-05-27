@@ -100,7 +100,7 @@ We use the `{EpiNow2}` model to correct for reporting delays in the observed tim
 For more details about the model, see the vignette for [`EpiNow2::estimate_infections()`](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html).
 In particular, the section on [dealing with truncation](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html#truncation) may be helpful.
 
-We return the following quantities (as samples or summaries):
+We return the following `{EpiNow2}` Stan model quantities (as samples and summaries):
 
 1. `reports[t]`: Expected nowcasted case count. Processed as `expected_nowcast_cases`.
 1. `imputed_reports[t]`: Posterior-predicted nowcasted case count. [Generated](https://github.com/epiforecasts/EpiNow2/blob/4ec087b37cd85b572cb4daa8b4f177bf85f0a84a/inst/stan/estimate_infections.stan#L281-L290) by applying Poisson or negative binomial noise to the expected nowcasted case count. Processed as `pp_nowcast_cases`.
