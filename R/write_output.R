@@ -3,7 +3,7 @@
 #' Processes the model fit, extracts samples and quantiles,
 #' and writes them to the appropriate directories.
 #'
-#' @param fit An EpiNow2 fit object with posterior estimates.
+#' @param fit An `EpiNow2` fit object with posterior estimates.
 #' @param samples A data.table as returned by [process_samples()]
 #' @param summaries A data.table as returned by [process_quantiles()]
 #' @param metadata List. Additional metadata to be included in the output. The
@@ -231,7 +231,7 @@ extract_draws_from_fit <- function(fit) {
 #' date-time-parameter combinations. It also standardizes parameter names and
 #' renames key columns.
 #'
-#' @param fit An EpiNow2 fit object with posterior estimates.
+#' @inheritParams write_model_outputs
 #' @param draws A data.table of posterior draws (either raw or summarized).
 #' @param fact_table A data.table of unique date-time-parameter combinations.
 #'
@@ -328,10 +328,10 @@ post_process_and_merge <- function(
 #'
 #' Extracts raw posterior samples from a Stan fit object and post-processes
 #' them, including merging with a fact table and standardizing the parameter
-#' names. If calling `process_quantiles()` the 50% and 95% intervals are
-#' returned in `{tidybayes}` format.
+#' names. If calling `[process_quantiles()]` the 50% and 95% intervals are
+#' returned in `tidybayes` format.
 #'
-#' @param fit An EpiNow2 fit object with posterior estimates.
+#' @inheritParams write_model_outputs
 #' @inheritParams Config
 #'
 #' @return A data.table of posterior draws or quantiles, merged and processed.
