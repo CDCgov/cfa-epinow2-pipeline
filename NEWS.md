@@ -2,6 +2,7 @@
 
 ## Features
 
+* Update runner action version
 * Remove duplicate batch autoscale text file
 * Improve consistency in docs
 * Update version of deploy action
