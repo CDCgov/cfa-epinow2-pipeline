@@ -2,6 +2,10 @@
 
 ## Features
 
+* Update version of deploy action
+* Update github checkout action from V2 to V4
+* Setting up dependabot yaml file
+* Remove out-of-date demo folder
 * Add automated check that docs are up to date
 * Rewrite README for simplification and clarity
 * Replace remaining self-hosted runner workflows with ubuntu-latest
