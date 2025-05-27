@@ -100,6 +100,14 @@ We use the `{EpiNow2}` model to correct for reporting delays in the observed tim
 For more details about the model, see the vignette for [`EpiNow2::estimate_infections()`](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html).
 In particular, the section on [dealing with truncation](https://epiforecasts.io/EpiNow2/articles/estimate_infections.html#truncation) may be helpful.
 
+We return the following quantities (as samples or summaries):
+
+1. `reports[t]`: Expected nowcasted case count. Processed as `expected_nowcast_cases`.
+1. `imputed_reports[t]`: Posterior-predicted nowcasted case count. [Generated](https://github.com/epiforecasts/EpiNow2/blob/4ec087b37cd85b572cb4daa8b4f177bf85f0a84a/inst/stan/estimate_infections.stan#L281-L290) by applying Poisson or negative binomial noise to the expected nowcasted case count. Processed as `pp_nowcast_cases`.
+1. `obs_reports[t]`: Expected right-truncated case count. [Generated](https://github.com/epiforecasts/EpiNow2/blob/4ec087b37cd85b572cb4daa8b4f177bf85f0a84a/inst/stan/estimate_infections.stan#L169-L185) by truncating the expected nowcasted case count. Processed as `expected_obs_cases`.
+1. `R[t]`: The time-varying effective reproduction number. Processed as `Rt`.
+1. `r[t]` The instantaneous growth rate at time $t$. Processed as `growth_rate`.
+
 ## Running the pipeline
 
 ### Locally
