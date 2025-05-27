@@ -1,7 +1,7 @@
 #' Download if specified
 #'
 #' @param blob_path The name of the blob to download
-#' @param blob_storage_container The name of the container to donwload from
+#' @param blob_storage_container The name of the container to download from
 #' @param dir The directory to which to write the downloaded file
 #' @return The path of the file
 #' @family azure

@@ -1,7 +1,7 @@
 #' Read in disease process parameters from an external file or files
 #'
 #' @param generation_interval_path,delay_interval_path,right_truncation_path
-#'   Path to a local file with the parameter PMF. See [read_interval_pmf] for
+#'   Path to a local file with the parameter PMF. See [read_interval_pmf()] for
 #'   details on the file schema. The parameters can be in the same file or a
 #'   different file.
 #' @param as_of_date Use the parameters that were used in production on this
@@ -298,18 +298,18 @@ check_returned_pmf <- function(
 
 #' Format PMFs for EpiNow2
 #'
-#' Opinionated wrappers around EpiNow2::generation_time_opts(),
-#' EpiNow2::delay_opts(), or EpiNow2::NonParametric() that format generation
-#' interval, delay, or right truncation parameters as an object ready for input
-#' to EpiNow2.
+#' Opinionated wrappers around [EpiNow2::generation_time_opts()],
+#' [EpiNow2::delay_opts()], or [EpiNow2::dist_spec()] which format the
+#' generation interval, delay, or right truncation parameters as an object ready
+#' for input to `EpiNow2`.
 #'
 #' Delays or right truncation are optional and can be skipped by passing `pmf =
 #' NA`.
 #'
-#' @param pmf As returned by [CFAEpiNow2Pipeline::read_disease_parameters()]. A
-#'   PMF vector or an NA, if not applying the PMF to the model fit.
+#' @param pmf As returned by [read_disease_parameters()]. A PMF vector or an NA,
+#' if not applying the PMF to the model fit.
 #'
-#' @return An EpiNow2::*_opts() formatted object or NA with a message
+#' @return An `EpiNow2::*_opts()` formatted object or NA with a message
 #' @family parameters
 #' @name opts_formatter
 NULL
