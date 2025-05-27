@@ -24,8 +24,8 @@ suppress_ess_warning <- function(.f, pattern = NULL) {
   }
 }
 
-orch_pipeline_clean <- suppress_ess_warning(orchestrate_pipeline)
-exec_mod_log_clean <- suppress_ess_warning(execute_model_logic)
+orch_pipeline_quiet <- suppress_ess_warning(orchestrate_pipeline)
+exec_mod_log_quiet <- suppress_ess_warning(execute_model_logic)
 
 test_that("Bad config throws warning and returns failure", {
   # Arrange
@@ -60,7 +60,7 @@ test_that("Pipeline run produces expected outputs with NO exclusions", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- orch_pipeline_clean(
+  pipeline_success <- orch_pipeline_quiet(
     config_path = config_path,
     input_dir = input_dir,
     output_dir = output_dir
@@ -84,7 +84,7 @@ test_that("Pipeline run produces expected outputs with exclusions", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- orch_pipeline_clean(
+  pipeline_success <- orch_pipeline_quiet(
     config_path = config_path,
     input_dir = input_dir,
     output_dir = output_dir
