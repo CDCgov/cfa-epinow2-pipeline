@@ -2,18 +2,17 @@
 % Please edit documentation in R/fit_model.R
 \name{fit_model}
 \alias{fit_model}
-\title{Fit an EpiNow2 model}
+\title{Fit an \code{EpiNow2} model}
 \usage{
 fit_model(data, parameters, seed, horizon, priors, sampler_opts)
 }
 \arguments{
 \item{data, }{in the format returned by \code{\link[=read_data]{read_data()}}}
 
-\item{parameters}{As returned from
-\code{\link[=read_disease_parameters]{read_disease_parameters()}}}
+\item{parameters}{As returned from \code{\link[=read_disease_parameters]{read_disease_parameters()}}}
 
-\item{seed}{The random seed, used for both initialization by EpiNow2 in R and
-sampling in Stan}
+\item{seed}{The random seed, used for both initialization by \code{EpiNow2} in R
+and sampling in Stan}
 
 \item{horizon}{The number of days, as an integer, to forecast}
 
@@ -29,7 +28,7 @@ A fitted model object of class \code{epinow} or, if model fitting fails,
 an NA is returned with a warning
 }
 \description{
-Fit an EpiNow2 model
+Fit an \code{EpiNow2} model
 }
 \seealso{
 Other pipeline: 

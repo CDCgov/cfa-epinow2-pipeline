@@ -9,7 +9,7 @@ download_if_specified(blob_path, blob_storage_container, dir)
 \arguments{
 \item{blob_path}{The name of the blob to download}
 
-\item{blob_storage_container}{The name of the container to donwload from}
+\item{blob_storage_container}{The name of the container to download from}
 
 \item{dir}{The directory to which to write the downloaded file}
 }
