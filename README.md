@@ -145,7 +145,6 @@ Then, to run interactively:
 make interactive TAG=latest
 ```
 
-<!--- Is it not a problem that we use docker now after making the image with podman --->
 This is equivalent to running:
 
 ```bash
@@ -155,7 +154,6 @@ docker run \
 ```
 
 **Note**: The default value of `CNTR_MGR` is `docker`!
-This means that...
 
 ### Automation
 
