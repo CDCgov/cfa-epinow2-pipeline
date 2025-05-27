@@ -12,7 +12,7 @@
 There is an Azure Container App Job (CAJ) named cfa-epinow2-pipeline that can be used to execute jobs. The CAJ has been preconfigured with the necessary service principal environment variables to simplify execution.
 This script is intended to be a drop-in replacement for the existing azure/job.py script, but using CAJ for compute instead of Azure Batch and not requiring a pool_id.
 
-View logs and metrics here: https://portal.azure.com/#@ext.cdc.gov/resource/subscriptions/ef340bd6-2809-4635-b18b-7e6583a8803b/resourceGroups/EXT-EDAV-CFA-PRD/providers/Microsoft.App/jobs/cfa-epinow2-pipeline/containers 
+View logs and metrics here: https://portal.azure.com/#@ext.cdc.gov/resource/subscriptions/ef340bd6-2809-4635-b18b-7e6583a8803b/resourceGroups/EXT-EDAV-CFA-PRD/providers/Microsoft.App/jobs/cfa-epinow2-pipeline/containers
 
 Here is a KQL query for monitoring invocations for a job by replacing 'Rt-estimation-2025-04-29T19-07-39.001200+00-00' with your job_id:
 ContainerAppSystemLogs_CL
@@ -134,4 +134,3 @@ if __name__ == "__main__":
         config_container=config_container,
         job_id=job_id,
     )
-
