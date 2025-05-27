@@ -2,6 +2,7 @@
 
 ## Features
 
+* Remove duplicate batch autoscale text file
 * Improve consistency in docs
 * Update version of deploy action
 * Update github checkout action from V2 to V4
