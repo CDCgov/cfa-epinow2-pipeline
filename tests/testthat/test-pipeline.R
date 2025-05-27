@@ -112,7 +112,7 @@ test_that("Process pipeline produces expected outputs and returns success", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- exec_mod_log_clean(
+  pipeline_success <- exec_mod_log_quiet(
     config = config,
     input_dir = input_dir,
     output_dir = output_dir
@@ -145,7 +145,7 @@ test_that("Runs on config from generator as of 2024-11-26", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- exec_mod_log_clean(
+  pipeline_success <- exec_mod_log_quiet(
     config = config,
     output_dir = output_dir,
     input_dir = input_dir
