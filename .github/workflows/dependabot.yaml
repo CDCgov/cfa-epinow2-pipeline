@@ -10,3 +10,6 @@
      schedule:
        interval: "monthly"
      update-types: "minor"
+     ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
