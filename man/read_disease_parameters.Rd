@@ -15,7 +15,7 @@ read_disease_parameters(
 )
 }
 \arguments{
-\item{generation_interval_path, delay_interval_path, right_truncation_path}{Path to a local file with the parameter PMF. See \link{read_interval_pmf} for
+\item{generation_interval_path, delay_interval_path, right_truncation_path}{Path to a local file with the parameter PMF. See \code{\link[=read_interval_pmf]{read_interval_pmf()}} for
 details on the file schema. The parameters can be in the same file or a
 different file.}
 

@@ -2,6 +2,7 @@
 
 ## Features
 
+* Improve consistency in docs
 * Update version of deploy action
 * Update github checkout action from V2 to V4
 * Setting up dependabot yaml file
