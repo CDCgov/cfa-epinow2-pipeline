@@ -2,6 +2,7 @@
 
 ## Features
 
+* Add commands for generating backfill configurations.
 * Remove duplicate batch autoscale text file
 * Improve consistency in docs
 * Update version of deploy action

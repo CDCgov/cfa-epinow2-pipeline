@@ -72,8 +72,8 @@ RightTruncation <- S7::new_class( # nolint: object_name_linter
 #' Parameters Class
 #'
 #' Holds all parameter-related configurations for the pipeline.
-#' @param as_of_date A string representing the as-of date. Formatted as
-#' "YYYY-MM-DD".
+#' @param as_of_date A string representing the date as-of which to fetch the
+#' parameters for. Formatted as "YYYY-MM-DD".
 #' @param generation_interval An instance of `GenerationInterval` class.
 #' @param delay_interval An instance of `DelayInterval` class.
 #' @param right_truncation An instance of `RightTruncation` class.
