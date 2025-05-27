@@ -16,7 +16,7 @@ write_model_outputs(
 )
 }
 \arguments{
-\item{fit}{An EpiNow2 fit object with posterior estimates.}
+\item{fit}{An \code{EpiNow2} fit object with posterior estimates.}
 
 \item{samples}{A data.table as returned by \code{\link[=process_samples]{process_samples()}}}
 
