@@ -114,10 +114,10 @@ We return the following `{EpiNow2}` Stan model quantities (as samples and summar
 
 The [`Makefile`](Makefile) may be used to build containers and run the pipeline locally using:
 
-1. `make pull` logs into the Azure Container Registry and pulls the latest container image.
-1. `make up` builds a container image with all the dependencies required to build the R package.
-1. `make build` builds the R package.
 1. `make up` starts an interactive bash shell in the container with project directory mounted.
+2. `make build` builds the Docker image with a given tag.
+3. `make pull` logs in to Azure Container Registry and pulls the latest container image.
+3. `make run` runs the pipeline from R interactively in the container.
 
 These targets depend on the environment variables:
 
