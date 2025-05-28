@@ -140,11 +140,10 @@ test_that("write_output_dir_structure generates dirs", {
 
 test_that("process_quantiles works as expected (rstan)", {
   # Load the sample fit object
-  fit <- readRDS(test_path("data", "sample_fit_rstan.rds"))
 
   # Run the function on the fit object
   result <- process_quantiles(
-    fit,
+    fit_rstan,
     "test_geo",
     "test_model",
     "test_disease",
@@ -205,7 +204,7 @@ test_that("process_quantiles works as expected (rstan)", {
   # Test 6: Verify the left join: all `time` values from
   # `stan_draws` should exist in the result
   stan_draws <- tidybayes::gather_draws(
-    fit[["estimates"]][["fit"]],
+    fit_rstan[["estimates"]][["fit"]],
     imputed_reports[time],
     obs_reports[time],
     R[time],
@@ -221,12 +220,10 @@ test_that("process_quantiles works as expected (rstan)", {
 })
 
 test_that("process_quantiles works as expected (cmdstanr)", {
-  # Load the sample fit object
-  fit <- readRDS(test_path("data", "sample_fit_cmdstanr.rds"))
 
   # Run the function on the fit object
   result <- process_quantiles(
-    fit,
+    fit_cmdstanr,
     "test_geo",
     "test_model",
     "test_disease",
@@ -287,7 +284,7 @@ test_that("process_quantiles works as expected (cmdstanr)", {
   # Test 6: Verify the left join: all `time` values from
   # `stan_draws` should exist in the result
   stan_draws <- tidybayes::gather_draws(
-    fit[["estimates"]][["fit"]],
+    fit_cmdstanr[["estimates"]][["fit"]],
     imputed_reports[time],
     obs_reports[time],
     R[time],
@@ -303,11 +300,9 @@ test_that("process_quantiles works as expected (cmdstanr)", {
 })
 
 test_that("process_samples works as expected (rstan)", {
-  # Load the sample fit object
-  fit <- readRDS(test_path("data", "sample_fit_rstan.rds"))
 
   # Run the function on the fit object
-  result <- process_samples(fit, "test_geo", "test_model", "test_disease")
+  result <- process_samples(fit_rstan, "test_geo", "test_model", "test_disease")
 
   # Test 1: Check if the result is a data.table
   expect_true(
@@ -361,7 +356,7 @@ test_that("process_samples works as expected (rstan)", {
   # Test 6: Verify the left join: all `time` values from
   # `stan_draws` should exist in the result
   stan_draws <- tidybayes::gather_draws(
-    fit[["estimates"]][["fit"]],
+    fit_rstan[["estimates"]][["fit"]],
     imputed_reports[time],
     obs_reports[time],
     R[time],
