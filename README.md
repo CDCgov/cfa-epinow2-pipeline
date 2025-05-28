@@ -114,9 +114,10 @@ We return the following `{EpiNow2}` Stan model quantities (as samples and summar
 
 The [`Makefile`](Makefile) may be used to build containers and run the pipeline locally using:
 
+1. `make pull` logs into the Azure Container Registry and pulls the latest container image.
 1. `make up` builds a container image with all the dependencies required to build the R package.
 1. `make build` builds the R package.
-1. `make interactive` launches the image in interactive mode.
+1. `make up` starts an interactive bash shell in the container with project directory mounted.
 
 These targets depend on the environment variables:
 
@@ -125,7 +126,6 @@ These targets depend on the environment variables:
 
 The default repository is cfaprdbatchcr.azurecr.io.
 
-<!--- Don't we need to do `make up` first? --->
 For example, to build a dependency image using `podman` and the `latest` tag:
 
 ```bash
@@ -142,7 +142,7 @@ podman build -t cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline \
 Then, to run interactively:
 
 ```bash
-make interactive TAG=latest
+make up TAG=latest
 ```
 
 This is equivalent to running:
