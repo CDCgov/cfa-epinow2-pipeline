@@ -80,7 +80,7 @@ test_that("Fitted model extracts diagnostics (cmdstanr)", {
   )
   DBI::dbDisconnect(con)
 
-  fit_path <- test_path("data", "sample_fit_cmdstanr_v2.rds")
+  fit_path <- test_path("data", "sample_fit_cmdstanr.rds")
   fit <- readRDS(fit_path)
   # Expected diagnostics
   expected <- data.frame(
