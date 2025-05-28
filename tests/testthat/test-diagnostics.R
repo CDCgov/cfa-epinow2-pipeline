@@ -131,37 +131,7 @@ test_that("Fitted model extracts diagnostics (cmdstanr)", {
 })
 
 test_that("Mean accept state approximately equal between cmdstanr and rstan", {
-  # Parameters
-  parameters <- list(
-    generation_interval = sir_gt_pmf,
-    delay_interval = c(0.2, 0.8),
-    right_truncation = c(0.7, 0.3)
-  )
-  # Arrange
-  data_path <- test_path("data/test_data.parquet")
-  con <- DBI::dbConnect(duckdb::duckdb())
-  data <- DBI::dbGetQuery(con, "
-                         SELECT
-                           report_date,
-                           reference_date,
-                           disease,
-                           geo_value AS state_abb,
-                           value AS confirm
-                         FROM read_parquet(?)
-                         WHERE reference_date <= '2023-01-22'",
-    params = list(data_path)
-  )
-  DBI::dbDisconnect(con)
-
-  priors <- list(
-    rt = list(
-      mean = 1,
-      sd = 0.2
-    ),
-    gp = list(
-      alpha_sd = 0.05
-    )
-  )
+  
   # Sampler
   sampler_opts <- list(
     cores = 1,
