@@ -174,8 +174,14 @@ test_that("process_quantiles works as expected (rstan)", {
   expect_setequal(
     colnames(result), expected_columns
   )
+  # Test 3A: Check if the result contains the correct number of processed_obs_data
+  obs_data <- result %>% dplyr::filter(`_variable` == "processed_obs_data") 
+  expected_num_rows <- 5
+  expect_equal(nrow(obs_data), expected_num_rows,
+    info = paste("The result should have", expected_num_rows, "rows")
+    )
 
-  # Test 3: Check if the result contains the correct number of rows
+  # Test 3B: Check if the result contains the correct number of rows
   expected_num_rows <- 55
   expect_equal(nrow(result), expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
@@ -254,8 +260,14 @@ test_that("process_quantiles works as expected (cmdstanr)", {
   expect_setequal(
     colnames(result), expected_columns
   )
+  # Test 3A: Check if the result contains the correct number of processed_obs_data
+  obs_data <- result %>% dplyr::filter(`_variable` == "processed_obs_data") 
+  expected_num_rows <- 5
+  expect_equal(nrow(obs_data), expected_num_rows,
+    info = paste("The result should have", expected_num_rows, "rows")
+    )
 
-  # Test 3: Check if the result contains the correct number of rows
+  # Test 3B: Check if the result contains the correct number of rows
   expected_num_rows <- 55
   expect_equal(nrow(result), expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
