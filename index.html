@@ -51,15 +51,31 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>A lightweight wrapper around <a href="https://github.com/epiforecasts/EpiNow2" class="external-link">{EpiNow2}</a> to add functionality for deployment in Azure Batch. It holds some helper functions to interface with Azure services, convert input data to EpiNow2’s expected input format, and save expected outputs. It also adds metadata and logging.</p>
-<p>This package is meant to enhance the <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> package to support deployment in CFA’s computational environment. The code is open source as part of CFA’s goals around development, but it may not be possible to support extensions to additional environments.</p>
+<p>This lightweight wrapper around <a href="https://github.com/epiforecasts/EpiNow2" class="external-link">{EpiNow2}</a> adds functionality for deployment in Azure Batch. It includes helper functions to:</p>
+<ul>
+<li>Interface with Azure services</li>
+<li>Convert input data to the expected <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> input format</li>
+<li>Save outputs in standardized formats</li>
+<li>Add logging and metadata</li>
+</ul>
+<p>The package supports deployment in CFA’s computational environment. While the code is open source, it may not easily support use outside CFA’s infrastructure.</p>
+</div>
+<div class="section level2">
+<h2 id="project-admin">Project Admin<a class="anchor" aria-label="anchor" href="#project-admin"></a>
+</h2>
+<ul>
+<li><a href="https://github.com/micahwiesner67" class="external-link">@micahwiesner67</a></li>
+<li><a href="https://github.com/zsusswein" class="external-link">@zsusswein</a></li>
+<li><a href="https://github.com/natemcintosh" class="external-link">@natemcintosh</a></li>
+<li><a href="https://github.com/kgostic" class="external-link">@kgostic</a></li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="structure">Structure<a class="anchor" aria-label="anchor" href="#structure"></a>
 </h2>
-<p>This repository holds an R package, <a href="https://cdcgov.github.io/cfa-epinow2-pipeline/">CFAEpiNow2Pipeline</a>. The repository is structured as a standard R package. All PRs pass R CMD check as part of the CI suite as a pre-condition for merge to main. If interested in contributing see <code>CONTRIBUTING.md</code> and open an issue or a PR.</p>
-<p>The package contains contains some adapters and wrappers to run to run many independent <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> models in parallel with cloud resources. The adapters read from datasets with standardized formats and produces outputs as flat files with standard names. The wrapper functions enhance <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> functionality to support cloud deployments, adding more logging and standardizing the R environment.</p>
-<p>This package standardizes the interface to <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> for purposes of deployment in a pipeline as part of a suite of models. This package does <em>not</em> manage pipeline deployment or kickoff, data extraction and transformation, or model output visualization.</p>
+<p>This repository contains the R package <a href="https://cdcgov.github.io/cfa-epinow2-pipeline/">CFAEpiNow2Pipeline</a> and follows standard R package conventions. All PRs must pass <code>R CMD CHECK</code> as part of the CI pipeline before merging to main. See <code>CONTRIBUTING.md</code> for details on contributing to the repository.</p>
+<p>The package provides adapters and wrappers to run multiple <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> models in parallel using cloud resources. It reads from a standardized input format and writes to a standardized output format. It enhances <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> to support cloud deployments, further logging, and standardization of the R environment.</p>
+<p>Note: This package standardizes how <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> integrates into CFA’s pipeline but does <em>not</em> manage postprocessing, data extraction and transformation, or output visualization.</p>
 </div>
 <div class="section level2">
 <h2 id="components">Components<a class="anchor" aria-label="anchor" href="#components"></a>
@@ -67,37 +83,41 @@
 <p>This package implements functions for:</p>
 <ol style="list-style-type: decimal">
 <li>
-<strong>Configuration</strong>: Loads parameters such as prior distributions, generation intervals, and right-truncation from a config in a standard schema, with the path to this config passed at runtime.
+<a href="https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#configuration"><strong>Configuration</strong></a>: Loads parameters (e.g. prior distributions, generation intervals, right truncation) from a config passed at runtime.
 <ul>
-<li>The config is validated at runtime, but config generation is specified at pipeline runtime and not part of this package.</li>
+<li>Configs are validated at runtime, but generated in <a href="https://github.com/CDCgov/cfa-config-generator" class="external-link">a separate microservice</a>.</li>
 </ul>
 </li>
 <li>
-<strong>Data load</strong>: Loads data from the CFA data lake or from a local environment and translates it from CFA’s schema to the expected <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> format.
+<a href="https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#azure"><strong>Data load</strong></a>: Reads input data from the CFA data lake or from a local environment and formats it for input to <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a>.
 <ul>
-<li>Paths are specified via the config</li>
+<li>Paths to data files are specified via the config.</li>
 </ul>
 </li>
 <li>
-<strong>Parameters</strong>: Loads pre-specified and -validated generation interval, delay interval, and right-truncation distributions from from the CFA data lake or from a local environment and formats them for use in EpiNow2.</li>
+<a href="https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#parameter"><strong>Parameters</strong></a>: Loads validated generation interval, delay interval, and right truncation distributions from from the CFA data lake or from a local environment and formats them for use in <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a>.</li>
 <li>
-<strong>Model run</strong>: Manages R environment to run <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> from a fixed random seed, both for <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> initialization and Stan sampling.</li>
+<a href="https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#pipeline"><strong>Model run</strong></a>: Manages R environment to run <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> from a fixed random seed for both <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> initialization and Stan sampling.</li>
 <li>
-<strong>Outputs</strong>: Provides functionality to process <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> model fits to a standardised flat output format (as described in forthcoming link). Within the pipeline, model fits are saved both in their entirety as <code>.rds</code> files, as well as via this flat output format.</li>
+<a href="https://cdcgov.github.io/cfa-epinow2-pipeline/reference/index.html#write-output"><strong>Outputs</strong></a>: Processes <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> model fits to standardized posterior sample and quantile parquet files.
+<ul>
+<li>In the pipeline, the full model fits are also saved as <code>.rds</code> files (alongside these processed outputs).</li>
+</ul>
+</li>
 <li>
-<strong>Logging</strong>: Steps in the pipeline have comprehensive R-style logging, with the the <a href="https://github.com/r-lib/cli" class="external-link">cli</a> package</li>
-<li>
-<strong>Metadata</strong>: Extract comprehensive metadata on the model run and store alongside outputs</li>
+<strong>Metadata</strong>: Extracts and saves metadata on the model run alongside model outputs.</li>
 </ol>
+<p>The <a href="https://github.com/r-lib/cli" class="external-link"><code>{cli}</code></a> package is used for detailed R-style logging throughout.</p>
 </div>
 <div class="section level2">
 <h2 id="output-format">Output format<a class="anchor" aria-label="anchor" href="#output-format"></a>
 </h2>
-<p>The end goals of this package is to standardize the raw outputs from EpiNow2 into samples and summaries tables, and to write those standardized outputs, along with relevant metadata, logs, etc. to a standard directory structure. Once in CFA’s standard format, the outputs can be passed into a separate pipeline that handles post-processing (e.g. plotting, scoring, analysis) of Rt estimates from several different Rt estimation models.</p>
+<p>This package standardizes <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> outputs into samples and summary tables, saving them along with metadata and logs in a consistent directory structure. Outputs feed into a downstream post-processing pipeline (for e.g. plotting, scoring, and further analysis).</p>
 <div class="section level3">
-<h3 id="directories">Directories<a class="anchor" aria-label="anchor" href="#directories"></a>
+<h3 id="structure-1">Structure<a class="anchor" aria-label="anchor" href="#structure-1"></a>
 </h3>
-<p>The nested partitioning structure of the outputs is designed to facilitate both automated processes and manual investigation: files are organized by job and task IDs, allowing for efficient file operations using glob patterns, while also maintaining a clear hierarchy that aids human users in navigating to specific results or logs. Files meant primarily for machine-readable consumption (i.e., draws, summaries, diagnostics) are structured together to make globbing easier. Files meant primarily for human investigation (i.e., logs, model fit object) are grouped together by task to facilitate manual workflows. In this workflow, task IDs correspond to location specific model runs (which are independent of one another) and the jobid refers to a unique model run and disease. For example, a production job should contain task IDs for each of the 50 states and the US, but a job submitted for testing or experimentation might contain a smaller number of tasks/locations.</p>
+<p>Outputs are organized by job and task IDs to support automated and manual review workflows. The job ID refers to a collection of models run together. The task ID corresponds to a specific model instance.</p>
+<p>Primarily machine-readable files (e.g., draws, summaries, diagnostics) are stored together for globbing. Human-readable files (e.g. logs, model fit objects) are stored together by task.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="op">&lt;</span>output<span class="op">&gt;</span>/</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="ex">├──</span> job_<span class="op">&lt;</span>job_id<span class="op">&gt;</span>/</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="ex">│</span>   ├── raw_samples/</span>
@@ -115,90 +135,121 @@
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="ex">│</span>   ├── job_metadata.json</span></code></pre></div>
 <ul>
 <li>
-<code>&lt;output&gt;/</code>: The base output directory. This could, for example, be <code>/</code> in a Docker container or dedicated output directory.</li>
+<code>&lt;output&gt;/</code>: Base output directory e.g. <code>/</code> in a Docker container or another specified path.</li>
 <li>
-<code>job_&lt;job_id&gt;/</code>: A directory named after the specific job identifier, containing all outputs related to that job. All tasks within a job share this same top-level directory.
+<code>&lt;job_id&gt;/</code>: A directory named after the job ID, containing all related outputs. All tasks for a job are grouped here.
 <ul>
 <li>
-<code>raw_samples/</code>: A subdirectory within each job folder that holds the raw sample files from all tasks in the job. Task-specific <em>draws</em> output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+<code>raw_samples/</code>: Contains raw sample files for all tasks in the job.
 <ul>
 <li>
-<code>samples_&lt;task_id&gt;.parquet</code>: A file containing raw samples from the model, associated with a particular task identifier. This file has columns <code>job_id</code>, <code>task_id</code>, <code>geo_value</code>, <code>disease</code>, <code>model</code>, <code>_draw</code>, <code>_chain</code>, <code>_iteration</code>, <code>_variable</code>, <code>value</code>, and <code>reference_date</code>. These variables follow the <a href="https://mjskay.github.io/tidybayes/articles/tidybayes.html" class="external-link">{tidybayes}</a> specification.</li>
+<code>samples_&lt;task_id&gt;.parquet</code>: Raw model samples for a specific task ID. See <a href="https://cdcgov.github.io/cfa-epinow2-pipeline/reference/sample_processing_functions.html"><code>process_samples()</code></a>.</li>
 </ul>
 </li>
 <li>
-<code>summarized_quantiles/</code>: A subdirectory for storing summarized quantile data. Task-specific <em>summarized</em> output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+<code>summarized_quantiles/</code>: Contains summarized quantile data for all tasks in the job.
 <ul>
 <li>
-<code>summarized_&lt;task_id&gt;.parquet</code>: A file with summarized quantiles relevant to a specific task identifier. This file has columns <code>job_id</code>, <code>task_id</code>, <code>geo_value</code>, <code>disease</code>, <code>model</code>, <code>value</code>, <code>_lower</code>, <code>_upper</code>, <code>_width</code>, <code>_point</code>, <code>_interval</code>, and <code>reference_date</code>. These variables follow the <a href="https://mjskay.github.io/tidybayes/articles/tidybayes.html" class="external-link">{tidybayes}</a> specification.</li>
+<code>summarized_&lt;task_id&gt;.parquet</code>: Summarized quantiles for a specific task ID. See <a href="https://cdcgov.github.io/cfa-epinow2-pipeline/reference/sample_processing_functions.html"><code>process_quantiles()</code></a>.</li>
 </ul>
 </li>
 <li>
-<code>diagnostics/</code>: A subdirectory for storing model fit diagnostics. Task-specific <em>diagnostic</em> output files all live together in this directory to enable easy globbing over task-partitioned outputs.
+<code>diagnostics/</code>: Contains model fit diagnostics for all tasks in the job.
 <ul>
 <li>
-<code>diagnostic_&lt;task_id&gt;.parquet</code>: A file with diagnostics relevant to a specific task identifier. This file has columns <code>diagnostic</code>, <code>value</code>, <code>job_id</code>, <code>task_id</code>, <code>geo_value</code>, <code>disease</code>, and <code>model</code>.</li>
+<code>diagnostic_&lt;task_id&gt;.parquet</code>: Diagnostics relevant for a specific task ID. Columns are: <code>diagnostic</code>, <code>value</code>, <code>job_id</code>, <code>task_id</code>, <code>geo_value</code>, <code>disease</code>, and <code>model</code>.</li>
 </ul>
 </li>
 <li>
-<code>tasks/</code>: This directory contains subdirectories for each task within a job. These are files that are less likely to require globbing from the data lake than manual investigation, so are stored togehter.
+<code>tasks/</code>: Contains one folder per task. These are primarily for manual review rather than automated processing.
 <ul>
 <li>
-<code>task_&lt;task_id&gt;/</code>: Each task has its own folder identified by the task ID, which includes several files:
+<code>task_&lt;task_id&gt;/</code>: A task-specific folder with:
 <ul>
 <li>
-<code>model.rds</code>: An RDS file storing the EpiNow2 model object fit to the data.</li>
+<code>model.rds</code>: The fitted <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> model object.</li>
 <li>
-<code>metadata.json</code>: A JSON file containing additional metadata about the model run for this task.</li>
+<code>metadata.json</code>: Metadata about the task run.</li>
 <li>
-<code>stdout.log</code>: A log file capturing standard output from the model run process.</li>
-<li>
-<code>stderr.log</code>: A log file capturing standard error output from the model run process.</li>
-</ul>
-</li>
+<code>logs.txt</code>: Log file of all stdout and stderr.</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>
-<code>job_metadata.json</code>: A JSON file located in the root of each job’s directory, providing metadata about the entire job.</li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="model-estimated-quantities">Model-estimated quantities<a class="anchor" aria-label="anchor" href="#model-estimated-quantities"></a>
 </h3>
-<p>EpiNow2 estimates the incident cases <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>y</mi><mo accent="true">̂</mo></mover><mrow><mi>t</mi><mi>d</mi></mrow></msub><annotation encoding="application/x-tex">\hat y_{td}</annotation></semantics></math> for timepoint <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mn>1</mn><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><mi>T</mi><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">t \in \{1, ..., T\}</annotation></semantics></math> and delay <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>∈</mo><mo stretchy="false" form="prefix">{</mo><mn>1</mn><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><mi>D</mi><mo stretchy="false" form="postfix">}</mo></mrow><annotation encoding="application/x-tex">d \in \{1, ..., D\}</annotation></semantics></math> where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>D</mi><mo>≤</mo><mi>T</mi></mrow><annotation encoding="application/x-tex">D \le T</annotation></semantics></math>. In the single vintage we’re providing to EpiNow2, the delay <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math> moves inversely to timepoints, so <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>=</mo><mi>T</mi><mo>−</mo><mi>t</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">d = T - t + 1</annotation></semantics></math>.</p>
-<p>The observed data vector of length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mrow><mi>t</mi><mi>d</mi></mrow></msub><mo>∈</mo><mi>W</mi></mrow><annotation encoding="application/x-tex">y_{td} \in W</annotation></semantics></math>. We supply a nowcasting correction PMF <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ν</mi><annotation encoding="application/x-tex">\nu</annotation></semantics></math> for the last <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math> timepoints where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ν</mi><mi>d</mi></msub><mo>∈</mo><mrow><mo stretchy="true" form="prefix">[</mo><mn>0</mn><mo>,</mo><mn>1</mn><mo stretchy="true" form="postfix">]</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">\nu_d \in [0, 1],</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>d</mi><mo>=</mo><mn>1</mn></mrow><mi>D</mi></msubsup><msub><mi>ν</mi><mi>d</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sum_{d=1}^D\nu_d = 1</annotation></semantics></math>. We also have some priors <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math>.</p>
-<p>We use EpiNow2’s generative model <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo>,</mo><mi>ν</mi><mo>,</mo><mi>Θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(y, \nu, \Theta)</annotation></semantics></math>.</p>
-<p>EpiNow2 is a forward model that produces an expected nowcasted case count for each <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math> pair: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>γ</mi><mo accent="true">̂</mo></mover><mrow><mi>t</mi><mi>d</mi></mrow></msub><annotation encoding="application/x-tex">\hat \gamma_{td}</annotation></semantics></math>. It applies the nowcasting correction <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ν</mi><annotation encoding="application/x-tex">\nu</annotation></semantics></math> to the last <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>D</mi><annotation encoding="application/x-tex">D</annotation></semantics></math> timepoints of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>γ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat \gamma</annotation></semantics></math> to produce the expected right-truncated case count <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>y</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat y</annotation></semantics></math>. Note that these <em>expected</em> case counts (with and without right-truncation) don’t have observation noise included.</p>
-<p>We can apply negative binomial observation noise using EpiNow2’s estimate of the negative binomial overdispersion parameter <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>ϕ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat \phi</annotation></semantics></math> and the expected case counts. The posterior predictive distributions of nowcasted case counts is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>γ</mi><mo accent="true">̃</mo></mover><mo>∼</mo><mtext mathvariant="normal">NB</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>γ</mi><mo accent="true">̂</mo></mover><mo>,</mo><mover><mi>ϕ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\tilde \gamma \sim \text{NB}(\hat \gamma, \hat \phi)</annotation></semantics></math>. The posterior predicted right-truncated case count is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>y</mi><mo accent="true">̃</mo></mover><mo>∼</mo><mtext mathvariant="normal">NB</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mover><mi>y</mi><mo accent="true">̂</mo></mover><mo>,</mo><mover><mi>ϕ</mi><mo accent="true">̂</mo></mover><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\tilde y \sim \text{NB}(\hat y, \hat \phi)</annotation></semantics></math>.</p>
-<p>We can get 3 of these 4 quantities pre-generated from the returned EpiNow2 Stan model:</p>
-<ul>
+<p>We use the <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> model to correct for reporting delays in the observed time series data. For more details about the model, see the vignette for <a href="https://epiforecasts.io/EpiNow2/articles/estimate_infections.html" class="external-link"><code>EpiNow2::estimate_infections()</code></a>. In particular, the section on <a href="https://epiforecasts.io/EpiNow2/articles/estimate_infections.html#truncation" class="external-link">dealing with truncation</a> may be helpful.</p>
+<p>We return the following <a href="https://epiforecasts.io/EpiNow2/" class="external-link">EpiNow2</a> Stan model quantities (as samples and summaries):</p>
+<ol style="list-style-type: decimal">
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>γ</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat \gamma</annotation></semantics></math>: The expected nowcasted case count is <code>reports[t]</code>
-</li>
+<code>reports[t]</code>: Expected nowcasted case count. Processed as <code>expected_nowcast_cases</code>.</li>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>y</mi><mo accent="true">̂</mo></mover><annotation encoding="application/x-tex">\hat y</annotation></semantics></math>: The expected right-truncated case count is <code>obs_reports[t]</code>
-</li>
+<code>imputed_reports[t]</code>: Posterior-predicted nowcasted case count. <a href="https://github.com/epiforecasts/EpiNow2/blob/4ec087b37cd85b572cb4daa8b4f177bf85f0a84a/inst/stan/estimate_infections.stan#L281-L290" class="external-link">Generated</a> by applying Poisson or negative binomial noise to the expected nowcasted case count. Processed as <code>pp_nowcast_cases</code>.</li>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>γ</mi><mo accent="true">̃</mo></mover><annotation encoding="application/x-tex">\tilde \gamma</annotation></semantics></math>: The posterior-predicted nowcasted case count is <code>imputed_reports[t]</code>
-</li>
+<code>obs_reports[t]</code>: Expected right-truncated case count. <a href="https://github.com/epiforecasts/EpiNow2/blob/4ec087b37cd85b572cb4daa8b4f177bf85f0a84a/inst/stan/estimate_infections.stan#L169-L185" class="external-link">Generated</a> by truncating the expected nowcasted case count. Processed as <code>expected_obs_cases</code>.</li>
 <li>
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>y</mi><mo accent="true">̃</mo></mover><annotation encoding="application/x-tex">\tilde y</annotation></semantics></math>: The posterior-predicted right-truncated case count isn’t returned by EpiNow2.</li>
-</ul>
-<p>We also save the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>R</mi><mi>t</mi></msub><annotation encoding="application/x-tex">R_t</annotation></semantics></math> estimate at time <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> and the intrinsic growth rate at time <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.</p>
+<code>R[t]</code>: The time-varying effective reproduction number. Processed as <code>Rt</code>.</li>
+<li>
+<code>r[t]</code> The instantaneous growth rate at time <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>. Processed as <code>growth_rate</code>.</li>
+</ol>
 </div>
 </div>
 <div class="section level2">
-<h2 id="automation">Automation<a class="anchor" aria-label="anchor" href="#automation"></a>
+<h2 id="running-the-pipeline">Running the pipeline<a class="anchor" aria-label="anchor" href="#running-the-pipeline"></a>
 </h2>
-<p>The project has multiple GitHub Actions workflows to automate the CI/CD process. Notably, the <a href=".github/workflows/containers-and-az-pool.yaml"><code>containers-and-az-pool.yaml</code></a> workflow executes jobs using a self-hosted runner, and serves as an entry point for starting the pipeline. The workflow has the following three jobs:</p>
-<ul>
-<li><p><strong>Build dependencies image</strong> (<code>build-dependencies-image</code>): Creates a container image with all the dependencies required to build the R package. This job is cached to speed up the process, so it only updates the image if the <a href="Dockerfile-dependencies"><code>Dockerfile-dependencies</code></a> or the <a href="DESCRIPTION"><code>DESCRIPTION</code></a> file changes. The image is pushed to the Azure container registry: <code>cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:[branch name]</code>.</p></li>
-<li><p><strong>Build pipeline image</strong> (<code>build-pipeline-image</code>): Using the previous image as a base, this job installs the R package and pushes the image to the Azure container registry: <code>cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:[branch name]</code>.</p></li>
-<li><p><strong>Create Batch Pool and Submit Jobs</strong> (<code>batch-pool</code>): This final job creates a new Azure batch pool with id <code>cfa-epinow2-pool-[branch name]</code> if it doesn’t already exist. Additionally, if the commit message contains the string “<code>[delete pool]</code>”, the pool is deleted.</p></li>
-</ul>
-<p>Both container tags and pool ids are based on the branch name, making it compatible with having multiple pipelines running simultaneously. The pool creation depends on Azure’s Python SDK (see the file <a href=".github/scripts/create_pool.py">.github/scripts/create_pool.py</a>), with the necessary credentials listed in a string at the top of the script.</p>
+<div class="section level3">
+<h3 id="locally">Locally<a class="anchor" aria-label="anchor" href="#locally"></a>
+</h3>
+<p>The <a href="Makefile"><code>Makefile</code></a> may be used to build containers and run the pipeline locally using:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>make up</code> starts an interactive bash shell in the container with project directory mounted.</li>
+<li>
+<code>make build</code> builds the Docker image with a given tag.</li>
+<li>
+<code>make pull</code> logs in to Azure Container Registry and pulls the latest container image.</li>
+<li>
+<code>make run</code> runs the pipeline from R interactively in the container.</li>
+</ol>
+<p>These targets depend on the environment variables:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>CNTR_MGR</code>: The container manager. Defaults to <code>docker</code>. The option <code>podman</code> is also allowed if present locally on the system. Note that there can be some incompatibilities between <code>podman</code> and Azure services.</li>
+<li>
+<code>TAG</code>: The tag used for the image. Defaults to the name of the branch.</li>
+</ol>
+<p>The default repository is cfaprdbatchcr.azurecr.io.</p>
+<p>For example, to build a dependency image using <code>podman</code> and the <code>latest</code> tag:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">make</span> build CNTR_MGR=podman TAG=latest</span></code></pre></div>
+<p>This is equivalent to running:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">podman</span> build <span class="at">-t</span> cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>    <span class="at">--build-arg</span> TAG=latest <span class="at">-f</span> Dockerfile</span></code></pre></div>
+<p>Then, to run interactively:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">make</span> up TAG=latest</span></code></pre></div>
+<p>This is equivalent to running:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>    <span class="at">-v</span>/wherever/your/pwd/is:/cfa-epinow2-pipeline <span class="at">-it</span> <span class="at">--rm</span> <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:latest</span></code></pre></div>
+<p><strong>Note</strong>: The default value of <code>CNTR_MGR</code> is <code>docker</code>!</p>
+</div>
+<div class="section level3">
+<h3 id="automation">Automation<a class="anchor" aria-label="anchor" href="#automation"></a>
+</h3>
+<p>The project uses GitHub Actions workflows to automate CI/CD. Notably, the <a href=".github/workflows/containers-and-az-pool.yaml"><code>containers-and-az-pool.yaml</code></a> workflow executes jobs using a self-hosted runner, and serves as an entry point for starting the pipeline. The workflow has the following three jobs:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Build dependencies image</strong> (<code>build-dependencies-image</code>): Creates a container image with all the dependencies required to build the R package. This job is cached to speed up the process, so it only updates the image if the <a href="Dockerfile-dependencies"><code>Dockerfile-dependencies</code></a> or the <a href="DESCRIPTION"><code>DESCRIPTION</code></a> file changes. The image is pushed to the Azure container registry: <code>cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline-dependencies:[branch name]</code>.</li>
+<li>
+<strong>Build pipeline image</strong> (<code>build-pipeline-image</code>): Using the previous image as a base, this job installs the R package and pushes the image to the Azure container registry: <code>cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:[branch name]</code>.</li>
+<li>
+<strong>Create Batch Pool and Submit Jobs</strong> (<code>batch-pool</code>): This final job creates a new Azure batch pool with ID <code>cfa-epinow2-pool-[branch name]</code> if it doesn’t already exist. Additionally, if the commit message contains the string “<code>[delete pool]</code>”, the pool is deleted.</li>
+</ol>
+<p>Both container tags and pool IDs are based on the branch name, making it compatible with having multiple pipelines running simultaneously. The pool creation depends on Azure’s Python SDK (see the file <a href=".github/scripts/create_pool.py">.github/scripts/create_pool.py</a>), with the necessary credentials listed in a string at the top of the script.</p>
 <blockquote>
 <p>[!IMPORTANT] The CI will fail with branch names that are not valid tag names for containers. For more information, see the official Azure documentation <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry" class="external-link">here</a>.</p>
 </blockquote>
@@ -237,39 +288,6 @@ flowchart LR
 
   end</code></pre>
 </div>
-<div class="section level2">
-<h2 id="container-images">Container images<a class="anchor" aria-label="anchor" href="#container-images"></a>
-</h2>
-<p>The project includes container images for running the pipelines. Particularly, the GitHub Action workflow located in <a href=".github/workflows/containers-and-az-pool.yaml">.github/workflows/containers-and-az-pool.yaml</a> automatically builds an image based on <a href="Dockerfile">Dockerfile</a> and pushes it to Azure Container Registry. The images can also be built locally, in which case the <a href="Makefile">Makefile</a> included in the project contains the following targets:</p>
-<ul>
-<li>
-<code>make deps</code> will build the image with the required dependencies for the package.</li>
-<li>
-<code>make build</code> will build the image containing the R package.</li>
-<li>
-<code>make interactive</code> will lunch the image in interactive mode.</li>
-</ul>
-<p>All three targets depend on the environment variables <code>CNTR_MGR</code> (defults to <code>docker</code>) and <code>TAG</code> (defaults to <code>local</code>). The default repository is cfaprdbatchcr.azurecr.io. For instance, if you wanted to build the dependency image using <code>podman</code> and the <code>latest</code> tag, you can do the following:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">make</span> build CNTR_MGR=podman TAG=zs-pipeline</span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">podman</span> build <span class="at">-t</span> cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline <span class="dt">\</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>    <span class="at">--build-arg</span> TAG=zs-pipeline <span class="at">-f</span> Dockerfile</span></code></pre></div>
-<p>To run interactively, you can use the following target:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">make</span> interactive TAG=zs-pipeline</span></code></pre></div>
-<p>which is equivalent to run:</p>
-<p><strong>NOTICE docker IS THE DEFAULT CNTR_MGR</strong></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="dt">\</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>    <span class="at">-v</span>/wherever/your/pwd/is:/cfa-epinow2-pipeline <span class="at">-it</span> <span class="at">--rm</span> <span class="dt">\</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:zs-pipeline</span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="project-admin">Project Admin<a class="anchor" aria-label="anchor" href="#project-admin"></a>
-</h2>
-<ul>
-<li>@micahwiesner67</li>
-<li>@zsusswein</li>
-<li>@natemcintosh</li>
-<li>@kgostic</li>
-</ul>
 </div>
 <div class="section level2">
 <h2 id="general-disclaimer">General Disclaimer<a class="anchor" aria-label="anchor" href="#general-disclaimer"></a>
