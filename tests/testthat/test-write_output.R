@@ -183,11 +183,11 @@ test_that("process_quantiles works as expected (rstan)", {
   )
 
   # Test 3B: Check if growth_rate has 4 rows
-  growth_rate_data <- result %>% dplyr::filter(`_variable` == "growth_rate") 
+  growth_rate_data <- result %>% dplyr::filter(`_variable` == "growth_rate")
   expected_num_rows <- 4
   expect_equal(nrow(obs_data), expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
-    )
+  )
 
   # Test 3C: Check if the result contains the correct number of rows
   expected_num_rows <- 53
@@ -267,7 +267,7 @@ test_that("process_quantiles works as expected (cmdstanr)", {
   expect_setequal(
     colnames(result), expected_columns
   )
-  
+
   # Test 3A: Check if the result contains the correct number of processed_obs_data
   obs_data <- result %>% dplyr::filter(`_variable` == "processed_obs_data")
   expected_num_rows <- 5
@@ -276,11 +276,11 @@ test_that("process_quantiles works as expected (cmdstanr)", {
   )
 
   # Test 3B: Check if growth_rate has 4 rows
-  growth_rate_data <- result %>% dplyr::filter(`_variable` == "growth_rate") 
+  growth_rate_data <- result %>% dplyr::filter(`_variable` == "growth_rate")
   expected_num_rows <- 4
   expect_equal(nrow(obs_data), expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
-    )
+  )
 
   # Test 3C: Check if the result contains the correct number of rows
   expected_num_rows <- 53
