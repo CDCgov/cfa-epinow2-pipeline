@@ -1,11 +1,14 @@
 option_list <- list(
-  optparse::make_option(c("-d", "--dates"),
-    type = "character", default = gsub(
+  optparse::make_option(
+    c("-d", "--dates"),
+    type = "character",
+    default = gsub(
       "-",
       "",
       lubridate::today(tzone = "UTC")
     ),
-    help = "Reports Date in yyyymmdd format", metavar = "character"
+    help = "Reports Date in yyyymmdd format",
+    metavar = "character"
   )
 )
 opt_parser <- optparse::OptionParser(option_list = option_list)
@@ -14,21 +17,29 @@ opt <- optparse::parse_args(opt_parser)
 date_names <- opt$dates
 
 
-
 read_process_excel_func <- function(
-    sheet_name,
-    pathogen,
-    file_name,
-    report_date) {
+  sheet_name,
+  pathogen,
+  file_name,
+  report_date
+) {
   df <- readxl::read_excel(
     paste0(file_name), # path where saved
     sheet = sheet_name,
     skip = 3
   )
   colnames(df) <- c(
-    "state", "dates_affected", "observed volume", "expected volume",
-    "initial_thoughts", "state_abb", "review_1_decision", "reviewer_2_decision",
-    "final_decision", "drop_dates", "additional_reasoning"
+    "state",
+    "dates_affected",
+    "observed volume",
+    "expected volume",
+    "initial_thoughts",
+    "state_abb",
+    "review_1_decision",
+    "reviewer_2_decision",
+    "final_decision",
+    "drop_dates",
+    "additional_reasoning"
   )
   df <- data.frame(tidyr::separate_rows(df, 10, sep = "\\|")) |>
     dplyr::filter(!is.na(state)) |>
@@ -37,12 +48,17 @@ read_process_excel_func <- function(
       pathogen = pathogen
     ) |>
     dplyr::select(
-      "report_date", "state", "state_abb", "pathogen", "review_1_decision",
-      "reviewer_2_decision", "final_decision", "drop_dates"
+      "report_date",
+      "state",
+      "state_abb",
+      "pathogen",
+      "review_1_decision",
+      "reviewer_2_decision",
+      "final_decision",
+      "drop_dates"
     )
   return(df)
 }
-
 
 
 create_pt_excl_from_rt_xslx <- function(dates) {
@@ -54,11 +70,15 @@ create_pt_excl_from_rt_xslx <- function(dates) {
   )
   drv <- site$get_drive("Documents") # Set drive to Documents (vs Wiki)
   rt_review_path <- file.path(
-    "General", "02 - Predict", "Real Time Monitoring (RTM) Branch",
+    "General",
+    "02 - Predict",
+    "Real Time Monitoring (RTM) Branch",
     "Nowcasting and Natural History",
-    "Rt", "NSSP-Rt", "Rt_Review_Notes", "Review_Decisions"
+    "Rt",
+    "NSSP-Rt",
+    "Rt_Review_Notes",
+    "Review_Decisions"
   )
-
 
   for (report_date in dates) {
     fname <- paste0("Rt_Review_", report_date, ".xlsx")
@@ -92,7 +112,8 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         reference_date = lubridate::ymd(drop_dates),
         report_date = lubridate::ymd(report_date),
         geo_value = state_abb,
-        pathogen = dplyr::case_when(pathogen == "influenza" ~ "Influenza",
+        pathogen = dplyr::case_when(
+          pathogen == "influenza" ~ "Influenza",
           pathogen == "covid" ~ "COVID-19",
           .default = as.character(pathogen)
         )
@@ -129,15 +150,20 @@ create_pt_excl_from_rt_xslx <- function(dates) {
 
     #### State exclusions #####
     state_exclusions <- combined_df |>
-      dplyr::filter(final_decision %in% c(
-        "Exclude State (Data)",
-        "Exclude State (Model)",
-        "Exclude State"
-      )) |>
-      dplyr::mutate(type = dplyr::case_when(
-        final_decision == "Exclude State (Data)" ~ "Data",
-        final_decision == "Exclude State (Model)" ~ "Model"
-      )) |>
+      dplyr::filter(
+        final_decision %in%
+          c(
+            "Exclude State (Data)",
+            "Exclude State (Model)",
+            "Exclude State"
+          )
+      ) |>
+      dplyr::mutate(
+        type = dplyr::case_when(
+          final_decision == "Exclude State (Data)" ~ "Data",
+          final_decision == "Exclude State (Model)" ~ "Model"
+        )
+      ) |>
       dplyr::select(state_abb, pathogen, type)
 
     container_name <- "nssp-etl"
@@ -154,8 +180,6 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         file
       )
     )
-
-
 
     #### Temp old-pipeline csv generator#####
     # Save a version in temp folder.
@@ -175,7 +199,8 @@ create_pt_excl_from_rt_xslx <- function(dates) {
       ) |>
       dplyr::mutate(
         geo_value = tolower(geo_value),
-        pathogen = dplyr::case_when(pathogen == "Influenza" ~ "flu",
+        pathogen = dplyr::case_when(
+          pathogen == "Influenza" ~ "flu",
           pathogen == "COVID-19" ~ "covid",
           .default = as.character(pathogen)
         )

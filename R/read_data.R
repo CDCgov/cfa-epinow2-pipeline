@@ -23,12 +23,14 @@
 #'   `reference_date`, `geo_value`, `confirm`
 #' @family read_data
 #' @export
-read_data <- function(data_path,
-                      disease = c("COVID-19", "Influenza", "RSV", "test"),
-                      geo_value,
-                      report_date,
-                      max_reference_date,
-                      min_reference_date) {
+read_data <- function(
+  data_path,
+  disease = c("COVID-19", "Influenza", "RSV", "test"),
+  geo_value,
+  report_date,
+  max_reference_date,
+  min_reference_date
+) {
   rlang::arg_match(disease)
   # NOTE: this is temporary workaround until we switch to the new API. I'm not
   # sure if there's a better way to do this without a whole bunch of special
@@ -144,9 +146,7 @@ read_data <- function(data_path,
   n_rows_expected <- as.Date(max_reference_date) -
     as.Date(min_reference_date) +
     1
-  if (
-    nrow(df) != n_rows_expected
-  ) {
+  if (nrow(df) != n_rows_expected) {
     expected_dates <- seq.Date(
       from = as.Date(min_reference_date),
       to = as.Date(max_reference_date),

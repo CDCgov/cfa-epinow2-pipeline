@@ -77,18 +77,19 @@ test_that("write_model_outputs writes files and directories correctly", {
     # Check file contents are right
     con <- DBI::dbConnect(duckdb::duckdb())
     on.exit(expr = DBI::dbDisconnect(con))
-    raw_samples_data <- DBI::dbGetQuery(con,
+    raw_samples_data <- DBI::dbGetQuery(
+      con,
       "SELECT * FROM read_parquet(?)",
       params = list(samples_file)
     )
     expect_equal(raw_samples_data, mock_samples)
 
-    raw_summaries_data <- DBI::dbGetQuery(con,
+    raw_summaries_data <- DBI::dbGetQuery(
+      con,
       "SELECT * FROM read_parquet(?)",
       params = list(summarized_file)
     )
     expect_equal(raw_summaries_data, mock_summaries)
-
 
     written_metadata <- jsonlite::read_json(metadata_file)
     jsonlite::write_json(mock_metadata, "expected.json")
@@ -108,7 +109,6 @@ test_that("write_model_outputs handles errors correctly", {
   samples <- data.frame(x = 1)
   summaries <- data.frame(y = 2)
   mock_diagnostics <- list(diagnostic = "Test")
-
 
   # Expect the function to raise a warning due to the invalid directory
   withr::with_tempdir({
@@ -173,12 +173,15 @@ test_that("process_quantiles works as expected", {
     "disease"
   )
   expect_setequal(
-    colnames(result), expected_columns
+    colnames(result),
+    expected_columns
   )
 
   # Test 3: Check if the result contains the correct number of rows
   expected_num_rows <- 55
-  expect_equal(nrow(result), expected_num_rows,
+  expect_equal(
+    nrow(result),
+    expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
   )
 
@@ -193,7 +196,8 @@ test_that("process_quantiles works as expected", {
   )
   unique_parameters <- sort(unique(as.character(result[["_variable"]])))
   expect_equal(
-    unique_parameters, expected_parameters
+    unique_parameters,
+    expected_parameters
   )
 
   # Test 5: Check if there are no missing values
@@ -247,12 +251,15 @@ test_that("process_samples works as expected", {
     "disease"
   )
   expect_setequal(
-    colnames(result), expected_columns
+    colnames(result),
+    expected_columns
   )
 
   # Test 3: Check if the result contains the correct number of rows
   expected_num_rows <- 2505 # Replace with actual expected value
-  expect_equal(nrow(result), expected_num_rows,
+  expect_equal(
+    nrow(result),
+    expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
   )
 
@@ -267,7 +274,8 @@ test_that("process_samples works as expected", {
   )
   unique_parameters <- sort(unique(as.character(result[["_variable"]])))
   expect_equal(
-    unique_parameters, expected_parameters
+    unique_parameters,
+    expected_parameters
   )
 
   # Test 5: Check if there are no missing values
@@ -296,7 +304,6 @@ test_that("process_samples works as expected", {
 
 test_that("write_parquet successfully writes data to parquet", {
   # Prepare temporary file and sample data
-
 
   temp_path <- "test.parquet"
   test_data <- data.frame(
