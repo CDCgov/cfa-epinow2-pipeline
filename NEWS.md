@@ -2,6 +2,7 @@
 
 ## Features
 
+* Run `make test-batch` target locally
 * Update runner action version
 * Remove duplicate batch autoscale text file
 * Improve consistency in docs
