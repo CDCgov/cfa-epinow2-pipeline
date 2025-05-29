@@ -3,10 +3,10 @@
 library(CFAEpiNow2Pipeline)
 
 parameters <- list(
-    generation_interval = sir_gt_pmf,
-    delay_interval = c(0.2, 0.8),
-    right_truncation = c(0.7, 0.3)
-  )
+  generation_interval = sir_gt_pmf,
+  delay_interval = c(0.2, 0.8),
+  right_truncation = c(0.7, 0.3)
+)
 # Data -- 5 points only
 data_path <- test_path("data", "test_data.parquet")
 con <- DBI::dbConnect(duckdb::duckdb())
@@ -45,19 +45,19 @@ sampler_opts <- list(
 )
 
 fit_rstan <- fit_model(
-    data = data,
-    parameters = parameters,
-    seed = 12345,
-    horizon = 0,
-    priors = priors,
-    sampler = c(backend = "cmdstanr", sampler_opts)
-  )
+  data = data,
+  parameters = parameters,
+  seed = 12345,
+  horizon = 0,
+  priors = priors,
+  sampler = c(backend = "cmdstanr", sampler_opts)
+)
 
 fit_cmdstanr <- fit_model(
-    data = data,
-    parameters = parameters,
-    seed = 12345,
-    horizon = 0,
-    priors = priors,
-    sampler = c(backend = "cmdstanr", sampler_opts)
-  )
+  data = data,
+  parameters = parameters,
+  seed = 12345,
+  horizon = 0,
+  priors = priors,
+  sampler = c(backend = "cmdstanr", sampler_opts)
+)
