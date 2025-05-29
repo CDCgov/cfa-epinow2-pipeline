@@ -264,12 +264,18 @@ post_process_and_merge <- function(
     all.y = FALSE
   )
 
+  # Step 1.25: De-duplicate results
+  time_index_dt <- merged_dt %>%
+    dplyr::group_by(date) %>% 
+    dplyr::summarize(time = max(time, na.rm = TRUE))
+
   # Step 1.5 Merge as_of_cases with merged_dt to get time variable
   # time-date indexing is off by one for "r" relative to other vars, so drop it
   processed_obs_data_time <- unique(
     merge(
       processed_obs_data,
-      merged_dt[!(".variable" == "r"), c("date", "time"), with = FALSE],
+      time_index_dt[, c("date", "time"), with = FALSE], 
+      # merged_dt[!(".variable" == "r"), c("date", "time"), with = FALSE],
       by = c("date"),
       all.x = TRUE,
       all.y = FALSE
