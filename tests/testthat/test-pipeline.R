@@ -105,7 +105,8 @@ test_that("Process pipeline produces expected outputs and returns success", {
   input_dir <- "data"
   config_path <- file.path(input_dir, "sample_config_with_exclusion.json")
   config <- read_json_into_config(
-    config_path, c("exclusions", "output_container")
+    config_path,
+    c("exclusions", "output_container")
   )
   # Read from locally
   output_dir <- "pipeline_test"

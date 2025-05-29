@@ -17,14 +17,15 @@
 #' @family write_output
 #' @export
 write_model_outputs <- function(
-    fit,
-    samples,
-    summaries,
-    output_dir,
-    job_id,
-    task_id,
-    metadata = list(),
-    diagnostics) {
+  fit,
+  samples,
+  summaries,
+  output_dir,
+  job_id,
+  task_id,
+  metadata = list(),
+  diagnostics
+) {
   rlang::try_fetch(
     {
       # Create directory structure
@@ -91,8 +92,10 @@ write_model_outputs <- function(
         )
       )
       jsonlite::write_json(
-        metadata, metadata_path,
-        pretty = TRUE, auto_unbox = TRUE
+        metadata,
+        metadata_path,
+        pretty = TRUE,
+        auto_unbox = TRUE
       )
       cli::cli_alert_success("Wrote metadata to {.path {metadata_path}}")
     },
@@ -180,20 +183,28 @@ extract_draws_from_fit <- function(fit) {
   # Get the dates for `obs_reports` by pulling out the `imputed_reports`
   # dates and update the associatftimeed variable name in-place. Bind it back
   # to the original fact table to have all desired variable-date combinations.
-  data.table::set(obs_fact_table, j = "parameter", value = factor(
-    obs_fact_table[["parameter"]],
-    levels = c("imputed_reports"),
-    labels = c("obs_reports")
-  ))
-  data.table::set(reports_fact_table, j = "parameter", value = factor(
-    reports_fact_table[["parameter"]],
-    levels = c("imputed_reports"),
-    labels = c("reports")
-  ))
-
+  data.table::set(
+    obs_fact_table,
+    j = "parameter",
+    value = factor(
+      obs_fact_table[["parameter"]],
+      levels = c("imputed_reports"),
+      labels = c("obs_reports")
+    )
+  )
+  data.table::set(
+    reports_fact_table,
+    j = "parameter",
+    value = factor(
+      reports_fact_table[["parameter"]],
+      levels = c("imputed_reports"),
+      labels = c("reports")
+    )
+  )
 
   # Combine original fact_table with new 'obs_reports' rows
-  fact_table <- rbind(fact_table,
+  fact_table <- rbind(
+    fact_table,
     obs_fact_table,
     reports_fact_table,
     fill = TRUE
@@ -240,17 +251,19 @@ extract_draws_from_fit <- function(fit) {
 #' @family write_output
 #' @noRd
 post_process_and_merge <- function(
-    fit,
-    draws,
-    fact_table,
-    geo_value,
-    model,
-    disease) {
+  fit,
+  draws,
+  fact_table,
+  geo_value,
+  model,
+  disease
+) {
   # Step 0: isolate "as_of" cases from fit objec. Create constants
   processed_obs_data <- fit$estimates$observations |>
     data.table::as.data.table()
   names(processed_obs_data)[names(processed_obs_data) == "confirm"] <- ".value"
-  data.table::set(processed_obs_data,
+  data.table::set(
+    processed_obs_data,
     j = ".variable",
     value = "processed_obs_data"
   )
@@ -287,36 +300,58 @@ post_process_and_merge <- function(
   merged_dt <- data.table::setorderv(merged_dt, sort_cols)
 
   # Step 2: Standardize parameter names
-  data.table::set(merged_dt, j = ".variable", value = factor(
-    merged_dt[[".variable"]],
-    levels = c(
-      "processed_obs_data",
-      "reports",
-      "imputed_reports",
-      "obs_reports",
-      "R",
-      "r"
-    ),
-    labels = c(
-      "processed_obs_data",
-      "expected_nowcast_cases",
-      "pp_nowcast_cases",
-      "expected_obs_cases",
-      "Rt",
-      "growth_rate"
+  data.table::set(
+    merged_dt,
+    j = ".variable",
+    value = factor(
+      merged_dt[[".variable"]],
+      levels = c(
+        "processed_obs_data",
+        "reports",
+        "imputed_reports",
+        "obs_reports",
+        "R",
+        "r"
+      ),
+      labels = c(
+        "processed_obs_data",
+        "expected_nowcast_cases",
+        "pp_nowcast_cases",
+        "expected_obs_cases",
+        "Rt",
+        "growth_rate"
+      )
     )
-  ))
+  )
 
   # Step 3: Rename columns as necessary
   data.table::setnames(
     merged_dt,
     old = c(
-      ".draw", ".chain", ".variable", ".value", ".lower", ".upper", ".width",
-      ".point", ".interval", "date", ".iteration"
+      ".draw",
+      ".chain",
+      ".variable",
+      ".value",
+      ".lower",
+      ".upper",
+      ".width",
+      ".point",
+      ".interval",
+      "date",
+      ".iteration"
     ),
     new = c(
-      "_draw", "_chain", "_variable", "value", "_lower", "_upper", "_width",
-      "_point", "_interval", "reference_date", "_iteration"
+      "_draw",
+      "_chain",
+      "_variable",
+      "value",
+      "_lower",
+      "_upper",
+      "_width",
+      "_point",
+      "_interval",
+      "reference_date",
+      "_iteration"
     ),
     # If using summaries, skip draws-specific names
     skip_absent = TRUE
@@ -364,11 +399,12 @@ process_samples <- function(fit, geo_value, model, disease) {
 #' @rdname sample_processing_functions
 #' @export
 process_quantiles <- function(
-    fit,
-    geo_value,
-    model,
-    disease,
-    quantile_width) {
+  fit,
+  geo_value,
+  model,
+  disease,
+  quantile_width
+) {
   # Step 1: Extract the draws
   draws_list <- extract_draws_from_fit(fit)
 
