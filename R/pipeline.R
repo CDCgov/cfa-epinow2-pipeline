@@ -70,10 +70,12 @@
 #' @rdname pipeline
 #' @family pipeline
 #' @export
-orchestrate_pipeline <- function(config_path,
-                                 config_container = NULL,
-                                 input_dir = "/input",
-                                 output_dir = "/output") {
+orchestrate_pipeline <- function(
+  config_path,
+  config_container = NULL,
+  input_dir = "/input",
+  output_dir = "/output"
+) {
   config <- rlang::try_fetch(
     {
       config_path <- download_if_specified(
@@ -82,14 +84,12 @@ orchestrate_pipeline <- function(config_path,
         dir = input_dir
       )
       read_json_into_config(
-        config_path, c("exclusions", "output_container")
+        config_path,
+        c("exclusions", "output_container")
       )
     },
     error = function(con) {
-      cli::cli_warn("Bad config file",
-        parent = con,
-        class = "Bad_config"
-      )
+      cli::cli_warn("Bad config file", parent = con, class = "Bad_config")
       FALSE
     }
   )
@@ -135,10 +135,7 @@ orchestrate_pipeline <- function(config_path,
   pipeline_success <- rlang::try_fetch(
     execute_model_logic(config, input_dir = input_dir, output_dir = output_dir),
     error = function(con) {
-      cli::cli_warn("Pipeline run failed",
-        parent = con,
-        class = "Run_failed"
-      )
+      cli::cli_warn("Pipeline run failed", parent = con, class = "Run_failed")
       FALSE
     }
   )

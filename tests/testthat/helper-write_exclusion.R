@@ -7,6 +7,9 @@ write_exclusions <- function() {
   )
   con <- DBI::dbConnect(duckdb::duckdb())
   duckdb::duckdb_register(con, "exclusions", exclusions)
-  DBI::dbExecute(con, "COPY (SELECT * FROM exclusions)
-                     TO 'data/test_exclusions.csv'")
+  DBI::dbExecute(
+    con,
+    "COPY (SELECT * FROM exclusions)
+                     TO 'data/test_exclusions.csv'"
+  )
 }

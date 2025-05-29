@@ -194,7 +194,6 @@ low_case_count_diagnostic <- function(df) {
     na.rm = TRUE
   )
 
-
   cli::cli_alert_info(c(
     "Ultimate week spans {format(ult_week_min, '%a, %Y-%m-%d')} ",
     "to {format(ult_week_max, '%a, %Y-%m-%d')} with ",

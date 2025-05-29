@@ -1,8 +1,9 @@
 expect_pipeline_files_written <- function(
-    output_dir,
-    job_id,
-    task_id,
-    check_logs = TRUE) {
+  output_dir,
+  job_id,
+  task_id,
+  check_logs = TRUE
+) {
   ########
   # Assert output files all exist
   job_path <- file.path(output_dir, job_id)
