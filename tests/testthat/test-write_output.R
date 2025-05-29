@@ -186,7 +186,7 @@ test_that("process_quantiles works as expected (rstan)", {
   # Test 3B: Check if growth_rate has 8 rows
   growth_rate_data <- result %>% dplyr::filter(`_variable` == "growth_rate")
   expected_growth_num_rows <- 8
-  expect_equal(nrow(obs_data), expected_growth_num_rows,
+  expect_equal(nrow(growth_rate_data), expected_growth_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
   )
 
@@ -281,7 +281,7 @@ test_that("process_quantiles works as expected (cmdstanr)", {
   # Test 3B: Check if growth_rate has 8 rows
   growth_rate_data <- result %>% dplyr::filter(`_variable` == "growth_rate")
   expected_growth_num_rows <- 8
-  expect_equal(nrow(obs_data), expected_growth_num_rows,
+  expect_equal(nrow(growth_rate_data), expected_growth_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
   )
 
