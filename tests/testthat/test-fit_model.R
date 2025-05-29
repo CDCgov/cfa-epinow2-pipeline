@@ -1,6 +1,11 @@
-test_that("Minimal model fit all params runs", {
+test_that("Minimal model fit all params runs (rstan)", {
 
-  expect_s3_class(fit, "epinow")
+  expect_s3_class(fit_rstan, "epinow")
+})
+
+test_that("Minimal model fit all params runs (cmdstanr)", {
+
+  expect_s3_class(fit_cmdstanr, "epinow")
 })
 
 test_that("Minimal model fit same between rstan or cmdstanr backend", {
