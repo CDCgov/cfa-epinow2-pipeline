@@ -76,8 +76,8 @@ push: ## Push the tagged image to the container registry
 test-batch: ## Run GitHub Actions workflow and then job.py for testing on Azure Batch
 	uv run azure/generate_configs.py \
 		--disease="COVID-19,Influenza" \
-		--state=all \
-		--output-container=nssp-rt-v2 \
+		--state=NY \
+		--output-container=nssp-rt-testing \
 		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
 	uv run --env-file .env \
