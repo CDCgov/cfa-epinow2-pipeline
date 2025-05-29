@@ -81,13 +81,12 @@ push: ## Push the tagged image to the container registry
 	$(CNTR_MGR) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 test-batch: ## Run GitHub Actions workflow and then job.py for testing on Azure Batch
-	gh workflow run \
-	  -R cdcgov/cfa-config-generator run-workload.yaml  \
-	  -r dev-add_backend_mpw \
-	  -f disease=all \
-	  -f state=NY \
-	  -f output_container="nssp-rt-testing" \
-	  -f job_id=$(JOB)
+	uv run azure/generate_configs.py \
+		--disease="COVID-19,Influenza" \
+		--state=NY \
+		--output-container=nssp-rt-testing \
+		--job-id=$(JOB) \
+		--report-date-str=$(REPORT_DATE)
 	uv run --env-file .env \
 		azure/job.py \
 			--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
