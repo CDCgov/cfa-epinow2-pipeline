@@ -2,6 +2,7 @@
 
 ## Features
 
+* Added `make run-caj` for using a CAJ instead of Batch
 * Update runner action version
 * Remove duplicate batch autoscale text file
 * Improve consistency in docs
