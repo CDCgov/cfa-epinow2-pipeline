@@ -175,11 +175,11 @@ test_that("process_quantiles works as expected (rstan)", {
     colnames(result), expected_columns
   )
   # Test 3A: Check if the result contains the correct number of processed_obs_data
-  obs_data <- result %>% dplyr::filter(`_variable` == "processed_obs_data") 
+  obs_data <- result %>% dplyr::filter(`_variable` == "processed_obs_data")
   expected_num_rows <- 5
   expect_equal(nrow(obs_data), expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
-    )
+  )
 
   # Test 3B: Check if the result contains the correct number of rows
   expected_num_rows <- 55
@@ -226,7 +226,6 @@ test_that("process_quantiles works as expected (rstan)", {
 })
 
 test_that("process_quantiles works as expected (cmdstanr)", {
-
   # Run the function on the fit object
   result <- process_quantiles(
     fit_cmdstanr,
@@ -261,11 +260,11 @@ test_that("process_quantiles works as expected (cmdstanr)", {
     colnames(result), expected_columns
   )
   # Test 3A: Check if the result contains the correct number of processed_obs_data
-  obs_data <- result %>% dplyr::filter(`_variable` == "processed_obs_data") 
+  obs_data <- result %>% dplyr::filter(`_variable` == "processed_obs_data")
   expected_num_rows <- 5
   expect_equal(nrow(obs_data), expected_num_rows,
     info = paste("The result should have", expected_num_rows, "rows")
-    )
+  )
 
   # Test 3B: Check if the result contains the correct number of rows
   expected_num_rows <- 55
@@ -312,7 +311,6 @@ test_that("process_quantiles works as expected (cmdstanr)", {
 })
 
 test_that("process_samples works as expected (rstan)", {
-
   # Run the function on the fit object
   result <- process_samples(fit_rstan, "test_geo", "test_model", "test_disease")
 

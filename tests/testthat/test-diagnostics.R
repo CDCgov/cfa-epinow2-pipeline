@@ -131,7 +131,6 @@ test_that("Fitted model extracts diagnostics (cmdstanr)", {
 })
 
 test_that("Mean accept state approximately equal between cmdstanr and rstan", {
-  
   # Sampler
   sampler_opts <- list(
     cores = 1,

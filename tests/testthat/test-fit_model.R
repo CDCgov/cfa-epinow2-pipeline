@@ -1,5 +1,4 @@
 test_that("Minimal model fit all params runs", {
-  
   fit <- fit_model(
     data = data,
     parameters = parameters,
@@ -13,7 +12,6 @@ test_that("Minimal model fit all params runs", {
 })
 
 test_that("Minimal model fit same between rstan or cmdstanr backend", {
-
   test_measure <- "Expected change in daily reports"
   rstan_rt <- fit_rstan$summary[fit_rstan$summary$measure == test_measure, ]
   cmdstanr_rt <- fit_cmdstanr$summary[fit_cmdstanr$summary$measure == test_measure, ]
@@ -22,7 +20,6 @@ test_that("Minimal model fit same between rstan or cmdstanr backend", {
 })
 
 test_that("Minimal model fit with no right trunc or delay runs", {
-  
   expect_s3_class(fit_cmdstanr, "epinow")
 })
 
