@@ -1,17 +1,17 @@
 test_that("Minimal model fit all params runs (rstan)", {
-
   expect_s3_class(fit_rstan, "epinow")
 })
 
 test_that("Minimal model fit all params runs (cmdstanr)", {
-
   expect_s3_class(fit_cmdstanr, "epinow")
 })
 
 test_that("Minimal model fit same between rstan or cmdstanr backend", {
   test_measure <- "Expected change in daily reports"
   rstan_rt <- fit_rstan$summary[fit_rstan$summary$measure == test_measure, ]
-  cmdstanr_rt <- fit_cmdstanr$summary[fit_cmdstanr$summary$measure == test_measure, ]
+  cmdstanr_rt <- fit_cmdstanr$summary[
+    fit_cmdstanr$summary$measure == test_measure,
+  ]
 
   expect_equal(rstan_rt$estimate, cmdstanr_rt$estimate)
 })

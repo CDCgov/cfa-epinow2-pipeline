@@ -69,7 +69,9 @@ test_that("Fitted model extracts diagnostics (cmdstanr)", {
   # Arrange
   data_path <- test_path("data/test_data.parquet")
   con <- DBI::dbConnect(duckdb::duckdb())
-  data <- DBI::dbGetQuery(con, "
+  data <- DBI::dbGetQuery(
+    con,
+    "
                          SELECT
                            report_date,
                            reference_date,
