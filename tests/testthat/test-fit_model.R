@@ -1,5 +1,5 @@
 test_that("Minimal model fit all params runs", {
-  # fit object created in setup.R 
+  # fit object created in setup.R
   expect_s3_class(fit, "epinow")
 })
 
