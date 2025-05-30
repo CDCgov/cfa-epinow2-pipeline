@@ -2,6 +2,7 @@
 
 ## Features
 
+* Refactoring unit tests to make use of setup.R global testing env
 * Run `make test-batch` target locally
 * Update runner action version
 * Remove duplicate batch autoscale text file
