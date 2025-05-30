@@ -1,24 +1,5 @@
 test_that("Fitted model extracts diagnostics", {
-  # Arrange
-  data_path <- test_path("data/test_data.parquet")
-  con <- DBI::dbConnect(duckdb::duckdb())
-  data <- DBI::dbGetQuery(
-    con,
-    "
-                         SELECT
-                           report_date,
-                           reference_date,
-                           disease,
-                           geo_value AS state_abb,
-                           value AS confirm
-                         FROM read_parquet(?)
-                         WHERE reference_date <= '2023-01-22'",
-    params = list(data_path)
-  )
-  DBI::dbDisconnect(con)
-  fit_path <- test_path("data", "sample_fit.rds")
-  fit <- readRDS(fit_path)
-
+  # Fit object read in from setup.R
   # Expected diagnostics
   expected <- data.frame(
     diagnostic = c(
