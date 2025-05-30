@@ -18,18 +18,21 @@ Description: Add logging, metadata handling, and data handling
     fitting hundreds of models in parallel.
 License: Apache License (>= 2)
 Encoding: UTF-8
-Remotes: github::epiforecasts/EpiNow2@bcf297cf36a93cc56123bc3c9e8cebfb1421a962
+Remotes:
+    github::epiforecasts/EpiNow2@bcf297cf36a93cc56123bc3c9e8cebfb1421a962,
+    github::stan-dev/cmdstanr@12fe0f8fd35226dadf3abc50de726537dc9ea475,
+    github::epinowcast/primarycensored
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests:
-    primarycensored,
     testthat (>= 3.0.0),
     usethis,
-    withr
+    withr,
 Config/testthat/edition: 3
 Imports:
     AzureRMR,
     AzureStor,
+    cmdstanr,
     cli,
     data.table,
     DBI,
@@ -37,6 +40,7 @@ Imports:
     duckdb,
     EpiNow2 (>= 1.4.0),
     jsonlite,
+    primarycensored,
     rlang,
     rstan,
     S7,
@@ -47,7 +51,7 @@ Imports:
     optparse,
     Microsoft365R
 Additional_repositories:
-    https://stan-dev.r-universe.dev
+	https://stan-dev.r-universe.dev
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
 Depends:
     R (>= 3.50)
