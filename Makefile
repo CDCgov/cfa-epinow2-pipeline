@@ -9,7 +9,8 @@ else
 TAG=$(BRANCH)
 endif
 
-CONFIG=test.json
+# CONFIG=test.json
+CONFIG=test_w_backend.json
 POOL="cfa-epinow2-$(TAG)"
 TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
 JOB:=Rt-estimation-$(TIMESTAMP)
@@ -64,6 +65,12 @@ run: ## Run pipeline from R interactively in the container
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt')"
+
+interactive:
+	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--env-file .env \
+	--workdir /cfa-epinow2-pipeline \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 up: ## Start an interactive bash shell in the container with project directory mounted
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \

@@ -33,6 +33,7 @@ Delays or right truncation are optional and can be skipped by passing \code{pmf 
 }
 \seealso{
 Other parameters: 
+\code{\link{check_returned_pmf}()},
 \code{\link{read_disease_parameters}()},
 \code{\link{read_interval_pmf}()}
 }

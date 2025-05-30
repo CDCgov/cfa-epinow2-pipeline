@@ -50,6 +50,17 @@ jobs:
           extra-packages: any::rcmdcheck, any::roxygen2
           needs: check
 
+      - name: Install cmdstan
+        run: |
+          Rscript -e 'cmdstanr::install_cmdstan()' && \
+            Rscript -e 'cmdstanr::set_cmdstan_path()'
+
+      - name: R CMD Check
+        run: |
+          R CMD build --no-build-vignettes --no-manual . && \
+            R CMD INSTALL CFAEpiNow2Pipeline_*.tar.gz && \
+            R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
+
       - name: Check that roxygen documentation is up to date
         run: |
           Rscript -e "roxygen2::roxygenize()"

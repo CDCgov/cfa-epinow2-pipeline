@@ -1,24 +1,4 @@
-test_that("Fitted model extracts diagnostics", {
-  # Arrange
-  data_path <- test_path("data/test_data.parquet")
-  con <- DBI::dbConnect(duckdb::duckdb())
-  data <- DBI::dbGetQuery(
-    con,
-    "
-                         SELECT
-                           report_date,
-                           reference_date,
-                           disease,
-                           geo_value AS state_abb,
-                           value AS confirm
-                         FROM read_parquet(?)
-                         WHERE reference_date <= '2023-01-22'",
-    params = list(data_path)
-  )
-  DBI::dbDisconnect(con)
-  fit_path <- test_path("data", "sample_fit.rds")
-  fit <- readRDS(fit_path)
-
+test_that("Fitted model extracts diagnostics (rstan)", {
   # Expected diagnostics
   expected <- data.frame(
     diagnostic = c(
@@ -49,18 +29,131 @@ test_that("Fitted model extracts diagnostics", {
     stringsAsFactors = FALSE
   )
   actual <- extract_diagnostics(
-    fit,
+    fit_rstan,
     data,
     "test",
     "test",
     "test",
     "test",
-    "test"
+    "test",
+    backend = "rstan"
   )
 
   testthat::expect_equal(
     actual,
     expected
+  )
+})
+
+test_that("Fitted model extracts diagnostics (cmdstanr)", {
+  # Expected diagnostics
+  expected <- data.frame(
+    diagnostic = c(
+      "mean_accept_stat",
+      "p_divergent",
+      "n_divergent",
+      "p_max_treedepth",
+      "p_high_rhat",
+      "n_high_rhat",
+      "diagnostic_flag",
+      "low_case_count_flag"
+    ),
+    value = c(
+      0.9147865,
+      0.0000000,
+      0.0000000,
+      0.0000000,
+      0.1960784,
+      20.000000,
+      1.0000000,
+      0.0000000
+    ),
+    job_id = rep("test", 8),
+    task_id = rep("test", 8),
+    disease = rep("test", 8),
+    geo_value = rep("test", 8),
+    model = rep("test", 8),
+    stringsAsFactors = FALSE
+  )
+  actual <- extract_diagnostics(
+    fit_cmdstanr,
+    data,
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    backend = "cmdstanr"
+  )
+
+  # Assert
+  testthat::expect_equal(
+    actual,
+    expected,
+    tolerance = 1e-5
+  )
+})
+
+test_that("Mean accept state approximately equal between cmdstanr and rstan", {
+  # Sampler
+  sampler_opts <- list(
+    cores = 1,
+    chains = 2,
+    adapt_delta = 0.90,
+    max_treedepth = 10,
+    iter_warmup = 500,
+    iter_sampling = 200
+  )
+  # fit cmdstanr
+  fit_cmdstanr <- fit_model(
+    data = data,
+    parameters = parameters,
+    seed = 12345,
+    horizon = 0,
+    priors = priors,
+    sampler = c(backend = "cmdstanr", sampler_opts)
+  )
+  # fit rstan
+  fit_rstan <- fit_model(
+    data = data,
+    parameters = parameters,
+    seed = 12345,
+    horizon = 0,
+    priors = priors,
+    sampler = c(backend = "rstan", sampler_opts)
+  )
+  cmdstanr_diagnostics <- extract_diagnostics(
+    fit_cmdstanr,
+    data,
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    backend = "cmdstanr"
+  )
+  rstan_diagnostics <- extract_diagnostics(
+    fit_rstan,
+    data,
+    "test",
+    "test",
+    "test",
+    "test",
+    "test",
+    backend = "rstan"
+  )
+
+  rstan_ma_stat <- rstan_diagnostics |>
+    dplyr::filter(diagnostic == "mean_accept_stat") |>
+    dplyr::pull(value)
+
+  cmdstanr_ma_stat <- cmdstanr_diagnostics |>
+    dplyr::filter(diagnostic == "mean_accept_stat") |>
+    dplyr::pull(value)
+
+  # Assert
+  testthat::expect_true(
+    rstan_ma_stat > 0.9 && cmdstanr_ma_stat > 0.9
   )
 })
 
@@ -101,7 +194,7 @@ test_that("Cases above threshold returns FALSE", {
 })
 
 
-test_that("Only the last two weeks are evalated", {
+test_that("Only the last two weeks are evaluated", {
   # Arrange
   # 3 weeks, first week would pass but last week does not
   df <- data.frame(
