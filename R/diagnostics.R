@@ -47,20 +47,23 @@
 #' }
 #' @family diagnostics
 #' @export
-extract_diagnostics <- function(fit,
-                                data,
-                                job_id,
-                                task_id,
-                                disease,
-                                geo_value,
-                                model,
-                                # could pass in backend through config but
-                                # then we're dependent on another parameter
-                                backend = "cmdstanr") {
+extract_diagnostics <- function(
+  fit,
+  data,
+  job_id,
+  task_id,
+  disease,
+  geo_value,
+  model,
+  # could pass in backend through config but
+  # then we're dependent on another parameter
+  backend = "cmdstanr"
+) {
   low_case_count <- low_case_count_diagnostic(data)
 
   if (backend == "rstan") {
-    epinow2_diagnostics <- rstan::get_sampler_params(fit$estimates$fit,
+    epinow2_diagnostics <- rstan::get_sampler_params(
+      fit$estimates$fit,
       inc_warmup = FALSE
     )
     mean_accept_stat <- mean(
