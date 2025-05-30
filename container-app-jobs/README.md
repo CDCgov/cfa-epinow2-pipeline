@@ -26,6 +26,8 @@ The *blob-config-runner* directory contains a Python tool that can start multipl
 
 This tool requires Python 3, which is already installed within WSL. A virtual environment using *venv* is recommended for execution, which can be installed with *apt*. To initialize the environment and necessary libraries, run the following command from the directory:
 
+Edit needed here!
+
 ```bash
 python3 -m venv .venv
 .venv/bin/python3 -m pip install -r requirements.txt
