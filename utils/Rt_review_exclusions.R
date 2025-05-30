@@ -41,6 +41,7 @@ read_process_excel_func <- function(
     "drop_dates",
     "additional_reasoning"
   )
+  df <- df |> dplyr::mutate(drop_dates = as.character(drop_dates))
   df <- data.frame(tidyr::separate_rows(df, 10, sep = "\\|")) |>
     dplyr::filter(!is.na(state)) |>
     dplyr::mutate(
