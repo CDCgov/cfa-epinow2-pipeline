@@ -2,6 +2,7 @@
 
 ## Features
 
+* Adding dependencies to install cmdstanr backend
 * Run `make test-batch` target locally
 * Update runner action version
 * Remove duplicate batch autoscale text file
