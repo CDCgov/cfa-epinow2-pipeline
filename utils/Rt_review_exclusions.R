@@ -27,7 +27,7 @@ read_process_excel_func <- function(
     paste0(file_name), # path where saved
     sheet = sheet_name,
     skip = 3,
-    col_names =c(
+    col_names = c(
       "state",
       "dates_affected",
       "observed volume",
