@@ -1,7 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
-
+* convert drop cols value to character for point/state exlcusions
 * Run `make test-batch` target locally
 * Added `make run-caj` for using a CAJ instead of Batch
 * Update runner action version
