@@ -38,11 +38,11 @@ def main(image_name: str, config_container: str, job_id: str):
     Arguments
     ----------
     image_name: str
-        The name of the container image (and tag) to use for the job
+        The name of the container image (and tag) to use for the Rt pipeline run
     config_container: str
-        The name of the storage container for the job to output to
+        The name of the storage container for the Rt pipeline to output to
     job_id: str
-        The name of the job to use for the job.
+        The name of the job to use for the Rt pipeline run.
     """
 
     job_name = "cfa-epinow2-pipeline"
@@ -102,19 +102,19 @@ if __name__ == "__main__":
     parser.add_argument(
         "--image_name",
         type=str,
-        help="The name of the container image (and tag) to use for the job",
+        help="The name of the container image (and tag) to use for the Rt pipeline run",
         required=True,
     )
     parser.add_argument(
         "--config_container",
         type=str,
-        help="The name of the storage container for the job to output to",
+        help="The name of the storage container for the Rt pipeline to output to",
         required=True,
     )
     parser.add_argument(
         "--job_id",
         type=str,
-        help="The name of the job to use for the job",
+        help="The name of the job to use for the Rt pipeline run",
         default=None,
     )
 
