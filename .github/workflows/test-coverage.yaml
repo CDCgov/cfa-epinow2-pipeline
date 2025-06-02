@@ -30,7 +30,7 @@ jobs:
       - name: Install cmdstan
         uses: epinowcast/actions/install-cmdstan@v1
         with:
-          cmdstanr-version: 'latest'
+          cmdstan-version: 'latest'
           num-cores: 1
 
       - name: Test coverage

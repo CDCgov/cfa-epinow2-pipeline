@@ -53,7 +53,7 @@ jobs:
       - name: Install cmdstan
         uses: epinowcast/actions/install-cmdstan@v1
         with:
-          cmdstanr-version: 'latest'
+          cmdstan-version: 'latest'
           num-cores: 1
 
       - name: Check that roxygen documentation is up to date
