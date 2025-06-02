@@ -50,11 +50,6 @@ def main(image_name: str, config_container: str, job_id: str):
     blob_account = 'cfaazurebatchprd'
     blob_url = f"https://{blob_account}.blob.core.windows.net"
     credential_v2 = DefaultAzureCredential()
-    token = {
-        "access_token": credential_v2.get_token(
-            "https://batch.core.windows.net/.default"
-        ).token
-    }
 
     blob_service_client = BlobServiceClient(blob_url, credential_v2)
     container_client = blob_service_client.get_container_client(
