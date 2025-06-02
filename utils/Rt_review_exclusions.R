@@ -26,21 +26,22 @@ read_process_excel_func <- function(
   df <- readxl::read_excel(
     paste0(file_name), # path where saved
     sheet = sheet_name,
-    skip = 3
+    skip = 3,
+    col_names = c(
+      "state",
+      "dates_affected",
+      "observed volume",
+      "expected volume",
+      "initial_thoughts",
+      "state_abb",
+      "review_1_decision",
+      "reviewer_2_decision",
+      "final_decision",
+      "drop_dates",
+      "additional_reasoning"
+    )
   )
-  colnames(df) <- c(
-    "state",
-    "dates_affected",
-    "observed volume",
-    "expected volume",
-    "initial_thoughts",
-    "state_abb",
-    "review_1_decision",
-    "reviewer_2_decision",
-    "final_decision",
-    "drop_dates",
-    "additional_reasoning"
-  )
+  df <- df |> dplyr::mutate(drop_dates = as.character(drop_dates))
   df <- data.frame(tidyr::separate_rows(df, 10, sep = "\\|")) |>
     dplyr::filter(!is.na(state)) |>
     dplyr::mutate(
