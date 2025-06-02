@@ -8,7 +8,7 @@
 # ]
 # ///
 
-'''
+"""
 There is an Azure Container App Job (CAJ) named cfa-epinow2-pipeline that can be used to execute jobs. The CAJ has been preconfigured with the necessary service principal environment variables to simplify execution.
 This script is intended to be a drop-in replacement for the existing azure/job.py script, but using CAJ for compute instead of Azure Batch and not requiring a pool_id.
 
@@ -24,7 +24,8 @@ ContainerAppSystemLogs_CL
     | where ContainerJobName_s == 'cfa-epinow2-pipeline' and Log_s startswith "✔ Blob 'Rt-estimation-2025-04-29T19-07-39.001200+00-00" and TimeGenerated >= datetime(2025-05-23T15:20:00)
 ) on $left.ReplicaName_s == $right.ContainerGroupName_s
 | project TimeGenerated, Sys_Logs = Log_s, ExecutionName_s, Type_s, Console_Logs = Log_s1, Duration = TimeGenerated - TimeGenerated1
-'''
+"""
+
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.appcontainers import ContainerAppsAPIClient
 from azure.mgmt.resource.subscriptions import SubscriptionClient
@@ -47,7 +48,7 @@ def main(image_name: str, config_container: str, job_id: str):
 
     job_name = "cfa-epinow2-pipeline"
     resource_group = "ext-edav-cfa-prd"
-    blob_account = 'cfaazurebatchprd'
+    blob_account = "cfaazurebatchprd"
     blob_url = f"https://{blob_account}.blob.core.windows.net"
     credential_v2 = DefaultAzureCredential()
 
@@ -65,32 +66,40 @@ def main(image_name: str, config_container: str, job_id: str):
         raise ValueError("No tasks found")
 
     # Get first subscription for logged-in credential
-    first_subscription_id = SubscriptionClient(credential_v2).subscriptions.list().next().subscription_id
+    first_subscription_id = (
+        SubscriptionClient(credential_v2).subscriptions.list().next().subscription_id
+    )
 
-    client = ContainerAppsAPIClient(credential=credential_v2, subscription_id=first_subscription_id)
-
+    client = ContainerAppsAPIClient(
+        credential=credential_v2, subscription_id=first_subscription_id
+    )
 
     # Download existing job template
-    job_template = client.jobs.get(resource_group_name=resource_group, job_name=job_name).template
+    job_template = client.jobs.get(
+        resource_group_name=resource_group, job_name=job_name
+    ).template
     container = job_template.containers[0]
 
     container.image = image_name
 
     for i, config_path in enumerate(task_configs):
         # Update the command for this config
-        container.command = ["Rscript", "-e",
-            f"CFAEpiNow2Pipeline::orchestrate_pipeline('{config_path}', config_container = '{config_container}')"]
+        container.command = [
+            "Rscript",
+            "-e",
+            f"CFAEpiNow2Pipeline::orchestrate_pipeline('{config_path}', config_container = '{config_container}')",
+        ]
 
         # Start job
         job_execution = client.jobs.begin_start(
-            resource_group_name=resource_group,
-            job_name=job_name,
-            template=job_template
+            resource_group_name=resource_group, job_name=job_name, template=job_template
         ).result()
 
-        state_config=config_path.split('/').pop()
-        job_execution_id=job_execution.id.split('/').pop()
-        print(f"Started Container App Job #{i+1}/{len(task_configs)} for {state_config} with execution ID: {job_execution_id}")
+        state_config = config_path.split("/").pop()
+        job_execution_id = job_execution.id.split("/").pop()
+        print(
+            f"Started Container App Job #{i+1}/{len(task_configs)} for {state_config} with execution ID: {job_execution_id}"
+        )
 
 
 if __name__ == "__main__":
