@@ -28,18 +28,18 @@ read_process_excel_func <- function(
     sheet = sheet_name,
     skip = 3,
     col_names =c(
-    "state",
-    "dates_affected",
-    "observed volume",
-    "expected volume",
-    "initial_thoughts",
-    "state_abb",
-    "review_1_decision",
-    "reviewer_2_decision",
-    "final_decision",
-    "drop_dates",
-    "additional_reasoning"
-    )
+      "state",
+      "dates_affected",
+      "observed volume",
+      "expected volume",
+      "initial_thoughts",
+      "state_abb",
+      "review_1_decision",
+      "reviewer_2_decision",
+      "final_decision",
+      "drop_dates",
+      "additional_reasoning"
+      )
   )
   df <- df |> dplyr::mutate(drop_dates = as.character(drop_dates))
   df <- data.frame(tidyr::separate_rows(df, 10, sep = "\\|")) |>
