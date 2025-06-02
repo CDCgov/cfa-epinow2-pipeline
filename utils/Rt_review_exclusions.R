@@ -39,7 +39,7 @@ read_process_excel_func <- function(
       "final_decision",
       "drop_dates",
       "additional_reasoning"
-      )
+    )
   )
   df <- df |> dplyr::mutate(drop_dates = as.character(drop_dates))
   df <- data.frame(tidyr::separate_rows(df, 10, sep = "\\|")) |>
