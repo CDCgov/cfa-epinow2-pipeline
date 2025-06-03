@@ -27,6 +27,12 @@ jobs:
           extra-packages: any::covr
           needs: coverage
 
+      - name: Install cmdstan
+        uses: epinowcast/actions/install-cmdstan@v1
+        with:
+          cmdstan-version: '2.36.0'
+          num-cores: 2
+
       - name: Test coverage
         shell: Rscript {0}
         run: |
