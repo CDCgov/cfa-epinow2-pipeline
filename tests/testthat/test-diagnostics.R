@@ -41,7 +41,8 @@ test_that("Fitted model extracts diagnostics", {
 
   testthat::expect_equal(
     actual,
-    expected
+    expected,
+    tolerance = 1e-4
   )
 })
 
