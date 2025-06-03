@@ -47,7 +47,7 @@ rerun-config: ## Generate a configuration file to rerun a previous model
 		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
 
-run-caj: ## Runs job.py on Azure Container App Jobs
+run-caj: ## Runs run_container_app_job.py on Azure Container App Jobs
 	uv run azure/run_container_app_job.py \
 		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
 		--job_id="$(JOB)"
