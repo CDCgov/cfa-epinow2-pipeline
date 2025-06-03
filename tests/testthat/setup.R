@@ -50,7 +50,7 @@ fit <- fit_model(
   data = data,
   parameters = parameters,
   seed = 12345,
-  horizon = 0,
+  horizon = 7,
   priors = priors,
   sampler = sampler_opts
 )
