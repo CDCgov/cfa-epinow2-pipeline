@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Adding dependencies to install cmdstanr backend and using GH action
 * convert drop cols value to character for point/state exlcusions
 * Run `make test-batch` target locally
 * Update runner action version
