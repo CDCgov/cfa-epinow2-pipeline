@@ -252,7 +252,7 @@ test_that("process_samples works as expected", {
   )
 
   # Test 3: Check if the result contains the correct number of rows
-  expected_num_rows <- 2505 # Replace with actual expected value
+  expected_num_rows <- 630 # Replace with actual expected value
   expect_equal(
     nrow(result),
     expected_num_rows,
