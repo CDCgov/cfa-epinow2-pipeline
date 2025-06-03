@@ -1,8 +1,8 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
-
 * Refactoring unit tests to make use of setup.R global testing env
+* convert drop cols value to character for point/state exlcusions
 * Run `make test-batch` target locally
 * Update runner action version
 * Remove duplicate batch autoscale text file
