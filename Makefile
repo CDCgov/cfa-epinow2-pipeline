@@ -54,7 +54,8 @@ run-caj: ## Runs job.py on Azure Container App Jobs
 
 
 run-batch: ## Runs job.py on Azure Batch
-	uv run azure/job.py --env-file .env \
+	uv run --env-file .env \
+		azure/job.py \
 		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
 		--config_container="$(CONFIG_CONTAINER)" \
 		--pool_id="$(POOL)" \
