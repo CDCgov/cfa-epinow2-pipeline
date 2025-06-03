@@ -41,7 +41,7 @@ def main(image_name: str, config_container: str, job_id: str):
     image_name: str
         The name of the container image (and tag) to use for the Rt pipeline run
     config_container: str
-        The name of the storage container for the Rt pipeline to output to
+        The name of the storage container where config files are located
     job_id: str
         The name of the job to use for the Rt pipeline run.
     """
@@ -117,8 +117,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--config_container",
         type=str,
-        help="The name of the storage container for the Rt pipeline to output to",
-        required=True,
+        help="The name of the storage container where config files are located",
+        default="rt-epinow2-config"
     )
     parser.add_argument(
         "--job_id",
