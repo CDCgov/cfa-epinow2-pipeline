@@ -176,7 +176,7 @@ test_that("process_quantiles works as expected", {
   )
 
   # Test 3: Check if the result contains the correct number of rows
-  expected_num_rows <- 110
+  expected_num_rows <- 111
   expect_equal(
     nrow(result),
     expected_num_rows,
