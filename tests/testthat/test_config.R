@@ -1,65 +1,34 @@
-test_that("Exclusions class can be constructed and properties set", {
-  excl <- Exclusions(path = "foo.csv", blob_storage_container = "bar")
-  expect_s3_class(excl, "Exclusions")
-  expect_equal(S7::prop(excl, "path"), "foo.csv")
-  expect_equal(S7::prop(excl, "blob_storage_container"), "bar")
-})
-
-test_that("Interval and subclasses can be constructed", {
-  intv <- Interval(path = "int.csv", blob_storage_container = NULL)
-  expect_s3_class(intv, "Interval")
-  gen <- GenerationInterval(path = "gen.csv", blob_storage_container = "cont")
-  expect_s3_class(gen, "GenerationInterval")
-  del <- DelayInterval(path = "del.csv", blob_storage_container = NULL)
-  expect_s3_class(del, "DelayInterval")
-  rt <- RightTruncation(path = "rt.csv", blob_storage_container = NULL)
-  expect_s3_class(rt, "RightTruncation")
-})
-
-test_that("Parameters class can be constructed", {
-  gen <- GenerationInterval(path = "g.csv", blob_storage_container = NULL)
-  del <- DelayInterval(path = "d.csv", blob_storage_container = NULL)
-  rt <- RightTruncation(path = "r.csv", blob_storage_container = NULL)
-  params <- Parameters(
+# Helper to create minimal valid S7 objects for config
+make_gen_interval <- function() {
+  GenerationInterval(path = "g.csv", blob_storage_container = NULL)
+}
+make_delay_interval <- function() {
+  DelayInterval(path = "d.csv", blob_storage_container = NULL)
+}
+make_right_trunc <- function() {
+  RightTruncation(path = "r.csv", blob_storage_container = NULL)
+}
+make_params <- function() {
+  Parameters(
     as_of_date = "2024-01-01",
-    generation_interval = gen,
-    delay_interval = del,
-    right_truncation = rt
+    generation_interval = make_gen_interval(),
+    delay_interval = make_delay_interval(),
+    right_truncation = make_right_trunc()
   )
-  expect_s3_class(params, "Parameters")
-  expect_equal(S7::prop(params, "as_of_date"), "2024-01-01")
-  expect_s3_class(S7::prop(params, "generation_interval"), "GenerationInterval")
-})
-
-test_that("Data class can be constructed", {
-  d <- Data(
+}
+make_data <- function() {
+  Data(
     path = "foo.parquet",
     blob_storage_container = NULL,
     report_date = "2024-01-01",
     reference_date = "2024-01-01"
   )
-  expect_s3_class(d, "Data")
-  expect_equal(S7::prop(d, "path"), "foo.parquet")
-})
-
-test_that("Config class can be constructed with nested objects", {
-  d <- Data(
-    path = "foo.parquet",
-    blob_storage_container = NULL,
-    report_date = "2024-01-01",
-    reference_date = "2024-01-01"
-  )
-  gen <- GenerationInterval(path = "g.csv", blob_storage_container = NULL)
-  del <- DelayInterval(path = "d.csv", blob_storage_container = NULL)
-  rt <- RightTruncation(path = "r.csv", blob_storage_container = NULL)
-  params <- Parameters(
-    as_of_date = "2024-01-01",
-    generation_interval = gen,
-    delay_interval = del,
-    right_truncation = rt
-  )
-  excl <- Exclusions(path = "ex.csv", blob_storage_container = NULL)
-  cfg <- Config(
+}
+make_exclusions <- function() {
+  Exclusions(path = "ex.csv", blob_storage_container = NULL)
+}
+make_config <- function() {
+  Config(
     job_id = "job1",
     task_id = "task1",
     min_reference_date = "2024-01-01",
@@ -74,9 +43,9 @@ test_that("Config class can be constructed with nested objects", {
     model = "EpiNow2",
     config_version = "1.0",
     quantile_width = c(0.5, 0.95),
-    data = d,
+    data = make_data(),
     priors = list(rt = list(mean = 1, sd = 0.5), gp = list(alpha_sd = 1)),
-    parameters = params,
+    parameters = make_params(),
     sampler_opts = list(
       cores = 1,
       chains = 2,
@@ -85,16 +54,48 @@ test_that("Config class can be constructed with nested objects", {
       max_treedepth = 10,
       adapt_delta = 0.8
     ),
-    exclusions = excl,
+    exclusions = make_exclusions(),
     output_container = NULL
   )
+}
+
+test_that("Exclusions class can be constructed and properties set", {
+  excl <- make_exclusions()
+  expect_s3_class(excl, "Exclusions")
+  expect_equal(S7::prop(excl, "path"), "ex.csv")
+  expect_null(S7::prop(excl, "blob_storage_container"))
+})
+
+test_that("Interval and subclasses can be constructed", {
+  expect_s3_class(make_gen_interval(), "GenerationInterval")
+  expect_s3_class(make_delay_interval(), "DelayInterval")
+  expect_s3_class(make_right_trunc(), "RightTruncation")
+  intv <- Interval(path = "int.csv", blob_storage_container = NULL)
+  expect_s3_class(intv, "Interval")
+})
+
+test_that("Parameters class can be constructed", {
+  params <- make_params()
+  expect_s3_class(params, "Parameters")
+  expect_equal(S7::prop(params, "as_of_date"), "2024-01-01")
+  expect_s3_class(S7::prop(params, "generation_interval"), "GenerationInterval")
+})
+
+test_that("Data class can be constructed", {
+  d <- make_data()
+  expect_s3_class(d, "Data")
+  expect_equal(S7::prop(d, "path"), "foo.parquet")
+})
+
+test_that("Config class can be constructed with nested objects", {
+  cfg <- make_config()
   expect_s3_class(cfg, "Config")
   expect_equal(S7::prop(cfg, "job_id"), "job1")
   expect_s3_class(S7::prop(cfg, "data"), "Data")
 })
 
 test_that("read_json_into_config reads and constructs Config object", {
-  # Create a minimal config as a list
+  # Create a minimal config as a list, matching make_config()
   gen <- list(path = "g.csv", blob_storage_container = NULL)
   del <- list(path = "d.csv", blob_storage_container = NULL)
   rt <- list(path = "r.csv", blob_storage_container = NULL)
