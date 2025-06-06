@@ -241,16 +241,22 @@ read_json_into_config <- function(config_path, optional_fields) {
   }
 
   inner <- function(raw_data, class_to_fill) {
-    # For each property, check if it is a regular value, or an S7 object.
-    # If it is an S7 object, we need to create an instance of that class, and do
-    # all the same checks for properties that we did above. If not, just add it
-    # to the config object.
+    # Helper to convert list(NULL) or list() to NULL recursively
+    nullify_list_null <- function(x) {
+      if (is.list(x) && length(x) == 0) {
+        return(NULL)
+      }
+      if (is.list(x)) {
+        return(lapply(x, nullify_list_null))
+      }
+      x
+    }
     config <- class_to_fill()
     for (prop_name in names(raw_data)) {
+      value <- nullify_list_null(raw_data[[prop_name]])
       if (prop_name %in% names(str2class)) {
-        # This is a class, call inner() again to recursively build it.
         S7::prop(config, prop_name) <- inner(
-          raw_data[[prop_name]],
+          value,
           str2class[[prop_name]]
         )
       } else if (!(prop_name %in% S7::prop_names(class_to_fill()))) {
@@ -258,8 +264,7 @@ read_json_into_config <- function(config_path, optional_fields) {
           "No Config field matching {.var {prop_name}}. Not using."
         )
       } else {
-        # Else set it directly
-        S7::prop(config, prop_name) <- raw_data[[prop_name]]
+        S7::prop(config, prop_name) <- value
       }
     }
     config
