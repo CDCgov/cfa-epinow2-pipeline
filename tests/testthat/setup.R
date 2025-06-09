@@ -1,6 +1,5 @@
 # Save model fit parameters into global testing environment for reuse
 
-library(CFAEpiNow2Pipeline)
 
 parameters <- list(
   generation_interval = sir_gt_pmf,
