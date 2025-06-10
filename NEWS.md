@@ -57,6 +57,7 @@
 * Minor changes in removing unused container tags from Azure CR
 * Reactivated DEBUG level logs from EpiNow2 so that sampler progress is visible
 * Added new test data and unit tests for point exclusions
+* Removed clutter from CSV outlier files with reference date containing nulls
 
 # CFAEpiNow2Pipeline v0.1.0
 
