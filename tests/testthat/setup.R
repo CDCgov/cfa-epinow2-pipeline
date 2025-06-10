@@ -44,6 +44,8 @@ sampler_opts <- list(
   iter_sampling = 25
 )
 
+set.seed(12345)
+
 fit <- fit_model(
   data = data,
   parameters = parameters,
