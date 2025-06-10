@@ -1,4 +1,4 @@
-FROM docker.io/rocker/geospatial:4.4.1
+FROM docker.io/rocker/geospatial:4.4.3
 
 # Will copy the package to the container preserving the directory structure
 RUN mkdir -p pkg
