@@ -28,10 +28,9 @@ jobs:
           needs: coverage
 
       - name: Install cmdstan
-        uses: epinowcast/actions/install-cmdstan@v1
-        with:
-          cmdstan-version: '2.36.0'
-          num-cores: 2
+        run: |
+          Rscript -e 'cmdstanr::install_cmdstan()' && \
+            Rscript -e 'cmdstanr::set_cmdstan_path()'
 
       - name: Test coverage
         shell: Rscript {0}
