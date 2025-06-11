@@ -17,7 +17,7 @@ concurrency:
 jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
-    container: 
+    container:
       image: docker.io/rocker/geospatial:4.4.1
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
