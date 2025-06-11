@@ -47,7 +47,7 @@ jobs:
     needs: get-image-name
 
     container:
-      image: ${{ needs.setup-job.outputs.IMAGE }}
+      image: ${{ needs.get-image-name.outputs.IMAGE }}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
