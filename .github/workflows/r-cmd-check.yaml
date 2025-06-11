@@ -54,24 +54,6 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-<<<<<<< HEAD
-      - name: get_dir
-        run: |
-          ls
-=======
->>>>>>> 30c88b6 (updating)
-      # - uses: actions/checkout@v4
-      # - uses: r-lib/actions/setup-pandoc@v2
-      # - uses: r-lib/actions/setup-r-dependencies@v2
-      #   with:
-      #     extra-packages: any::rcmdcheck, any::roxygen2
-      #     needs: check
-      # - name: Install cmdstan
-      #  uses: epinowcast/actions/install-cmdstan@v1
-      #  with:
-      #    cmdstan-version: '2.36.0'
-      #    num-cores: 2
-
       - name: Check that roxygen documentation is up to date
         run: |
           Rscript -e "roxygen2::roxygenize()"
