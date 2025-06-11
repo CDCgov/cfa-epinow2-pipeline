@@ -58,7 +58,7 @@ jobs:
 
       - name: Examine Directory
         run: |
-          ls /__w/cfa-epinow2-pipeline/cfa-epinow2-pipeline
+          ls -a  /__w/cfa-epinow2-pipeline/cfa-epinow2-pipeline
 
       - name: Check that roxygen documentation is up to date
         run: |
