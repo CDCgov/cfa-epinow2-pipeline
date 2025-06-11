@@ -5,26 +5,26 @@
 \title{Config Class}
 \usage{
 Config(
-  job_id = class_missing,
-  task_id = class_missing,
-  min_reference_date = class_missing,
-  max_reference_date = class_missing,
-  report_date = class_missing,
-  production_date = class_missing,
-  disease = class_missing,
-  geo_value = class_missing,
-  geo_type = class_missing,
-  seed = class_missing,
-  horizon = class_missing,
-  model = class_missing,
-  config_version = class_missing,
-  quantile_width = class_missing,
-  data = class_missing,
-  priors = class_missing,
-  parameters = class_missing,
-  sampler_opts = class_missing,
-  exclusions = class_missing,
-  output_container = class_missing
+  job_id = character(0),
+  task_id = character(0),
+  min_reference_date = character(0),
+  max_reference_date = character(0),
+  report_date = character(0),
+  production_date = character(0),
+  disease = character(0),
+  geo_value = character(0),
+  geo_type = character(0),
+  seed = integer(0),
+  horizon = integer(0),
+  model = "EpiNow2",
+  config_version = character(0),
+  quantile_width = c(0.5, 0.95),
+  data = Data(),
+  priors = list(),
+  parameters = Parameters(),
+  sampler_opts = list(),
+  exclusions = Exclusions(),
+  output_container = character(0)
 )
 }
 \arguments{
@@ -87,7 +87,6 @@ Represents the complete configuration for the pipeline.
 \seealso{
 Other config: 
 \code{\link{Data}()},
-\code{\link{Exclusions}()},
 \code{\link{Interval}},
 \code{\link{Parameters}()},
 \code{\link{read_json_into_config}()}
