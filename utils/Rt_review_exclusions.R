@@ -123,6 +123,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     # point exclusions in outlier.csv format
     point_exclusions <- combined_df |>
       dplyr::filter(!is.na(drop_dates)) |>
+      dplyr::filter(!is.na(reference_date)) |>
       dplyr::mutate(
         raw_confirm = NA,
         clean_confirm = NA
@@ -188,6 +189,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     # Can get rid of this once we end old pipeline support
     point_exclusions <- combined_df |>
       dplyr::filter(!is.na(drop_dates)) |>
+      dplyr::filter(!is.na(reference_date)) |>
       dplyr::mutate(
         raw_confirm = NA,
         clean_confirm = NA
