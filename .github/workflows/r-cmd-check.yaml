@@ -54,9 +54,12 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
+<<<<<<< HEAD
       - name: get_dir
         run: |
           ls
+=======
+>>>>>>> 30c88b6 (updating)
       # - uses: actions/checkout@v4
       # - uses: r-lib/actions/setup-pandoc@v2
       # - uses: r-lib/actions/setup-r-dependencies@v2
