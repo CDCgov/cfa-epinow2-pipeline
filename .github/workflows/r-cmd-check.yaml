@@ -55,7 +55,7 @@ jobs:
 
     steps:
       - name: get_dir
-        run: | 
+        run: |
           ls
       # - uses: actions/checkout@v4
       # - uses: r-lib/actions/setup-pandoc@v2
