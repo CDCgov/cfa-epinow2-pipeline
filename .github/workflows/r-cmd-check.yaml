@@ -40,7 +40,7 @@ jobs:
 
       - name: Build Docker Image String
         id: image-name
-        run: echo "image_name=ghcr.io/cfa-epiow2-pipeline:${{ steps.image-tag.outputs.tag }}" >> $GITHUB_OUTPUT
+        run: echo "image_name=ghcr.io/cdcgov/cfa-epinow2-pipeline:${{ steps.image-tag.outputs.tag }}" >> $GITHUB_OUTPUT
 
   R-CMD-check:
     runs-on: ubuntu-latest
