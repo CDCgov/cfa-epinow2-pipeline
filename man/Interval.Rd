@@ -7,13 +7,16 @@
 \alias{RightTruncation}
 \title{Interval Class}
 \usage{
-Interval(path = character(0), blob_storage_container = character(0))
+Interval(path = class_missing, blob_storage_container = class_missing)
 
-GenerationInterval(path = character(0), blob_storage_container = character(0))
+GenerationInterval(
+  path = class_missing,
+  blob_storage_container = class_missing
+)
 
-DelayInterval(path = character(0), blob_storage_container = character(0))
+DelayInterval(path = class_missing, blob_storage_container = class_missing)
 
-RightTruncation(path = character(0), blob_storage_container = character(0))
+RightTruncation(path = class_missing, blob_storage_container = class_missing)
 }
 \arguments{
 \item{path}{A string specifying the path to the generation interval CSV file.}
