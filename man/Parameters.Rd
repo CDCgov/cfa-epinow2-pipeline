@@ -5,10 +5,10 @@
 \title{Parameters Class}
 \usage{
 Parameters(
-  as_of_date = character(0),
-  generation_interval = GenerationInterval(),
-  delay_interval = DelayInterval(),
-  right_truncation = RightTruncation()
+  as_of_date = class_missing,
+  generation_interval = class_missing,
+  delay_interval = class_missing,
+  right_truncation = class_missing
 )
 }
 \arguments{
