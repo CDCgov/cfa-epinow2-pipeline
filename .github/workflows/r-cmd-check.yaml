@@ -54,6 +54,12 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Examine Directory
+        run: |
+          ls /__w/cfa-epinow2-pipeline/cfa-epinow2-pipeline
+
       - name: Check that roxygen documentation is up to date
         run: |
           Rscript -e "roxygen2::roxygenize()"
