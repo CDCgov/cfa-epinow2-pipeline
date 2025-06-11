@@ -11,7 +11,7 @@ name: Code coverage
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
-    container: 
+    container:
       image: docker.io/rocker/geospatial:4.4.1
 
     env:
