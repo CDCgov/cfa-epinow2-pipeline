@@ -1,7 +1,7 @@
 # Save model fit parameters into global testing environment for reuse
 
-# probably can remove this
-# set.seed(12345)
+# nolint probably can remove this
+# nolint set.seed(12345)
 
 parameters <- list(
   generation_interval = sir_gt_pmf,
