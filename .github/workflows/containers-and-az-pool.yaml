@@ -5,6 +5,7 @@ name: Create Docker Image and Azure Pool
 
 on:
   workflow_dispatch:
+  workflow_call:
   pull_request:
     paths-ignore: # we don't need this to run everytime we make an edit to an irrelevant file
       - .github/workflows/block-fixup.yaml
