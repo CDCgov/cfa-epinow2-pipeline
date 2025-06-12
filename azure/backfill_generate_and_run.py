@@ -103,7 +103,8 @@ def main(
         typer.Option(
             help="""
                 The parameter as-of dates. Default is to match the report dates.
-                Otherwise, a comma separated list of dates in ISO format.
+                Otherwise, a single ISO date, or a comma separated list of dates in
+                ISO format.
                 """,
         ),
     ] = "match_report_dates",
@@ -203,11 +204,27 @@ def main(
         ]
     )
 
-    as_of_dates: list[date] = (
-        [date.fromisoformat(s.strip()) for s in str_as_of_dates.split(",")]
-        if str_as_of_dates != "match_report_dates"
-        else report_dates
-    )
+    match str_as_of_dates:
+        case "match_report_dates":
+            # If the as_of_dates is set to match the report dates, use the report dates
+            as_of_dates = report_dates
+        case s if ("," not in s) and (s.strip() != ""):
+            # If a single date is provided, parse it as a date
+            as_of_dates = [date.fromisoformat(s.strip())] * len(report_dates)
+        case s if "," in s:
+            # If multiple dates are provided, split on commas and parse each date
+            # This will handle cases like "2025-01-01, 2025-01-02, 2025-01-03"
+            as_of_dates = [
+                date.fromisoformat(s.strip()) for s in str_as_of_dates.split(",")
+            ]
+        case _:
+            # Something else was provided, raise an error
+            raise ValueError(
+                """
+                Invalid as_of_dates format. Must be 'match_report_dates',
+                a single ISO date, or a comma separated list of dates in ISO format.
+                """
+            )
 
     job_ids: list[str] = generate_backfill_config(
         state=state,
