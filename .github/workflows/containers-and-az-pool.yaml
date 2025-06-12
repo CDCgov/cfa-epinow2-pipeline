@@ -86,6 +86,14 @@ jobs:
           chmod +x $GITHUB_WORKSPACE/.github/scripts/docker_build_and_push.sh
           $GITHUB_WORKSPACE/.github/scripts/docker_build_and_push.sh ${{ env.IMAGE_NAME }} ${{ steps.image-tag.outputs.tag }}
 
+  test-coverage:
+    needs: build-pipeline-image
+    uses: ./.github/workflows/test-coverage.yaml
+
+  r-cmd-check:
+    needs: build-pipeline-image
+    uses: ./.github/workflows/r-cmd-check.yaml
+
   acr-import:
     needs: build-pipeline-image
     runs-on: ubuntu-latest
