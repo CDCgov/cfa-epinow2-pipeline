@@ -24,15 +24,7 @@ fit_model <- function(
   sampler_opts
 ) {
   # Priors ------------------------------------------------------------------
-  rt <- EpiNow2::rt_opts(
-    list(
-      mean = priors[["rt"]][["mean"]],
-      sd = priors[["rt"]][["sd"]]
-    )
-  )
-  gp <- EpiNow2::gp_opts(
-    alpha_sd = priors[["gp"]][["alpha_sd"]]
-  )
+  rt <- EpiNow2::rt_opts(rw = 1)
 
   # Distributions -----------------------------------------------------------
   generation_time <- format_generation_interval(
@@ -62,7 +54,7 @@ fit_model <- function(
         truncation = truncation,
         horizon = horizon,
         rt = rt,
-        gp = gp,
+        gp = NULL,
         stan = stan,
         verbose = TRUE,
         # Dump logs to console to be caught by pipeline's logging instead of
