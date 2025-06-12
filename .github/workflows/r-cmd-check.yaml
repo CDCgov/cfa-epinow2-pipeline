@@ -55,7 +55,7 @@ jobs:
 
     steps:
       - uses: ./.github/workflows/containers-and-az-pool.yaml
-      
+
       - uses: actions/checkout@v4
 
       - name: Examine Directory
