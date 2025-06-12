@@ -232,6 +232,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     geo_value = config@geo_value,
     report_date = config@report_date
   )
+  cli::cli_alert("Params read succesfully")
 
   fit <- fit_model(
     data = cases_df,
@@ -241,6 +242,8 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     priors = config@priors,
     sampler_opts = config@sampler_opts
   )
+  cli::cli_alert("Model fit succesfully")
+
   diagnostics <- extract_diagnostics(
     fit = fit,
     data = cases_df,
@@ -248,8 +251,11 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     task_id = config@task_id,
     disease = config@disease,
     geo_value = config@geo_value,
-    model = config@model
+    model = config@model,
+    backend = config@sampler_opts$backend
   )
+  cli::cli_alert("Diagnostics extracted succesfully")
+
   samples <- process_samples(
     fit = fit,
     geo_value = config@geo_value,

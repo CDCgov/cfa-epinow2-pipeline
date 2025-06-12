@@ -1,6 +1,8 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Switching base rocker image from geospatial (4.7 GB) to tidyverse (2.7 GB)
+* Updating EpiNow2 package from v1.4.0 to v1.6.0
 * Refactoring unit tests to make use of setup.R global testing env
 * Adding dependencies to install cmdstanr backend and using GH action
 * convert drop cols value to character for point/state exlcusions
@@ -37,11 +39,11 @@
 * Fix 'latest' tag for CI
 * Updated path for read/write of data outliers
 * Updating makefile to represent unified Dockerfile approach (not two-step build)
-* Make sure we change "COVID-19/Omicron" to "COVID-19" when reading NSSP data.
+* Make sure we change "COVID-19/Omicron" to "COVID-19" when reading NSSP data
 * Unified Dockerfile
-* Add instructions for data outliers reruns to the SOP.
-* Add ability to call `make rerun-prod` to rerun just the tasks that needed a data change.
-* Add output container as a new field in the config file.
+* Add instructions for data outliers reruns to the SOP
+* Add ability to call `make rerun-prod` to rerun just the tasks that needed a data change
+* Add output container as a new field in the config file
 * Building with ubuntu-latest and using Container App runner for all else, remove azure-cli action
 * Adding exclusions documentation and Makefile support
 * Add the blob storage container, if provided
@@ -50,7 +52,7 @@
 * Write model diagnostics to an output file, correcting an oversight
 * Refactored GH Actions container build to cfa-actions 2-step build
 * Creating SOP.md to document weekly run procedures, including diagram
-* Allows unique job_ids for runs.
+* Allows unique job_ids for runs
 * Makefile supports either docker or podman as arguments to setup & manage containers
 * Streamlined configurable container execution provided by included start.sh script
 * Container App Job execution tools added including job-template.yaml file for single task and Python script for bulk tasks

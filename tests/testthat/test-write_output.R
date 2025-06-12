@@ -138,11 +138,12 @@ test_that("write_output_dir_structure generates dirs", {
   })
 })
 
-test_that("process_quantiles works as expected", {
-  # Fit object read in from setup.R
+test_that("process_quantiles works as expected (rstan)", {
+  # Load the sample fit object
+
   # Run the function on the fit object
   result <- process_quantiles(
-    fit,
+    fit_rstan,
     "test_geo",
     "test_model",
     "test_disease",
@@ -175,7 +176,33 @@ test_that("process_quantiles works as expected", {
     expected_columns
   )
 
-  # Test 3: Check if the `parameter` column contains the expected values
+  # Test 3A: Check if the result contains the correct number of processed_obs_data
+  obs_data <- result %>% dplyr::filter(`_variable` == "processed_obs_data")
+  expected_num_rows <- 5
+  expect_equal(
+    nrow(obs_data),
+    expected_num_rows,
+    info = paste("The result should have", expected_num_rows, "rows")
+  )
+
+  # Test 3B: Check if growth_rate has 8 rows
+  growth_rate_data <- result %>% dplyr::filter(`_variable` == "growth_rate")
+  expected_growth_num_rows <- 8
+  expect_equal(
+    nrow(growth_rate_data),
+    expected_growth_num_rows,
+    info = paste("The result should have", expected_num_rows, "rows")
+  )
+
+  # Test 3C: Check if the result contains the correct number of rows
+  expected_num_rows <- 53
+  expect_equal(
+    nrow(result),
+    expected_num_rows,
+    info = paste("The result should have", expected_num_rows, "rows")
+  )
+
+  # Test 4: Check if the `parameter` column contains the expected values
   expected_parameters <- c(
     "Rt",
     "expected_nowcast_cases",
@@ -199,7 +226,7 @@ test_that("process_quantiles works as expected", {
   # Test 5: Verify the left join: all `time` values from
   # `stan_draws` should exist in the result
   stan_draws <- tidybayes::gather_draws(
-    fit[["estimates"]][["fit"]],
+    fit_rstan[["estimates"]][["fit"]],
     imputed_reports[time],
     obs_reports[time],
     R[time],
@@ -214,10 +241,15 @@ test_that("process_quantiles works as expected", {
   )
 })
 
-test_that("process_samples works as expected", {
-  # Fit object read in from setup.R
+test_that("process_quantiles works as expected (cmdstanr)", {
   # Run the function on the fit object
-  result <- process_samples(fit, "test_geo", "test_model", "test_disease")
+  result <- process_quantiles(
+    fit_cmdstanr,
+    "test_geo",
+    "test_model",
+    "test_disease",
+    c(0.5, 0.95)
+  )
 
   # Test 1: Check if the result is a data.table
   expect_true(
@@ -229,10 +261,12 @@ test_that("process_samples works as expected", {
   expected_columns <- c(
     "time",
     "_variable",
-    "_chain",
-    "_iteration",
-    "_draw",
     "value",
+    "_lower",
+    "_upper",
+    "_width",
+    "_point",
+    "_interval",
     "reference_date",
     "geo_value",
     "model",
@@ -243,7 +277,33 @@ test_that("process_samples works as expected", {
     expected_columns
   )
 
-  # Test 3: Check if the `parameter` column contains the expected values
+  # Test 3A: Check if the result contains the correct number of processed_obs_data
+  obs_data <- result %>% dplyr::filter(`_variable` == "processed_obs_data")
+  expected_num_rows <- 5
+  expect_equal(
+    nrow(obs_data),
+    expected_num_rows,
+    info = paste("The result should have", expected_num_rows, "rows")
+  )
+
+  # Test 3B: Check if growth_rate has 8 rows
+  growth_rate_data <- result %>% dplyr::filter(`_variable` == "growth_rate")
+  expected_growth_num_rows <- 8
+  expect_equal(
+    nrow(growth_rate_data),
+    expected_growth_num_rows,
+    info = paste("The result should have", expected_num_rows, "rows")
+  )
+
+  # Test 3C: Check if the result contains the correct number of rows
+  expected_num_rows <- 53
+  expect_equal(
+    nrow(result),
+    expected_num_rows,
+    info = paste("The result should have", expected_num_rows, "rows")
+  )
+
+  # Test 4: Check if the `parameter` column contains the expected values
   expected_parameters <- c(
     "Rt",
     "expected_nowcast_cases",
@@ -261,13 +321,13 @@ test_that("process_samples works as expected", {
   # Test 4: Check if there are no missing values
   expect_false(
     anyNA(result[result[["_variable"]] != "processed_obs_data", ]),
-    "Columns have NA values"
+    "Relevant columns have NA values"
   )
 
   # Test 5: Verify the left join: all `time` values from
   # `stan_draws` should exist in the result
   stan_draws <- tidybayes::gather_draws(
-    fit[["estimates"]][["fit"]],
+    fit_cmdstanr[["estimates"]][["fit"]],
     imputed_reports[time],
     obs_reports[time],
     R[time],
