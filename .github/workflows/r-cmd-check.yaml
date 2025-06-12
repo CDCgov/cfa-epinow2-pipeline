@@ -56,10 +56,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Examine Directory
-        run: |
-          ls -a  /__w/cfa-epinow2-pipeline/cfa-epinow2-pipeline
-
       - name: Check that roxygen documentation is up to date
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
