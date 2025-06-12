@@ -46,15 +46,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+
       - name: Test coverage
         shell: Rscript {0}
         run: |
-          covr::codecov(
-            quiet = FALSE,
-            clean = FALSE,
-            install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package"),
-            token = "${{ secrets.CODECOV_TOKEN }}"
-          )
+          covr::package_coverage()
 
       - name: Show testthat output
         if: always()
