@@ -31,7 +31,8 @@ test_that("Minimal model fit all params runs", {
       sd = 0.2
     ),
     gp = list(
-      alpha_sd = 0.05
+      alpha_sd = 0.05,
+      ls_mean = 21
     )
   )
   # Sampler
@@ -89,7 +90,8 @@ test_that("Minimal model fit with no right trunc or delay runs", {
       sd = 0.2
     ),
     gp = list(
-      alpha_sd = 0.05
+      alpha_sd = 0.05,
+      ls_mean = 21
     )
   )
   # Sampler
@@ -152,7 +154,8 @@ test_that("Bad params w/ failing fit issues warning and returns NA", {
       sd = 0.2
     ),
     gp = list(
-      alpha_sd = 0.05
+      alpha_sd = 0.05,
+      ls_mean = 21
     )
   )
   # Sampler
