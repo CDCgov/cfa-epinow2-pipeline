@@ -24,8 +24,7 @@
 #'   estimate will be NA in the returned list.
 #' @details `generation_interval_path` is required because the generation
 #'   interval is a required parameter for $R_t$ estimation.
-#'   `delay_interval_path` and `right_truncation_path` are optional (but
-#'   strongly suggested).
+#'   `delay_interval_path` and `right_truncation_path` are optional
 #' @family parameters
 #' @export
 read_disease_parameters <- function(
@@ -306,7 +305,7 @@ check_returned_pmf <- function(
 #' Format PMFs for EpiNow2
 #'
 #' Opinionated wrappers around [EpiNow2::generation_time_opts()],
-#' [EpiNow2::delay_opts()], or [EpiNow2::dist_spec()] which format the
+#' [EpiNow2::delay_opts()], or [EpiNow2::trunc_opts()] which format the
 #' generation interval, delay, or right truncation parameters as an object ready
 #' for input to `EpiNow2`.
 #'
