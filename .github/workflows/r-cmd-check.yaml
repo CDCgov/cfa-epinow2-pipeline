@@ -62,6 +62,7 @@ jobs:
 
       - name: Check that roxygen documentation is up to date
         run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
           Rscript -e "roxygen2::roxygenize()"
           git diff --exit-code man || (echo "::error::Documentation is not up to date. Run 'roxygen2::roxygenize()' locally to re-render." && exit 1)
 
