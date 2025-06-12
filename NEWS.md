@@ -3,6 +3,7 @@
 ## Features
 * Switching base rocker image from geospatial (4.7 GB) to tidyverse (2.7 GB)
 * Updating EpiNow2 package from v1.4.0 to v1.6.0
+* Refactoring unit tests to make use of setup.R global testing env
 * Adding dependencies to install cmdstanr backend and using GH action
 * convert drop cols value to character for point/state exlcusions
 * Run `make test-batch` target locally

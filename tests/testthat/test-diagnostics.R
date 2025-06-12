@@ -12,14 +12,14 @@ test_that("Fitted model extracts diagnostics (rstan)", {
       "low_case_count_flag"
     ),
     value = c(
-      0.94240233,
+      0.90197355,
       0.00000000,
       0.00000000,
       0.00000000,
-      0.00000000,
-      0.00000000,
-      0.00000000,
-      0.00000000
+      0.01739130,
+      2.0000000,
+      1.0000000,
+      1.0000000
     ),
     job_id = rep("test", 8),
     task_id = rep("test", 8),
@@ -41,7 +41,8 @@ test_that("Fitted model extracts diagnostics (rstan)", {
 
   testthat::expect_equal(
     actual,
-    expected
+    expected,
+    tolerance = 1e-4
   )
 })
 

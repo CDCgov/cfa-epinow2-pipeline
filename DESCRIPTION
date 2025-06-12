@@ -33,6 +33,7 @@ Imports:
     AzureStor,
     cmdstanr,
     cli,
+    covr,
     data.table,
     DBI,
     dplyr,

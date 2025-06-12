@@ -1,7 +1,5 @@
 # Save model fit parameters into global testing environment for reuse
 
-library(CFAEpiNow2Pipeline)
-
 parameters <- list(
   generation_interval = sir_gt_pmf,
   delay_interval = c(0.2, 0.8),
@@ -46,6 +44,7 @@ sampler_opts <- list(
   iter_sampling = 25
 )
 
+<<<<<<< HEAD
 fit_rstan <- fit_model(
   data = data,
   parameters = parameters,
@@ -62,4 +61,15 @@ fit_cmdstanr <- fit_model(
   horizon = 0,
   priors = priors,
   sampler = c(backend = "cmdstanr", sampler_opts)
+=======
+set.seed(12345)
+
+fit <- fit_model(
+  data = data,
+  parameters = parameters,
+  seed = 12345,
+  horizon = 7,
+  priors = priors,
+  sampler = sampler_opts
+>>>>>>> main
 )
