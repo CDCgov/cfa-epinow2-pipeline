@@ -54,9 +54,9 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: ./.github/workflows/containers-and-az-pool.yaml
-
       - uses: actions/checkout@v4
+
+      - uses: ./.github/workflows/containers-and-az-pool.yaml
 
       - name: Examine Directory
         run: |
