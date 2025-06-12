@@ -7,7 +7,9 @@ test_that("Can apply exclusions on happy path", {
   )
   data_path <- test_path("data", "test_data.parquet")
   con <- DBI::dbConnect(duckdb::duckdb())
-  data <- DBI::dbGetQuery(con, "
+  data <- DBI::dbGetQuery(
+    con,
+    "
                          SELECT
                            report_date,
                            reference_date,
@@ -24,7 +26,6 @@ test_that("Can apply exclusions on happy path", {
   expected[
     expected[["reference_date"]] == "2023-01-06",
   ][["confirm"]] <- NA
-
 
   # Act
   actual <- apply_exclusions(
@@ -48,7 +49,9 @@ test_that("Can read exclusions on happy path", {
   duckdb::duckdb_register(con, "exclusions", expected)
 
   withr::with_tempdir({
-    DBI::dbExecute(con, "
+    DBI::dbExecute(
+      con,
+      "
     COPY (
       SELECT
         reference_date,
@@ -56,7 +59,8 @@ test_that("Can read exclusions on happy path", {
         geo_value AS state,
         disease
        FROM exclusions
-     ) TO 'test.csv'")
+     ) TO 'test.csv'"
+    )
 
     actual <- read_exclusions("test.csv")
   })
@@ -79,9 +83,7 @@ test_that("Empty read errors", {
   withr::with_tempdir({
     DBI::dbExecute(con, "COPY (FROM exclusions) TO 'test.csv'")
 
-    expect_error(read_exclusions("test.csv"),
-      class = "empty_return"
-    )
+    expect_error(read_exclusions("test.csv"), class = "empty_return")
   })
 })
 
@@ -106,7 +108,8 @@ test_that("Works as expected on large exclusions file", {
 
   # Load some sample case data
   data_path <- test_path("data", "2025-04-02_test.parquet")
-  cases <- read_data(data_path,
+  cases <- read_data(
+    data_path,
     disease = "COVID-19",
     geo_value = "OH",
     report_date = "2025-04-02",

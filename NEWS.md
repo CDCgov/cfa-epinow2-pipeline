@@ -1,8 +1,12 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
-
 * Add commands for generating backfill configurations.
+* Adding dependencies to install cmdstanr backend and using GH action
+* convert drop cols value to character for point/state exlcusions
+* Run `make test-batch` target locally
+* Added `make run-caj` for using a CAJ instead of Batch
+* Update runner action version
 * Remove duplicate batch autoscale text file
 * Improve consistency in docs
 * Update version of deploy action
@@ -10,6 +14,8 @@
 * Setting up dependabot yaml file
 * Remove out-of-date demo folder
 * Add automated check that docs are up to date
+* Rewrite README for simplification and clarity
+* Switch to the `air` code formatter
 * Replace remaining self-hosted runner workflows with ubuntu-latest
 * Fix mismatch between R code and documentation
 * Change code owner and include authors in R package
@@ -52,6 +58,7 @@
 * Minor changes in removing unused container tags from Azure CR
 * Reactivated DEBUG level logs from EpiNow2 so that sampler progress is visible
 * Added new test data and unit tests for point exclusions
+* Removed any nulls from reference_date column in outlier files
 
 # CFAEpiNow2Pipeline v0.1.0
 

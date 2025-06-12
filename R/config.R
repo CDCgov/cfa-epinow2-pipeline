@@ -11,7 +11,8 @@ character_or_null <- S7::new_union(S7::class_character, NULL)
 #' container to get it from. If NULL, will look locally.
 #' @family config
 #' @export
-Exclusions <- S7::new_class( # nolint: object_name_linter
+Exclusions <- S7::new_class(
+  # nolint: object_name_linter
   "Exclusions",
   properties = list(
     path = character_or_null,
@@ -28,7 +29,8 @@ Exclusions <- S7::new_class( # nolint: object_name_linter
 #' container to get it from. If NULL, will look locally.
 #' @name Interval
 #' @family config
-Interval <- S7::new_class( # nolint: object_name_linter
+Interval <- S7::new_class(
+  # nolint: object_name_linter
   "Interval",
   properties = list(
     path = character_or_null,
@@ -42,7 +44,8 @@ Interval <- S7::new_class( # nolint: object_name_linter
 #' @rdname Interval
 #' @family config
 #' @export
-GenerationInterval <- S7::new_class( # nolint: object_name_linter
+GenerationInterval <- S7::new_class(
+  # nolint: object_name_linter
   "GenerationInterval",
   parent = Interval,
 )
@@ -53,7 +56,8 @@ GenerationInterval <- S7::new_class( # nolint: object_name_linter
 #' @rdname Interval
 #' @family config
 #' @export
-DelayInterval <- S7::new_class( # nolint: object_name_linter
+DelayInterval <- S7::new_class(
+  # nolint: object_name_linter
   "DelayInterval",
   parent = Interval,
 )
@@ -64,7 +68,8 @@ DelayInterval <- S7::new_class( # nolint: object_name_linter
 #' @rdname Interval
 #' @family config
 #' @export
-RightTruncation <- S7::new_class( # nolint: object_name_linter
+RightTruncation <- S7::new_class(
+  # nolint: object_name_linter
   "RightTruncation",
   parent = Interval,
 )
@@ -79,7 +84,8 @@ RightTruncation <- S7::new_class( # nolint: object_name_linter
 #' @param right_truncation An instance of `RightTruncation` class.
 #' @family config
 #' @export
-Parameters <- S7::new_class( # nolint: object_name_linter
+Parameters <- S7::new_class(
+  # nolint: object_name_linter
   "Parameters",
   properties = list(
     as_of_date = S7::class_character,
@@ -101,7 +107,8 @@ Parameters <- S7::new_class( # nolint: object_name_linter
 #' @param reference_date A list of strings representing reference dates.
 #' @family config
 #' @export
-Data <- S7::new_class( # nolint: object_name_linter
+Data <- S7::new_class(
+  # nolint: object_name_linter
   "Data",
   properties = list(
     path = S7::class_character,
@@ -150,7 +157,8 @@ Data <- S7::new_class( # nolint: object_name_linter
 #' container.
 #' @family config
 #' @export
-Config <- S7::new_class( # nolint: object_name_linter
+Config <- S7::new_class(
+  # nolint: object_name_linter
   "Config",
   properties = list(
     job_id = S7::class_character,
@@ -242,7 +250,8 @@ read_json_into_config <- function(config_path, optional_fields) {
       if (prop_name %in% names(str2class)) {
         # This is a class, call inner() again to recursively build it.
         S7::prop(config, prop_name) <- inner(
-          raw_data[[prop_name]], str2class[[prop_name]]
+          raw_data[[prop_name]],
+          str2class[[prop_name]]
         )
       } else if (!(prop_name %in% S7::prop_names(class_to_fill()))) {
         cli::cli_alert_info(
