@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - uses: ./.github/workflows/containers-and-az-pool.yaml
-      
+
       - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-r-dependencies@v2
