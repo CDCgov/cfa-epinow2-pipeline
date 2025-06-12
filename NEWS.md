@@ -32,10 +32,6 @@
 * Automate tag deletion from ghcr.io
 * Editing of `SOP.md`
 * Pin r-version at 4.4.3 for CI/CD
-* Fix minor typos in `SOP.md
-* Swap from `Dockerfile-batch` to using an inline-metadata script, managed by `uv`
-* Switching base docker image to smaller image. Switched from geospatial (4.7 GB) to tidyverse (2.7 GB)
-* Pin r-version at 4.4.3 for CI/CD
 * Fix minor typos in `SOP.md`.
 * Swap from `Dockerfile-batch` to using an inline-metadata script, managed by `uv`.
 * Adding dynamic logic to re-query for configs in blob
