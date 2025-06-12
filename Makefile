@@ -47,12 +47,25 @@ rerun-config: ## Generate a configuration file to rerun a previous model
 		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
 
+create-wed-range-inclusive: ## Create a range of Wednesday dates inclusive
+	# The user passes in a `START_DATE` and `END_DATE` in ISO format (YYYY-MM-DD).
+	# The script will generate a list of Wednesdays between those two dates inclusive.
+	# Example usage: START_DATE=2024-10-01 END_DATE=2025-05-31 make create-wed-range-inclusive
+	@python -c "import os, datetime as dt; \
+		start = dt.datetime.strptime(os.environ['START_DATE'], '%Y-%m-%d').date(); \
+		end = dt.datetime.strptime(os.environ['END_DATE'], '%Y-%m-%d').date(); \
+		dates = [start + dt.timedelta(days=i) for i in range((end-start).days+1)]; \
+		wednesdays = [d for d in dates if d.weekday() == 2]; \
+		print(','.join([d.strftime('%Y-%m-%d') for d in wednesdays]))"
+
 backfill-config-and-run: ## Generate backfill configs, and run in batch
 	# More and other options are available, see the script for details if these
 	# basic arguments are not sufficient. It is expected that backfill configs
 	# will be relatively different from one another, so it is likely these arguments
 	# will be different for each backfill.
 	# To see those options, run `uv run azure/backfill_generate_and_run.py --help`
+	# To generate a list of Wednesday, run e.g.
+	# `make create-wed-range-inclusive START_DATE=2024-10-01 END_DATE=2025-05-31`
 	uv run --env-file .env azure/backfill_generate_and_run.py \
 		--state=all \
 		--disease="COVID-19,Influenza" \
