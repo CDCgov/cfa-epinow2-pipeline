@@ -9,6 +9,7 @@ $Dockerfile-batch^
 ^LICENSE.md$
 ^Makefile$
 ^SOP.md$
+^[\.]?air\.toml$
 ^\.github$
 ^\.lintr$
 ^\.pre-commit-config\.yaml$

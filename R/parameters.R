@@ -29,13 +29,14 @@
 #' @family parameters
 #' @export
 read_disease_parameters <- function(
-    generation_interval_path,
-    delay_interval_path,
-    right_truncation_path,
-    disease,
-    as_of_date,
-    geo_value,
-    report_date) {
+  generation_interval_path,
+  delay_interval_path,
+  right_truncation_path,
+  disease,
+  as_of_date,
+  geo_value,
+  report_date
+) {
   generation_interval <- read_interval_pmf(
     path = generation_interval_path,
     disease = disease,
@@ -114,21 +115,23 @@ path_is_specified <- function(path) {
 #' @return A PMF vector
 #' @family parameters
 #' @export
-read_interval_pmf <- function(path,
-                              disease = c(
-                                "COVID-19",
-                                "Influenza",
-                                "RSV",
-                                "test"
-                              ),
-                              as_of_date,
-                              parameter = c(
-                                "generation_interval",
-                                "delay",
-                                "right_truncation"
-                              ),
-                              geo_value = NA,
-                              report_date = NA) {
+read_interval_pmf <- function(
+  path,
+  disease = c(
+    "COVID-19",
+    "Influenza",
+    "RSV",
+    "test"
+  ),
+  as_of_date,
+  parameter = c(
+    "generation_interval",
+    "delay",
+    "right_truncation"
+  ),
+  geo_value = NA,
+  report_date = NA
+) {
   ###################
   # Validate input
   rlang::arg_match(parameter)
@@ -137,11 +140,11 @@ read_interval_pmf <- function(path,
   as_of_date <- stringify_date(as_of_date)
   cli::cli_alert_info("Reading {.arg {parameter}} from {.path {path}}")
   if (!file.exists(path)) {
-    cli::cli_abort("File {.path {path}} does not exist",
+    cli::cli_abort(
+      "File {.path {path}} does not exist",
       class = "file_not_found"
     )
   }
-
 
   ################
   # Prepare query
@@ -172,12 +175,15 @@ read_interval_pmf <- function(path,
     parameters <- c(parameters, list(geo_value))
   }
   if (parameter == "right_truncation") {
-    query <- paste(query, "AND (
+    query <- paste(
+      query,
+      "AND (
                              reference_date <= ? :: DATE
                              OR reference_date IS NULL
                            )
                            ORDER BY reference_date DESC
-                           LIMIT 1")
+                           LIMIT 1"
+    )
     parameters <- c(parameters, list(report_date))
   }
 
@@ -233,13 +239,14 @@ read_interval_pmf <- function(path,
 #' @family parameters
 #' @noRd
 check_returned_pmf <- function(
-    pmf_df,
-    parameter,
-    disease,
-    as_of_date,
-    geo_value,
-    report_date,
-    path) {
+  pmf_df,
+  parameter,
+  disease,
+  as_of_date,
+  geo_value,
+  report_date,
+  path
+) {
   ################
   # Validate loaded PMF
   if (nrow(pmf_df) != 1) {
@@ -317,10 +324,9 @@ NULL
 #' @rdname opts_formatter
 #' @export
 format_generation_interval <- function(pmf) {
-  if (
-    rlang::is_na(pmf) || rlang::is_null(pmf)
-  ) {
-    cli::cli_abort("No generation time PMF specified but is required",
+  if (rlang::is_na(pmf) || rlang::is_null(pmf)) {
+    cli::cli_abort(
+      "No generation time PMF specified but is required",
       class = "Missing_GI"
     )
   }
@@ -346,9 +352,7 @@ format_generation_interval <- function(pmf) {
 #' @rdname opts_formatter
 #' @export
 format_delay_interval <- function(pmf) {
-  if (
-    rlang::is_na(pmf) || rlang::is_null(pmf)
-  ) {
+  if (rlang::is_na(pmf) || rlang::is_null(pmf)) {
     cli::cli_alert("Not adjusting for infection to case delay")
     EpiNow2::delay_opts()
   } else {
@@ -366,9 +370,7 @@ format_delay_interval <- function(pmf) {
 #' @rdname opts_formatter
 #' @export
 format_right_truncation <- function(pmf, data) {
-  if (
-    rlang::is_na(pmf) || rlang::is_null(pmf)
-  ) {
+  if (rlang::is_na(pmf) || rlang::is_null(pmf)) {
     cli::cli_alert("Not adjusting for right truncation")
     EpiNow2::trunc_opts()
   } else if (length(pmf) > nrow(data)) {

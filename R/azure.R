@@ -7,9 +7,10 @@
 #' @family azure
 #' @export
 download_if_specified <- function(
-    blob_path,
-    blob_storage_container,
-    dir) {
+  blob_path,
+  blob_storage_container,
+  dir
+) {
   # Guard against null input erroring out file.exists()
   if (rlang::is_null(blob_path)) {
     local_path <- NULL
@@ -39,9 +40,10 @@ download_if_specified <- function(
 #' @family azure
 #' @export
 download_file_from_container <- function(
-    blob_storage_path,
-    local_file_path,
-    storage_container) {
+  blob_storage_path,
+  local_file_path,
+  storage_container
+) {
   cli::cli_alert_info(
     "Downloading blob {.path {blob_storage_path}} to {.path {local_file_path}}"
   )

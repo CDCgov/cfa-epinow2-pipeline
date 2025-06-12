@@ -50,6 +50,12 @@ jobs:
           extra-packages: any::rcmdcheck, any::roxygen2
           needs: check
 
+      - name: Install cmdstan
+        uses: epinowcast/actions/install-cmdstan@v1
+        with:
+          cmdstan-version: '2.36.0'
+          num-cores: 2
+
       - name: Check that roxygen documentation is up to date
         run: |
           Rscript -e "roxygen2::roxygenize()"

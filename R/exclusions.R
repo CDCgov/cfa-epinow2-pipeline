@@ -24,7 +24,9 @@ apply_exclusions <- function(cases, exclusions) {
   duckdb::duckdb_register(con, "cases", cases)
   duckdb::duckdb_register(con, "exclusions", exclusions)
 
-  df <- DBI::dbGetQuery(con, "
+  df <- DBI::dbGetQuery(
+    con,
+    "
     SELECT
       cases.report_date,
       cases.reference_date,
@@ -41,7 +43,8 @@ apply_exclusions <- function(cases, exclusions) {
         AND cases.geo_value = exclusions.geo_value
         AND cases.disease = exclusions.disease
       ORDER BY cases.reference_date
-    ")
+    "
+  )
 
   cli::cli_alert_info("{.val {sum(is.na(df[['confirm']]))}} exclusions applied")
 
@@ -71,7 +74,9 @@ read_exclusions <- function(path) {
   con <- DBI::dbConnect(duckdb::duckdb())
   on.exit(DBI::dbDisconnect(con))
   df <- rlang::try_fetch(
-    DBI::dbGetQuery(con, "
+    DBI::dbGetQuery(
+      con,
+      "
       SELECT
         reference_date,
         report_date,
@@ -93,7 +98,8 @@ read_exclusions <- function(path) {
   )
 
   if (nrow(df) == 0) {
-    cli::cli_abort("No data matching returned from {.path {path}}",
+    cli::cli_abort(
+      "No data matching returned from {.path {path}}",
       class = "empty_return"
     )
   }

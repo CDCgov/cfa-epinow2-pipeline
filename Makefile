@@ -78,9 +78,14 @@ backfill-config-and-run: ## Generate backfill configs, and run in batch
 		--image-name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
 		--pool-id="$(POOL)"
 
+run-caj: ## Runs run_container_app_job.py on Azure Container App Jobs
+	uv run azure/run_container_app_job.py \
+		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+		--job_id="$(JOB)"
+
 run-batch: ## Runs job.py on Azure Batch
 	uv run --env-file .env \
-	azure/job.py \
+		azure/job.py \
 		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
 		--config_container="$(CONFIG_CONTAINER)" \
 		--pool_id="$(POOL)" \
@@ -105,12 +110,12 @@ push: ## Push the tagged image to the container registry
 	$(CNTR_MGR) push $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
 test-batch: ## Run GitHub Actions workflow and then job.py for testing on Azure Batch
-	gh workflow run \
-	  -R cdcgov/cfa-config-generator run-workload.yaml  \
-	  -f disease=all \
-	  -f state=NY \
-	  -f output_container="nssp-rt-testing" \
-	  -f job_id=$(JOB)
+	uv run azure/generate_configs.py \
+		--disease="COVID-19,Influenza" \
+		--state=NY \
+		--output-container=nssp-rt-testing \
+		--job-id=$(JOB) \
+		--report-date-str=$(REPORT_DATE)
 	uv run --env-file .env \
 		azure/job.py \
 			--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
