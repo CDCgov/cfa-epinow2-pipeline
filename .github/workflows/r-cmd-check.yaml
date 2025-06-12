@@ -4,11 +4,7 @@
 name: R CMD check
 
 on:
-  pull_request:
-    branches: [main]
-  push:
-    branches:
-      - main
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
