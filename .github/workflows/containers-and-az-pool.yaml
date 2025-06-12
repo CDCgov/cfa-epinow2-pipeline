@@ -240,3 +240,8 @@ jobs:
               echo "Running create pool script"
               uv run .github/scripts/create_pool.py
             fi
+  test-coverage:
+    uses: ./.github/workflows/test-coverage.yaml
+
+  r-cmd-check:
+    uses: ./.github/workflows/r-cmd-check.yaml
