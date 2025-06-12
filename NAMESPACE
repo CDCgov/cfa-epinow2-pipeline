@@ -2,11 +2,7 @@
 
 export(Config)
 export(Data)
-export(DelayInterval)
-export(Exclusions)
-export(GenerationInterval)
 export(Parameters)
-export(RightTruncation)
 export(apply_exclusions)
 export(check_returned_pmf)
 export(download_file_from_container)

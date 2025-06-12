@@ -217,13 +217,13 @@ test_that("process_quantiles works as expected (rstan)", {
     expected_parameters
   )
 
-  # Test 5: Check if there are no missing values
+  # Test 4: Check if there are no missing values
   expect_false(
     anyNA(result[result[["_variable"]] != "processed_obs_data", ]),
     "Relevant columns have NA values"
   )
 
-  # Test 6: Verify the left join: all `time` values from
+  # Test 5: Verify the left join: all `time` values from
   # `stan_draws` should exist in the result
   stan_draws <- tidybayes::gather_draws(
     fit_rstan[["estimates"]][["fit"]],
@@ -318,13 +318,13 @@ test_that("process_quantiles works as expected (cmdstanr)", {
     expected_parameters
   )
 
-  # Test 5: Check if there are no missing values
+  # Test 4: Check if there are no missing values
   expect_false(
     anyNA(result[result[["_variable"]] != "processed_obs_data", ]),
     "Relevant columns have NA values"
   )
 
-  # Test 6: Verify the left join: all `time` values from
+  # Test 5: Verify the left join: all `time` values from
   # `stan_draws` should exist in the result
   stan_draws <- tidybayes::gather_draws(
     fit_cmdstanr[["estimates"]][["fit"]],
