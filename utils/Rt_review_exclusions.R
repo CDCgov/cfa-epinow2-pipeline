@@ -153,7 +153,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     )
     AzureStor::storage_write_csv(
       cont = cont,
-      object = df2,
+      object = point_exclusions,
       file = file.path(
         "outliers-v2",
         paste0(lubridate::ymd(report_date), ".csv")
