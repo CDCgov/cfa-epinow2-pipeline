@@ -5,10 +5,10 @@
 \title{Parameters Class}
 \usage{
 Parameters(
-  as_of_date = character(0),
-  generation_interval = GenerationInterval(),
-  delay_interval = DelayInterval(),
-  right_truncation = RightTruncation()
+  as_of_date = class_missing,
+  generation_interval = class_missing,
+  delay_interval = class_missing,
+  right_truncation = class_missing
 )
 }
 \arguments{
@@ -28,7 +28,6 @@ Holds all parameter-related configurations for the pipeline.
 Other config: 
 \code{\link{Config}()},
 \code{\link{Data}()},
-\code{\link{Exclusions}()},
 \code{\link{Interval}},
 \code{\link{read_json_into_config}()}
 }

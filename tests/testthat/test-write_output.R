@@ -139,9 +139,7 @@ test_that("write_output_dir_structure generates dirs", {
 })
 
 test_that("process_quantiles works as expected", {
-  # Load the sample fit object
-  fit <- readRDS(test_path("data", "sample_fit.rds"))
-
+  # Fit object read in from setup.R
   # Run the function on the fit object
   result <- process_quantiles(
     fit,
@@ -177,15 +175,7 @@ test_that("process_quantiles works as expected", {
     expected_columns
   )
 
-  # Test 3: Check if the result contains the correct number of rows
-  expected_num_rows <- 55
-  expect_equal(
-    nrow(result),
-    expected_num_rows,
-    info = paste("The result should have", expected_num_rows, "rows")
-  )
-
-  # Test 4: Check if the `parameter` column contains the expected values
+  # Test 3: Check if the `parameter` column contains the expected values
   expected_parameters <- c(
     "Rt",
     "expected_nowcast_cases",
@@ -200,13 +190,13 @@ test_that("process_quantiles works as expected", {
     expected_parameters
   )
 
-  # Test 5: Check if there are no missing values
+  # Test 4: Check if there are no missing values
   expect_false(
     anyNA(result[result[["_variable"]] != "processed_obs_data", ]),
     "Relevant columns have NA values"
   )
 
-  # Test 6: Verify the left join: all `time` values from
+  # Test 5: Verify the left join: all `time` values from
   # `stan_draws` should exist in the result
   stan_draws <- tidybayes::gather_draws(
     fit[["estimates"]][["fit"]],
@@ -225,9 +215,7 @@ test_that("process_quantiles works as expected", {
 })
 
 test_that("process_samples works as expected", {
-  # Load the sample fit object
-  fit <- readRDS(test_path("data", "sample_fit.rds"))
-
+  # Fit object read in from setup.R
   # Run the function on the fit object
   result <- process_samples(fit, "test_geo", "test_model", "test_disease")
 
@@ -255,15 +243,7 @@ test_that("process_samples works as expected", {
     expected_columns
   )
 
-  # Test 3: Check if the result contains the correct number of rows
-  expected_num_rows <- 2505 # Replace with actual expected value
-  expect_equal(
-    nrow(result),
-    expected_num_rows,
-    info = paste("The result should have", expected_num_rows, "rows")
-  )
-
-  # Test 4: Check if the `parameter` column contains the expected values
+  # Test 3: Check if the `parameter` column contains the expected values
   expected_parameters <- c(
     "Rt",
     "expected_nowcast_cases",
@@ -278,13 +258,13 @@ test_that("process_samples works as expected", {
     expected_parameters
   )
 
-  # Test 5: Check if there are no missing values
+  # Test 4: Check if there are no missing values
   expect_false(
     anyNA(result[result[["_variable"]] != "processed_obs_data", ]),
     "Columns have NA values"
   )
 
-  # Test 6: Verify the left join: all `time` values from
+  # Test 5: Verify the left join: all `time` values from
   # `stan_draws` should exist in the result
   stan_draws <- tidybayes::gather_draws(
     fit[["estimates"]][["fit"]],

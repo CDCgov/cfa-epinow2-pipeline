@@ -2,18 +2,9 @@
 % Please edit documentation in R/config.R
 \name{Interval}
 \alias{Interval}
-\alias{GenerationInterval}
-\alias{DelayInterval}
-\alias{RightTruncation}
 \title{Interval Class}
 \usage{
-Interval(path = character(0), blob_storage_container = character(0))
-
-GenerationInterval(path = character(0), blob_storage_container = character(0))
-
-DelayInterval(path = character(0), blob_storage_container = character(0))
-
-RightTruncation(path = character(0), blob_storage_container = character(0))
+Interval(path = class_missing, blob_storage_container = class_missing)
 }
 \arguments{
 \item{path}{A string specifying the path to the generation interval CSV file.}
@@ -23,39 +14,11 @@ container to get it from. If NULL, will look locally.}
 }
 \description{
 Represents a generic interval. Meant to be subclassed.
-
-Represents the generation interval parameters.
-
-Represents the delay interval parameters.
-
-Represents the right truncation parameters.
 }
 \seealso{
 Other config: 
 \code{\link{Config}()},
 \code{\link{Data}()},
-\code{\link{Exclusions}()},
-\code{\link{Parameters}()},
-\code{\link{read_json_into_config}()}
-
-Other config: 
-\code{\link{Config}()},
-\code{\link{Data}()},
-\code{\link{Exclusions}()},
-\code{\link{Parameters}()},
-\code{\link{read_json_into_config}()}
-
-Other config: 
-\code{\link{Config}()},
-\code{\link{Data}()},
-\code{\link{Exclusions}()},
-\code{\link{Parameters}()},
-\code{\link{read_json_into_config}()}
-
-Other config: 
-\code{\link{Config}()},
-\code{\link{Data}()},
-\code{\link{Exclusions}()},
 \code{\link{Parameters}()},
 \code{\link{read_json_into_config}()}
 }
