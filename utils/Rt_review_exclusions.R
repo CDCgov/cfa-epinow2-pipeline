@@ -137,11 +137,15 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     container_name <- "nssp-etl"
     cont <- CFAEpiNow2Pipeline::fetch_blob_container(container_name)
 
-    df2 <- point_exclusions
-    if df2.filter(~col("reference_date")).count() == 0:
-       print("Dataset is empty. Not saving.")
-    else:
-       df2.show()
+    empty_df <- function(df2) {
+      all(df2 == "")
+    }
+    
+    if(empty_df(point_exclusions)){
+      cat("This CSV contains empty values. No output file created.\n")
+    } else {
+      point_exclusions
+    }
                                
     cli::cli_alert_info(
       "saving {lubridate::ymd(report_date)}.csv in
