@@ -118,7 +118,7 @@ def main(
                 for each report date. This is most useful when pulling from the NSSP gold
                 data. For example, 'gold/{}.parquet' would become 'gold/2025-01-01.parquet'
                 for the report date 2025-01-01.
-                Cannot be used in conjunction with the --data-paths option.
+                Cannot be used in conjunction with the --str-data-paths option.
                 """,
         ),
     ] = None,
@@ -128,7 +128,7 @@ def main(
             help="""
                 Comma separated paths to the data. One path for each report date.
                 If the data is in blob, these should be the names of the blobs.
-                Cannot be used in conjunction with the --report-date-fstring option.
+                Cannot be used in conjunction with the --data-paths-template option.
                 """,
         ),
     ] = None,
