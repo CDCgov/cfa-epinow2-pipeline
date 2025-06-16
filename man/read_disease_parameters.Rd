@@ -51,8 +51,7 @@ Read in disease process parameters from an external file or files
 \details{
 \code{generation_interval_path} is required because the generation
 interval is a required parameter for $R_t$ estimation.
-\code{delay_interval_path} and \code{right_truncation_path} are optional (but
-strongly suggested).
+\code{delay_interval_path} and \code{right_truncation_path} are optional
 }
 \seealso{
 Other parameters: 

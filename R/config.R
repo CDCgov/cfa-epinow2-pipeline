@@ -10,7 +10,7 @@ character_or_null <- S7::new_union(S7::class_character, NULL)
 #' @param blob_storage_container Optional. The name of the blob storage
 #' container to get it from. If NULL, will look locally.
 #' @family config
-#' @export
+#' @noRd
 Exclusions <- S7::new_class(
   # nolint: object_name_linter
   "Exclusions",
@@ -43,7 +43,7 @@ Interval <- S7::new_class(
 #' Represents the generation interval parameters.
 #' @rdname Interval
 #' @family config
-#' @export
+#' @noRd
 GenerationInterval <- S7::new_class(
   # nolint: object_name_linter
   "GenerationInterval",
@@ -55,7 +55,7 @@ GenerationInterval <- S7::new_class(
 #' Represents the delay interval parameters.
 #' @rdname Interval
 #' @family config
-#' @export
+#' @noRd
 DelayInterval <- S7::new_class(
   # nolint: object_name_linter
   "DelayInterval",
@@ -67,7 +67,7 @@ DelayInterval <- S7::new_class(
 #' Represents the right truncation parameters.
 #' @rdname Interval
 #' @family config
-#' @export
+#' @noRd
 RightTruncation <- S7::new_class(
   # nolint: object_name_linter
   "RightTruncation",

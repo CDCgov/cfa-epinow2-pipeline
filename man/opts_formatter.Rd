@@ -24,7 +24,7 @@ An \verb{EpiNow2::*_opts()} formatted object or NA with a message
 }
 \description{
 Opinionated wrappers around \code{\link[EpiNow2:generation_time_opts]{EpiNow2::generation_time_opts()}},
-\code{\link[EpiNow2:delay_opts]{EpiNow2::delay_opts()}}, or \code{\link[EpiNow2:dist_spec]{EpiNow2::dist_spec()}} which format the
+\code{\link[EpiNow2:delay_opts]{EpiNow2::delay_opts()}}, or \code{\link[EpiNow2:trunc_opts]{EpiNow2::trunc_opts()}} which format the
 generation interval, delay, or right truncation parameters as an object ready
 for input to \code{EpiNow2}.
 }

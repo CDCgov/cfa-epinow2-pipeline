@@ -1,7 +1,9 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+
 * Add commands for generating backfill configurations.
+* Refactoring unit tests to make use of setup.R global testing env
 * Adding dependencies to install cmdstanr backend and using GH action
 * convert drop cols value to character for point/state exlcusions
 * Run `make test-batch` target locally
