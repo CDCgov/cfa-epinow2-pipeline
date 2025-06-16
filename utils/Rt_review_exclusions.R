@@ -137,10 +137,11 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     container_name <- "nssp-etl"
     cont <- CFAEpiNow2Pipeline::fetch_blob_container(container_name)
 
-    if point_exclusions.filter(~col("reference_date")).count() = 0:
+    df2 <- point_exclusions
+    if df2.filter(~col("reference_date")).count() == 0:
        print("Dataset is empty. Not saving.")
     else:
-       point_exclusions.show()
+       df2.show()
                                
     cli::cli_alert_info(
       "saving {lubridate::ymd(report_date)}.csv in
@@ -148,7 +149,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     )
     AzureStor::storage_write_csv(
       cont = cont,
-      object = point_exclusions,
+      object = df2,
       file = file.path(
         "outliers-v2",
         paste0(lubridate::ymd(report_date), ".csv")
