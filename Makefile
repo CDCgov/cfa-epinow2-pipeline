@@ -50,7 +50,9 @@ rerun-config: ## Generate a configuration file to rerun a previous model
 create-wed-range-inclusive: ## Create a range of Wednesday dates inclusive
 	# The user passes in a `START_DATE` and `END_DATE` in ISO format (YYYY-MM-DD).
 	# The script will generate a list of Wednesdays between those two dates inclusive.
-	# Example usage: START_DATE=2024-10-01 END_DATE=2025-05-31 make create-wed-range-inclusive
+	# Example usage: START_DATE=2024-10-01 END_DATE=2025-05-31 make create-wed-range-inclusive.
+	# This is most useful for getting a list of report date arguments for the
+	# `backfill-config-and-run` target.
 	@python -c "import os, datetime as dt; \
 		start = dt.datetime.strptime(os.environ['START_DATE'], '%Y-%m-%d').date(); \
 		end = dt.datetime.strptime(os.environ['END_DATE'], '%Y-%m-%d').date(); \
@@ -64,7 +66,7 @@ backfill-config-and-run: ## Generate backfill configs, and run in batch
 	# will be relatively different from one another, so it is likely these arguments
 	# will be different for each backfill.
 	# To see those options, run `uv run azure/backfill_generate_and_run.py --help`
-	# To generate a list of Wednesday, run e.g.
+	# To generate a list of Wednesday arguments, run e.g.
 	# `make create-wed-range-inclusive START_DATE=2024-10-01 END_DATE=2025-05-31`
 	uv run --env-file .env azure/backfill_generate_and_run.py \
 		--state=all \
