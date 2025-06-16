@@ -42,6 +42,7 @@ Imports:
     EpiNow2 (>= 1.4.0),
     jsonlite,
     rlang,
+    roxygen2,
     rstan,
     S7,
     lubridate,
