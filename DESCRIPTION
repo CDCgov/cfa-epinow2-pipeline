@@ -41,6 +41,7 @@ Imports:
     duckdb,
     EpiNow2 (>= 1.4.0),
     jsonlite,
+    rcmdcheck,
     rlang,
     roxygen2,
     rstan,
