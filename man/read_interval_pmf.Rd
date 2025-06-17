@@ -66,6 +66,7 @@ https://en.wikipedia.org/wiki/Slowly_changing_dimension#Type_2:_add_new_row
 }
 \seealso{
 Other parameters: 
+\code{\link{check_returned_pmf}()},
 \code{\link{opts_formatter}},
 \code{\link{read_disease_parameters}()}
 }

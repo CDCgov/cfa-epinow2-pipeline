@@ -1,6 +1,6 @@
 Package: CFAEpiNow2Pipeline
 Title: EpiNow2 wrapper for deployment to Azure Batch
-Version: 0.2.1.9000
+Version: 0.3.0.0
 Authors@R: c(
     person("Zachary", "Susswein", , "utb2@cdc.gov", role = "aut",
            comment = c(ORCID = "0000-0002-4329-4833")),
@@ -24,10 +24,9 @@ Remotes:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests:
-    primarycensored,
     testthat (>= 3.0.0),
     usethis,
-    withr
+    withr,
 Config/testthat/edition: 3
 Imports:
     AzureRMR,
@@ -41,6 +40,7 @@ Imports:
     duckdb,
     EpiNow2 (>= 1.4.0),
     jsonlite,
+    primarycensored,
     rcmdcheck,
     rlang,
     roxygen2,

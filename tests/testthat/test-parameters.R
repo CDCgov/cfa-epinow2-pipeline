@@ -495,7 +495,7 @@ test_that("NULL `reference_date` prints in output", {
   path <- "test/path/to/file.ext"
 
   expect_snapshot(
-    pmf <- check_returned_pmf(
+    pmf <- CFAEpiNow2Pipeline:::check_returned_pmf(
       pmf_df = pmf_df,
       parameter = parameter,
       disease = disease,
@@ -547,6 +547,8 @@ test_that("GI with nonzero first element throws warning", {
   )
   expect_equal(
     fixed,
-    EpiNow2::generation_time_opts(dist = EpiNow2::dist_spec(pmf = sir_gt_pmf))
+    EpiNow2::generation_time_opts(
+      dist = EpiNow2::NonParametric(pmf = sir_gt_pmf)
+    )
   )
 })
