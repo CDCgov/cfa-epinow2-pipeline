@@ -157,3 +157,40 @@ test_that("Replace COVID-19/Omicron with COVID-19, US", {
   expect_false("COVID-19/Omicron" %in% actual$disease)
   expect_true(all(actual$disease == "COVID-19"))
 })
+
+test_that("API v2 with COVID-19, one state", {
+  data_path <- test_path("data/CA_apiv2_test.parquet")
+
+  actual <- read_data(
+    data_path,
+    disease = "COVID-19",
+    geo_value = "CA",
+    report_date = "2024-11-26",
+    min_reference_date = as.Date("2024-06-01"),
+    max_reference_date = "2024-11-25"
+  )
+
+  # Expect that there should be no "COVID-19/Omicron" in the data,
+  # only "COVID-19"
+  expect_false("COVID-19/Omicron" %in% actual$disease)
+  expect_true(all(actual$disease == "COVID-19"))
+})
+
+
+test_that("API v2 with COVID-19, US", {
+  data_path <- test_path("data/CA_apiv2_test.parquet")
+
+  actual <- read_data(
+    data_path,
+    disease = "COVID-19",
+    geo_value = "US",
+    report_date = "2024-11-26",
+    min_reference_date = as.Date("2024-06-01"),
+    max_reference_date = "2024-11-25"
+  )
+
+  # Expect that there should be no "COVID-19/Omicron" in the data,
+  # only "COVID-19"
+  expect_false("COVID-19/Omicron" %in% actual$disease)
+  expect_true(all(actual$disease == "COVID-19"))
+})
