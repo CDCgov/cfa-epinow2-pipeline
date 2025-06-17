@@ -141,7 +141,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
       all(df2 == "")
     }
 
-    if (empty_df(point_exclusions)){
+    if (empty_df(point_exclusions)) {
       cat("This CSV contains empty values. No output file created.\n")
     } else {
       cli::cli_alert_info(
