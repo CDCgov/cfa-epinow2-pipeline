@@ -141,24 +141,22 @@ create_pt_excl_from_rt_xslx <- function(dates) {
       all(df2 == "")
     }
     
-    if(empty_df(point_exclusions)){
+    if (empty_df(point_exclusions)){
       cat("This CSV contains empty values. No output file created.\n")
     } else {
-      point_exclusions
-    }
-                               
-    cli::cli_alert_info(
-      "saving {lubridate::ymd(report_date)}.csv in
-      {container_name}/outliers-v2"
-    )
-    AzureStor::storage_write_csv(
-      cont = cont,
-      object = point_exclusions,
-      file = file.path(
-        "outliers-v2",
-        paste0(lubridate::ymd(report_date), ".csv")
+      cli::cli_alert_info(
+        "saving {lubridate::ymd(report_date)}.csv in
+        {container_name}/outliers-v2"
       )
-    )
+      AzureStor::storage_write_csv(
+        cont = cont,
+        object = point_exclusions,
+        file = file.path(
+          "outliers-v2",
+          paste0(lubridate::ymd(report_date), ".csv")
+        )
+      )
+    }
 
     #### State exclusions #####
     state_exclusions <- combined_df |>
