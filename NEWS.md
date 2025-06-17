@@ -1,7 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
-* Updating EpiNow2 package from v1.4.0 to v1.6.1
+* Updating EpiNow2 from version 1.4.1.9000 to version 1.6.1
 * Switching base rocker image from geospatial (4.7 GB) to r-ver (3 GB)
 * Refactoring unit tests to make use of setup.R global testing env
 * Adding dependencies to install cmdstanr backend and using GH action
