@@ -40,8 +40,8 @@ sampler_opts <- list(
   chains = 1,
   adapt_delta = 0.8,
   max_treedepth = 10,
-  iter_warmup = 25,
-  iter_sampling = 25
+  iter_warmup = 100,
+  iter_sampling = 100
 )
 
 set.seed(12345)
