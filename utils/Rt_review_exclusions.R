@@ -142,7 +142,9 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     }
 
     if (empty_df(point_exclusions)) {
-      cli::cli_alert_info("This CSV contains empty values. No output file created.")
+      cli::cli_alert_info(
+        "This CSV contains empty values. No output file created."
+      )
     } else {
       cli::cli_alert_info(
         "saving {lubridate::ymd(report_date)}.csv in
