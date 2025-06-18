@@ -84,20 +84,20 @@ test_that("Model fit returns reasonable Rt, p_divergent values", {
   testthat::expect_true(p_divergent < 0.05)
 
   # Test 3: Test that Rt estimate range covers true_rt (2.0)
-  actual_rt <- fit$summary %>%
+  actual_r0 <- gostic_fit$summary %>%
     dplyr::filter(measure == "Effective reproduction no.") %>%
     dplyr::select(estimate) %>%
     gsub("[()--]", " ", .)
 
   # Split the string into numbers
-  rt_estimates <- unlist(strsplit(actual_rt, "\\s+"))
-  actual_rt_lower <- rt_estimates[length(rt_estimates) - 1]
-  actual_rt_upper <- rt_estimates[length(rt_estimates)]
+  r0_estimates <- unlist(strsplit(actual_r0, "\\s+"))
+  actual_r0_lower <- rt_estimates[length(r0_estimates) - 1]
+  actual_r0_upper <- rt_estimates[length(r0_estimates)]
 
-  expected_rt <- 2.0
+  expected_r0 <- gostic_data |> dplyr::pull(true_rt) |> mean()
 
   testthat::expect_true(
-    actual_rt_lower < expected_rt & actual_rt_upper > expected_rt
+    actual_rt_lower < expected_rt & actual_rt_upper > expected_r0
   )
 })
 
