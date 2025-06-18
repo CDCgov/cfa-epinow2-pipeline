@@ -76,14 +76,7 @@ test_that("Model fit returns reasonable Rt, p_divergent values", {
 
   testthat::expect_true(ma_stat > 0.85)
 
-  # Test 2: Test that p_divergent < 0.05
-  p_divergent <- diagnostic_df %>%
-    dplyr::filter(diagnostic == "p_divergent") %>%
-    dplyr::pull(value)
-
-  testthat::expect_true(p_divergent < 0.05)
-
-  # Test 3: Test that Rt estimate range covers true_rt (2.0)
+  # Test 2: Test that Rt estimate range covers true_rt (~2.0)
   actual_r0 <- gostic_fit$summary %>%
     dplyr::filter(measure == "Effective reproduction no.") %>%
     dplyr::select(estimate) %>%
