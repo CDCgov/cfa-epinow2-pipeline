@@ -35,6 +35,16 @@ priors <- list(
   )
 )
 # Sampler
+sampler_opts <- list(
+  cores = 1,
+  chains = 1,
+  adapt_delta = 0.8,
+  max_treedepth = 10,
+  iter_warmup = 25,
+  iter_sampling = 25
+)
+
+# Sampler
 gostic_sampler_opts <- list(
   cores = 2,
   chains = 2,
