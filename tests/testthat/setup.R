@@ -50,7 +50,7 @@ gostic_sampler_opts <- list(
   chains = 2,
   adapt_delta = 0.8,
   max_treedepth = 10,
-  iter_warmup = 1000,
+  iter_warmup = 3000,
   iter_sampling = 1000
 )
 
