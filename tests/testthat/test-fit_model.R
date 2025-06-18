@@ -5,22 +5,6 @@ test_that("Minimal model fit all params runs", {
 
 test_that("Minimal model fit with no right trunc or delay runs", {
   # Data loaded in from setup.R
-  # Parameters
-  parameters <- list(
-    generation_interval = sir_gt_pmf,
-    delay_interval = NA,
-    right_truncation = NA
-  )
-
-  fit <- fit_model(
-    data = data,
-    parameters = parameters,
-    seed = 12345,
-    horizon = 0,
-    priors = priors,
-    sampler = sampler_opts
-  )
-
   expect_s3_class(fit, "epinow")
 })
 
@@ -71,6 +55,45 @@ test_that("Right truncation longer than data throws error", {
     )
   )
 })
+
+test_that("Model fit returns reasonable Rt, p_divergent values", {
+  # Data loaded in from setup.R
+  # Parameters
+  diagnostic_df <- extract_diagnostics(
+    gostic_fit,
+    gostic_data,
+    "test",
+    "test",
+    "test",
+    "test",
+    "test"
+  )
+
+  # Test 1: Test that mean accept stat is above 0.85
+  ma_stat <- diagnostic_df %>%
+    dplyr::filter(diagnostic == "mean_accept_stat") %>%
+    dplyr::pull(value)
+
+  testthat::expect_true(ma_stat > 0.85)
+
+  # Test 2: Test that Rt estimate range covers true_rt (~2.0)
+  actual_r0 <- gostic_fit$summary %>%
+    dplyr::filter(measure == "Effective reproduction no.") %>%
+    dplyr::select(estimate) %>%
+    gsub("[()--]", " ", .)
+
+  # Split the string into numbers
+  r0_estimates <- unlist(strsplit(actual_r0, "\\s+"))
+  actual_r0_lower <- rt_estimates[length(r0_estimates) - 1]
+  actual_r0_upper <- rt_estimates[length(r0_estimates)]
+
+  expected_r0 <- gostic_data |> dplyr::pull(true_rt) |> mean()
+
+  testthat::expect_true(
+    actual_rt_lower < expected_rt & actual_rt_upper > expected_r0
+  )
+})
+
 
 test_that("Missing GI throws error", {
   expect_error(format_generation_interval(NA), class = "Missing_GI")

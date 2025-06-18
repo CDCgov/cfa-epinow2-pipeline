@@ -547,6 +547,8 @@ test_that("GI with nonzero first element throws warning", {
   )
   expect_equal(
     fixed,
-    EpiNow2::generation_time_opts(dist = EpiNow2::dist_spec(pmf = sir_gt_pmf))
+    EpiNow2::generation_time_opts(
+      dist = EpiNow2::NonParametric(pmf = sir_gt_pmf)
+    )
   )
 })
