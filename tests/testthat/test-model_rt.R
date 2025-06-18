@@ -22,7 +22,7 @@ test_that("Model fit returns reasonable Rt, p_divergent values", {
     sampler = sampler_opts
   )
 
-  actual <- extract_diagnostics(
+  diagnostic_df <- extract_diagnostics(
     fit,
     data,
     "test",
@@ -33,16 +33,33 @@ test_that("Model fit returns reasonable Rt, p_divergent values", {
   )
 
   # Test 1: Test that mean accept stat is above 0.85
-  ma_stat <- actual %>%
+  ma_stat <- diagnostic_df %>%
     dplyr::filter(diagnostic == "mean_accept_stat") %>%
     dplyr::pull(value)
 
   testthat::expect_true(ma_stat > 0.85)
 
   # Test 2: Test that p_divergent < 0.05
-  p_divergent <- actual %>%
+  p_divergent <- diagnostic_df %>%
     dplyr::filter(diagnostic == "p_divergent") %>%
     dplyr::pull(value)
 
   testthat::expect_true(p_divergent < 0.05)
+
+  # Test 3: Test that Rt estimate range covers true_rt (2.0)
+  actual_rt <- fit$summary %>%
+    dplyr::filter(measure == "Effective reproduction no.") %>%
+    dplyr::select(estimate) %>%
+    gsub("[()--]", " ", .)
+
+  # Split the string into numbers
+  rt_estimates <- unlist(strsplit(actual_rt, "\\s+"))
+  actual_rt_lower <- rt_estimates[length(rt_estimates) - 1]
+  actual_rt_upper <- rt_estimates[length(rt_estimates)]
+
+  expected_rt <- 2.0
+
+  testthat::expect_true(
+    actual_rt_lower < expected_rt & actual_rt_upper > expected_rt
+  )
 })
