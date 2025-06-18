@@ -18,8 +18,8 @@ test_that("Fitted model extracts diagnostics", {
       0.0000000,
       0.0000000,
       0.1391304,
-      0.0000000,
       16.0000000,
+      1.0000000,
       1.0000000
     ),
     job_id = rep("test", 8),

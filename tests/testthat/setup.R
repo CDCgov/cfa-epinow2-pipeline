@@ -51,7 +51,7 @@ gostic_sampler_opts <- list(
   adapt_delta = 0.8,
   max_treedepth = 10,
   iter_warmup = 1000,
-  iter_sampling = 500
+  iter_sampling = 1000
 )
 
 set.seed(12345)
