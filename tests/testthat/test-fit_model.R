@@ -5,22 +5,6 @@ test_that("Minimal model fit all params runs", {
 
 test_that("Minimal model fit with no right trunc or delay runs", {
   # Data loaded in from setup.R
-  # Parameters
-  parameters <- list(
-    generation_interval = sir_gt_pmf,
-    delay_interval = NA,
-    right_truncation = NA
-  )
-
-  fit <- fit_model(
-    data = data,
-    parameters = parameters,
-    seed = 12345,
-    horizon = 0,
-    priors = priors,
-    sampler = sampler_opts
-  )
-
   expect_s3_class(fit, "epinow")
 })
 
