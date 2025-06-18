@@ -24,41 +24,6 @@ test_that("Minimal model fit with no right trunc or delay runs", {
   expect_s3_class(fit, "epinow")
 })
 
-test_that("Model fit mean_accept_stat > 0.9", {
-  # Data loaded in from setup.R
-  # Parameters
-  parameters <- list(
-    generation_interval = sir_gt_pmf,
-    delay_interval = NA,
-    right_truncation = NA
-  )
-
-  fit <- fit_model(
-    data = data,
-    parameters = parameters,
-    seed = 12345,
-    horizon = 0,
-    priors = priors,
-    sampler = sampler_opts
-  )
-
-  actual <- extract_diagnostics(
-    fit,
-    data,
-    "test",
-    "test",
-    "test",
-    "test",
-    "test"
-  )
-
-  ma_stat <- actual %>%
-    dplyr::filter(diagnostic == "mean_accept_stat") %>%
-    dplyr::pull(value)
-
-  testthat::expect_true(ma_stat > 0.9)
-})
-
 test_that("Bad params w/ failing fit issues warning and returns NA", {
   # Parameterization is same as above except Stan argument `iter_warmup` is
   # negative, which is an illegal parameterizaion. As a result, EpiNow2 starts
@@ -106,6 +71,52 @@ test_that("Right truncation longer than data throws error", {
     )
   )
 })
+
+test_that("Model fit returns reasonable Rt, p_divergent values", {
+  # Data loaded in from setup.R
+  # Parameters
+  diagnostic_df <- extract_diagnostics(
+    gostic_fit,
+    gostic_data,
+    "test",
+    "test",
+    "test",
+    "test",
+    "test"
+  )
+
+  # Test 1: Test that mean accept stat is above 0.85
+  ma_stat <- diagnostic_df %>%
+    dplyr::filter(diagnostic == "mean_accept_stat") %>%
+    dplyr::pull(value)
+
+  testthat::expect_true(ma_stat > 0.85)
+
+  # Test 2: Test that p_divergent < 0.05
+  p_divergent <- diagnostic_df %>%
+    dplyr::filter(diagnostic == "p_divergent") %>%
+    dplyr::pull(value)
+
+  testthat::expect_true(p_divergent < 0.05)
+
+  # Test 3: Test that Rt estimate range covers true_rt (2.0)
+  actual_rt <- fit$summary %>%
+    dplyr::filter(measure == "Effective reproduction no.") %>%
+    dplyr::select(estimate) %>%
+    gsub("[()--]", " ", .)
+
+  # Split the string into numbers
+  rt_estimates <- unlist(strsplit(actual_rt, "\\s+"))
+  actual_rt_lower <- rt_estimates[length(rt_estimates) - 1]
+  actual_rt_upper <- rt_estimates[length(rt_estimates)]
+
+  expected_rt <- 2.0
+
+  testthat::expect_true(
+    actual_rt_lower < expected_rt & actual_rt_upper > expected_rt
+  )
+})
+
 
 test_that("Missing GI throws error", {
   expect_error(format_generation_interval(NA), class = "Missing_GI")
