@@ -13,13 +13,13 @@ test_that("Fitted model extracts diagnostics", {
       "low_case_count_flag"
     ),
     value = c(
-      0.9216656,
+      0.6990423,
       0.0000000,
       0.0000000,
       0.0000000,
+      0.1391304,
       0.0000000,
-      0.0000000,
-      1.0000000,
+      16.0000000,
       1.0000000
     ),
     job_id = rep("test", 8),
