@@ -50,8 +50,8 @@ gostic_sampler_opts <- list(
   chains = 2,
   adapt_delta = 0.8,
   max_treedepth = 10,
-  iter_warmup = 3000,
-  iter_sampling = 1000
+  iter_warmup = 500,
+  iter_sampling = 500
 )
 
 set.seed(12345)
@@ -67,8 +67,8 @@ fit <- fit_model(
 
 ## Creating a second fit to test Rt estimation stability
 gostic_data <- gostic_toy_rt %>%
-  dplyr::mutate(reference_date = as.Date("2023-01-01") + time) %>%
-  dplyr::filter(reference_date < as.Date("2023-02-01")) %>%
+  dplyr::mutate(reference_date = as.Date("2023-01-01") + time) |>
+  dplyr::filter(reference_date <= "2023-02-01") |>
   dplyr::rename(confirm = incidence)
 
 gostic_parameters <- list(
