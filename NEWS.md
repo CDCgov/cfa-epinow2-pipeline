@@ -1,7 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
-* Dependabot update to urllib3 
+* Dependabot update to urllib3
 * Does not save outlier csv files if contents are empty
 * Switching base rocker image from geospatial (4.7 GB) to r-ver (3 GB)
 * Refactoring unit tests to make use of setup.R global testing env
