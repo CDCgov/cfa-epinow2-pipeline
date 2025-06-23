@@ -83,7 +83,7 @@ test_that("Cases above threshold returns FALSE", {
 })
 
 
-test_that("Only the last two weeks are evalated", {
+test_that("Only the last two weeks are evaluated", {
   # Arrange
   # 3 weeks, first week would pass but last week does not
   df <- data.frame(
