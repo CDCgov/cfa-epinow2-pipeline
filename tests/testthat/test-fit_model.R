@@ -77,10 +77,10 @@ test_that("Model fit returns reasonable R0 estimate", {
   testthat::expect_true(ma_stat > 0.85)
 
   # Test 2: Test that Rt estimate range covers true_rt (~2.0)
-  actual_rt <- gostic_fit$summary |>
+  estimate <- gostic_fit$summary |>
     dplyr::filter(measure == "Effective reproduction no.") |>
-    dplyr::select(estimate) |>
-    gsub("[()--]", " ", .)
+    dplyr::pull(estimate)
+  actual_rt <- gsub("[()--]", " ", estimate)
 
   # Split the string into numbers
   rt_estimates <- unlist(strsplit(actual_rt, "\\s+"))
