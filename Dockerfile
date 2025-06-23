@@ -1,12 +1,12 @@
-FROM docker.io/rocker/geospatial:4.4.1
+FROM docker.io/rocker/r-ver:4.4.1
 
 # Will copy the package to the container preserving the directory structure
 RUN mkdir -p pkg
 
 COPY ./DESCRIPTION pkg/
 
-# Installing missing dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends pandoc-citeproc
+# Installing missing dependencies (removing pandoc-citeproc install)
+RUN apt-get update
 RUN install2.r pak
 # dependencies = TRUE means we install `suggests` too
 RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
