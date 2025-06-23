@@ -46,16 +46,19 @@
 #' }
 #' @family diagnostics
 #' @export
-extract_diagnostics <- function(fit,
-                                data,
-                                job_id,
-                                task_id,
-                                disease,
-                                geo_value,
-                                model) {
+extract_diagnostics <- function(
+  fit,
+  data,
+  job_id,
+  task_id,
+  disease,
+  geo_value,
+  model
+) {
   low_case_count <- low_case_count_diagnostic(data)
 
-  epinow2_diagnostics <- rstan::get_sampler_params(fit$estimates$fit,
+  epinow2_diagnostics <- rstan::get_sampler_params(
+    fit$estimates$fit,
     inc_warmup = FALSE
   )
   mean_accept_stat <- mean(
@@ -81,7 +84,6 @@ extract_diagnostics <- function(fit,
     rstan::summary(fit$estimates$fit)$summary[, "Rhat"] > 1.05,
     na.rm = TRUE
   )
-
 
   # Combine all diagnostic flags into one flag
   diagnostic_flag <- any(
@@ -174,7 +176,6 @@ low_case_count_diagnostic <- function(df) {
     ],
     na.rm = TRUE
   )
-
 
   cli::cli_alert_info(c(
     "Ultimate week spans {format(ult_week_min, '%a, %Y-%m-%d')} ",

@@ -6,7 +6,9 @@ gostic_toy_rt[["report_date"]] <- max(gostic_toy_rt[["reference_date"]]) + 1
 con <- DBI::dbConnect(duckdb::duckdb())
 
 duckdb::duckdb_register(con, "gostic_toy_rt", gostic_toy_rt)
-dbExecute(con, "
+dbExecute(
+  con,
+  "
 COPY (
   SELECT
     obs_incidence AS value,
@@ -21,10 +23,13 @@ COPY (
 ) TO
  'tests/testthat/data/test_data.parquet' (FORMAT PARQUET)
  ;
-            ")
+            "
+)
 
 # Repeat for US overall
-dbExecute(con, "
+dbExecute(
+  con,
+  "
 COPY (
   SELECT
     obs_incidence AS value,
@@ -39,5 +44,6 @@ COPY (
 ) TO
  'tests/testthat/data/us_overall_test_data.parquet' (FORMAT PARQUET)
  ;
-            ")
+            "
+)
 dbDisconnect(con)

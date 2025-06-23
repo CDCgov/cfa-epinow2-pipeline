@@ -5,10 +5,10 @@
 \title{Data Class}
 \usage{
 Data(
-  path = character(0),
-  blob_storage_container = character(0),
-  report_date = character(0),
-  reference_date = character(0)
+  path = class_missing,
+  blob_storage_container = class_missing,
+  report_date = class_missing,
+  reference_date = class_missing
 )
 }
 \arguments{
@@ -28,7 +28,6 @@ Represents the data-related configurations.
 \seealso{
 Other config: 
 \code{\link{Config}()},
-\code{\link{Exclusions}()},
 \code{\link{Interval}},
 \code{\link{Parameters}()},
 \code{\link{read_json_into_config}()}
