@@ -56,7 +56,7 @@ test_that("Right truncation longer than data throws error", {
   )
 })
 
-test_that("Model fit returns reasonable Rt, p_divergent values", {
+test_that("Model fit returns reasonable R0 estimate", {
   # Data loaded in from setup.R
   # Parameters
   diagnostic_df <- extract_diagnostics(
@@ -84,8 +84,8 @@ test_that("Model fit returns reasonable Rt, p_divergent values", {
 
   # Split the string into numbers
   r0_estimates <- unlist(strsplit(actual_r0, "\\s+"))
-  actual_r0_lower <- rt_estimates[length(r0_estimates) - 1]
-  actual_r0_upper <- rt_estimates[length(r0_estimates)]
+  actual_r0_lower <- r0_estimates[length(r0_estimates) - 1]
+  actual_r0_upper <- r0_estimates[length(r0_estimates)]
 
   expected_r0 <- gostic_data |> dplyr::pull(true_rt) |> mean()
 
