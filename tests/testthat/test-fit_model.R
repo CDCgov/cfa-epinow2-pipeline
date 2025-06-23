@@ -87,7 +87,7 @@ test_that("Model fit returns reasonable R0 estimate", {
   actual_rt_lower <- rt_estimates[length(rt_estimates) - 1]
   actual_rt_upper <- rt_estimates[length(rt_estimates)]
 
-  expected_rt <- gostic_data |> dplyr::pull(true_rt) |> mean()
+  expected_rt <- gostic_data |> tail(1) |> dplyr::pull(true_rt)
 
   testthat::expect_true(
     actual_rt_lower < expected_rt & actual_rt_upper > expected_rt
