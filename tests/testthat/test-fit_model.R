@@ -77,20 +77,20 @@ test_that("Model fit returns reasonable R0 estimate", {
   testthat::expect_true(ma_stat > 0.85)
 
   # Test 2: Test that Rt estimate range covers true_rt (~2.0)
-  actual_r0 <- gostic_fit$summary %>%
+  actual_rt <- gostic_fit$summary %>%
     dplyr::filter(measure == "Effective reproduction no.") %>%
     dplyr::select(estimate) %>%
     gsub("[()--]", " ", .)
 
   # Split the string into numbers
-  r0_estimates <- unlist(strsplit(actual_r0, "\\s+"))
-  actual_r0_lower <- r0_estimates[length(r0_estimates) - 1]
-  actual_r0_upper <- r0_estimates[length(r0_estimates)]
+  rt_estimates <- unlist(strsplit(actual_rt, "\\s+"))
+  actual_rt_lower <- rt_estimates[length(rt_estimates) - 1]
+  actual_rt_upper <- rt_estimates[length(rt_estimates)]
 
-  expected_r0 <- gostic_data |> dplyr::pull(true_rt) |> mean()
+  expected_rt <- gostic_data |> dplyr::pull(true_rt) |> mean()
 
   testthat::expect_true(
-    actual_r0_lower < expected_r0 & actual_r0_upper > expected_r0
+    actual_rt_lower < expected_rt & actual_rt_upper > expected_rt
   )
 })
 
