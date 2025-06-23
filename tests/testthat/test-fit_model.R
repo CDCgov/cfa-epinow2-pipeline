@@ -70,16 +70,16 @@ test_that("Model fit returns reasonable R0 estimate", {
   )
 
   # Test 1: Test that mean accept stat is above 0.85
-  ma_stat <- diagnostic_df %>%
-    dplyr::filter(diagnostic == "mean_accept_stat") %>%
+  ma_stat <- diagnostic_df |>
+    dplyr::filter(diagnostic == "mean_accept_stat") |>
     dplyr::pull(value)
 
   testthat::expect_true(ma_stat > 0.85)
 
   # Test 2: Test that Rt estimate range covers true_rt (~2.0)
-  actual_rt <- gostic_fit$summary %>%
-    dplyr::filter(measure == "Effective reproduction no.") %>%
-    dplyr::select(estimate) %>%
+  actual_rt <- gostic_fit$summary |>
+    dplyr::filter(measure == "Effective reproduction no.") |>
+    dplyr::select(estimate) |>
     gsub("[()--]", " ", .)
 
   # Split the string into numbers
