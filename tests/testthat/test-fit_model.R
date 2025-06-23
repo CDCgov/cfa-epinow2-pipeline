@@ -90,7 +90,7 @@ test_that("Model fit returns reasonable R0 estimate", {
   expected_r0 <- gostic_data |> dplyr::pull(true_rt) |> mean()
 
   testthat::expect_true(
-    actual_rt_lower < expected_rt & actual_rt_upper > expected_r0
+    actual_r0_lower < expected_r0 & actual_r0_upper > expected_r0
   )
 })
 
