@@ -181,7 +181,7 @@ extract_draws_from_fit <- function(fit) {
   # (a posterior pred of the final observed value). Obs reports is the
   # expected value actually observed in real time but without obs error.
   # Get the dates for `obs_reports` by pulling out the `imputed_reports`
-  # dates and update the associatftimeed variable name in-place. Bind it back
+  # dates and update the associated variable name in-place. Bind it back
   # to the original fact table to have all desired variable-date combinations.
   data.table::set(
     obs_fact_table,
