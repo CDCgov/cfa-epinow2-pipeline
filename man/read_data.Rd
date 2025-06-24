@@ -6,7 +6,7 @@
 \usage{
 read_data(
   data_path,
-  disease = c("COVID-19", "Influenza", "test"),
+  disease = c("COVID-19", "Influenza", "RSV", "test"),
   geo_value,
   report_date,
   max_reference_date,
@@ -18,7 +18,7 @@ read_data(
 must be in parquet format.}
 
 \item{disease}{A string specifying the disease being modeled. One of
-\code{"COVID-19"} or \code{"Influenza"}.}
+\code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
 
 \item{geo_value}{An uppercase, two-character string specifying the geographic
 value, usually a state or \code{"US"} for national data.}

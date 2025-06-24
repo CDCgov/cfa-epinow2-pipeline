@@ -37,7 +37,6 @@ test_that("Can read all params on happy path", {
       reference_date = reference_date
     )
 
-
     actual <- read_disease_parameters(
       generation_interval_path = "generation_interval.parquet",
       delay_interval_path = "delay_interval.parquet",
@@ -48,7 +47,6 @@ test_that("Can read all params on happy path", {
       report_date = reference_date
     )
   })
-
 
   expect_equal(
     actual,
@@ -98,7 +96,6 @@ test_that("Can skip params on happy path", {
       reference_date = reference_date
     )
 
-
     actual <- read_disease_parameters(
       generation_interval_path = "generation_interval.parquet",
       delay_interval_path = NULL,
@@ -108,7 +105,6 @@ test_that("Can skip params on happy path", {
       geo_value = "test"
     )
   })
-
 
   expect_equal(
     actual,
@@ -150,7 +146,6 @@ test_that("Can read right-truncation on happy path", {
     )
   })
   expect_equal(actual, expected)
-
 
   # Influenza
   disease <- "Influenza"

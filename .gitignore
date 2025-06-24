@@ -389,3 +389,6 @@ azure/*.toml
 # Careful with Secrets!
 *.env
 *.env.gpg
+
+# vscode settings
+.vscode/

@@ -50,7 +50,7 @@ jobs:
           retention-days: 7
 
       - name: Post to PR
-        uses: CDCgov/cfa-actions/post-artifact@v1.0.0
+        uses: CDCgov/cfa-actions/post-artifact@v1.4.0
         if: ${{ github.event_name == 'pull_request' }}
         with:
           artifact-name: pkgdown-site
@@ -58,7 +58,7 @@ jobs:
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        uses: JamesIves/github-pages-deploy-action@v4.7.3
         with:
           clean: false
           branch: gh-pages

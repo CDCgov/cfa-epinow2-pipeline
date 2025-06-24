@@ -1,6 +1,6 @@
 ## Epinow2 Rt Pipeline
 
-This document is meant to guide someone in running the weekly Rt estimation pipeline from within the VAP (Virtual Analytic Platform). The main command for running the weekly pipeline (found in the Makefile) is `make run-prod`. Running this will create and utilize a suite of configuration files (.json) specified from within the associated blob storage account and will produce outputs in the `rt-epinow2-output` Azure blob storage account.
+This document is a guide to running the weekly Rt estimation pipeline from within the VAP (Virtual Analyst Platform). The main command to run the weekly pipeline (found in the Makefile) is `make run-prod`. Running this will create and utilize a suite of configuration files (.json) specified from within the associated blob storage account and will produce outputs in the `rt-epinow2-output` Azure blob storage account.
 
 ## Introduction
 
@@ -63,11 +63,11 @@ flowchart TD
 
 ### Definitions
 
-A **job** is a unique pipeline run, which consists of a set of configuration files that fully define the run, and a set of outputs. The `job_id` a unique tag assigned by the config generator that links the configuration files to the run and the outputs. A job may contain many tasks (e.g. a typical production job contains tasks for each of 51 jurisdictions \* 2 diseases = 102 tasks, each with their own `task_id`). Each task is reproducible and defined by its own .json config file.
+A **job** is a unique pipeline run, which consists of a set of configuration files that fully define the run, and a set of outputs. The `job_id` is a unique tag assigned by the config generator that links the configuration files to the run and the outputs. A job may contain many tasks (e.g. a typical production job contains tasks for each of 51 jurisdictions \* 2 diseases = 102 tasks, each with their own `task_id`). Each task is reproducible and defined by its own .json config file.
 
 ### A full pipeline run consists of
 
-1.  Use the [cfa-config-generator](https://github.com/CDCgov/cfa-config-generator) to create a new job_id, generate configuration files for your job and upload them to blob.
+1.  Use the [cfa-config-generator](https://github.com/CDCgov/cfa-config-generator) to create a new `job_id`, generate configuration files for your job and upload them to blob.
 
 2.  Set up the job
 
@@ -79,9 +79,9 @@ A **job** is a unique pipeline run, which consists of a set of configuration fil
 
 4.  Upload the outputs from the container to a persistent storage location, such as Azure Blob (or for local runs, to your local filesystem).
 
-Downstream of this pipeline, the cfa-Rt-postprocessing repo provides additional tools to parse and evaluate the model's outputs.
+Downstream of this pipeline, the cfa-rt-postprocessing repo provides additional tools to parse and evaluate the model's outputs.
 
-This may seem complicated, but once you have your dependencies and credentials set up, the whole workflow can be run with a single call to `make run-prod` at the command line. This SOP will walk your through the required setup and the underlying steps.
+This may seem complicated, but once you have your dependencies and credentials set up, the whole workflow can be run with a single call to `make run-prod` at the command line. This SOP will walk you through the required setup and the underlying steps.
 
 ### Storage and related repos
 
@@ -89,22 +89,22 @@ This may seem complicated, but once you have your dependencies and credentials s
 -   <https://github.com/CDCent/cfa-rt-postprocessing>: a repo with tools for postprocessing of Rt estimates
 -   `az://rt-epinow2-config/` an Azure blob storage container that holds configuration files
 -   `az://nssp-rt-v2/` an Azure blob storage container where we store production outputs
--   `az://nssp-rt-testing/` a blob storage container where we store non-production outputs
--   `az://nssp-rt-post-process/` a blob storage container where we store output from the post processor.
+-   `az://nssp-rt-testing/` an Azure blob storage container where we store non-production outputs
+-   `az://nssp-rt-post-process/` an Azure blob storage container where we store output from the post processor
 
 ## Getting started
 
 ### Pre-requisites
 
-1.  VAP environment & Account
+1.  VAP environment and account
     -   git (`sudo apt-get install git`)
-    -   docker CLI ([follow this script](https://gist.github.com/jkislin/a575780249c3580a472e25c07d3fd68f#file-docker_setup-sh)). See the [appendix](#appendix) if you wish to use podman instead for local runs.
+    -   docker CLI ([follow this script](https://gist.github.com/jkislin/a575780249c3580a472e25c07d3fd68f#file-docker_setup-sh)). See the [appendix](#appendix) if you wish to use podman instead for local runs
     -   gh CLI (`sudo apt-get install gh`)
-    -   `uv` command line tool. If not already installed, install with `curl -LsSf https://astral.sh/uv/install.sh | sh` (which does not require `sudo` permissions).
+    -   `uv` command line tool. If not already installed, install following [these](https://docs.astral.sh/uv/getting-started/installation/) instructions
 2.  cfa-epinow2-pipeline repository in VAP
     -   Navigate to where you would like to clone the repository code
     -   Clone the repository (`git clone https://www.github.com/cdcgov/cfa-epinow2-pipeline` OR `gh auth login` and then `gh repo clone cdcgov/cfa-epinow2-pipeline`)
-3.  Authentication to Azure To authenticate to the requisite Azure resources provide a `.env` file containing the secrets necessary for authentication.
+3.  Authentication to Azure. To authenticate to the requisite Azure resources provide a `.env` file containing the secrets necessary for authentication.
     -   Request access to necessary Azure credential file (.env) from any of the admins listed in the README.md
     -   decrypt the file (`gpg --decrypt .env`)
     -   Place the decrypted file in your `cfa-epinow2-pipeline` directory
@@ -113,7 +113,7 @@ This may seem complicated, but once you have your dependencies and credentials s
 
 #### Test Configuration Generation
 
-1.  `make config` Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a suite of configuration files, following the default settings for a production run, and saves it into `az://rt-epinow2-config/{job_id}`. If successful, something like this output will print to your command line. Make a note of the `job_id`, which you will need to identify your configs (and eventually your model outputs) in Azure blob storage.
+1.  `make config` Running this command runs code located in the CDCgov/cfa-config-generator repository. This command creates a suite of configuration files, following the default settings for a production run, and saves them into `az://rt-epinow2-config/{job_id}`. If successful, something like this output will print to your command line. Make a note of the `job_id`, which you will need to identify your configs (and eventually your model outputs) in Azure blob storage.
 
 ```
 make config
@@ -215,7 +215,7 @@ flowchart TD
 In this flowchart, each arrow with text represents a manual action. Writing out the above in more detail:
 1. The anomaly review team documents their decisions in the spreadsheet
 1. The person running the pipeline pulls an updated docker using `make pull` and open's the docker with `make up`
-1. Then the user enters `cd cfa-epinow2-pipeline/utils` into the terminal as well as `Rscript Rt_review_exclusions.R -d yyymmdd` where yyyymmdd is the date in the name of the Rt_review_yyymmdd.xlsx excel file on sharepoint. The -d argument's default is today's date
+1. Then the user enters `cd cfa-epinow2-pipeline/utils` into the terminal as well as `Rscript Rt_review_exclusions.R -d yyyymmdd` where yyyymmdd is the date in the name of the Rt_review_yyymmdd.xlsx excel file on sharepoint. The -d argument's default is today's date
 1. The terminal will prompt you to login using a provided url and a code. Copy the url and paste into a browser where you are logged onto your CDC account (not ext account). Then paste the provided code. Then confirm your login by hitting continue. Once confirmed, the script will download the sharepoint excel file, process it, and upload it as the outlier csv file to the blob storage "folder" [`az://nssp-etl/outliers-v2/`](az://nssp-etl/outliers-v2/)
 1. The person running the pipeline runs `make rerun-prod`. This will create new configuration files that include the path to the outlier CSV just uploaded to Blob, and then kick off those tasks in Azure Batch
 
