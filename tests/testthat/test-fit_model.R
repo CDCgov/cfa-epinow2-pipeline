@@ -24,6 +24,28 @@ test_that("Minimal model fit with no right trunc or delay runs", {
   expect_s3_class(fit, "epinow")
 })
 
+test_that("Minimal model fit with 'rw' set for rt_custom param", {
+  # Data loaded in from setup.R
+  # Parameters
+  parameters <- list(
+    generation_interval = sir_gt_pmf,
+    delay_interval = NA,
+    right_truncation = NA
+  )
+
+  fit <- fit_model(
+    data = data,
+    parameters = parameters,
+    seed = 12345,
+    horizon = 0,
+    priors = priors,
+    sampler = sampler_opts,
+    rt_custom = "rw"
+  )
+
+  expect_s3_class(fit, "epinow")
+})
+
 test_that("Bad params w/ failing fit issues warning and returns NA", {
   # Parameterization is same as above except Stan argument `iter_warmup` is
   # negative, which is an illegal parameterizaion. As a result, EpiNow2 starts
