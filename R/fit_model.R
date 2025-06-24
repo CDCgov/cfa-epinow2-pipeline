@@ -11,20 +11,36 @@
 #' @param sampler_opts A list. The Stan sampler options to be passed through
 #'   EpiNow2. It has required keys: `cores`, `chains`, `iter_warmup`,
 #'   `iter_sampling`, `max_treedepth`, and `adapt_delta`.
+#' @param rt_custom Either 'rw' to denote random walk or NULL.
 #'
 #' @return A fitted model object of class `epinow` or, if model fitting fails,
 #'   an NA is returned with a warning
 #' @family pipeline
 #' @export
 fit_model <- function(
-    data,
-    parameters,
-    seed,
-    horizon,
-    priors,
-    sampler_opts) {
+  data,
+  parameters,
+  seed,
+  horizon,
+  priors,
+  sampler_opts,
+  rt_custom = NULL
+) {
   # Priors ------------------------------------------------------------------
-  rt <- EpiNow2::rt_opts(rw = 1)
+  if (is.null(rt_custom)) {
+    rt <- EpiNow2::rt_opts(
+      list(
+        mean = priors[["rt"]][["mean"]],
+        sd = priors[["rt"]][["sd"]]
+      )
+    )
+    gp <- EpiNow2::gp_opts(
+      alpha_sd = priors[["gp"]][["alpha_sd"]]
+    )
+  } else if (rt_custom == "rw") {
+    rt <- EpiNow2::rt_opts(rw = 1)
+    gp <- NULL
+  }
 
   # Distributions -----------------------------------------------------------
   generation_time <- format_generation_interval(
@@ -38,7 +54,8 @@ fit_model <- function(
     data
   )
   stan <- format_stan_opts(
-    sampler_opts, seed
+    sampler_opts,
+    seed
   )
   df <- data.frame(
     confirm = data[["confirm"]],

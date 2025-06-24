@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Adding functionality to expose rt_opts so we can run a random walk fit
 * Pin r-version at 4.4.3 for CI/CD
 * Fix minor typos in `SOP.md`.
 * Swap from `Dockerfile-batch` to using an inline-metadata script, managed by `uv`.
