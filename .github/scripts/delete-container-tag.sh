@@ -19,8 +19,3 @@ az acr repository delete \
     --yes \
     --name "${REGISTRY}" \
     --image "${IMAGE}:${TAG}"
-
-az acr repository delete \
-    --yes \
-    --name "${REGISTRY}" \
-    --image "${IMAGE}:dependencies-${TAG}"

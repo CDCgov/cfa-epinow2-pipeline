@@ -15,12 +15,12 @@ read_disease_parameters(
 )
 }
 \arguments{
-\item{generation_interval_path, delay_interval_path, right_truncation_path}{Path to a local file with the parameter PMF. See \link{read_interval_pmf} for
+\item{generation_interval_path, delay_interval_path, right_truncation_path}{Path to a local file with the parameter PMF. See \code{\link[=read_interval_pmf]{read_interval_pmf()}} for
 details on the file schema. The parameters can be in the same file or a
 different file.}
 
 \item{disease}{A string specifying the disease being modeled. One of
-\code{"COVID-19"} or \code{"Influenza"}.}
+\code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
 
 \item{as_of_date}{Use the parameters that were used in production on this
 date. Set for the current date for the most up-to-to date version of the
@@ -51,8 +51,7 @@ Read in disease process parameters from an external file or files
 \details{
 \code{generation_interval_path} is required because the generation
 interval is a required parameter for $R_t$ estimation.
-\code{delay_interval_path} and \code{right_truncation_path} are optional (but
-strongly suggested).
+\code{delay_interval_path} and \code{right_truncation_path} are optional
 }
 \seealso{
 Other parameters: 

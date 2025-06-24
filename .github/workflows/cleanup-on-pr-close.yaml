@@ -1,40 +1,71 @@
 name: Tear down Batch pool
 
 on:
-  workflow_dispatch:
   pull_request:
     types:
       - closed
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: The name of the tag to delete. Usually the branch name.
+        type: string
+
+env:
+  IMAGE_TAG: ${{ inputs.tag || github.head_ref || github.ref_name }}
+  # getting tag from input or branch name https://stackoverflow.com/a/71158878
 
 jobs:
 
   delete-pool:
-    runs-on: cfa-cdcgov-aca
+    environment: production
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
     name: Delete Batch pool
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Protect 'latest'
+        run: |
+          if [ "${{ env.IMAGE_TAG }}" = "latest" ]; then
+            echo "Cannot delete pool for 'latest'"
+            exit 1
+          fi
 
-        # From: https://stackoverflow.com/a/58035262/2097171
-      - name: Extract tag
-        shell: bash
-        run: echo "tag=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: branch-name
-
-      - name: Azure login
-        id: azure_login_2
-        uses: azure/login@v2
+      # From: https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#requesting-the-jwt-using-the-actions-core-toolkit
+      - name: Install OIDC Client from Core Package
+        run: npm install @actions/core@1.6.0 @actions/http-client
+      - name: Get Id Token
+        uses: actions/github-script@v7
+        id: idtoken
         with:
-        # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+          script: |
+            const coredemo = require('@actions/core')
+            const id_token = await coredemo.getIDToken('api://AzureADTokenExchange')
+            coredemo.setOutput('id_token', id_token)
 
       - name: Delete pool
-        run: |
-            chmod +x $GITHUB_WORKSPACE/.github/scripts/cleanup-on-pr-close.sh
-            $GITHUB_WORKSPACE/.github/scripts/cleanup-on-pr-close.sh \
-              "${{ secrets.BATCH_ACCOUNT }}" \
-              "${{ secrets.PRD_RESOURCE_GROUP }}" \
-              "cfa-epinow2-${{ steps.branch-name.outputs.tag }}"
+        uses: CDCgov/cfa-actions/runner-action@v1.4.0
+        with:
+          github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
+          github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
+          wait_for_completion: true
+          print_logs: true
+          script: |
+              CURRENT_BRANCH='${{ github.event.pull_request.head.sha || github.ref_name }}'
+              echo "Cloning repo at commit '$CURRENT_BRANCH'"
+              git clone https://github.com/${{ github.repository }}.git
+              cd ${{ github.event.repository.name }}
+              git checkout $CURRENT_BRANCH
+
+              echo "Logging into Azure CLI"
+              az login --service-principal \
+                --username ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }} \
+                --tenant ${{ secrets.TENANT_ID }} \
+                --federated-token ${{ steps.idtoken.outputs.id_token }} \
+                --output none
+
+              echo "Running cleanup pool script"
+              bash .github/scripts/cleanup-on-pr-close.sh \
+                "${{ secrets.BATCH_ACCOUNT }}" \
+                "${{ secrets.PRD_RESOURCE_GROUP }}" \
+                "cfa-epinow2-${{ env.IMAGE_TAG }}"
