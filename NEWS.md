@@ -63,6 +63,7 @@
 * Reactivated DEBUG level logs from EpiNow2 so that sampler progress is visible
 * Added new test data and unit tests for point exclusions
 * Removed any nulls from reference_date column in outlier files
+* Removed quotes and identifiers from outlier and state exclusions files
 
 # CFAEpiNow2Pipeline v0.1.0
 
