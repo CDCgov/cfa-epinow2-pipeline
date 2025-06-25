@@ -157,8 +157,8 @@ create_pt_excl_from_rt_xslx <- function(dates) {
           "outliers-v2",
           paste0(lubridate::ymd(report_date), ".csv")
         ),
-      quote = FALSE,
-      row.names = FALSE
+        quote = FALSE,
+        row.names = FALSE
       )
     }
 
