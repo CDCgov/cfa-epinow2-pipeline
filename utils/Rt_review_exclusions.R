@@ -156,7 +156,9 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         file = file.path(
           "outliers-v2",
           paste0(lubridate::ymd(report_date), ".csv")
-        )
+        ),
+        quote = FALSE,
+        row.names = FALSE
       )
     }
 
@@ -190,7 +192,9 @@ create_pt_excl_from_rt_xslx <- function(dates) {
       file = file.path(
         "state_exclusions",
         file
-      )
+      ),
+      quote = FALSE,
+      row.names = FALSE
     )
 
     #### Temp old-pipeline csv generator#####
@@ -228,7 +232,9 @@ create_pt_excl_from_rt_xslx <- function(dates) {
       file = file.path(
         "temp_outliers_for_old",
         paste0(lubridate::ymd(report_date), ".csv")
-      )
+      ),
+      quote = FALSE,
+      row.names = FALSE
     )
   }
 }
