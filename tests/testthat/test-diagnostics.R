@@ -13,12 +13,12 @@ test_that("Fitted model extracts diagnostics", {
       "low_case_count_flag"
     ),
     value = c(
-      0.90197355,
-      0.00000000,
-      0.00000000,
-      0.00000000,
-      0.01739130,
-      2.0000000,
+      0.6990423,
+      0.0000000,
+      0.0000000,
+      0.0000000,
+      0.1391304,
+      16.0000000,
       1.0000000,
       1.0000000
     ),
@@ -83,7 +83,7 @@ test_that("Cases above threshold returns FALSE", {
 })
 
 
-test_that("Only the last two weeks are evalated", {
+test_that("Only the last two weeks are evaluated", {
   # Arrange
   # 3 weeks, first week would pass but last week does not
   df <- data.frame(
