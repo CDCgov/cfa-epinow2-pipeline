@@ -1,15 +1,16 @@
 #' Download if specified
 #'
 #' @param blob_path The name of the blob to download
-#' @param blob_storage_container The name of the container to donwload from
+#' @param blob_storage_container The name of the container to download from
 #' @param dir The directory to which to write the downloaded file
 #' @return The path of the file
 #' @family azure
 #' @export
 download_if_specified <- function(
-    blob_path,
-    blob_storage_container,
-    dir) {
+  blob_path,
+  blob_storage_container,
+  dir
+) {
   # Guard against null input erroring out file.exists()
   if (rlang::is_null(blob_path)) {
     local_path <- NULL
@@ -39,9 +40,10 @@ download_if_specified <- function(
 #' @family azure
 #' @export
 download_file_from_container <- function(
-    blob_storage_path,
-    local_file_path,
-    storage_container) {
+  blob_storage_path,
+  local_file_path,
+  storage_container
+) {
   cli::cli_alert_info(
     "Downloading blob {.path {blob_storage_path}} to {.path {local_file_path}}"
   )

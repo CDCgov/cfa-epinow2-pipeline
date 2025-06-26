@@ -1,22 +1,5 @@
 test_that("Fitted model extracts diagnostics", {
-  # Arrange
-  data_path <- test_path("data/test_data.parquet")
-  con <- DBI::dbConnect(duckdb::duckdb())
-  data <- DBI::dbGetQuery(con, "
-                         SELECT
-                           report_date,
-                           reference_date,
-                           disease,
-                           geo_value AS state_abb,
-                           value AS confirm
-                         FROM read_parquet(?)
-                         WHERE reference_date <= '2023-01-22'",
-    params = list(data_path)
-  )
-  DBI::dbDisconnect(con)
-  fit_path <- test_path("data", "sample_fit.rds")
-  fit <- readRDS(fit_path)
-
+  # Fit object read in from setup.R
   # Expected diagnostics
   expected <- data.frame(
     diagnostic = c(
@@ -30,14 +13,14 @@ test_that("Fitted model extracts diagnostics", {
       "low_case_count_flag"
     ),
     value = c(
-      0.94240233,
+      0.90197355,
       0.00000000,
       0.00000000,
       0.00000000,
-      0.00000000,
-      0.00000000,
-      0.00000000,
-      0.00000000
+      0.01739130,
+      2.0000000,
+      1.0000000,
+      1.0000000
     ),
     job_id = rep("test", 8),
     task_id = rep("test", 8),
@@ -58,7 +41,8 @@ test_that("Fitted model extracts diagnostics", {
 
   testthat::expect_equal(
     actual,
-    expected
+    expected,
+    tolerance = 1e-4
   )
 })
 

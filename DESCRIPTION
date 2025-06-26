@@ -2,13 +2,15 @@ Package: CFAEpiNow2Pipeline
 Title: EpiNow2 wrapper for deployment to Azure Batch
 Version: 0.2.1.9000
 Authors@R: c(
-    person("Zachary", "Susswein", , "utb2@cdc.gov", role = c("aut", "cre"),
+    person("Zachary", "Susswein", , "utb2@cdc.gov", role = "aut",
            comment = c(ORCID = "0000-0002-4329-4833")),
-    person("Katelyn", "Gostic", , "uep6@cdc.gov", role = "ctb",
+    person("Katelyn", "Gostic", , "uep6@cdc.gov", role = "aut",
            comment = c(ORCID = "0000-0002-9369-6371")),
-    person("Nathan", "McIntosh", , "ute2@cdc.gov", role = "ctb"),
-    person("Patrick", "Corbett", , "pyv3@cdc.gov", role = "ctb"),
-    person("Adam", "Howes", , "xwg3@cdc.gov", role = "ctb")
+    person("Nathan", "McIntosh", , "ute2@cdc.gov", role = "aut"),
+    person("Patrick", "Corbett", , "pyv3@cdc.gov", role = "aut"),
+    person("Adam", "Howes", , "xwg3@cdc.gov", role = "aut",
+           comment = c(ORCID = "0000-0003-2386-4031")),
+    person("Micah", "Wiesner", , "zqm6@cdc.gov", role = c("aut", "cre"))
     )
 Description: Add logging, metadata handling, and data handling
     functions to use EpiNow2 in a pipeline. This pipeline is optimized
@@ -16,7 +18,9 @@ Description: Add logging, metadata handling, and data handling
     fitting hundreds of models in parallel.
 License: Apache License (>= 2)
 Encoding: UTF-8
-Remotes: github::epiforecasts/EpiNow2@bcf297cf36a93cc56123bc3c9e8cebfb1421a962
+Remotes:
+    github::epiforecasts/EpiNow2@bcf297cf36a93cc56123bc3c9e8cebfb1421a962,
+    github::stan-dev/cmdstanr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests:
@@ -28,14 +32,18 @@ Config/testthat/edition: 3
 Imports:
     AzureRMR,
     AzureStor,
+    cmdstanr,
     cli,
+    covr,
     data.table,
     DBI,
     dplyr,
     duckdb,
     EpiNow2 (>= 1.4.0),
     jsonlite,
+    rcmdcheck,
     rlang,
+    roxygen2,
     rstan,
     S7,
     lubridate,
@@ -45,7 +53,7 @@ Imports:
     optparse,
     Microsoft365R
 Additional_repositories:
-    https://stan-dev.r-universe.dev
+	https://stan-dev.r-universe.dev
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
 Depends:
     R (>= 3.50)

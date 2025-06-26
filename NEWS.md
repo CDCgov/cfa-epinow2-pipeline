@@ -1,6 +1,37 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Remove azure/requirements.txt as we have moved to inline dependencies in *uv*
+* Does not save outlier csv files if contents are empty
+* Switching base rocker image from geospatial (4.7 GB) to r-ver (3 GB)
+* Refactoring unit tests to make use of setup.R global testing env
+* Adding dependencies to install cmdstanr backend and using GH action
+* convert drop cols value to character for point/state exlcusions
+* Run `make test-batch` target locally
+* Added `make run-caj` for using a CAJ instead of Batch
+* Update runner action version
+* Remove duplicate batch autoscale text file
+* Improve consistency in docs
+* Update version of deploy action
+* Update github checkout action from V2 to V4
+* Setting up dependabot yaml file
+* Remove out-of-date demo folder
+* Add automated check that docs are up to date
+* Rewrite README for simplification and clarity
+* Switch to the `air` code formatter
+* Replace remaining self-hosted runner workflows with ubuntu-latest
+* Fix mismatch between R code and documentation
+* Change code owner and include authors in R package
+* Change code owner
+* Add documentation to the Makefile
+* Fix mismatch between R code and documentation
+* Fix production diseases
+* Add RSV specifications
+* Create the config files locally to speed things up
+* Lock dependencies for creating the pool
+* Saving state exclusions to nssp-rt/state_exclusions
+* Automate tag deletion from ghcr.io
+* Editing of `SOP.md`
 * Pin r-version at 4.4.3 for CI/CD
 * Fix minor typos in `SOP.md`.
 * Swap from `Dockerfile-batch` to using an inline-metadata script, managed by `uv`.
@@ -30,6 +61,8 @@
 * Minor changes in removing unused container tags from Azure CR
 * Reactivated DEBUG level logs from EpiNow2 so that sampler progress is visible
 * Added new test data and unit tests for point exclusions
+* Removed any nulls from reference_date column in outlier files
+* Removed quotes and identifiers from outlier and state exclusions files
 
 # CFAEpiNow2Pipeline v0.1.0
 
@@ -41,3 +74,4 @@ This initial release establishes minimal feature parity with the internal EpiNow
 * Comprehensive documentation of pipeline code and validation of input data, parameters, and model run configs
 * Set up comprehensive logging of model runs and handle pipeline failures to preserve logs where possible
 * Automatically download and upload inputs and outputs from Azure Blob Storage
+* A new script for building the pool. Runnable from CLI or GHA. Requires `uv` be installed, and then `uv` handles the python and dependency management based on the inline script metadata.

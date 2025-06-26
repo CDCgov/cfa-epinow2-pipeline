@@ -1,10 +1,9 @@
-#' Fit an EpiNow2 model
+#' Fit an `EpiNow2` model
 #'
-#' @param data, in the format returned by [CFAEpiNow2Pipeline::read_data()]
-#' @param parameters As returned from
-#'   [CFAEpiNow2Pipeline::read_disease_parameters()]
-#' @param seed The random seed, used for both initialization by EpiNow2 in R and
-#'   sampling in Stan
+#' @param data, in the format returned by [read_data()]
+#' @param parameters As returned from [read_disease_parameters()]
+#' @param seed The random seed, used for both initialization by `EpiNow2` in R
+#'   and sampling in Stan
 #' @param horizon The number of days, as an integer, to forecast
 #' @param priors A list of lists. The first level should contain the key `rt`
 #'   with elements `mean` and `sd` and the key `gp` with element `alpha_sd`.
@@ -17,12 +16,13 @@
 #' @family pipeline
 #' @export
 fit_model <- function(
-    data,
-    parameters,
-    seed,
-    horizon,
-    priors,
-    sampler_opts) {
+  data,
+  parameters,
+  seed,
+  horizon,
+  priors,
+  sampler_opts
+) {
   # Priors ------------------------------------------------------------------
   rt <- EpiNow2::rt_opts(rw = 1)
 
@@ -38,7 +38,8 @@ fit_model <- function(
     data
   )
   stan <- format_stan_opts(
-    sampler_opts, seed
+    sampler_opts,
+    seed
   )
   df <- data.frame(
     confirm = data[["confirm"]],
@@ -79,12 +80,12 @@ fit_model <- function(
 
 #' Format Stan options for input to EpiNow2
 #'
-#' Format configuration `sampler_opts` for input to EpiNow2 via a call to
+#' Format configuration `sampler_opts` for input to `EpiNow2` via a call to
 #' [EpiNow2::stan_opts()].
 #'
 #' @inheritParams fit_model
 #' @param seed A stochastic seed passed here to the Stan sampler and as the R
-#' PRNG seed for EpiNow2 initialization
+#' PRNG seed for `EpiNow2` initialization
 #'
 #' @return A `stan_opts` object of arguments
 #'
