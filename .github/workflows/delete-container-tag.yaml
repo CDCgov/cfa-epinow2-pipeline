@@ -1,39 +1,91 @@
-name: Delete tag from container registry
+name: Delete tag from container registries
 
 on:
   pull_request:
     types: [closed]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: The name of the tag to delete. Usually the branch name.
+        type: string
 
 env:
   IMAGE_NAME: cfa-epinow2-pipeline
+  IMAGE_TAG: ${{ inputs.tag || github.head_ref || github.ref_name }}
+  # getting tag from input or branch name https://stackoverflow.com/a/71158878
 
 jobs:
-  delete-container:
-    runs-on: cfa-cdcgov-aca
-    name: Deleting the container
+  delete-tag-ghcr:
+    continue-on-error: true # allow other tag deletion to happen even if one fails
+    permissions:
+      packages: write
+    runs-on: ubuntu-latest
+    name: Delete image tag from GHCR
 
     steps:
-      - name : Checkout code
-        uses: actions/checkout@v4
-
-      - name: Figure out tag (either latest if it is main or the branch name)
-        id: image-tag
-        run: echo "tag=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-
-      - name: Login to Azure with NNH Service Principal
-        id: azure_login_2
-        uses: azure/login@v2
+      # Deleting a package from GHCR by tag name is surprising complex
+      # This action has been approved for use on cdcent/cdcgov by the CDC Github Team
+      # https://github.com/snok/container-retention-policy
+      - name: Delete image tag
+        uses: snok/container-retention-policy@v3.0.0
         with:
-          # managed by EDAV. Contact Amit Mantri or Jon Kislin if you
-          # have issues. Also, this is documented in the Predict
-          # handbook.
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+          account: ${{ github.repository_owner }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          image-names: ${{ env.IMAGE_NAME }}
+          image-tags: ${{ env.IMAGE_TAG }},${{ env.IMAGE_TAG }}-cache
+          cut-off: 1s # required, minimum package age to be a candidate for deletion
 
-      - name: Azure CLI script
+  delete-tag-acr:
+    environment: production
+    continue-on-error: true # allow other tag deletion to happen even if one fails
+    permissions:
+      id-token: write
+    runs-on: ubuntu-latest
+    name: Delete image tag from ACR
+
+    steps:
+      - name: Protect 'latest'
         run: |
-            chmod +x $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh
-            $GITHUB_WORKSPACE/.github/scripts/delete-container-tag.sh \
-              ${{ secrets.CONTAINER_REGISTRY_URL }} \
-              ${{ env.IMAGE_NAME }} \
-              ${{ steps.image-tag.outputs.tag }}
+          if [ "${{ env.IMAGE_TAG }}" = "latest" ]; then
+            echo "Cannot delete pool for 'latest'"
+            exit 1
+          fi
+
+      # From: https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#requesting-the-jwt-using-the-actions-core-toolkit
+      - name: Install OIDC Client from Core Package
+        run: npm install @actions/core@1.6.0 @actions/http-client
+      - name: Get Id Token
+        uses: actions/github-script@v7
+        id: idtoken
+        with:
+          script: |
+            const coredemo = require('@actions/core')
+            const id_token = await coredemo.getIDToken('api://AzureADTokenExchange')
+            coredemo.setOutput('id_token', id_token)
+
+      - name: Delete ACR tag
+        uses: CDCgov/cfa-actions/runner-action@v1.4.0
+        with:
+          github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
+          github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
+          wait_for_completion: true
+          print_logs: true
+          script: |
+              CURRENT_BRANCH='${{ github.event.pull_request.head.sha || github.ref_name }}'
+              echo "Cloning repo at commit '$CURRENT_BRANCH'"
+              git clone https://github.com/${{ github.repository }}.git
+              cd ${{ github.event.repository.name }}
+              git checkout $CURRENT_BRANCH
+
+              echo "Logging into Azure CLI"
+              az login --service-principal \
+                --username ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }} \
+                --tenant ${{ secrets.TENANT_ID }} \
+                --federated-token ${{ steps.idtoken.outputs.id_token }} \
+                --output none
+
+              echo "Running delete tag script"
+              bash .github/scripts/delete-container-tag.sh \
+                ${{ secrets.CONTAINER_REGISTRY_URL }} \
+                ${{ env.IMAGE_NAME }} \
+                ${{ env.IMAGE_TAG }}

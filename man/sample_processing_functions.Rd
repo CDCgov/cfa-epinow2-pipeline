@@ -11,7 +11,7 @@ process_samples(fit, geo_value, model, disease)
 process_quantiles(fit, geo_value, model, disease, quantile_width)
 }
 \arguments{
-\item{fit}{An EpiNow2 fit object with posterior estimates.}
+\item{fit}{An \code{EpiNow2} fit object with posterior estimates.}
 
 \item{geo_value}{An uppercase, two-character string specifying the geographic
 value, usually a state or \code{"US"} for national data.}
@@ -19,7 +19,7 @@ value, usually a state or \code{"US"} for national data.}
 \item{model}{A string specifying the model to be used.}
 
 \item{disease}{A string specifying the disease being modeled. One of
-\code{"COVID-19"} or \code{"Influenza"}.}
+\code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
 
 \item{quantile_width}{A vector of numeric values representing the desired
 quantiles. Passed to \code{\link[tidybayes:reexports]{tidybayes::median_qi()}}.}
@@ -30,8 +30,8 @@ A data.table of posterior draws or quantiles, merged and processed.
 \description{
 Extracts raw posterior samples from a Stan fit object and post-processes
 them, including merging with a fact table and standardizing the parameter
-names. If calling \code{process_quantiles()} the 50\% and 95\% intervals are
-returned in \code{{tidybayes}} format.
+names. If calling \verb{[process_quantiles()]} the 50\% and 95\% intervals are
+returned in \code{tidybayes} format.
 }
 \seealso{
 Other write_output: 

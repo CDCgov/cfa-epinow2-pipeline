@@ -16,7 +16,7 @@ extract_diagnostics(fit, data, job_id, task_id, disease, geo_value, model)
 \item{task_id}{A string specifying the task.}
 
 \item{disease}{A string specifying the disease being modeled. One of
-\code{"COVID-19"} or \code{"Influenza"}.}
+\code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
 
 \item{geo_value}{An uppercase, two-character string specifying the geographic
 value, usually a state or \code{"US"} for national data.}

@@ -20,11 +20,12 @@ env:
 
 jobs:
   start-caj:
+    environment: production
     permissions:
       id-token: 'write'
       packages: 'read'
       contents: 'write'
-    runs-on: cfa-cdcgov-aca
+    runs-on: ubuntu-latest
     name: start caj
     steps:
       - name: Azure login with OIDC
@@ -32,7 +33,9 @@ jobs:
         uses: azure/login@v2
         with:
         # managed by EDAV. Contact Amit Mantri or Jon Kislin if you have issues.
-          creds: ${{ secrets.EDAV_CFA_PREDICT_NNHT_SP }}
+          client-id: ${{ secrets.AZURE_NNHT_SP_CLIENT_ID }}
+          tenant-id: ${{ secrets.TENANT_ID }}
+          subscription-id: ${{ secrets.SUBSCRIPTION_ID }}
 
       - name: Get container app job template
         run: |
