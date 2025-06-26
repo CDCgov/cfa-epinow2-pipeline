@@ -1,3 +1,32 @@
+# This file is part of the standard setup for testthat.
+# It is recommended that you do not modify it.
+#
+# Where should you do additional test configuration?
+# Learn more about the roles of various files in:
+# * https://r-pkgs.org/testing-design.html#sec-tests-files-overview
+# * https://testthat.r-lib.org/articles/special-files.html
+
+# Suppress common warning in tests from model fit due to cmdstanr
+suppress_ess_warning <- function(.f, pattern = NULL) {
+  if (is.null(pattern)) {
+    pattern <- "The ESS has been capped to avoid unstable"
+  }
+  force(.f) # ensure .f is evaluated once
+  function(...) {
+    withCallingHandlers(
+      .f(...),
+      warning = function(w) {
+        if (grepl(pattern, conditionMessage(w))) {
+          invokeRestart("muffleWarning")
+        }
+      }
+    )
+  }
+}
+
+orch_pipeline_quiet <- suppress_ess_warning(orchestrate_pipeline)
+exec_mod_log_quiet <- suppress_ess_warning(execute_model_logic)
+
 test_that("Bad config throws warning and returns failure", {
   # Arrange
   config_path <- test_path("data", "bad_config.json")
@@ -31,7 +60,7 @@ test_that("Pipeline run produces expected outputs with NO exclusions", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- orchestrate_pipeline(
+  pipeline_success <- orch_pipeline_quiet(
     config_path = config_path,
     input_dir = input_dir,
     output_dir = output_dir
@@ -55,7 +84,7 @@ test_that("Pipeline run produces expected outputs with exclusions", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- orchestrate_pipeline(
+  pipeline_success <- orch_pipeline_quiet(
     config_path = config_path,
     input_dir = input_dir,
     output_dir = output_dir
@@ -84,7 +113,7 @@ test_that("Process pipeline produces expected outputs and returns success", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- execute_model_logic(
+  pipeline_success <- exec_mod_log_quiet(
     config = config,
     input_dir = input_dir,
     output_dir = output_dir
@@ -117,7 +146,7 @@ test_that("Runs on config from generator as of 2024-11-26", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- execute_model_logic(
+  pipeline_success <- exec_mod_log_quiet(
     config = config,
     output_dir = output_dir,
     input_dir = input_dir
