@@ -196,14 +196,14 @@ Config <- S7::new_class(
       S7::class_double,
       default = 1.0,
       validator = \(value) {
-        ifelse(
-          (value >= 0) && (value <= 1),
-          NULL,
+        if (length(value) == 1 && value >= 0 && value <= 1) {
+          NULL
+        } else {
           paste0(
             "Invalid value for facility_active_proportion. ",
             "It must be a single numeric value between 0 and 1."
           )
-        )
+        }
       }
     )
   )
