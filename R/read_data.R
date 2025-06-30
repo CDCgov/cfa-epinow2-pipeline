@@ -130,10 +130,10 @@ read_data <- function(
         SELECT *,
         -- This is the same as `all(any_visits_this_day)`
         -- when grouped by facility
-        AVG(IF(any_visits_this_day, 1, 0)) OVER 
+        AVG(IF(any_visits_this_day, 1, 0)) OVER
             (PARTITION BY facility) AS proportion_true
         FROM read_parquet(?)
-        -- Filter here during the CTE, otherwise the PARTITION BY 
+        -- Filter here during the CTE, otherwise the PARTITION BY
         -- statement will be computationally expensive
         WHERE 1=1
           AND disease LIKE ?
@@ -148,7 +148,7 @@ read_data <- function(
           WHEN disease = 'COVID-19/Omicron' THEN 'COVID-19'
           ELSE disease
         END AS disease,
-        -- We want to inject the 'US' as our abbrevation here bc data 
+        -- We want to inject the 'US' as our abbrevation here bc data
         -- is not agg'd
         'US' AS geo_value,
         sum(value) AS confirm
@@ -165,10 +165,10 @@ read_data <- function(
         SELECT *,
         -- This is the same as `all(any_visits_this_day)`
         -- when grouped by facility
-        AVG(IF(any_visits_this_day, 1, 0)) OVER 
+        AVG(IF(any_visits_this_day, 1, 0)) OVER
             (PARTITION BY facility) AS proportion_true
         FROM read_parquet(?)
-        -- Filter here during the CTE, otherwise the PARTITION BY 
+        -- Filter here during the CTE, otherwise the PARTITION BY
         -- statement will be computationally expensive
         WHERE 1=1
           AND disease LIKE ?
