@@ -155,6 +155,11 @@ Data <- S7::new_class(
 #' "YYYY-MM-DD".
 #' @param output_container An optional string specifying the output blob storage
 #' container.
+#' @param facility_active_proportion A numeric value between 0 and 1 specifying
+#' the proportion of days during the modeling period that facilities must have
+#' valid DDI codes to be included in the analysis. Default is 1.0 (facilities
+#' must have visits every day). Lower values allow inclusion of facilities
+#' with fewer active days.
 #' @family config
 #' @export
 Config <- S7::new_class(
@@ -186,7 +191,21 @@ Config <- S7::new_class(
     # Would add default values, but Roxygen isn't happy about them yet.
     sampler_opts = S7::class_list,
     exclusions = S7::S7_class(Exclusions()),
-    output_container = character_or_null
+    output_container = character_or_null,
+    facility_active_proportion = S7::new_property(
+      S7::class_double,
+      default = 1.0,
+      validator = \(value) {
+        ifelse(
+          (value >= 0) && (value <= 1),
+          NULL,
+          paste0(
+            "Invalid value for facility_active_proportion. ",
+            "It must be a single numeric value between 0 and 1."
+          )
+        )
+      }
+    )
   )
 )
 

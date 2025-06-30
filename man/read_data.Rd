@@ -10,7 +10,8 @@ read_data(
   geo_value,
   report_date,
   max_reference_date,
-  min_reference_date
+  min_reference_date,
+  facility_active_proportion
 )
 }
 \arguments{
@@ -31,6 +32,12 @@ date. Formatted as "YYYY-MM-DD".}
 
 \item{min_reference_date}{A string representing the minimum reference
 date. Formatted as "YYYY-MM-DD".}
+
+\item{facility_active_proportion}{A numeric value between 0 and 1 specifying
+the proportion of days during the modeling period that facilities must have
+valid DDI codes to be included in the analysis. Default is 1.0 (facilities
+must have visits every day). Lower values allow inclusion of facilities
+with fewer active days.}
 }
 \value{
 A dataframe with one or more rows and columns \code{report_date},
