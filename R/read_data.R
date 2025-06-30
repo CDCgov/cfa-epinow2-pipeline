@@ -159,9 +159,12 @@ read_data <- function(
       ORDER BY reference_date
      "
     # Append `facility_active_proportion` to the query
-    parameters <- c(parameters, list(
-      facility_active_proportion = facility_active_proportion
-    ))
+    parameters <- c(
+      parameters,
+      list(
+        facility_active_proportion = facility_active_proportion
+      )
+    )
   } else {
     # Add a column that is the proportion true over
     # the whole 8 week modeling period.
@@ -197,10 +200,13 @@ read_data <- function(
       ORDER BY reference_date
      "
     # Append `geo_value` to the query
-    parameters <- c(parameters, list(
-      geo_value = geo_value,
-      facility_active_proportion = facility_active_proportion
-    ))
+    parameters <- c(
+      parameters,
+      list(
+        geo_value = geo_value,
+        facility_active_proportion = facility_active_proportion
+      )
+    )
   }
 
   df <- rlang::try_fetch(
