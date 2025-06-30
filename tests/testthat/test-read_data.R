@@ -196,3 +196,40 @@ test_that("API v2 with COVID-19, US", {
   expect_false("COVID-19/Omicron" %in% actual$disease)
   expect_true(all(actual$disease == "COVID-19"))
 })
+
+test_that("facility_active_proportion affects counts", {
+  data_path <- test_path("data/CA_apiv2_test.parquet")
+
+  # Read data with facility_active_proportion = 1.0
+  # (stricter - only facilities active all days)
+  data_strict <- read_data(
+    data_path,
+    disease = "COVID-19",
+    geo_value = "CA",
+    report_date = "2024-11-26",
+    min_reference_date = as.Date("2024-06-01"),
+    max_reference_date = "2024-11-25",
+    facility_active_proportion = 1.0
+  )
+
+  # Read data with facility_active_proportion = 0.5
+  # (less strict - facilities active >=50% of days)
+  data_lenient <- read_data(
+    data_path,
+    disease = "COVID-19",
+    geo_value = "CA",
+    report_date = "2024-11-26",
+    min_reference_date = as.Date("2024-06-01"),
+    max_reference_date = "2024-11-25",
+    facility_active_proportion = 0.5
+  )
+
+  # Both should have the same structure
+  expect_equal(names(data_strict), names(data_lenient))
+  expect_equal(nrow(data_strict), nrow(data_lenient))
+
+  expect_true(
+    all(data_lenient$confirm >= data_strict$confirm),
+    info = "Lenient data should have equal or more counts than strict data"
+  )
+})
