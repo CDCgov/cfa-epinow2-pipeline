@@ -114,7 +114,8 @@ test_that("Works as expected on large exclusions file", {
     geo_value = "OH",
     report_date = "2025-04-02",
     max_reference_date = "2025-04-02",
-    min_reference_date = "1970-01-01"
+    min_reference_date = "1970-01-01",
+    facility_active_proportion = 1.0
   )
 
   # Apply the exclusions

@@ -167,7 +167,8 @@ test_that("API v2 with COVID-19, one state", {
     geo_value = "CA",
     report_date = "2024-11-26",
     min_reference_date = as.Date("2024-06-01"),
-    max_reference_date = "2024-11-25"
+    max_reference_date = "2024-11-25",
+    facility_active_proportion = 1.0
   )
 
   # Expect that there should be no "COVID-19/Omicron" in the data,
@@ -186,7 +187,8 @@ test_that("API v2 with COVID-19, US", {
     geo_value = "US",
     report_date = "2024-11-26",
     min_reference_date = as.Date("2024-06-01"),
-    max_reference_date = "2024-11-25"
+    max_reference_date = "2024-11-25",
+    facility_active_proportion = 1.0
   )
 
   # Expect that there should be no "COVID-19/Omicron" in the data,
