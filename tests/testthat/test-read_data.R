@@ -100,7 +100,7 @@ test_that("An invalid query throws a wrapped error", {
       min_reference_date = "2023-01-02",
       max_reference_date = "2023-01-22"
     ),
-    class = "wrapped_invalid_query"
+    class = "wrapped_schema_read_error"
   )
 })
 

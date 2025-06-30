@@ -94,6 +94,7 @@ orchestrate_pipeline <- function(
     }
   )
   if (typeof(config) == "logical") {
+    cli::cli_warn("Failed to read config", class = "Bad_config")
     return(invisible(FALSE))
   }
 
@@ -113,6 +114,7 @@ orchestrate_pipeline <- function(
   logfile_connection <- file(file.path(logfile_path, "logs.txt"), open = "wt")
   sink(
     logfile_connection,
+    # "output" means general (non-error) output
     type = "output",
     append = TRUE,
     # Send output to logs and to console
@@ -120,8 +122,11 @@ orchestrate_pipeline <- function(
   )
   sink(
     logfile_connection,
+    # "message" means error messages
     type = "message",
     append = TRUE
+    # Unfortunately, we can't split messages to both console and log file.
+    # It will error out if we try
   )
   on.exit(sink(file = NULL))
   cli::cli_alert_info("Starting run at {Sys.time()}")

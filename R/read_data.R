@@ -35,6 +35,33 @@ read_data <- function(
 
   check_file_exists(data_path)
 
+  con <- DBI::dbConnect(duckdb::duckdb())
+  on.exit(expr = DBI::dbDisconnect(con))
+
+  # Get the schema of the data file, and check if `any_visits_this_day` is
+  # present. If it is, then it is an API v2 file, otherwise it is an API v1
+  # file. We use this to determine the query we need to run.
+  is_api_v2 <- rlang::try_fetch(
+    DBI::dbGetQuery(
+      con,
+      "SELECT * FROM read_parquet(?) LIMIT 0;",
+      params = list(data_path)
+    ) |>
+      names() |>
+      # Does it contain `any_visits_this_day`?
+      stringr::str_detect("any_visits_this_day") |>
+      any(),
+    error = function(con) {
+      cli::cli_abort(
+        c(
+          "Error reading schema from {.path {data_path}}",
+          "Original error: {con}"
+        ),
+        class = "wrapped_schema_read_error"
+      )
+    }
+  )
+
   parameters <- list(
     data_path = data_path,
     # If disease is COVID-19, we want to match both COVID-19 and
@@ -48,7 +75,7 @@ read_data <- function(
   # We need different queries for the states and the US overall. For US overall
   # we need to aggregate over all the facilities in all the states. For the
   # states, we need to aggregate over all the facilities in that one state
-  if (geo_value == "US") {
+  if (geo_value == "US" && !is_api_v2) {
     query <- "
    SELECT
      report_date,
@@ -70,7 +97,7 @@ read_data <- function(
     GROUP BY reference_date, report_date, disease
     ORDER BY reference_date
    "
-  } else {
+  } else if (geo_value != "US" && !is_api_v2) {
     # We want just one state so aggregate over facilites in that one state only
     query <- "
   SELECT
@@ -95,10 +122,79 @@ read_data <- function(
   "
     # Append `geo_value` to the query
     parameters <- c(parameters, list(geo_value = geo_value))
+  } else if (geo_value == "US" && is_api_v2) {
+    # Add a column that is the proportion true over
+    # the whole 8 week modeling period.
+    query <- "
+      WITH facility_checks AS (
+        SELECT *,
+        -- This is the same as `all(any_visits_this_day)`
+        -- when grouped by facility
+        AVG(IF(any_visits_this_day, 1, 0)) OVER 
+            (PARTITION BY facility) AS proportion_true
+        FROM read_parquet(?)
+        -- Filter here during the CTE, otherwise the PARTITION BY 
+        -- statement will be computationally expensive
+        WHERE 1=1
+          AND disease LIKE ?
+          AND metric = 'count_ed_visits'
+          AND reference_date >= ? :: DATE
+          AND reference_date <= ? :: DATE
+          AND report_date = ? :: DATE
+      ) SELECT
+        report_date,
+        reference_date,
+        CASE
+          WHEN disease = 'COVID-19/Omicron' THEN 'COVID-19'
+          ELSE disease
+        END AS disease,
+        -- We want to inject the 'US' as our abbrevation here bc data 
+        -- is not agg'd
+        'US' AS geo_value,
+        sum(value) AS confirm
+      FROM facility_checks
+      WHERE proportion_true = 1
+      GROUP BY reference_date, report_date, disease
+      ORDER BY reference_date
+     "
+  } else {
+    # Add a column that is the proportion true over
+    # the whole 8 week modeling period.
+    query <- "
+      WITH facility_checks AS (
+        SELECT *,
+        -- This is the same as `all(any_visits_this_day)`
+        -- when grouped by facility
+        AVG(IF(any_visits_this_day, 1, 0)) OVER 
+            (PARTITION BY facility) AS proportion_true
+        FROM read_parquet(?)
+        -- Filter here during the CTE, otherwise the PARTITION BY 
+        -- statement will be computationally expensive
+        WHERE 1=1
+          AND disease LIKE ?
+          AND metric = 'count_ed_visits'
+          AND reference_date >= ? :: DATE
+          AND reference_date <= ? :: DATE
+          AND report_date = ? :: DATE
+          AND geo_value = ?
+      ) SELECT
+        report_date,
+        reference_date,
+        CASE
+          WHEN disease = 'COVID-19/Omicron' THEN 'COVID-19'
+          ELSE disease
+        END AS disease,
+        geo_value AS geo_value,
+        sum(value) AS confirm
+      FROM facility_checks
+      WHERE proportion_true = 1
+      GROUP BY geo_value, reference_date, report_date, disease
+      ORDER BY reference_date
+     "
+    # Append `geo_value` to the query
+    parameters <- c(parameters, list(geo_value = geo_value))
   }
 
-  con <- DBI::dbConnect(duckdb::duckdb())
-  on.exit(expr = DBI::dbDisconnect(con))
   df <- rlang::try_fetch(
     DBI::dbGetQuery(
       con,
