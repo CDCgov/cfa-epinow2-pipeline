@@ -85,7 +85,7 @@ orchestrate_pipeline <- function(
       )
       read_json_into_config(
         config_path,
-        c("exclusions", "output_container")
+        c("exclusions", "output_container", "facility_active_proportion")
       )
     },
     error = function(con) {
@@ -194,7 +194,8 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     geo_value = config@geo_value,
     report_date = config@report_date,
     max_reference_date = config@max_reference_date,
-    min_reference_date = config@min_reference_date
+    min_reference_date = config@min_reference_date,
+    facility_active_proportion = config@facility_active_proportion
   )
 
   # rlang::is_empty() checks for empty and NULL values

@@ -29,7 +29,8 @@ read_data <- function(
   geo_value,
   report_date,
   max_reference_date,
-  min_reference_date
+  min_reference_date,
+  facility_active_proportion
 ) {
   rlang::arg_match(disease)
 
@@ -153,10 +154,14 @@ read_data <- function(
         'US' AS geo_value,
         sum(value) AS confirm
       FROM facility_checks
-      WHERE proportion_true = 1
+      WHERE proportion_true = ?
       GROUP BY reference_date, report_date, disease
       ORDER BY reference_date
      "
+    # Append `facility_active_proportion` to the query
+    parameters <- c(parameters, list(
+      facility_active_proportion = facility_active_proportion
+    ))
   } else {
     # Add a column that is the proportion true over
     # the whole 8 week modeling period.
@@ -187,12 +192,15 @@ read_data <- function(
         geo_value AS geo_value,
         sum(value) AS confirm
       FROM facility_checks
-      WHERE proportion_true = 1
+      WHERE proportion_true = ?
       GROUP BY geo_value, reference_date, report_date, disease
       ORDER BY reference_date
      "
     # Append `geo_value` to the query
-    parameters <- c(parameters, list(geo_value = geo_value))
+    parameters <- c(parameters, list(
+      geo_value = geo_value,
+      facility_active_proportion = facility_active_proportion
+    ))
   }
 
   df <- rlang::try_fetch(
@@ -211,6 +219,11 @@ read_data <- function(
           "*" = "min_reference_date: {.val {parameters[['min_ref_date']]}}",
           "*" = "max_reference_date: {.val {parameters[['max_ref_date']]}}",
           "*" = "report_date: {.val {parameters[['report_date']]}}",
+          "*" = "geo_value: {.val {parameters[['geo_value']]}}",
+          "*" = paste0(
+            "facility_active_proportion:",
+            " {.val {parameters[['facility_active_proportion']]}}"
+          ),
           "Original error: {con}"
         ),
         class = "wrapped_invalid_query"
