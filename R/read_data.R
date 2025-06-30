@@ -154,7 +154,7 @@ read_data <- function(
         'US' AS geo_value,
         sum(value) AS confirm
       FROM facility_checks
-      WHERE proportion_true = ?
+      WHERE proportion_true >= ?
       GROUP BY reference_date, report_date, disease
       ORDER BY reference_date
      "
@@ -195,7 +195,7 @@ read_data <- function(
         geo_value AS geo_value,
         sum(value) AS confirm
       FROM facility_checks
-      WHERE proportion_true = ?
+      WHERE proportion_true >= ?
       GROUP BY geo_value, reference_date, report_date, disease
       ORDER BY reference_date
      "
