@@ -194,7 +194,7 @@ Config <- S7::new_class(
     output_container = character_or_null,
     facility_active_proportion = S7::new_property(
       S7::class_double,
-      default = 1.0,
+      default = quote(1.0),
       validator = \(value) {
         if (length(value) == 1 && value >= 0 && value <= 1) {
           NULL
