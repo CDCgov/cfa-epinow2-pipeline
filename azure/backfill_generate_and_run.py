@@ -165,11 +165,29 @@ def main(
         str,
         typer.Option(help="The name of the config file storage container"),
     ] = "rt-epinow2-config",
+    facility_active_proportion: Annotated[
+        float,
+        typer.Option(
+            help="""
+            Minimum proportion of days of a facility must be actively reporting DDI
+            counts during the modeling period. Must be a number between 0 and 1.
+            Default is 1.0, meaning all facilities must have been active every day.
+            """,
+            show_default=True,
+        ),
+    ] = 1.0,
 ) -> None:
     """
     Generate and upload config files for the EpiNow2 pipeline. Then, if asked for, kick
     off those tasks in Azure Batch.
     """
+    # Make sure facility_active_proportion is between 0 and 1
+    if not (0 <= facility_active_proportion <= 1):
+        raise ValueError(
+            "facility_active_proportion must be between 0 and 1. "
+            f"Got {facility_active_proportion}."
+        )
+
     # Split on commas and spaces, and remove empty strings
     # This will handle cases like "2025-01-01, 2025-01-02 2025-01-03,2025-01-04".
     # Then parse each date string into a date object.
@@ -237,6 +255,7 @@ def main(
         as_of_dates=as_of_dates,
         output_container=output_container,
         task_exclusions=task_exclusions,
+        facility_active_proportion=facility_active_proportion,
     )
 
     if config_only:
