@@ -155,6 +155,52 @@ docker run \
 
 **Note**: The default value of `CNTR_MGR` is `docker`!
 
+### Backfill runs
+
+For running historical or backfill analysis across multiple report dates, use the `azure/backfill_generate_and_run.py` script. This script generates configuration files for multiple report dates and optionally submits them to Azure Batch for processing.
+
+**Important**: Always run `uv run azure/backfill_generate_and_run.py --help` first to see all available options and their detailed descriptions. The script has many configuration options that may be important for your specific use case.
+
+#### Basic usage
+
+Here's a simple example of running a backfill for COVID-19 and RSV across all states for three report dates:
+
+```bash
+uv run --env-file .env azure/backfill_generate_and_run.py \
+    --state=all \
+    --disease="COVID-19,RSV" \
+    --str-report-dates="2025-06-04,2025-06-11,2025-06-18" \
+    --reference-date-time-span="8w" \
+    --data-paths-template="gold/{}.parquet" \
+    --data-container="nssp-etl" \
+    --backfill-name="example-backfill-june-2025" \
+    --output-container="nssp-rt-testing" \
+    --image-name="cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:latest" \
+    --pool-id="cfa-epinow2-latest"
+```
+
+#### Key parameters
+
+- `--state`: Target states (`all`, single state like `NY`, or comma-separated list)
+- `--disease`: Target diseases (comma-separated, e.g., `"COVID-19,Influenza"`)
+- `--str-report-dates`: Comma-separated ISO dates for the backfill
+- `--reference-date-time-span`: Time span of data for each model (e.g., `8w` for 8 weeks)
+- `--data-paths-template`: Template for data file paths (e.g., `"gold/{}.parquet"`)
+- `--backfill-name`: Unique name for this backfill run
+- `--config-only`: Generate configs only without submitting to Azure Batch
+
+#### Generating date ranges
+
+To create a list of Wednesday dates for backfill, use the Makefile helper:
+
+```bash
+make create-wed-range-inclusive START_DATE=2024-10-01 END_DATE=2025-05-31
+```
+
+This will output a comma-separated list of Wednesday dates that you can use with the `--str-report-dates` parameter.
+
+For more advanced options like custom exclusions, facility active proportion settings, or different data path configurations, run the help command to see all available parameters.
+
 ### Automation
 
 The project uses GitHub Actions workflows to automate CI/CD.
