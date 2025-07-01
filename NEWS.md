@@ -2,6 +2,7 @@
 
 ## Features
 * Add commands for generating backfill configurations.
+* Updating EpiNow2 from version 1.4.1.9000 to version 1.6.1
 * Remove azure/requirements.txt as we have moved to inline dependencies in *uv*
 * Does not save outlier csv files if contents are empty
 * Switching base rocker image from geospatial (4.7 GB) to r-ver (3 GB)
@@ -63,6 +64,7 @@
 * Reactivated DEBUG level logs from EpiNow2 so that sampler progress is visible
 * Added new test data and unit tests for point exclusions
 * Removed any nulls from reference_date column in outlier files
+* Removed quotes and identifiers from outlier and state exclusions files
 
 # CFAEpiNow2Pipeline v0.1.0
 
