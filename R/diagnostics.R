@@ -57,33 +57,19 @@ extract_diagnostics <- function(
 ) {
   low_case_count <- low_case_count_diagnostic(data)
 
-  epinow2_diagnostics <- rstan::get_sampler_params(
-    fit$estimates$fit,
-    inc_warmup = FALSE
-  )
-  mean_accept_stat <- mean(
-    sapply(epinow2_diagnostics, function(x) mean(x[, "accept_stat__"]))
-  )
-  p_divergent <- mean(
-    rstan::get_divergent_iterations(fit$estimates$fit),
-    na.rm = TRUE
-  )
-  n_divergent <- sum(
-    rstan::get_divergent_iterations(fit$estimates$fit),
-    na.rm = TRUE
-  )
-  p_max_treedepth <- mean(
-    rstan::get_max_treedepth_iterations(fit$estimates$fit),
-    na.rm = TRUE
-  )
-  p_high_rhat <- mean(
-    rstan::summary(fit$estimates$fit)$summary[, "Rhat"] > 1.05,
-    na.rm = TRUE
-  )
-  n_high_rhat <- sum(
-    rstan::summary(fit$estimates$fit)$summary[, "Rhat"] > 1.05,
-    na.rm = TRUE
-  )
+  sampler_df <- fit$estimates$fit$sampler_diagnostics(format = "df")
+  summary_df <- fit$estimates$fit$summary()
+
+  iterations <- length(sampler_df$divergent__)
+  mean_accept_stat <- mean(sampler_df$accept_stat__)
+  n_divergent <- sum(sampler_df$divergent__)
+  p_divergent <- n_divergent / iterations
+  # choosing 10 as max treepdepth here
+  p_max_treedepth <- sum(sampler_df$treedepth__ > 10) / iterations
+  # TODO: MPW
+  # this should be number of Rt predictions with rhat > 1.05
+  n_high_rhat <- sum(summary_df$rhat > 1.05, na.rm = TRUE)
+  p_high_rhat <- n_high_rhat / nrow(summary_df)
 
   # Combine all diagnostic flags into one flag
   diagnostic_flag <- any(
