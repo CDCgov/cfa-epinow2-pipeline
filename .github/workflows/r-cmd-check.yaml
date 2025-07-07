@@ -58,9 +58,9 @@ jobs:
           Rscript -e "roxygen2::roxygenize()"
           git diff --exit-code man || (echo "::error::Documentation is not up to date. Run 'roxygen2::roxygenize()' locally to re-render." && exit 1)
 
-      - name: Get cmdstan path
+      - name: Set cmdstan path
         run: |
-          Rscript -e 'cmdstanr::cmdstan_path()'
+          Rscript -e 'cmdstanr::set_cmdstan_path(path = NULL)'
 
       - uses: r-lib/actions/check-r-package@v2
         with:
