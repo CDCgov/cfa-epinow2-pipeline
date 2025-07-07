@@ -11,7 +11,6 @@ RUN install2.r pak
 # dependencies = TRUE means we install `suggests` too
 RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
 # The cmdstan version will need to be incrementally updated
-# Must also manually bump cmdstan version `.github/workflows` when updating
 RUN Rscript -e 'cmdstanr::install_cmdstan(version="2.36.0")' &&\
     Rscript -e 'cmdstanr::set_cmdstan_path(path = NULL)
 # This requires access to the Azure Container Registry
