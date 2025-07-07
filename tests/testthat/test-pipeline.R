@@ -1,3 +1,26 @@
+suppress_ess_warning <- function(.f, pattern = NULL) {
+  if (is.null(pattern)) {
+    pattern <- "The ESS has been capped to avoid unstable"
+  }
+
+  # ensure .f is evaluated once
+  force(.f)
+
+  function(...) {
+    withCallingHandlers(
+      .f(...),
+      warning = function(w) {
+        if (grepl(pattern, conditionMessage(w))) {
+          invokeRestart("muffleWarning")
+        }
+      }
+    )
+  }
+}
+
+orch_pipeline_quiet <- suppress_ess_warning(orchestrate_pipeline)
+exec_mod_log_quiet <- suppress_ess_warning(execute_model_logic)
+
 test_that("Bad config throws warning and returns failure", {
   # Arrange
   config_path <- test_path("data", "bad_config.json")
@@ -31,7 +54,7 @@ test_that("Pipeline run produces expected outputs with NO exclusions", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- orchestrate_pipeline(
+  pipeline_success <- orch_pipeline_quiet(
     config_path = config_path,
     input_dir = input_dir,
     output_dir = output_dir
@@ -55,7 +78,7 @@ test_that("Pipeline run produces expected outputs with exclusions", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- orchestrate_pipeline(
+  pipeline_success <- orch_pipeline_quiet(
     config_path = config_path,
     input_dir = input_dir,
     output_dir = output_dir
@@ -84,7 +107,7 @@ test_that("Process pipeline produces expected outputs and returns success", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- execute_model_logic(
+  pipeline_success <- exec_mod_log_quiet(
     config = config,
     input_dir = input_dir,
     output_dir = output_dir
@@ -117,7 +140,7 @@ test_that("Runs on config from generator as of 2024-11-26", {
   on.exit(unlink(output_dir, recursive = TRUE))
 
   # Act
-  pipeline_success <- execute_model_logic(
+  pipeline_success <- exec_mod_log_quiet(
     config = config,
     output_dir = output_dir,
     input_dir = input_dir
