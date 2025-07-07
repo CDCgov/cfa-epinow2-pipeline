@@ -11,8 +11,7 @@ RUN install2.r pak
 # dependencies = TRUE means we install `suggests` too
 RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
 # The cmdstan version will need to be incrementally updated
-RUN Rscript -e 'cmdstanr::install_cmdstan(version="2.36.0")' &&\
-    Rscript -e 'cmdstanr::set_cmdstan_path()'
+RUN Rscript -e 'cmdstanr::install_cmdstan(version="2.36.0")' 
 # This requires access to the Azure Container Registry
 # FROM ghcr.io/cdcgov/cfa-epinow2-pipeline:${TAG}
 
