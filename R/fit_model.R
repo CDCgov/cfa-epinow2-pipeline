@@ -118,7 +118,7 @@ format_stan_opts <- function(sampler_opts, seed) {
     ))
   }
   EpiNow2::stan_opts(
-    backend = "rstan",
+    backend = "cmdstanr",
     cores = sampler_opts[["cores"]],
     chains = sampler_opts[["chains"]],
     seed = seed,
