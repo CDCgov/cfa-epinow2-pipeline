@@ -44,13 +44,25 @@ sampler_opts <- list(
   iter_sampling = 25
 )
 
+# Sampler
+gostic_sampler_opts <- list(
+  cores = 2,
+  chains = 2,
+  adapt_delta = 0.8,
+  max_treedepth = 10,
+  iter_warmup = 1000,
+  iter_sampling = 1000
+)
+
+set.seed(12345)
+
 fit_rstan <- fit_model(
   data = data,
   parameters = parameters,
   seed = 12345,
   horizon = 7,
   priors = priors,
-  sampler = c(backend = "cmdstanr", sampler_opts)
+  sampler = c(backend = "rstan", sampler_opts)
 )
 
 fit_cmdstanr <- fit_model(
@@ -60,4 +72,25 @@ fit_cmdstanr <- fit_model(
   horizon = 7,
   priors = priors,
   sampler = c(backend = "cmdstanr", sampler_opts)
+)
+
+## Creating a second fit to test Rt estimation stability
+gostic_data <- gostic_toy_rt |>
+  dplyr::mutate(reference_date = as.Date("2023-01-01") + time) |>
+  dplyr::filter(reference_date <= "2023-03-01") |>
+  dplyr::rename(confirm = incidence)
+
+gostic_parameters <- list(
+  generation_interval = sir_gt_pmf,
+  delay_interval = NA,
+  right_truncation = NA
+)
+
+gostic_fit <- fit_model(
+  data = gostic_data,
+  parameters = gostic_parameters,
+  seed = 12345,
+  horizon = 0,
+  priors = priors,
+  sampler = gostic_sampler_opts
 )

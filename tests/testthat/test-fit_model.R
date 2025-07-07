@@ -69,6 +69,47 @@ test_that("Right truncation longer than data throws error", {
   )
 })
 
+test_that("Model fit returns reasonable R0 estimate", {
+  # Data loaded in from setup.R
+  # Parameters
+  diagnostic_df <- extract_diagnostics(
+    gostic_fit,
+    gostic_data,
+    "test",
+    "test",
+    "test",
+    "test",
+    "test"
+  )
+
+  # Test 1: Test that mean accept stat is above 0.85
+  ma_stat <- diagnostic_df |>
+    dplyr::filter(diagnostic == "mean_accept_stat") |>
+    dplyr::pull(value)
+
+  testthat::expect_true(ma_stat > 0.85)
+
+  # Test 2: Test that Rt estimate range covers true_rt (~2.0)
+  estimate <- gostic_fit$summary |>
+    dplyr::filter(measure == "Effective reproduction no.") |>
+    dplyr::pull(estimate)
+  actual_rt <- gsub("[()--]", " ", estimate)
+
+  # Split the string into numbers
+  rt_estimates <- unlist(strsplit(actual_rt, "\\s+"))
+  actual_rt_lower <- rt_estimates[length(rt_estimates) - 1]
+  actual_rt_upper <- rt_estimates[length(rt_estimates)]
+
+  expected_rt <- gostic_data |>
+    dplyr::slice_max(reference_date, n = 1) |>
+    dplyr::pull(true_rt)
+
+  testthat::expect_true(
+    actual_rt_lower < expected_rt & actual_rt_upper > expected_rt
+  )
+})
+
+
 test_that("Missing GI throws error", {
   expect_error(format_generation_interval(NA), class = "Missing_GI")
 })
