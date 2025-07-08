@@ -57,7 +57,7 @@ fit_model <- function(
   rlang::try_fetch(
     withr::with_seed(seed, {
       EpiNow2::epinow(
-        filter_leading_zeros(df),
+        EpiNow2::filter_leading_zeros(df),
         generation_time = generation_time,
         delays = delays,
         truncation = truncation,
