@@ -45,6 +45,7 @@ fit_model <- function(
     parameters[["right_truncation"]],
     data
   )
+  forecast <- EpiNow2::forecast_opts(horizon = horizon)
   stan <- format_stan_opts(
     sampler_opts,
     seed
@@ -60,7 +61,7 @@ fit_model <- function(
         generation_time = generation_time,
         delays = delays,
         truncation = truncation,
-        forecast = forecast_opts(horizon = horizon),
+        forecast = forecast,
         rt = rt,
         gp = gp,
         stan = stan,
