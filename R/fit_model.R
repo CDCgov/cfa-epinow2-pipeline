@@ -31,7 +31,7 @@ fit_model <- function(
     )
   )
   gp <- EpiNow2::gp_opts(
-    alpha = priors[["gp"]][["alpha_sd"]]
+    alpha = EpiNow2::Normal(mean = 0, sd = priors[["gp"]][["alpha_sd"]])
   )
 
   # Distributions -----------------------------------------------------------
