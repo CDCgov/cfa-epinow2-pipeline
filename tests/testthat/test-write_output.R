@@ -147,7 +147,8 @@ test_that("process_quantiles works as expected", {
     "test_model",
     "test_disease",
     c(0.5, 0.95)
-  )
+  ) |>
+    dplyr::select(!c(accumulate, breakpoint))
 
   # Test 1: Check if the result is a data.table
   expect_true(
@@ -217,7 +218,8 @@ test_that("process_quantiles works as expected", {
 test_that("process_samples works as expected", {
   # Fit object read in from setup.R
   # Run the function on the fit object
-  result <- process_samples(fit, "test_geo", "test_model", "test_disease")
+  result <- process_samples(fit, "test_geo", "test_model", "test_disease") |>
+    dplyr::select(!c(accumulate, breakpoint))
 
   # Test 1: Check if the result is a data.table
   expect_true(
