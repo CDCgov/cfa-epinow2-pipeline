@@ -147,8 +147,7 @@ test_that("process_quantiles works as expected", {
     "test_model",
     "test_disease",
     c(0.5, 0.95)
-  ) |>
-    dplyr::select(!c(accumulate, breakpoint))
+  )
 
   # Test 1: Check if the result is a data.table
   expect_true(
@@ -167,6 +166,8 @@ test_that("process_quantiles works as expected", {
     "_point",
     "_interval",
     "reference_date",
+    "accumulate",
+    "breakpoint",
     "geo_value",
     "model",
     "disease"
@@ -190,6 +191,9 @@ test_that("process_quantiles works as expected", {
     unique_parameters,
     expected_parameters
   )
+
+  # remove EpiNow2 version 1.7.1 columns that populate with NAs
+  result <- result |> dplyr::select(!c("accumulate", "breakpoint"))
 
   # Test 4: Check if there are no missing values
   expect_false(
@@ -236,6 +240,8 @@ test_that("process_samples works as expected", {
     "_draw",
     "value",
     "reference_date",
+    "accumulate",
+    "breakpoint",
     "geo_value",
     "model",
     "disease"
@@ -259,6 +265,9 @@ test_that("process_samples works as expected", {
     unique_parameters,
     expected_parameters
   )
+
+  # remove EpiNow2 version 1.7.1 columns that populate with NAs
+  result <- result |> dplyr::select(!c("accumulate", "breakpoint"))
 
   # Test 4: Check if there are no missing values
   expect_false(
