@@ -69,7 +69,7 @@ fit <- fit_model(
 gostic_data <- gostic_toy_rt |>
   dplyr::mutate(reference_date = as.Date("2023-01-01") + time) |>
   dplyr::filter(reference_date <= "2023-03-01") |>
-  dplyr::rename(confirm = incidence)
+  dplyr::rename(confirm = obs_incidence)
 
 gostic_parameters <- list(
   generation_interval = sir_gt_pmf,
