@@ -12,6 +12,7 @@ RUN install2.r pak
 RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
 # The cmdstan version will need to be incrementally updated
 RUN Rscript -e 'cmdstanr::install_cmdstan(version="2.36.0")'
+RUN Rscript -e 'cmdstanr::set_cmdstan_path()'
 # This requires access to the Azure Container Registry
 # FROM ghcr.io/cdcgov/cfa-epinow2-pipeline:${TAG}
 
