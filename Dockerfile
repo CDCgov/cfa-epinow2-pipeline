@@ -27,7 +27,7 @@ RUN R CMD build --no-build-vignettes --no-manual pkg && \
 RUN R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
 
 RUN git config --global --add safe.directory "$GITHUB_WORKSPACE" && \
-    Rscript -e "roxygen2::roxygenize()" && \
+    Rscript -e "roxygen2::roxygenize('pkg')" && \
     git diff --exit-code man || (echo "::error::Documentation is not up to date. Run 'roxygen2::roxygenize()' locally to re-render." && exit 1)
 
 CMD ["bash"]
