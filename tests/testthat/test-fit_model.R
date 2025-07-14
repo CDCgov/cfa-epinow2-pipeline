@@ -1,11 +1,23 @@
-test_that("Minimal model fit all params runs", {
-  # fit object created in setup.R
-  expect_s3_class(fit, "epinow")
+test_that("Minimal model fit all params runs (rstan)", {
+  expect_s3_class(fit_rstan, "epinow")
+})
+
+test_that("Minimal model fit all params runs (cmdstanr)", {
+  expect_s3_class(fit_cmdstanr, "epinow")
+})
+
+test_that("Minimal model fit same between rstan or cmdstanr backend", {
+  test_measure <- "Expected change in daily reports"
+  rstan_rt <- fit_rstan$summary[fit_rstan$summary$measure == test_measure, ]
+  cmdstanr_rt <- fit_cmdstanr$summary[
+    fit_cmdstanr$summary$measure == test_measure,
+  ]
+
+  expect_equal(rstan_rt$estimate, cmdstanr_rt$estimate)
 })
 
 test_that("Minimal model fit with no right trunc or delay runs", {
-  # Data loaded in from setup.R
-  expect_s3_class(fit, "epinow")
+  expect_s3_class(fit_cmdstanr, "epinow")
 })
 
 test_that("Bad params w/ failing fit issues warning and returns NA", {
@@ -23,6 +35,7 @@ test_that("Bad params w/ failing fit issues warning and returns NA", {
   )
   # Sampler
   sampler_opts <- list(
+    backend = "cmdstanr",
     cores = 1,
     chains = 1,
     adapt_delta = 0.8,

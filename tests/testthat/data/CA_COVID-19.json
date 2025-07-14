@@ -39,6 +39,7 @@
     }
   },
   "sampler_opts": {
+    "backend": "rstan",
     "cores": 1,
     "chains": 1,
     "iter_warmup": 50,

@@ -56,13 +56,22 @@ gostic_sampler_opts <- list(
 
 set.seed(12345)
 
-fit <- fit_model(
+fit_rstan <- fit_model(
   data = data,
   parameters = parameters,
   seed = 12345,
   horizon = 7,
   priors = priors,
-  sampler = sampler_opts
+  sampler = c(backend = "rstan", sampler_opts)
+)
+
+fit_cmdstanr <- fit_model(
+  data = data,
+  parameters = parameters,
+  seed = 12345,
+  horizon = 7,
+  priors = priors,
+  sampler = c(backend = "cmdstanr", sampler_opts)
 )
 
 ## Creating a second fit to test Rt estimation stability
