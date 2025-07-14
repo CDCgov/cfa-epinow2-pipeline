@@ -14,7 +14,6 @@ RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = T
 # Must also manually bump cmdstan version `.github/workflows` when updating
 RUN Rscript -e 'cmdstanr::install_cmdstan(version="2.36.0")'
 # This requires access to the Azure Container Registry
-# FROM ghcr.io/cdcgov/cfa-epinow2-pipeline:${TAG}
 
 # Will copy the package to the container preserving the directory structure
 COPY . pkg/
@@ -26,5 +25,9 @@ RUN R CMD build --no-build-vignettes --no-manual pkg && \
 
 # Ensure the package is working properly
 RUN R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
+
+RUN git config --global --add safe.directory "$GITHUB_WORKSPACE" && \
+    Rscript -e "roxygen2::roxygenize()" && \
+    git diff --exit-code man || (echo "::error::Documentation is not up to date. Run 'roxygen2::roxygenize()' locally to re-render." && exit 1)
 
 CMD ["bash"]
