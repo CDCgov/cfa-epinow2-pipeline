@@ -57,8 +57,13 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           Rscript -e "roxygen2::roxygenize()"
           git diff --exit-code man || (echo "::error::Documentation is not up to date. Run 'roxygen2::roxygenize()' locally to re-render." && exit 1)
-
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          upload-snapshots: true
-          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+      
+      - name: R CMD Check
+        run: |
+          R CMD build --no-build-vignettes --no-manual pkg && \
+          R CMD INSTALL CFAEpiNow2Pipeline_*.tar.gz && \
+          R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
+      #- uses: r-lib/actions/check-r-package@v2
+      #  with:
+      #    upload-snapshots: true
+      #    build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
