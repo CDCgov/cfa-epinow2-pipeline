@@ -50,7 +50,7 @@ gostic_priors <- list(
     sd = 0.2
   ),
   gp = list(
-    alpha_sd = 0.01
+    alpha_sd = 0.05
   )
 )
 
