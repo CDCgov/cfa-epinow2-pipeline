@@ -19,7 +19,7 @@ Description: Add logging, metadata handling, and data handling
 License: Apache License (>= 2)
 Encoding: UTF-8
 Remotes:
-    github::epiforecasts/EpiNow2,
+    github::epiforecasts/EpiNow2@b5f5f2b6b2bf4e01f4d346dacbbea84d75d910b2,
     github::stan-dev/cmdstanr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
