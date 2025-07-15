@@ -44,6 +44,16 @@ sampler_opts <- list(
   iter_sampling = 25
 )
 
+gostic_priors <- list(
+  rt = list(
+    mean = 2,
+    sd = 0.2
+  ),
+  gp = list(
+    alpha_sd = 0.01
+  )
+)
+
 # Sampler
 gostic_sampler_opts <- list(
   cores = 2,
@@ -82,6 +92,6 @@ gostic_fit <- fit_model(
   parameters = gostic_parameters,
   seed = 123456,
   horizon = 0,
-  priors = priors,
+  priors = gostic_priors,
   sampler = gostic_sampler_opts
 )
