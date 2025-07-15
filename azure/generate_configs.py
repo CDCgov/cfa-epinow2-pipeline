@@ -6,7 +6,7 @@
 # ]
 #
 # [tool.uv.sources]
-# cfa-config-generator = { git = "https://github.com/CDCgov/cfa-config-generator" }
+# cfa-config-generator = { git = "https://github.com/CDCgov/cfa-config-generator", branch = "dev-test_alt_priors_mpw"}
 # ///
 
 

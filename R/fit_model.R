@@ -25,13 +25,13 @@ fit_model <- function(
 ) {
   # Priors ------------------------------------------------------------------
   rt <- EpiNow2::rt_opts(
-    list(
+    prior = EpiNow2::LogNormal(
       mean = priors[["rt"]][["mean"]],
       sd = priors[["rt"]][["sd"]]
     )
   )
   gp <- EpiNow2::gp_opts(
-    alpha_sd = priors[["gp"]][["alpha_sd"]]
+    alpha = EpiNow2::Normal(mean = 0, sd = priors[["gp"]][["alpha_sd"]])
   )
 
   # Distributions -----------------------------------------------------------
@@ -45,6 +45,7 @@ fit_model <- function(
     parameters[["right_truncation"]],
     data
   )
+  forecast <- EpiNow2::forecast_opts(horizon = horizon)
   stan <- format_stan_opts(
     sampler_opts,
     seed
@@ -56,11 +57,11 @@ fit_model <- function(
   rlang::try_fetch(
     withr::with_seed(seed, {
       EpiNow2::epinow(
-        df,
+        EpiNow2::filter_leading_zeros(df),
         generation_time = generation_time,
         delays = delays,
         truncation = truncation,
-        horizon = horizon,
+        forecast = forecast,
         rt = rt,
         gp = gp,
         stan = stan,
@@ -72,8 +73,7 @@ fit_model <- function(
           file = NULL,
           mirror_to_console = TRUE,
           name = "EpiNow2"
-        ),
-        filter_leading_zeros = FALSE,
+        )
       )
     }),
     error = function(cnd) {
