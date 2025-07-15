@@ -35,7 +35,7 @@ tag: ## Tags the local image for pushing to the container registry
 
 config: ## Generates a configuration file for running the model
 	uv run azure/generate_configs.py \
-		--disease="COVID-19,Influenza" \
+		--disease="COVID-19,Influenza,RSV" \
 		--state=all \
 		--output-container=nssp-rt-v2 \
 		--job-id=$(JOB) \
@@ -81,7 +81,7 @@ push: ## Push the tagged image to the container registry
 
 test-batch: ## Run GitHub Actions workflow and then job.py for testing on Azure Batch
 	uv run azure/generate_configs.py \
-		--disease="COVID-19,Influenza" \
+		--disease="COVID-19,Influenza,RSV" \
 		--state=NY \
 		--output-container=nssp-rt-testing \
 		--job-id=$(JOB) \
