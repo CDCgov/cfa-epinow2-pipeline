@@ -85,7 +85,7 @@ orchestrate_pipeline <- function(
       )
       read_json_into_config(
         config_path,
-        c("exclusions", "output_container")
+        c("exclusions", "output_container", "facility_active_proportion")
       )
     },
     error = function(con) {
@@ -94,6 +94,7 @@ orchestrate_pipeline <- function(
     }
   )
   if (typeof(config) == "logical") {
+    cli::cli_warn("Failed to read config", class = "Bad_config")
     return(invisible(FALSE))
   }
 
@@ -113,6 +114,7 @@ orchestrate_pipeline <- function(
   logfile_connection <- file(file.path(logfile_path, "logs.txt"), open = "wt")
   sink(
     logfile_connection,
+    # "output" means general (non-error) output
     type = "output",
     append = TRUE,
     # Send output to logs and to console
@@ -120,8 +122,11 @@ orchestrate_pipeline <- function(
   )
   sink(
     logfile_connection,
+    # "message" means error messages
     type = "message",
     append = TRUE
+    # Unfortunately, we can't split messages to both console and log file.
+    # It will error out if we try
   )
   on.exit(sink(file = NULL))
   cli::cli_alert_info("Starting run at {Sys.time()}")
@@ -189,7 +194,8 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     geo_value = config@geo_value,
     report_date = config@report_date,
     max_reference_date = config@max_reference_date,
-    min_reference_date = config@min_reference_date
+    min_reference_date = config@min_reference_date,
+    facility_active_proportion = config@facility_active_proportion
   )
 
   # rlang::is_empty() checks for empty and NULL values
@@ -281,7 +287,8 @@ execute_model_logic <- function(config, input_dir, output_dir) {
       config@exclusions@blob_storage_container
     ),
     # Add the config container here when refactoring out to outer func
-    run_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
+    run_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z"),
+    facility_active_proportion = config@facility_active_proportion,
   )
 
   write_model_outputs(
