@@ -54,7 +54,7 @@ def main(
             Default is 0.94 (require active reporting for >=53 of 56 days in the training period).
             We do not recommend using 1.00, as this will filter out large fractions of the data in some states,
             because not all facilities report actively same-day (at lag 0). This default was chosen for correspondence
-            with API v1, and it includes data from most facilities, 
+            with API v1, and it includes data from most facilities,
             even if they do not actively report at lag 0 or drop out for a few days incidentally.
             """,
             show_default=True,
