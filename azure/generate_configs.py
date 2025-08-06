@@ -55,7 +55,7 @@ def main(
             """,
             show_default=True,
         ),
-    ] = 1.0,
+    ] = 0.94,
 ):
     """
     Generate and upload config files for the epinow2 pipeline.
