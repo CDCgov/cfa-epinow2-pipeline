@@ -66,4 +66,3 @@ jobs:
 
             echo 'Running command: "${{ env.COMMAND }}"'
             ${{ env.COMMAND }}
-
