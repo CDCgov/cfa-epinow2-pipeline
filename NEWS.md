@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Scheduling `make run-prod` on Github Actions Wednesdays at 8 AM ET
 * Adds facility active proportion information for config runs and re-runs
 * Adds RSV into the makefile for configs
 * Updating EpiNow2 from version 1.4.1.9000 to version 1.6.1
