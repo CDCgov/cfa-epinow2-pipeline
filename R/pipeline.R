@@ -249,9 +249,9 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     disease = config@disease,
     geo_value = config@geo_value,
     model = config@model,
-    covid_low_case_count= config@covid_low_case_count,
-    rsv_low_case_count= config@rsv_low_case_count,
-    flu_low_case_count= config@flu_low_case_count
+    covid_low_case_count = config@covid_low_case_count,
+    rsv_low_case_count = config@rsv_low_case_count,
+    flu_low_case_count = config@flu_low_case_count
   )
   samples <- process_samples(
     fit = fit,
