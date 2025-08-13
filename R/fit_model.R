@@ -82,7 +82,8 @@ fit_model <- function(
           file = NULL,
           mirror_to_console = TRUE,
           name = "EpiNow2"
-        )
+        ),
+        filter_leading_zeros = FALSE
       )
     }),
     error = function(cnd) {
@@ -138,5 +139,3 @@ format_stan_opts <- function(sampler_opts, seed) {
     )
   )
 }
-
-parse
