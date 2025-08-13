@@ -65,6 +65,39 @@ def main(
             show_default=True,
         ),
     ] = 0.94,
+    covid_low_case_count: Annotated[
+        int,
+        typer.Option(
+            help="""
+            Jurisdictions with less than X number of COVID ED visist will be labeled 
+            as n_low_case_count in the diagnostics file and will be edited to "Not Estimated"
+            during post processing. Default value is 10
+            """,
+            show_default=True,
+        ),
+    ] = 10,
+    rsv_low_case_count: Annotated[
+        int,
+        typer.Option(
+            help="""
+            Jurisdictions with less than X number of RSV ED visist will be labeled 
+            as n_low_case_count in the diagnostics file and will be edited to "Not Estimated"
+            during post processing.
+            """,
+            show_default=True,
+        ),
+    ] = 5,
+    flu_low_case_count: Annotated[
+        int,
+        typer.Option(
+            help="""
+            Jurisdictions with less than X number of RSV ED visist will be labeled 
+            as n_low_case_count in the diagnostics file and will be edited to "Not Estimated"
+            during post processing.
+            """,
+            show_default=True,
+        ),
+    ] = 10,
 ):
     """
     Generate and upload config files for rerunning the epinow2 pipeline.
@@ -100,6 +133,9 @@ def main(
         output_container=output_container,
         data_exclusions_path=data_exclusions_path,
         facility_active_proportion=facility_active_proportion,
+        covid_low_count=covid_case_low_count,
+        rsv_low_count=rsv_low_case_count,
+        flu_low_count=flu_low_case_count,
     )
 
 

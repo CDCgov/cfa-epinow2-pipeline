@@ -13,6 +13,9 @@ CONFIG=test.json
 POOL="cfa-epinow2-$(TAG)"
 TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
 JOB:=Rt-estimation-$(TIMESTAMP)
+covid_low_case_count:=$(covid_low_case_count)
+rsv_low_case_count:=$(rsv_low_case_count)
+flu_low_case_count:=$(flu_low_case_count)
 
 # The report date to use, in ISO format (YYYY-MM-DD). Default is today
 REPORT_DATE?=$(shell date -u +%F)
@@ -39,13 +42,19 @@ config: ## Generates a configuration file for running the model
 		--state=all \
 		--output-container=nssp-rt-v2 \
 		--job-id=$(JOB) \
-		--report-date-str=$(REPORT_DATE)
+		--report-date-str=$(REPORT_DATE) \
+		--covid_low_case_count="$(covid_low_case_count)" \
+		--rsv_low_case_count="$(rsv_low_case_count)" \
+		--flu_low_case_count="$(flu_low_case_count)"
 
 rerun-config: ## Generate a configuration file to rerun a previous model
 	uv run azure/generate_rerun_configs.py \
 		--output-container=nssp-rt-v2 \
 		--job-id=$(JOB) \
-		--report-date-str=$(REPORT_DATE)
+		--report-date-str=$(REPORT_DATE) \
+		--covid_low_case_count="$(covid_low_case_count)" \
+		--rsv_low_case_count="$(rsv_low_case_count)" \
+		--flu_low_case_count="$(flu_low_case_count)"
 
 run-caj: ## Runs run_container_app_job.py on Azure Container App Jobs
 	uv run azure/run_container_app_job.py \
@@ -85,7 +94,10 @@ test-batch: ## Run GitHub Actions workflow and then job.py for testing on Azure 
 		--state=NY \
 		--output-container=nssp-rt-testing \
 		--job-id=$(JOB) \
-		--report-date-str=$(REPORT_DATE)
+		--report-date-str=$(REPORT_DATE) \
+		--covid_low_case_count="$(covid_low_case_count)" \
+		--rsv_low_case_count="$(rsv_low_case_count)" \
+		--flu_low_case_count="$(flu_low_case_count)"
 	uv run --env-file .env \
 		azure/job.py \
 			--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
