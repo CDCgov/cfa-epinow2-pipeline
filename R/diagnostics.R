@@ -53,9 +53,19 @@ extract_diagnostics <- function(
   task_id,
   disease,
   geo_value,
-  model
+  model,
+  covid_low_case_count,
+  rsv_low_case_count,
+  flu_low_case_count
 ) {
-  low_case_count <- low_case_count_diagnostic(data)
+  if(disease=="COVID-19"):
+    low_case_count_threshold = covid_low_case_count
+  if(disease=="RSV"):
+    low_case_count_threshold = covid_lorsv_low_case_countw_case_count
+  if(disease=="Influenza"):
+    low_case_count_threshold = flu_low_case_count  
+
+  low_case_count <- low_case_count_diagnostic(data, low_case_count_threshold)
 
   epinow2_diagnostics <- rstan::get_sampler_params(
     fit$estimates$fit,
@@ -128,8 +138,9 @@ extract_diagnostics <- function(
 #' Calculate low case count diagnostic flag
 #'
 #' The diagnostic flag is TRUE if either of the _last_ two weeks of the dataset
-#' have fewer than an aggregate 10 cases per week. This aggregation excludes the
-#' count from confirmed outliers, which have been set to NA in the data.
+#' have fewer than an aggregate X cases per week. See the low_case_count_threshold 
+#' parameter for what the value of X is. This aggregation excludes the count 
+#' from confirmed outliers, which have been set to NA in the data.
 #'
 #' This function assumes that the `df` input dataset has been
 #' "completed": that any implicit missingness has been made explicit.
@@ -137,12 +148,16 @@ extract_diagnostics <- function(
 #' @param df A dataframe as returned by [read_data()]. The dataframe must
 #' include columns such as `reference_date` (a date vector) and `confirm`
 #' (the number of confirmed cases per day).
+#' @param low_case_count_threshold: an integer that determines cutoff for determining
+#' low_case_count flag. If the jurisdiction has less than X ED visist for the respective
+#' pathogen, it will be considered as have to few cases and later on in post-processing
+#' the Rt estimate and growth category will be edited to NA and "Not Estimated", respectively
 #'
 #' @return A logical value (TRUE or FALSE) indicating whether either of the last
 #' two weeks in the dataset had fewer than 10 cases per week.
 #' @family diagnostics
 #' @export
-low_case_count_diagnostic <- function(df) {
+low_case_count_diagnostic <- function(df, low_case_count_threshold) {
   cli::cli_alert_info("Calculating low case count diagnostic")
   # Get the dates in the last and second-to-last weeks
   last_date <- as.Date(max(df[["reference_date"]], na.rm = TRUE))
@@ -190,7 +205,7 @@ low_case_count_diagnostic <- function(df) {
   ))
 
   any(
-    ultimate_week_count < 10,
-    penultimate_week_count < 10
+    ultimate_week_count < low_case_count_threshold,
+    penultimate_week_count < low_case_count_threshold
   )
 }
