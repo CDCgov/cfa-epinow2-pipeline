@@ -64,7 +64,7 @@ def main(
         int,
         typer.Option(
             help="""
-            Jurisdictions with less than X number of COVID ED visist will be labeled 
+            Jurisdictions with less than X number of COVID ED visist will be labeled
             as n_low_case_count in the diagnostics file and will be edited to "Not Estimated"
             during post processing. Default value is 10
             """,
@@ -75,7 +75,7 @@ def main(
         int,
         typer.Option(
             help="""
-            Jurisdictions with less than X number of RSV ED visist will be labeled 
+            Jurisdictions with less than X number of RSV ED visist will be labeled
             as n_low_case_count in the diagnostics file and will be edited to "Not Estimated"
             during post processing.
             """,
@@ -86,7 +86,7 @@ def main(
         int,
         typer.Option(
             help="""
-            Jurisdictions with less than X number of RSV ED visist will be labeled 
+            Jurisdictions with less than X number of RSV ED visist will be labeled
             as n_low_case_count in the diagnostics file and will be edited to "Not Estimated"
             during post processing.
             """,

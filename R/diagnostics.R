@@ -57,13 +57,16 @@ extract_diagnostics <- function(
   covid_low_case_count,
   rsv_low_case_count,
   flu_low_case_count
-) {
-  if(disease=="COVID-19"):
+  ) {
+  if(disease=="COVID-19"){
     low_case_count_threshold = covid_low_case_count
-  if(disease=="RSV"):
+  }
+  if(disease=="RSV"){
     low_case_count_threshold = covid_lorsv_low_case_countw_case_count
-  if(disease=="Influenza"):
-    low_case_count_threshold = flu_low_case_count  
+  }
+  if(disease=="Influenza"){
+    low_case_count_threshold = flu_low_case_count
+  }
 
   low_case_count <- low_case_count_diagnostic(data, low_case_count_threshold)
 
@@ -138,8 +141,8 @@ extract_diagnostics <- function(
 #' Calculate low case count diagnostic flag
 #'
 #' The diagnostic flag is TRUE if either of the _last_ two weeks of the dataset
-#' have fewer than an aggregate X cases per week. See the low_case_count_threshold 
-#' parameter for what the value of X is. This aggregation excludes the count 
+#' have fewer than an aggregate X cases per week. See the low_case_count_threshold
+#' parameter for what the value of X is. This aggregation excludes the count
 #' from confirmed outliers, which have been set to NA in the data.
 #'
 #' This function assumes that the `df` input dataset has been
@@ -148,10 +151,12 @@ extract_diagnostics <- function(
 #' @param df A dataframe as returned by [read_data()]. The dataframe must
 #' include columns such as `reference_date` (a date vector) and `confirm`
 #' (the number of confirmed cases per day).
-#' @param low_case_count_threshold: an integer that determines cutoff for determining
-#' low_case_count flag. If the jurisdiction has less than X ED visist for the respective
-#' pathogen, it will be considered as have to few cases and later on in post-processing
-#' the Rt estimate and growth category will be edited to NA and "Not Estimated", respectively
+#' @param low_case_count_threshold: an integer that determines cutoff for
+#' determining low_case_count flag. If the jurisdiction has less than
+#' X ED visist for the respective pathogen, it will be considered
+#' as have to few cases and later on in post-processing the
+#' Rt estimate and growth category will be edited to NA and
+#' "Not Estimated", respectively
 #'
 #' @return A logical value (TRUE or FALSE) indicating whether either of the last
 #' two weeks in the dataset had fewer than 10 cases per week.
