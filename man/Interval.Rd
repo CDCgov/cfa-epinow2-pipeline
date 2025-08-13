@@ -4,7 +4,7 @@
 \alias{Interval}
 \title{Interval Class}
 \usage{
-Interval(path = class_missing, blob_storage_container = class_missing)
+Interval(path = character(0), blob_storage_container = character(0))
 }
 \arguments{
 \item{path}{A string specifying the path to the generation interval CSV file.}
