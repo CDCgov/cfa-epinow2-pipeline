@@ -13,6 +13,18 @@ test_that("Fitted model extracts diagnostics", {
   testthat::expect_setequal(
     names(actual),
     c(
+      "diagnostic",
+      "value",
+      "job_id",
+      "task_id",
+      "disease",
+      "geo_value",
+      "model"
+    )
+  )
+  testthat::expect_setequal(
+    actual[["diagnostic"]],
+    c(
       "mean_accept_stat",
       "p_divergent",
       "n_divergent",
@@ -25,7 +37,7 @@ test_that("Fitted model extracts diagnostics", {
   )
 
   testthat::expect_equal(
-    actual$job_id,
+    actual[["job_id"]],
     rep("test", 8)
   )
   testthat::expect_equal(
@@ -33,28 +45,64 @@ test_that("Fitted model extracts diagnostics", {
     rep("test", 8)
   )
   testthat::expect_equal(
-    actual$disease,
+    actual[["disease"]],
     rep("test", 8)
   )
   testthat::expect_equal(
-    actual$geo_value,
+    actual[["geo_value"]],
     rep("test", 8)
   )
   testthat::expect_equal(
-    actual$model,
+    actual[["model"]],
     rep("test", 8)
   )
 
   # From helper-expect_probability.R
-  expect_probability(actual[["mean_accept_stat"]])
-  expect_probability(actual[["p_divergent"]])
-  expect_probability(actual[["p_max_treedepth"]])
-  expect_probability(actual[["p_high_rhat"]])
+  expect_probability(actual[
+    which(actual[["diagnostic"]] == "mean_accept_stat"),
+    "value"
+  ])
+  expect_probability(actual[
+    which(actual[["diagnostic"]] == "p_divergent"),
+    "value"
+  ])
+  expect_probability(actual[
+    which(actual[["diagnostic"]] == "p_max_treedepth"),
+    "value"
+  ])
+  expect_probability(actual[
+    which(actual[["diagnostic"]] == "p_high_rhat"),
+    "value"
+  ])
 
-  testthat::expect_type(actual[["n_divergent"]], "numeric")
-  testthat::expect_type(actual[["n_high_rhat"]], "numeric")
-  testthat::expect_type(actual[["diagnostic_flag"]], "numeric")
-  testthat::expect_type(actual[["low_case_count_flag"]], "numeric")
+  testthat::expect_type(
+    actual[
+      which(actual[["diagnostic"]] == "n_divergent"),
+      "value"
+    ],
+    "double"
+  )
+  testthat::expect_type(
+    actual[
+      which(actual[["diagnostic"]] == "n_high_rhat"),
+      "value"
+    ],
+    "double"
+  )
+  testthat::expect_type(
+    actual[
+      which(actual[["diagnostic"]] == "diagnostic_flag"),
+      "value"
+    ],
+    "double"
+  )
+  testthat::expect_type(
+    actual[
+      which(actual[["diagnostic"]] == "low_case_count_flag"),
+      "value"
+    ],
+    "double"
+  )
 })
 
 test_that("Cases below threshold returns TRUE", {
