@@ -64,7 +64,7 @@ extract_diagnostics <- function(
   if(disease=="RSV"){
     low_case_count_threshold = covid_lorsv_low_case_countw_case_count
   }
-  if(disease=="Influenza"){
+  if (disease == "Influenza") {
     low_case_count_threshold = flu_low_case_count
   }
 
