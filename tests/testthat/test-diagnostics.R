@@ -51,10 +51,10 @@ test_that("Fitted model extracts diagnostics", {
   expect_probability(actual$p_max_treedepth)
   expect_probability(actual$p_high_rhat)
 
-  testthat::expect_numeric(actual$n_divergent)
-  testthat::expect_numeric(actual$n_high_rhat)
-  testthat::expect_numeric(actual$diagnostic_flag)
-  testthat::expect_numeric(actual$low_case_count_flag)
+  testthat::expect_type(actual$n_divergent, "numeric")
+  testthat::expect_type(actual$n_high_rhat, "numeric")
+  testthat::expect_type(actual$diagnostic_flag, "numeric")
+  testthat::expect_type(actual$low_case_count_flag, "numeric")
 })
 
 test_that("Cases below threshold returns TRUE", {
