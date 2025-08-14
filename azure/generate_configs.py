@@ -45,6 +45,21 @@ def main(
             help="Production date in ISO format. Default is today", show_default=False
         ),
     ] = date.today().isoformat(),
+    facility_active_proportion: Annotated[
+        float,
+        typer.Option(
+            help="""
+            Minimum proportion of days of a facility must be actively reporting DDI
+            counts during the modeling period. Must be a number between 0 and 1.
+            Default is 0.94 (require active reporting for >=53 of 56 days in the training period).
+            We do not recommend using 1.00, as this will filter out large fractions of the data in some states,
+            because not all facilities report actively same-day (at lag 0). This default was chosen for correspondence
+            with API v1, and it includes data from most facilities,
+            even if they do not actively report at lag 0 or drop out for a few days incidentally.
+            """,
+            show_default=True,
+        ),
+    ] = 0.94,
 ):
     """
     Generate and upload config files for the epinow2 pipeline.
@@ -56,6 +71,12 @@ def main(
     # Make sure the job ID is not empty.
     if not job_id:
         raise ValueError("Job ID cannot be empty")
+
+    # Make sure facility_active_proportion is between 0 and 1.
+    if not (0 <= facility_active_proportion <= 1):
+        raise ValueError(
+            "facility_active_proportion must be between 0 and 1, inclusive."
+        )
 
     # Generate and upload to blob for all states and diseases.
     generate_config(
@@ -72,6 +93,7 @@ def main(
         job_id=job_id,
         as_of_date=now.isoformat(),
         output_container=output_container,
+        facility_active_proportion=facility_active_proportion,
     )
 
 
