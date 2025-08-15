@@ -59,13 +59,13 @@ extract_diagnostics <- function(
   low_case_count_thresholds
 ) {
   if (disease == "COVID-19") {
-    low_case_count_threshold <- low_case_count_thresholds["COVID-19"]
+    low_case_count_threshold <- 10
   }
   if (disease == "RSV") {
-    low_case_count_threshold <- low_case_count_thresholds["RSV"]
+    low_case_count_threshold <- 5
   }
   if (disease == "Influenza") {
-    low_case_count_threshold <- low_case_count_thresholds["Influenza"]
+    low_case_count_threshold <- 10
   }
   if (disease == "test") {
     low_case_count_threshold <- 10
