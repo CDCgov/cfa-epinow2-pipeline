@@ -67,6 +67,9 @@ extract_diagnostics <- function(
   if (disease == "Influenza") {
     low_case_count_threshold <- low_case_count_thresholds["Influenza"]
   }
+  if (disease == "test") {
+    low_case_count_threshold <- 10
+  }
 
   low_case_count <- low_case_count_diagnostic(data, low_case_count_threshold)
 
