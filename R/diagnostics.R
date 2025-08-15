@@ -54,18 +54,16 @@ extract_diagnostics <- function(
   disease,
   geo_value,
   model,
-  covid_low_case_count,
-  rsv_low_case_count,
-  flu_low_case_count
+  low_case_count_thresholds
 ) {
   if (disease == "COVID-19") {
-    low_case_count_threshold = covid_low_case_count
+    low_case_count_threshold = low_case_count_thresholds['COVID-19']
   }
   if (disease == "RSV") {
-    low_case_count_threshold = covid_lorsv_low_case_countw_case_count
+    low_case_count_threshold = low_case_count_thresholds['RSV']
   }
   if (disease == "Influenza") {
-    low_case_count_threshold = flu_low_case_count
+    low_case_count_threshold = low_case_count_thresholds['Influenza']
   }
 
   low_case_count <- low_case_count_diagnostic(data, low_case_count_threshold)
