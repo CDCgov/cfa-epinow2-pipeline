@@ -57,13 +57,13 @@ extract_diagnostics <- function(
   low_case_count_thresholds
 ) {
   if (disease == "COVID-19") {
-    low_case_count_threshold = low_case_count_thresholds['COVID-19']
+    low_case_count_threshold <- low_case_count_thresholds["COVID-19"]
   }
   if (disease == "RSV") {
-    low_case_count_threshold = low_case_count_thresholds['RSV']
+    low_case_count_threshold <- low_case_count_thresholds["RSV"]
   }
   if (disease == "Influenza") {
-    low_case_count_threshold = low_case_count_thresholds['Influenza']
+    low_case_count_threshold <- low_case_count_thresholds["Influenza"]
   }
 
   low_case_count <- low_case_count_diagnostic(data, low_case_count_threshold)
@@ -138,10 +138,11 @@ extract_diagnostics <- function(
 
 #' Calculate low case count diagnostic flag
 #'
-#' The diagnostic flag is TRUE if either of the _last_ two weeks of the dataset
-#' have fewer than an aggregate X cases per week. See the low_case_count_threshold
-#' parameter for what the value of X is. This aggregation excludes the count
-#' from confirmed outliers, which have been set to NA in the data.
+#' The diagnostic flag is TRUE if either of the _last_ two weeks
+#' of the dataset have fewer than an aggregate X cases per week.
+#' See the low_case_count_threshold parameter for what the value
+#' of X is. This aggregation excludes the count from confirmed
+#' outliers, which have been set to NA in the data.
 #'
 #' This function assumes that the `df` input dataset has been
 #' "completed": that any implicit missingness has been made explicit.
