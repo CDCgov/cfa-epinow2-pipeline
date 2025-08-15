@@ -29,6 +29,7 @@ Exclusions <- S7::new_class(
 #' container to get it from. If NULL, will look locally.
 #' @name Interval
 #' @family config
+#' @noRd
 Interval <- S7::new_class(
   # nolint: object_name_linter
   "Interval",
@@ -107,6 +108,7 @@ Parameters <- S7::new_class(
 #' @param reference_date A list of strings representing reference dates.
 #' @family config
 #' @export
+#' @noRd
 Data <- S7::new_class(
   # nolint: object_name_linter
   "Data",
@@ -157,6 +159,7 @@ Data <- S7::new_class(
 #' container.
 #' @family config
 #' @export
+#' @noRd
 Config <- S7::new_class(
   # nolint: object_name_linter
   "Config",
