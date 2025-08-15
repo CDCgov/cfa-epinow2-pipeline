@@ -37,7 +37,7 @@ test_that("Fitted model extracts diagnostics", {
     "Influenza",
     "test",
     "test",
-    low_case_count_thresholds =list(
+    low_case_count_thresholds = list(
       "COVID-19" = 10,
       "Influenza" = 10,
       "RSV" = 5
