@@ -9,6 +9,12 @@
 #'
 #' @param fit The model fit object from `EpiNow2`
 #' @param data A data frame containing the input data used in the model fit.
+#' @param low_count_threshold: an integer that determines cutoff for
+#' determining low_case_count flag. If the jurisdiction has less than
+#' X ED visist for the respective pathogen, it will be considered
+#' as have to few cases and later on in post-processing the
+#' Rt estimate and growth category will be edited to NA and
+#' "Not Estimated", respectively
 #' @inheritParams Config
 #'
 #' @return A \code{data.frame} containing the extracted diagnostic metrics. The
@@ -51,12 +57,12 @@
 extract_diagnostics <- function(
   fit,
   data,
+  low_count_threshold,
   job_id,
   task_id,
   disease,
   geo_value,
-  model,
-  low_count_threshold
+  model
 ) {
   low_case_count <- low_case_count_diagnostic(data, low_count_threshold)
 

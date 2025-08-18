@@ -32,16 +32,12 @@ test_that("Fitted model extracts diagnostics", {
   actual <- extract_diagnostics(
     fit,
     data,
+    low_count_threshold = 10,
     "test",
     "test",
     "test",
     "test",
-    "test",
-    low_case_count_thresholds = list(
-      "COVID-19" = 10,
-      "Influenza" = 10,
-      "RSV" = 5
-    )
+    "test"
   )
 
   testthat::expect_equal(
