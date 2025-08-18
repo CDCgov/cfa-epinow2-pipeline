@@ -51,7 +51,7 @@ jobs:
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
@@ -172,7 +172,7 @@ jobs:
     steps:
       - name: Checkout Repo
         id: checkout_repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
