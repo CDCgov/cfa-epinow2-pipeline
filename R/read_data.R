@@ -17,7 +17,6 @@
 #'
 #' @param data_path The path to the local file. This could contain a glob and
 #'   must be in parquet format.
-#' @inheritParams Config
 #'
 #' @return A dataframe with one or more rows and columns `report_date`,
 #'   `reference_date`, `geo_value`, `confirm`

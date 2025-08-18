@@ -10,7 +10,6 @@
 #' paths to the samples, summaries, and model output will be added to the
 #' metadata list.
 #' @param diagnostics A data.table as returned by [extract_diagnostics()]
-#' @inheritParams Config
 #' @inheritParams orchestrate_pipeline
 #'
 #' @return Invisible NULL. The function is called for its side effects.
@@ -118,7 +117,6 @@ write_model_outputs <- function(
 #' files related to a job and its tasks, including directories for raw samples
 #' and summarized quantiles.
 #'
-#' @inheritParams Config
 #' @inheritParams orchestrate_pipeline
 #'
 #' @return The path to the base output directory (invisible).
@@ -366,7 +364,6 @@ post_process_and_merge <- function(
 #' returned in `tidybayes` format.
 #'
 #' @inheritParams write_model_outputs
-#' @inheritParams Config
 #'
 #' @return A data.table of posterior draws or quantiles, merged and processed.
 #'

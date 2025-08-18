@@ -25,10 +25,6 @@ write_model_outputs(
 \item{output_dir}{A string specifying the directory where output, logs, and
 other pipeline artifacts will be saved. Defaults to the root directory ("/").}
 
-\item{job_id}{A string specifying the job.}
-
-\item{task_id}{A string specifying the task.}
-
 \item{metadata}{List. Additional metadata to be included in the output. The
 paths to the samples, summaries, and model output will be added to the
 metadata list.}

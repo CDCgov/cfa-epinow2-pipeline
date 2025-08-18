@@ -8,7 +8,6 @@
 #'   date. Set for the current date for the most up-to-to date version of the
 #'   parameters and set to an earlier date to use parameters from an earlier
 #'   time period.
-#' @inheritParams Config
 #' @param report_date An optional parameter to subset the query to a parameter
 #'   on or before a particular `report_date`. Right now, the only parameter with
 #'   report date-specific estimates is `right_truncation`. Note that this

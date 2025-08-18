@@ -9,7 +9,6 @@
 #'
 #' @param fit The model fit object from `EpiNow2`
 #' @param data A data frame containing the input data used in the model fit.
-#' @inheritParams Config
 #'
 #' @return A \code{data.frame} containing the extracted diagnostic metrics. The
 #' data frame includes the following columns:

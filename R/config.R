@@ -85,6 +85,7 @@ RightTruncation <- S7::new_class(
 #' @param right_truncation An instance of `RightTruncation` class.
 #' @family config
 #' @export
+#' @noRd
 Parameters <- S7::new_class(
   # nolint: object_name_linter
   "Parameters",
