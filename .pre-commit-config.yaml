@@ -42,12 +42,20 @@ repos:
         language: fail
         files: '\.(Rhistory|RData|Rds|rds)$'
         exclude: '^tests/testthat/data/.*\.rds$'
-    -   id: block-sensitive-files
-        name: Don't commit specific sensitive file
-        entry: Cannot commit test .parquet that has live data
-        language: fail
-        files: 'tests/testthat/data/2025-04-02_test.parquet'
-        
+    -   id: block-test-parquet
+        name: Block specific test.parquet file
+        entry: |
+            bash -c '
+                if git diff --cached --name-only | grep -q "tests/testthat/data/2025-04-02_test.parquet"; then
+                    echo "ERROR: tests/testthat/data/2025-04-02_test.parquet is blocked from being committed"
+                    echo "  Please remove this file from your commit with: "
+                    echo "  git reset HEAD tests/testthat/data/2025-04-02_test.parquet"
+                    exit 1
+                fi'
+        language: system
+        pass_filenames: false
+        always_run: true
+
 # Secrets
 -   repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
