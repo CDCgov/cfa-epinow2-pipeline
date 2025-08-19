@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Updating roxygen2 documentation to @noRd to handle S7 classes
 * Scheduling `make run-prod` on Github Actions Wednesdays at 8 AM ET
 * Adds facility active proportion information for config runs and re-runs
 * Removing test data in test-exclusions
