@@ -53,7 +53,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Setup GH CLI
-        uses: actions4gh/setup-gh@v1
+        uses: cli/gh-extension-precompile@v1
 
       - name: Test GH CLI
         run: gh --version
