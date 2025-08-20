@@ -94,10 +94,19 @@ test-batch: ## Run GitHub Actions workflow and then job.py for testing on Azure 
 			--job_id="$(JOB)"
 
 test: ## Run unit tests for the CFAEpiNow2Pipeline R package
+	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--env-file .env \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 	Rscript -e "testthat::test_local()"
 
 document: ## Generate roxygen2 documentation for the CFAEpiNow2Pipeline R package
+	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--env-file .env \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 	Rscript -e "roxygen2::roxygenize()"
 
 check: ## Perform R CMD check for the CFAEpiNow2Pipeline R package
+	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--env-file .env \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 	Rscript -e "rcmdcheck::rcmdcheck()"
