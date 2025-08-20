@@ -60,8 +60,10 @@ jobs:
           apt update
           apt-get install gh
 
-      - name: Test GH CLI
-        run: gh --version
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with: 
+          python-version: '3.11'
 
       - name: Install pkgdown
         shell: Rscript {0}
