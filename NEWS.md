@@ -2,6 +2,7 @@
 
 ## Features
 * Specifying package versions in DESCRIPTION
+* Updating make commands to be called from docker image locally
 * Updating pre-commit to block specific test.parquet file
 * Scheduling `make run-prod` on Github Actions Wednesdays at 8 AM ET
 * Adds facility active proportion information for config runs and re-runs
