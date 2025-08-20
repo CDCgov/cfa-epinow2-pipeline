@@ -11,7 +11,7 @@
 #' @param data A data frame containing the input data used in the model fit.
 #' @param low_count_threshold: an integer that determines cutoff for
 #' determining low_case_count flag. If the jurisdiction has less than
-#' X ED visist for the respective pathogen, it will be considered
+#' X DDI counts for the respective pathogen, it will be considered
 #' as having too few cases and later on in post-processing the
 #' Rt estimate and growth category will be edited to NA and
 #' "Not Estimated", respectively
