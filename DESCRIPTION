@@ -39,7 +39,7 @@ Imports:
     DBI,
     dplyr,
     duckdb,
-    EpiNow2 (>= 1.4.0),
+    EpiNow2 (>= 1.6.0),
     jsonlite,
     rcmdcheck,
     rlang,
