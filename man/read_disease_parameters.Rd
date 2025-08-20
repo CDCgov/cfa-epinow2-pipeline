@@ -19,10 +19,16 @@ read_disease_parameters(
 details on the file schema. The parameters can be in the same file or a
 different file.}
 
+\item{disease}{A string specifying the disease being modeled. One of
+\code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
+
 \item{as_of_date}{Use the parameters that were used in production on this
 date. Set for the current date for the most up-to-to date version of the
 parameters and set to an earlier date to use parameters from an earlier
 time period.}
+
+\item{geo_value}{An uppercase, two-character string specifying the geographic
+value, usually a state or \code{"US"} for national data.}
 
 \item{report_date}{An optional parameter to subset the query to a parameter
 on or before a particular \code{report_date}. Right now, the only parameter with
