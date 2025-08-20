@@ -97,16 +97,16 @@ test: ## Run unit tests for the CFAEpiNow2Pipeline R package
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
-	Rscript -e "testthat::test_local()"
+	Rscript -e "testthat::test_local('cfa-epinow2-pipeline')"
 
 document: ## Generate roxygen2 documentation for the CFAEpiNow2Pipeline R package
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
-	Rscript -e "roxygen2::roxygenize()"
+	Rscript -e "roxygen2::roxygenize('cfa-epinow2-pipeline')"
 
 check: ## Perform R CMD check for the CFAEpiNow2Pipeline R package
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
-	Rscript -e "rcmdcheck::rcmdcheck()"
+	Rscript -e "rcmdcheck::rcmdcheck('cfa-epinow2-pipeline')"
