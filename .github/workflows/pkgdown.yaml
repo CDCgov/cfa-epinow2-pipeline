@@ -63,7 +63,7 @@ jobs:
       - name: Setup Python
         run: |
           apt-get update
-          apt-get install -y pthon3 python-pip curl
+          apt-get install -y python3 python-pip curl
 
       - name: Install pkgdown
         shell: Rscript {0}
