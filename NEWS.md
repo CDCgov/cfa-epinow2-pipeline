@@ -2,6 +2,7 @@
 
 ## Features
 * add pathogen-specific low case count thresholds options
+* Updating pre-commit to block specific test.parquet file
 * Scheduling `make run-prod` on Github Actions Wednesdays at 8 AM ET
 * Adds facility active proportion information for config runs and re-runs
 * Removing test data in test-exclusions
