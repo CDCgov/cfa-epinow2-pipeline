@@ -52,6 +52,8 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
+      - run: git config --global --add safe.directory /__w/cfa-epinow2-pipeline/cfa-epinow2-pipeline
+
       - name: Setup GH CLI
         uses: cli/gh-extension-precompile@v1
 
