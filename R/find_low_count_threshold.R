@@ -8,17 +8,10 @@
 #' @family diagnostics
 #' @export
 low_case_count_threshold <- function(low_case_count_thresholds, disease) {
-  if (disease == "COVID-19") {
-    low_count_threshold <- low_case_count_thresholds[["COVID-19"]]
-  }
-  if (disease == "RSV") {
-    low_count_threshold <- low_case_count_thresholds[["RSV"]]
-  }
-  if (disease == "Influenza") {
-    low_count_threshold <- low_case_count_thresholds[["Influenza"]]
-  }
   if (disease == "test") {
     low_count_threshold <- 10
+  } else {
+    low_count_threshold <- low_case_count_threshold[["disease"]]
   }
   return(low_count_threshold)
 }
