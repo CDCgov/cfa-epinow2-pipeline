@@ -4,7 +4,16 @@
 \alias{extract_diagnostics}
 \title{Extract diagnostic metrics from model fit and data}
 \usage{
-extract_diagnostics(fit, data, job_id, task_id, disease, geo_value, model)
+extract_diagnostics(
+  fit,
+  data,
+  low_count_threshold,
+  job_id,
+  task_id,
+  disease,
+  geo_value,
+  model
+)
 }
 \arguments{
 \item{fit}{The model fit object from \code{EpiNow2}}
@@ -22,6 +31,13 @@ extract_diagnostics(fit, data, job_id, task_id, disease, geo_value, model)
 value, usually a state or \code{"US"} for national data.}
 
 \item{model}{A string specifying the model to be used.}
+
+\item{low_count_threshold:}{an integer that determines cutoff for
+determining low_case_count flag. If the jurisdiction has less than
+X ED visist for the respective pathogen, it will be considered
+as have to few cases and later on in post-processing the
+Rt estimate and growth category will be edited to NA and
+"Not Estimated", respectively}
 }
 \value{
 A \code{data.frame} containing the extracted diagnostic metrics. The
@@ -31,7 +47,8 @@ data frame includes the following columns:
 \item \code{value}: The value of the diagnostic metric.
 \item \code{job_id}: The unique identifier for the job.
 \item \code{task_id}: The unique identifier for the task.
-\item \code{disease,geo_value,model}: Metadata for downstream processing.
+\item \code{disease,geo_value,model}: Metadata
+for downstream processing.
 }
 }
 \description{
@@ -68,6 +85,7 @@ by the thresholds: (1) mean_accept_stat < 0.1, (2) p_divergent >
 }
 \seealso{
 Other diagnostics: 
-\code{\link{low_case_count_diagnostic}()}
+\code{\link{low_case_count_diagnostic}()},
+\code{\link{low_case_count_threshold}()}
 }
 \concept{diagnostics}
