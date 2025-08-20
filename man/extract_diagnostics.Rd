@@ -10,18 +10,6 @@ extract_diagnostics(fit, data, job_id, task_id, disease, geo_value, model)
 \item{fit}{The model fit object from \code{EpiNow2}}
 
 \item{data}{A data frame containing the input data used in the model fit.}
-
-\item{job_id}{A string specifying the job.}
-
-\item{task_id}{A string specifying the task.}
-
-\item{disease}{A string specifying the disease being modeled. One of
-\code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
-
-\item{geo_value}{An uppercase, two-character string specifying the geographic
-value, usually a state or \code{"US"} for national data.}
-
-\item{model}{A string specifying the model to be used.}
 }
 \value{
 A \code{data.frame} containing the extracted diagnostic metrics. The
