@@ -30,31 +30,31 @@ Suggests:
     withr
 Config/testthat/edition: 3
 Imports:
-    AzureRMR,
-    AzureStor,
+    AzureRMR (== 2.4.4),
+    AzureStor (== 3.7.0),
     cmdstanr,
-    cli,
-    covr,
-    data.table,
-    DBI,
-    dplyr,
-    duckdb,
+    cli (== 3.6.3),
+    covr (== 3.6.4),
+    data.table (== 1.16.2),
+    DBI (== 1.2.3),
+    dplyr (== 1.1.4),
+    duckdb (== 1.1.1),
     EpiNow2 (>= 1.4.0),
-    jsonlite,
-    rcmdcheck,
-    rlang,
-    roxygen2,
-    rstan,
-    S7,
-    lubridate,
-    readxl,
-    tidyr,
-    tidybayes,
-    optparse,
-    Microsoft365R
+    jsonlite (== 1.8.9),
+    rcmdcheck (== 1.4.0),
+    rlang (== 1.1.4),
+    roxygen2 (== 7.3.2),
+    rstan (== 2.32.6),
+    S7 (== 0.1.1),
+    lubridate (== 1.9.3),
+    readxl (== 1.4.3),
+    tidyr (== 1.3.1),
+    tidybayes (== 3.0.7),
+    optparse (== 1.7.5),
+    Microsoft365R (== 2.4.0)
 Additional_repositories:
 	https://stan-dev.r-universe.dev
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
 Depends:
-    R (>= 3.50)
+    R (== 4.40)
 LazyData: true
