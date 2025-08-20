@@ -98,6 +98,3 @@ test: ## Run unit tests for the CFAEpiNow2Pipeline R package
 
 document: ## Generate roxygen2 documentation for the CFAEpiNow2Pipeline R package
 	Rscript -e "roxygen2::roxygenize()"
-
-check: ## Perform R CMD check for the CFAEpiNow2Pipeline R package
-	Rscript -e "rcmdcheck::rcmdcheck()"
