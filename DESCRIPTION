@@ -56,5 +56,5 @@ Additional_repositories:
 	https://stan-dev.r-universe.dev
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/
 Depends:
-    R (== 4.4.0)
+    R (== 4.4.1)
 LazyData: true
