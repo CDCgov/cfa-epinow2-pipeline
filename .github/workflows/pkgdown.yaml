@@ -61,9 +61,15 @@ jobs:
           apt-get install gh
 
       - name: Setup Python
+<<<<<<< HEAD
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+=======
+        run: |
+          apt-get update
+          apt-get install -y pthon3 python-pip curl
+>>>>>>> 8f6cd19 (trying base install of python)
 
       - name: Install pkgdown
         shell: Rscript {0}
