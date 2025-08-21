@@ -62,6 +62,7 @@ test_that("Model fit returns reasonable R0 estimate", {
   diagnostic_df <- extract_diagnostics(
     gostic_fit,
     gostic_data,
+    low_count_threshold = 10,
     "test",
     "test",
     "test",

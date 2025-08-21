@@ -4,21 +4,30 @@
 \alias{low_case_count_diagnostic}
 \title{Calculate low case count diagnostic flag}
 \usage{
-low_case_count_diagnostic(df)
+low_case_count_diagnostic(df, low_count_threshold)
 }
 \arguments{
 \item{df}{A dataframe as returned by \code{\link[=read_data]{read_data()}}. The dataframe must
 include columns such as \code{reference_date} (a date vector) and \code{confirm}
 (the number of confirmed cases per day).}
+
+\item{low_count_threshold}{an integer that determines cutoff for
+determining low_case_count flag. If the jurisdiction has less than
+X ED visist for the respective pathogen, it will be considered
+as having too few cases and later on in post-processing the
+Rt estimate and growth category will be edited to NA and
+"Not Estimated", respectively}
 }
 \value{
 A logical value (TRUE or FALSE) indicating whether either of the last
 two weeks in the dataset had fewer than 10 cases per week.
 }
 \description{
-The diagnostic flag is TRUE if either of the \emph{last} two weeks of the dataset
-have fewer than an aggregate 10 cases per week. This aggregation excludes the
-count from confirmed outliers, which have been set to NA in the data.
+The diagnostic flag is TRUE if either of the \emph{last} two weeks
+of the dataset have fewer than an aggregate X cases per week.
+See the low_case_count_threshold parameter for what the value
+of X is. This aggregation excludes the count from confirmed
+outliers, which have been set to NA in the data.
 }
 \details{
 This function assumes that the \code{df} input dataset has been
@@ -26,6 +35,7 @@ This function assumes that the \code{df} input dataset has been
 }
 \seealso{
 Other diagnostics: 
-\code{\link{extract_diagnostics}()}
+\code{\link{extract_diagnostics}()},
+\code{\link{low_case_count_threshold}()}
 }
 \concept{diagnostics}

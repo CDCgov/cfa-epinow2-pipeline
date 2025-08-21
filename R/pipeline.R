@@ -241,9 +241,16 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     priors = config@priors,
     sampler_opts = config@sampler_opts
   )
+
+  low_count_threshold <- low_case_count_threshold(
+    disease = config@disease,
+    low_case_count_thresholds = config@low_case_count_thresholds
+  )
+
   diagnostics <- extract_diagnostics(
     fit = fit,
     data = cases_df,
+    low_count_threshold = low_count_threshold,
     job_id = config@job_id,
     task_id = config@task_id,
     disease = config@disease,
@@ -271,6 +278,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     data_path = empty_str_if_non_existent(config@data@path),
     model = config@model,
     disease = config@disease,
+    low_case_count_threshold = low_count_threshold,
     geo_value = config@geo_value,
     report_date = config@report_date,
     production_date = config@production_date,
