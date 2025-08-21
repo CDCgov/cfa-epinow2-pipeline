@@ -250,12 +250,12 @@ execute_model_logic <- function(config, input_dir, output_dir) {
   diagnostics <- extract_diagnostics(
     fit = fit,
     data = cases_df,
+    low_count_threshold = low_count_threshold,
     job_id = config@job_id,
     task_id = config@task_id,
     disease = config@disease,
     geo_value = config@geo_value,
-    model = config@model,
-    low_count_threshold = low_count_threshold
+    model = config@model
   )
   samples <- process_samples(
     fit = fit,

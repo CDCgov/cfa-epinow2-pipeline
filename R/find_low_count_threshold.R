@@ -11,7 +11,7 @@ low_case_count_threshold <- function(low_case_count_thresholds, disease) {
   if (disease == "test") {
     low_count_threshold <- 10
   } else {
-    low_count_threshold <- low_case_count_threshold[["disease"]]
+    low_count_threshold <- low_case_count_thresholds[[disease]]
   }
   return(low_count_threshold)
 }
