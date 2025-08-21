@@ -20,6 +20,25 @@ Exclusions <- S7::new_class(
   )
 )
 
+#' Test Class
+#'
+#' Represents exclusion criteria for the pipeline.
+#'
+#' @param path A string specifying the path to a CSV file containing exclusion
+#' data. It should include at least the columns: `reference_date`,
+#' `report_date`, `state`, `disease`.
+#' @param blob_storage_container Optional. The name of the blob storage
+#' container to get it from. If NULL, will look locally.
+#' @export
+Test <- S7::new_class(
+  # nolint: object_name_linter
+  "Test",
+  properties = list(
+    path = character_or_null,
+    blob_storage_container = character_or_null
+  )
+)
+
 #' Interval Class
 #'
 #' Represents a generic interval. Meant to be subclassed.
