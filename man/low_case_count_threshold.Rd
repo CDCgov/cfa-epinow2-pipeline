@@ -14,9 +14,9 @@ determining n_low_case_count in diagnostic file}
 \code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
 }
 \value{
-low_count_threshold An integer that reflects the value X where number ED visits < X
-in the past week and week prior results in an n_low_case_count flag for
-that pathogen-state pair
+low_count_threshold An integer that reflects the value X where
+number ED visits < X in the past week and week prior results in an
+n_low_case_count flag for that pathogen-state pair
 }
 \description{
 Determine Low Case Count Threshold Based on Pathogen
