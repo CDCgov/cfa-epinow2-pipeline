@@ -34,8 +34,8 @@ value, usually a state or \code{"US"} for national data.}
 
 \item{low_count_threshold:}{an integer that determines cutoff for
 determining low_case_count flag. If the jurisdiction has less than
-X ED visist for the respective pathogen, it will be considered
-as have to few cases and later on in post-processing the
+X DDI counts for the respective pathogen, it will be considered
+as having too few cases and later on in post-processing the
 Rt estimate and growth category will be edited to NA and
 "Not Estimated", respectively}
 }
