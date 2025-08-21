@@ -2,7 +2,7 @@
 #'
 #' @inheritParams Config
 #'
-#' @return An integer that reflects the value X where number ED visits < X
+#' @return low_count_threshold An integer that reflects the value X where number ED visits < X
 #' in the past week and week prior results in an n_low_case_count flag for
 #' that pathogen-state pair
 #' @family diagnostics

@@ -20,6 +20,13 @@ extract_diagnostics(
 
 \item{data}{A data frame containing the input data used in the model fit.}
 
+\item{low_count_threshold}{an integer that determines cutoff for
+determining low_case_count flag. If the jurisdiction has less than
+X DDI counts for the respective pathogen, it will be considered
+as having too few cases and later on in post-processing the
+Rt estimate and growth category will be edited to NA and
+"Not Estimated", respectively}
+
 \item{job_id}{A string specifying the job.}
 
 \item{task_id}{A string specifying the task.}
@@ -31,13 +38,6 @@ extract_diagnostics(
 value, usually a state or \code{"US"} for national data.}
 
 \item{model}{A string specifying the model to be used.}
-
-\item{low_count_threshold:}{an integer that determines cutoff for
-determining low_case_count flag. If the jurisdiction has less than
-X DDI counts for the respective pathogen, it will be considered
-as having too few cases and later on in post-processing the
-Rt estimate and growth category will be edited to NA and
-"Not Estimated", respectively}
 }
 \value{
 A \code{data.frame} containing the extracted diagnostic metrics. The
