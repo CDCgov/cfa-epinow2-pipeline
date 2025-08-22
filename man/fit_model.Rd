@@ -16,8 +16,11 @@ and sampling in Stan}
 
 \item{horizon}{The number of days, as an integer, to forecast}
 
-\item{priors}{A list of lists. The first level should contain the key \code{rt}
-with elements \code{mean} and \code{sd} and the key \code{gp} with element \code{alpha_sd}.}
+\item{priors}{A list of lists. The first level should contain the key \code{rt}.
+If \code{rw} is included, it should be a list with a single element \code{rw}
+containing the random walk prior. If \code{mean} and \code{sd} are included, they
+should be provided as a list with elements \code{mean} and \code{sd} and the key \code{gp}
+with element \code{alpha_sd}.}
 
 \item{sampler_opts}{A list. The Stan sampler options to be passed through
 EpiNow2. It has required keys: \code{cores}, \code{chains}, \code{iter_warmup},
