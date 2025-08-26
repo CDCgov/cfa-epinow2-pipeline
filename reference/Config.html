@@ -46,6 +46,7 @@
 <span>  report_date <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  production_date <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  disease <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  low_case_count_thresholds <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  geo_value <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  geo_type <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  seed <span class="op">=</span> <span class="va">class_missing</span>,</span>
@@ -97,6 +98,12 @@ Formatted as "YYYY-MM-DD".</p></dd>
 <dt id="arg-disease">disease<a class="anchor" aria-label="anchor" href="#arg-disease"></a></dt>
 <dd><p>A string specifying the disease being modeled. One of
 <code>"COVID-19"</code> or <code>"Influenza"</code> or <code>"RSV"</code>.</p></dd>
+
+
+<dt id="arg-low-case-count-thresholds">low_case_count_thresholds<a class="anchor" aria-label="anchor" href="#arg-low-case-count-thresholds"></a></dt>
+<dd><p>A named list of thresholds to use for
+determining n_low_case_count in diagnostic file
+Example: list(<code>COVID-19</code> = 10, <code>Influenza`` = 10, </code>RSV` = 5)</p></dd>
 
 
 <dt id="arg-geo-value">geo_value<a class="anchor" aria-label="anchor" href="#arg-geo-value"></a></dt>

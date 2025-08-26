@@ -53,7 +53,16 @@ are outside an acceptable range. The results are returned as a data frame.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extract_diagnostics</span><span class="op">(</span><span class="va">fit</span>, <span class="va">data</span>, <span class="va">job_id</span>, <span class="va">task_id</span>, <span class="va">disease</span>, <span class="va">geo_value</span>, <span class="va">model</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">extract_diagnostics</span><span class="op">(</span></span>
+<span>  <span class="va">fit</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">low_count_threshold</span>,</span>
+<span>  <span class="va">job_id</span>,</span>
+<span>  <span class="va">task_id</span>,</span>
+<span>  <span class="va">disease</span>,</span>
+<span>  <span class="va">geo_value</span>,</span>
+<span>  <span class="va">model</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -66,6 +75,15 @@ are outside an acceptable range. The results are returned as a data frame.</p>
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>A data frame containing the input data used in the model fit.</p></dd>
+
+
+<dt id="arg-low-count-threshold">low_count_threshold<a class="anchor" aria-label="anchor" href="#arg-low-count-threshold"></a></dt>
+<dd><p>an integer that determines cutoff for
+determining low_case_count flag. If the jurisdiction has less than
+X DDI counts for the respective pathogen, it will be considered
+as having too few cases and later on in post-processing the
+Rt estimate and growth category will be edited to NA and
+"Not Estimated", respectively, in release</p></dd>
 
 
 <dt id="arg-job-id">job_id<a class="anchor" aria-label="anchor" href="#arg-job-id"></a></dt>
@@ -97,7 +115,8 @@ data frame includes the following columns:</p><ul><li><p><code>diagnostic</code>
 <li><p><code>value</code>: The value of the diagnostic metric.</p></li>
 <li><p><code>job_id</code>: The unique identifier for the job.</p></li>
 <li><p><code>task_id</code>: The unique identifier for the task.</p></li>
-<li><p><code>disease,geo_value,model</code>: Metadata for downstream processing.</p></li>
+<li><p><code>disease,geo_value,model</code>: Metadata
+for downstream processing.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -124,7 +143,8 @@ by the thresholds: (1) mean_accept_stat &lt; 0.1, (2) p_divergent &gt;
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other diagnostics:
-<code><a href="low_case_count_diagnostic.html">low_case_count_diagnostic</a>()</code></p></div>
+<code><a href="low_case_count_diagnostic.html">low_case_count_diagnostic</a>()</code>,
+<code><a href="low_case_count_threshold.html">low_case_count_threshold</a>()</code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
