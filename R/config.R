@@ -132,8 +132,9 @@ Data <- S7::new_class(
 #' Formatted as "YYYY-MM-DD".
 #' @param disease A string specifying the disease being modeled. One of
 #'    `"COVID-19"` or `"Influenza"` or `"RSV"`.
-#' @param low_case_count_thresholds A list of thresholds to use for
+#' @param low_case_count_thresholds A named list of thresholds to use for
 #'  determining n_low_case_count in diagnostic file
+#' Example: list(`COVID-19` = 10, `Influenza`` = 10, `RSV` = 5)
 #' @param geo_value An uppercase, two-character string specifying the geographic
 #'   value, usually a state or `"US"` for national data.
 #' @param geo_type A string specifying the geographic type, usually "state".

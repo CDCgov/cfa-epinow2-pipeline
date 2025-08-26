@@ -7,8 +7,9 @@
 low_case_count_threshold(low_case_count_thresholds, disease)
 }
 \arguments{
-\item{low_case_count_thresholds}{A list of thresholds to use for
-determining n_low_case_count in diagnostic file}
+\item{low_case_count_thresholds}{A named list of thresholds to use for
+determining n_low_case_count in diagnostic file
+Example: list(\code{COVID-19} = 10, \verb{Influenza`` = 10, }RSV` = 5)}
 
 \item{disease}{A string specifying the disease being modeled. One of
 \code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
