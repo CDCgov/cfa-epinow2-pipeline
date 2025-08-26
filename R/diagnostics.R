@@ -14,7 +14,7 @@
 #' X DDI counts for the respective pathogen, it will be considered
 #' as having too few cases and later on in post-processing the
 #' Rt estimate and growth category will be edited to NA and
-#' "Not Estimated", respectively
+#' "Not Estimated", respectively, in release
 #' @inheritParams Config
 #'
 #' @return A \code{data.frame} containing the extracted diagnostic metrics. The
