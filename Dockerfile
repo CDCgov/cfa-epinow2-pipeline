@@ -34,17 +34,7 @@ RUN if [ "$CHECK_PKG" = "true" ]; then \
     fi
 
 ARG DEVELOPMENT=false
-RUN if [ "$DEVELOPMENT" = "true" ]; then \
-        echo "Development mode is enabled"; \
-        apt-get update && apt-get install \
-            libharfbuzz-dev libfribidi-dev libfontconfig1-dev \
-            libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev \
-            --no-install-recommends -y && \
-        install2.r --error devtools roxygen2 testthat languageserver && \
-        apt-get install -y --no-install-recommends libcairo2-dev && \
-        installGithub.r nx10/httpgd; \
-    else \
-        echo "Development mode is disabled"; \
-    fi
+COPY ./.devcontainer/extra.sh extra.sh
+RUN chmod +x extra.sh && ./extra.sh
 
 CMD ["bash"]
