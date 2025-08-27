@@ -6,7 +6,8 @@ RUN mkdir -p pkg
 COPY ./DESCRIPTION pkg/
 
 # Installing missing dependencies (removing pandoc-citeproc install)
-RUN apt-get update
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libcurl4-openssl-dev
 RUN install2.r pak
 # dependencies = TRUE means we install `suggests` too
 RUN Rscript -e 'pak::local_install_deps("pkg", upgrade = FALSE, dependencies = TRUE)'
@@ -25,6 +26,25 @@ RUN R CMD build --no-build-vignettes --no-manual pkg && \
     R CMD INSTALL CFAEpiNow2Pipeline_*.tar.gz
 
 # Ensure the package is working properly
-RUN R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
+ARG CHECK_PKG=true
+RUN if [ "$CHECK_PKG" = "true" ]; then \
+        R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz; \
+    else \
+        echo "Skipping package check (CHECK_PKG=$CHECK_PKG)"; \
+    fi
+
+ARG DEVELOPMENT=false
+RUN if [ "$DEVELOPMENT" = "true" ]; then \
+        echo "Development mode is enabled"; \
+        apt-get update && apt-get install \
+            libharfbuzz-dev libfribidi-dev libfontconfig1-dev \
+            libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev \
+            --no-install-recommends -y && \
+        install2.r --error devtools roxygen2 testthat languageserver && \
+        apt-get install -y --no-install-recommends libcairo2-dev && \
+        installGithub.r nx10/httpgd; \
+    else \
+        echo "Development mode is disabled"; \
+    fi
 
 CMD ["bash"]
