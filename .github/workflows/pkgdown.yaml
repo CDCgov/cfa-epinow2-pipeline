@@ -52,26 +52,24 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
+      # Setting up gh CLI (cached)
       - name: Setup GH CLI
-        run: |
-          apt-get install curl
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          apt update
-          apt-get install gh
+        uses: cli/gh-extension-precompile@v2
 
-      - name: Setup Python
-        run: |
-          apt-get update
-          apt-get install -y python3 python-pip curl
+      # Installs python using a cached version
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
 
+      # Installing pkgdown (won't be cached)
       - name: Install pkgdown
-        shell: Rscript {0}
-        run: install.packages("pkgdown")
+        run: |
+          install2.r pkgdown
 
       - name: Build site
-        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
+        run: |
+          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
 
       - name: Save artifact
         if: ${{ github.event_name == 'pull_request' }}
