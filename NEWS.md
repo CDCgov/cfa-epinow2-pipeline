@@ -2,6 +2,7 @@
 
 ## Features
 
+* adds RSV into the Rt exclusions file
 * add pathogen-specific low case count thresholds options
 * Updating make commands to be called from docker image locally
 * Updating pre-commit to block specific test.parquet file
