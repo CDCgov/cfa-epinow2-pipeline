@@ -94,6 +94,10 @@ jobs:
     needs: build-pipeline-image
     uses: ./.github/workflows/r-cmd-check.yaml
 
+  pkgdown:
+    needs: build-pipeline-image
+    uses: ./.github/workflows/pkgdown.yaml
+
   acr-import:
     needs: build-pipeline-image
     runs-on: ubuntu-latest
