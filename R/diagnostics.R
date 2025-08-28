@@ -9,6 +9,12 @@
 #'
 #' @param fit The model fit object from `EpiNow2`
 #' @param data A data frame containing the input data used in the model fit.
+#' @param low_count_threshold an integer that determines cutoff for
+#' determining low_case_count flag. If the jurisdiction has less than
+#' X DDI counts for the respective pathogen, it will be considered
+#' as having too few cases and later on in post-processing the
+#' Rt estimate and growth category will be edited to NA and
+#' "Not Estimated", respectively, in release
 #' @inheritParams Config
 #'
 #' @return A \code{data.frame} containing the extracted diagnostic metrics. The
@@ -18,7 +24,9 @@
 #'   \item \code{value}: The value of the diagnostic metric.
 #'   \item \code{job_id}: The unique identifier for the job.
 #'   \item \code{task_id}: The unique identifier for the task.
-#'   \item \code{disease,geo_value,model}: Metadata for downstream processing.
+#'   \item \code{disease,geo_value,model}: Metadata
+#' for downstream processing.
+
 #' }
 #'
 #' @details
@@ -49,13 +57,14 @@
 extract_diagnostics <- function(
   fit,
   data,
+  low_count_threshold,
   job_id,
   task_id,
   disease,
   geo_value,
   model
 ) {
-  low_case_count <- low_case_count_diagnostic(data)
+  low_case_count <- low_case_count_diagnostic(data, low_count_threshold)
 
   epinow2_diagnostics <- rstan::get_sampler_params(
     fit$estimates$fit,
@@ -127,9 +136,11 @@ extract_diagnostics <- function(
 
 #' Calculate low case count diagnostic flag
 #'
-#' The diagnostic flag is TRUE if either of the _last_ two weeks of the dataset
-#' have fewer than an aggregate 10 cases per week. This aggregation excludes the
-#' count from confirmed outliers, which have been set to NA in the data.
+#' The diagnostic flag is TRUE if either of the _last_ two weeks
+#' of the dataset have fewer than an aggregate X cases per week.
+#' See the low_case_count_threshold parameter for what the value
+#' of X is. This aggregation excludes the count from confirmed
+#' outliers, which have been set to NA in the data.
 #'
 #' This function assumes that the `df` input dataset has been
 #' "completed": that any implicit missingness has been made explicit.
@@ -137,12 +148,18 @@ extract_diagnostics <- function(
 #' @param df A dataframe as returned by [read_data()]. The dataframe must
 #' include columns such as `reference_date` (a date vector) and `confirm`
 #' (the number of confirmed cases per day).
+#' @param low_count_threshold an integer that determines cutoff for
+#' determining low_case_count flag. If the jurisdiction has less than
+#' X ED visist for the respective pathogen, it will be considered
+#' as having too few cases and later on in post-processing the
+#' Rt estimate and growth category will be edited to NA and
+#' "Not Estimated", respectively
 #'
 #' @return A logical value (TRUE or FALSE) indicating whether either of the last
 #' two weeks in the dataset had fewer than 10 cases per week.
 #' @family diagnostics
 #' @export
-low_case_count_diagnostic <- function(df) {
+low_case_count_diagnostic <- function(df, low_count_threshold) {
   cli::cli_alert_info("Calculating low case count diagnostic")
   # Get the dates in the last and second-to-last weeks
   last_date <- as.Date(max(df[["reference_date"]], na.rm = TRUE))
@@ -190,7 +207,7 @@ low_case_count_diagnostic <- function(df) {
   ))
 
   any(
-    ultimate_week_count < 10,
-    penultimate_week_count < 10
+    ultimate_week_count < low_count_threshold,
+    penultimate_week_count < low_count_threshold
   )
 }
