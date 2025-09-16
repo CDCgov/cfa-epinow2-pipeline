@@ -90,6 +90,10 @@ jobs:
     needs: build-pipeline-image
     uses: ./.github/workflows/test-coverage.yaml
 
+  test-documentation:
+    needs: build-pipeline-image
+    uses: ./.github/workflows/test-documentation.yaml
+
   acr-import:
     needs: build-pipeline-image
     runs-on: ubuntu-latest
