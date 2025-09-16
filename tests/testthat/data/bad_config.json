@@ -2,6 +2,11 @@
     "job_id": "6183da58-89bc-455f-8562-4f607257a876",
     "task_id": "bc0c3eb3-7158-4631-a2a9-86b97357f97e",
     "disease": "test",
+    "low_case_count_thresholds": {
+    "COVID-19": 10,
+    "Influenza": 10,
+    "RSV": 5
+    },
     "geo_value": "test",
     "geo_type": "test",
     "min_reference_date": "2023-01-02",

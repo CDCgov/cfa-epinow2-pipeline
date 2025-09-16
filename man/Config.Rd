@@ -12,6 +12,7 @@ Config(
   report_date = class_missing,
   production_date = class_missing,
   disease = class_missing,
+  low_case_count_thresholds = class_missing,
   geo_value = class_missing,
   geo_type = class_missing,
   seed = class_missing,
@@ -46,6 +47,10 @@ Formatted as "YYYY-MM-DD".}
 
 \item{disease}{A string specifying the disease being modeled. One of
 \code{"COVID-19"} or \code{"Influenza"} or \code{"RSV"}.}
+
+\item{low_case_count_thresholds}{A named list of thresholds to use for
+determining n_low_case_count in diagnostic file
+Example: list(\code{COVID-19} = 10, \verb{Influenza`` = 10, }RSV` = 5)}
 
 \item{geo_value}{An uppercase, two-character string specifying the geographic
 value, usually a state or \code{"US"} for national data.}
