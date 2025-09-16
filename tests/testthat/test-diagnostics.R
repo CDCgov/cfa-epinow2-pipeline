@@ -3,6 +3,7 @@ test_that("Fitted model extracts diagnostics", {
   actual <- extract_diagnostics(
     fit,
     data,
+    low_count_threshold = 10,
     "test",
     "test",
     "test",
@@ -117,7 +118,7 @@ test_that("Cases below threshold returns TRUE", {
   )
 
   # Act
-  diagnostic <- low_case_count_diagnostic(true_df)
+  diagnostic <- low_case_count_diagnostic(true_df, 10)
 
   # Assert
   expect_true(diagnostic)
@@ -135,7 +136,7 @@ test_that("Cases above threshold returns FALSE", {
   )
 
   # Act
-  diagnostic <- low_case_count_diagnostic(false_df)
+  diagnostic <- low_case_count_diagnostic(false_df, 10)
 
   # Assert
   expect_false(diagnostic)
@@ -156,7 +157,7 @@ test_that("Only the last two weeks are evaluated", {
   )
 
   # Act
-  diagnostic <- low_case_count_diagnostic(df)
+  diagnostic <- low_case_count_diagnostic(df, 10)
 
   # Assert
   expect_true(diagnostic)
@@ -175,7 +176,7 @@ test_that("Old approach's negative is now positive", {
   )
 
   # Act
-  diagnostic <- low_case_count_diagnostic(df)
+  diagnostic <- low_case_count_diagnostic(df, 10)
 
   # Assert
   expect_true(diagnostic)
@@ -194,7 +195,7 @@ test_that("NAs are evalated as 0", {
   )
 
   # Act
-  diagnostic <- low_case_count_diagnostic(df)
+  diagnostic <- low_case_count_diagnostic(df, 10)
 
   # Assert
   expect_true(diagnostic)
