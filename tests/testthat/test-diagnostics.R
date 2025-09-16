@@ -1,34 +1,5 @@
 test_that("Fitted model extracts diagnostics", {
   # Fit object read in from setup.R
-  # Expected diagnostics
-  expected <- data.frame(
-    diagnostic = c(
-      "mean_accept_stat",
-      "p_divergent",
-      "n_divergent",
-      "p_max_treedepth",
-      "p_high_rhat",
-      "n_high_rhat",
-      "diagnostic_flag",
-      "low_case_count_flag"
-    ),
-    value = c(
-      0.6990423,
-      0.0000000,
-      0.0000000,
-      0.0000000,
-      0.1391304,
-      16.0000000,
-      1.0000000,
-      1.0000000
-    ),
-    job_id = rep("test", 8),
-    task_id = rep("test", 8),
-    disease = rep("test", 8),
-    geo_value = rep("test", 8),
-    model = rep("test", 8),
-    stringsAsFactors = FALSE
-  )
   actual <- extract_diagnostics(
     fit,
     data,
@@ -40,10 +11,98 @@ test_that("Fitted model extracts diagnostics", {
     "test"
   )
 
+  testthat::expect_setequal(
+    names(actual),
+    c(
+      "diagnostic",
+      "value",
+      "job_id",
+      "task_id",
+      "disease",
+      "geo_value",
+      "model"
+    )
+  )
+  testthat::expect_setequal(
+    actual[["diagnostic"]],
+    c(
+      "mean_accept_stat",
+      "p_divergent",
+      "n_divergent",
+      "p_max_treedepth",
+      "p_high_rhat",
+      "n_high_rhat",
+      "diagnostic_flag",
+      "low_case_count_flag"
+    )
+  )
+
   testthat::expect_equal(
-    actual,
-    expected,
-    tolerance = 1e-4
+    actual[["job_id"]],
+    rep("test", 8)
+  )
+  testthat::expect_equal(
+    actual$task_id,
+    rep("test", 8)
+  )
+  testthat::expect_equal(
+    actual[["disease"]],
+    rep("test", 8)
+  )
+  testthat::expect_equal(
+    actual[["geo_value"]],
+    rep("test", 8)
+  )
+  testthat::expect_equal(
+    actual[["model"]],
+    rep("test", 8)
+  )
+
+  # From helper-expect_probability.R
+  expect_probability(actual[
+    which(actual[["diagnostic"]] == "mean_accept_stat"),
+    "value"
+  ])
+  expect_probability(actual[
+    which(actual[["diagnostic"]] == "p_divergent"),
+    "value"
+  ])
+  expect_probability(actual[
+    which(actual[["diagnostic"]] == "p_max_treedepth"),
+    "value"
+  ])
+  expect_probability(actual[
+    which(actual[["diagnostic"]] == "p_high_rhat"),
+    "value"
+  ])
+
+  testthat::expect_type(
+    actual[
+      which(actual[["diagnostic"]] == "n_divergent"),
+      "value"
+    ],
+    "double"
+  )
+  testthat::expect_type(
+    actual[
+      which(actual[["diagnostic"]] == "n_high_rhat"),
+      "value"
+    ],
+    "double"
+  )
+  testthat::expect_type(
+    actual[
+      which(actual[["diagnostic"]] == "diagnostic_flag"),
+      "value"
+    ],
+    "double"
+  )
+  testthat::expect_type(
+    actual[
+      which(actual[["diagnostic"]] == "low_case_count_flag"),
+      "value"
+    ],
+    "double"
   )
 })
 

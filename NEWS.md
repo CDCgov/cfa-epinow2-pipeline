@@ -1,7 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
-
+* Allow using the random walk implementation
 * adds RSV into the Rt exclusions file
 * add pathogen-specific low case count thresholds options
 * Updating make commands to be called from docker image locally
