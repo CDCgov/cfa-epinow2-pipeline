@@ -1,6 +1,11 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+
+* adds RSV into the Rt exclusions file
+* add pathogen-specific low case count thresholds options
+* Updating make commands to be called from docker image locally
+* Updating pre-commit to block specific test.parquet file
 * Scheduling `make run-prod` on Github Actions Wednesdays at 8 AM ET
 * Adds facility active proportion information for config runs and re-runs
 * Removing test data in test-exclusions
