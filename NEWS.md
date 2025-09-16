@@ -2,6 +2,7 @@
 
 ## Features
 * Removing duplicative r-cmd-check.yaml file (already checking in Dockerfile)
+* Upgrade checkout action to v5
 * Updating github-script action to v8
 * adds RSV into the Rt exclusions file
 * add pathogen-specific low case count thresholds options
