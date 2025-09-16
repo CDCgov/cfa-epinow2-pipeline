@@ -32,7 +32,7 @@ on:
 
 env:
   # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
-  REGISTRY: cfaprdbatchcr.azurecr.io/
+  REGISTRY: cfaprdbatchcr.azurecr.io
   IMAGE_NAME: cfa-epinow2-pipeline
 
 jobs:
@@ -116,7 +116,7 @@ jobs:
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
       - name: Get Id Token
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         id: idtoken
         with:
           script: |
@@ -125,7 +125,7 @@ jobs:
             coredemo.setOutput('id_token', id_token)
 
       - name: ACR Import
-        uses: CDCgov/cfa-actions/runner-action@v1.4.0
+        uses: CDCgov/cfa-actions/runner-action@v1.5.0
         with:
           github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
           github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
@@ -188,7 +188,7 @@ jobs:
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
       - name: Get Id Token
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         id: idtoken
         with:
           script: |
@@ -200,7 +200,7 @@ jobs:
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
         # Removed invalid condition referencing steps.check_pool_id.outputs.pool-exists
-        uses: CDCgov/cfa-actions/runner-action@v1.4.0
+        uses: CDCgov/cfa-actions/runner-action@v1.5.0
         with:
           github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
           github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
@@ -217,7 +217,7 @@ jobs:
             export CONTAINER_REGISTRY_USERNAME=${{ secrets.CONTAINER_REGISTRY_USERNAME }}
             export CONTAINER_REGISTRY_PASSWORD=${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
             export CONTAINER_REGISTRY_URL=${{ secrets.CONTAINER_REGISTRY_URL }}
-            export CONTAINER_IMAGE_NAME=${{ env.REGISTRY }}${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            export CONTAINER_IMAGE_NAME=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
             export POOL_ID=${{ env.POOL_ID }}
             export SUBNET_ID=${{ secrets.BATCH_SUBNET_ID }}
             export RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}

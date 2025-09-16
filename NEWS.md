@@ -2,9 +2,12 @@
 
 ## Features
 * Specifying package versions in DESCRIPTION
+* Updating github-script action to v8
+* adds RSV into the Rt exclusions file
 * add pathogen-specific low case count thresholds options
 * Updating make commands to be called from docker image locally
 * Updating pre-commit to block specific test.parquet file
+* Updating cfa-actions to v1.5
 * Scheduling `make run-prod` on Github Actions Wednesdays at 8 AM ET
 * Adds facility active proportion information for config runs and re-runs
 * Removing test data in test-exclusions

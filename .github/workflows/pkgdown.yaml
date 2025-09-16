@@ -82,7 +82,7 @@ jobs:
           retention-days: 7
 
       - name: Post to PR
-        uses: CDCgov/cfa-actions/post-artifact@v1.4.0
+        uses: CDCgov/cfa-actions/post-artifact@v1.5.0
         if: ${{ github.event_name == 'pull_request' }}
         with:
           artifact-name: pkgdown-site
