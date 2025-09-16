@@ -32,7 +32,7 @@ on:
 
 env:
   # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
-  REGISTRY: cfaprdbatchcr.azurecr.io/
+  REGISTRY: cfaprdbatchcr.azurecr.io
   IMAGE_NAME: cfa-epinow2-pipeline
 
 jobs:
@@ -213,7 +213,7 @@ jobs:
             export CONTAINER_REGISTRY_USERNAME=${{ secrets.CONTAINER_REGISTRY_USERNAME }}
             export CONTAINER_REGISTRY_PASSWORD=${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
             export CONTAINER_REGISTRY_URL=${{ secrets.CONTAINER_REGISTRY_URL }}
-            export CONTAINER_IMAGE_NAME=${{ env.REGISTRY }}${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            export CONTAINER_IMAGE_NAME=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
             export POOL_ID=${{ env.POOL_ID }}
             export SUBNET_ID=${{ secrets.BATCH_SUBNET_ID }}
             export RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}
