@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Move first run earlier in the day
 * Removing duplicative r-cmd-check.yaml file (already checking in Dockerfile)
 * Upgrade checkout action to v5
 * Updating github-script action to v8
