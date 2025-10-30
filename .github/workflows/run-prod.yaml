@@ -2,8 +2,8 @@ name: make run-prod (or custom)
 
 on:
   schedule:
-    # Run at 11 AM UTC on Wednesdays
-    - cron: '0 11 * * 3'
+    # Run at 11:30 AM UTC on Wednesdays
+    - cron: '30 11 * * 3'
   workflow_dispatch:
     inputs:
       command:
