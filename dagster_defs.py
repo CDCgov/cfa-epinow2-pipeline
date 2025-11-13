@@ -73,7 +73,6 @@ class RtConfig(dg.Config):
 )
 def rt_config(
     context: dg.AssetExecutionContext,
-    job_id,
     config: RtConfig
 ) -> tuple[str, str, dict]:
     """
@@ -82,8 +81,10 @@ def rt_config(
     keys_by_dimension: dg.MultiPartitionKey = context.partition_key.keys_by_dimension
     state = keys_by_dimension["state"]
     disease = keys_by_dimension["disease"]
+    job_id = config.job_id
     context.log.debug(f"state: '{state}'")
     context.log.debug(f"disease: '{disease}'")
+    context.log.debug(f"job_id: '{job_id}'")
     context.log.debug(f"report_date_str: '{config.report_date_str}'")
     context.log.debug(f"output_container: '{config.output_container}'")
     context.log.debug(f"input_container: '{config.input_container}'")
@@ -119,10 +120,12 @@ def rt_config(
     blob_name = f"{job_id}/{task_id}.json"
     config_path = f"{STORAGE_ACCOUNT_PATH}/{CONFIG_CONTAINER}/{blob_name}"
     return dg.MaterializeResult(
-        value=(job_id, config_path, config),
+        value=(job_id, blob_name, config),
         metadata={
             "job_id": job_id,
-            "config_path": config_path,
+            "storage_account": STORAGE_ACCOUNT,
+            "storage_container": CONFIG_CONTAINER,
+            "blob_name": blob_name,
             "config": dg.JsonMetadataValue(config)
         }
     )
@@ -133,30 +136,36 @@ def rt_config(
     partitions_def=rt_partitions
 )
 def rt_pipeline(context: dg.AssetExecutionContext, rt_config) -> str:
-    job_id, config_path, config = rt_config
-    context.log.debug(f"config_path: '{config_path}'")
+    job_id, blob_name, config = rt_config
+    context.log.debug(f"blob_name: '{blob_name}'")
     context.log.debug(f"config: '{config}'")
     subprocess.run([
             "Rscript",
             "-e",
-            (f"CFAEpiNow2Pipeline::orchestrate_pipeline('{config_path}', "
+            (f"CFAEpiNow2Pipeline::orchestrate_pipeline('{blob_name}', "
              f"config_container = '{CONFIG_CONTAINER}')"),
     ], check=True)
     output_path = f"{STORAGE_ACCOUNT_PATH}/{OUTPUT_CONTAINER}/{job_id}"
     return dg.MaterializeResult(
         value=output_path,
-        metadata={"output_path": output_path}
+        metadata={
+            "output_path": output_path,
+            "storage_account": STORAGE_ACCOUNT,
+            "storage_container": OUTPUT_CONTAINER,
+            "blob_path": job_id,
+        }
     )
 
 
 workdir = "/opt/dagster/code_location/cfa-epinow2-pipeline"
+image = "cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:dagster"
 
 # configuring an executor to run workflow steps on Docker
 # add this to a job or the Definitions class to use it
 docker_executor_configured = docker_executor.configured(
     {
         # specify a default image
-        "image": "cfa-epinow2-pipeline:dagster",
+        "image": image,
         # "env_vars": [f"DAGSTER_USER={user}"],
         "container_kwargs": {
             "volumes": [
@@ -175,7 +184,7 @@ docker_executor_configured = docker_executor.configured(
 azure_caj_executor_configured = azure_caj_executor.configured(
     {
         "container_app_job_name": "cfa-epinow2-pipeline",
-        "image": f"cfaprdbatchcr.azurecr.io/cfa-dagster:{user}",
+        "image": image,
         # "env_vars": [f"DAGSTER_USER={user}"],
     }
 )
@@ -184,7 +193,7 @@ azure_caj_executor_configured = azure_caj_executor.configured(
 # add this to a job or the Definitions class to use it
 azure_batch_executor_configured = azure_batch_executor.configured(
     {
-        "image": f"cfaprdbatchcr.azurecr.io/cfa-dagster:{user}",
+        "image": image,
         # "env_vars": [f"DAGSTER_USER={user}"],
         "container_kwargs": {
             "working_dir": workdir,
@@ -197,14 +206,13 @@ rt_pipeline_job = dg.define_asset_job(
     name="rt_pipeline_job",
     # specify an executor including docker, Azure Container App Job, or
     # the future Azure Batch executor
-    executor_def=docker_executor_configured,
+    # executor_def=docker_executor_configured,
     # uncomment the below to switch to run on Azure Container App Jobs.
     # remember to rebuild and push your image if you made any workflow changes
-    # executor_def=azure_caj_executor_configured,
-    selection=dg.AssetSelection.assets(job_id, rt_config, rt_pipeline),
+    executor_def=azure_caj_executor_configured,
+    selection=dg.AssetSelection.assets(rt_config, rt_pipeline),
     config=dg.RunConfig({
         "ops": {
-            "job_id": JobIdConfig(),
             "rt_config": RtConfig(),
         }
     }),
