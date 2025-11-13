@@ -47,26 +47,6 @@ CONFIG_CONTAINER = "rt-epinow2-config"
 OUTPUT_CONTAINER = "nssp-rt-v2" if is_production else "nssp-rt-testing"
 
 
-class JobIdConfig(dg.Config):
-    job_id: str = (
-        "Rt-estimation-" +
-        datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    )
-
-
-@dg.asset(
-    description="The Rt pipeline Job ID",
-)
-def job_id(config: JobIdConfig) -> str:
-    """
-    The Rt pipeline Job ID
-    """
-    return dg.MaterializeResult(
-        value=config.job_id,
-        metadata={"job_id": config.job_id}
-    )
-
-
 state_partitions = dg.StaticPartitionsDefinition(sorted(nssp_valid_states))
 disease_partitions = dg.StaticPartitionsDefinition(list(all_diseases))
 rt_partitions = dg.MultiPartitionsDefinition({
@@ -76,8 +56,10 @@ rt_partitions = dg.MultiPartitionsDefinition({
 
 
 class RtConfig(dg.Config):
-    # job_id comes from upstream asset
-    # job_id: Annotated[str, typer.Option(help="Job ID to use", show_default=False)]
+    job_id: str = (
+        "Rt-estimation-" +
+        datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    )
     report_date_str: str = datetime.now(timezone.utc).strftime("%F")
     output_container: str = OUTPUT_CONTAINER
     input_container: str = "nssp-etl"
@@ -93,7 +75,7 @@ def rt_config(
     context: dg.AssetExecutionContext,
     job_id,
     config: RtConfig
-) -> tuple[str, dict]:
+) -> tuple[str, str, dict]:
     """
     The Rt pipeline config
     """
@@ -137,8 +119,9 @@ def rt_config(
     blob_name = f"{job_id}/{task_id}.json"
     config_path = f"{STORAGE_ACCOUNT_PATH}/{CONFIG_CONTAINER}/{blob_name}"
     return dg.MaterializeResult(
-        value=(config_path, config),
+        value=(job_id, config_path, config),
         metadata={
+            "job_id": job_id,
             "config_path": config_path,
             "config": dg.JsonMetadataValue(config)
         }
@@ -149,8 +132,8 @@ def rt_config(
     description="The Rt pipeline",
     partitions_def=rt_partitions
 )
-def rt_pipeline(context: dg.AssetExecutionContext, job_id, rt_config) -> str:
-    config_path, config = rt_config
+def rt_pipeline(context: dg.AssetExecutionContext, rt_config) -> str:
+    job_id, config_path, config = rt_config
     context.log.debug(f"config_path: '{config_path}'")
     context.log.debug(f"config: '{config}'")
     subprocess.run([
@@ -191,6 +174,7 @@ docker_executor_configured = docker_executor.configured(
 # add this to a job or the Definitions class to use it
 azure_caj_executor_configured = azure_caj_executor.configured(
     {
+        "container_app_job_name": "cfa-epinow2-pipeline",
         "image": f"cfaprdbatchcr.azurecr.io/cfa-dagster:{user}",
         # "env_vars": [f"DAGSTER_USER={user}"],
     }
