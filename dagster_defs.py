@@ -4,9 +4,9 @@
 # requires-python = ">=3.13,<3.14"
 # dependencies = [
 #    "dagster-postgres>=0.27.4",
-#    "dagster-webserver==1.12.1",
-#    "dagster==1.12.1",
-#    "dagster-graphql==1.12.1",
+#    "dagster-webserver==1.12.2",
+#    "dagster==1.12.2",
+#    "dagster-graphql==1.12.2",
 #    "cfa-dagster @ git+https://github.com/cdcgov/cfa-dagster.git",
 #    "pyyaml>=6.0.2",
 #     "cfa-config-generator @ git+https://github.com/cdcgov/cfa-config-generator.git@gio-return-config",
