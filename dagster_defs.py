@@ -150,11 +150,11 @@ def single_run_rt_config(
 @dg.asset(
     description="The Rt pipeline",
     partitions_def=rt_partitions,
+    deps=[single_run_rt_config],
 )
 def single_config_rt_pipeline(
     context: dg.AssetExecutionContext,
     config: RtConfig,
-    single_run_rt_config
 ) -> str:
 
     metadata = get_latest_metadata_for_partition(
@@ -237,7 +237,7 @@ azure_batch_executor_configured = azure_batch_executor.configured(
 
 @dg.op
 def launch_pipeline(context: dg.OpExecutionContext):
-    partition_keys = rt_partitions.get_partition_keys()
+    partition_keys = rt_partitions.get_partition_keys()[:3]
     asset_selection = ["single_run_rt_config", "single_config_rt_pipeline"]
     backfill_id = launch_asset_backfill(
         asset_selection,
@@ -281,8 +281,8 @@ defs = dg.Definitions(
     },
     # setting Docker as the default executor. comment this out to use
     # the default executor that runs directly on your computer
-    executor=dg.in_process_executor
+    # executor=dg.in_process_executor
     # executor=docker_executor_configured,
-    # executor=azure_caj_executor_configured,
+    executor=azure_caj_executor_configured,
     # executor=azure_batch_executor_configured,
 )
