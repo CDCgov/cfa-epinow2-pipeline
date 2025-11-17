@@ -7,8 +7,7 @@ RUN apt-get update && apt-get install -y curl git
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
-# WORKDIR MUST be /opt/dagster/code_location/<your repo name>
-ARG WORKDIR=/opt/dagster/code_location/cfa-epinow2-pipeline
+ARG WORKDIR=/app
 WORKDIR ${WORKDIR}
 
 # Will copy the package to the container preserving the directory structure
