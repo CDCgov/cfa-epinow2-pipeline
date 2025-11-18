@@ -158,6 +158,7 @@ def single_config_rt_pipeline(
 ) -> str:
 
     metadata = get_latest_metadata_for_partition(
+        context.instance,
         "single_run_rt_config",
         context.partition_key
     )
