@@ -249,10 +249,7 @@ def launch_pipeline(context: dg.OpExecutionContext):
     context.log.info(f"Launched backfill with id: '{backfill_id}'")
 
 
-@dg.job(
-    # run this job directly on the code location server
-    executor_def=dg.in_process_executor
-)
+@dg.job
 def weekly_rt_pipeline():
     launch_pipeline()
 
