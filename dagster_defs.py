@@ -32,7 +32,7 @@ from cfa_dagster.azure_container_app_job.executor import (
 from cfa_dagster.docker.executor import docker_executor
 
 from cfa_config_generator.utils.epinow2.driver_functions import (
-    generate_config
+    generate_local_config
 )
 from cfa_config_generator.utils.epinow2.constants import (
     nssp_valid_states,
@@ -108,7 +108,7 @@ def single_run_rt_config(
         zip(*[key.split("|") for key in context.partition_keys])
     )
 
-    rt_configs = generate_config(
+    rt_configs = generate_local_config(
         state=states,
         disease=diseases,
         report_date=report_date,
@@ -216,7 +216,9 @@ docker_executor_configured = docker_executor.configured(
 # add this to a job or the Definitions class to use it
 azure_caj_executor_configured = azure_caj_executor.configured(
     {
-        "container_app_job_name": "cfa-epinow2-pipeline",
+        "container_app_job_name": "cfa-dagster",
+        "cpu": 2,
+        "memory": 4,
         "image": image,
         # "env_vars": [f"DAGSTER_USER={user}"],
     }
