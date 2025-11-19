@@ -217,8 +217,8 @@ docker_executor_configured = docker_executor.configured(
 azure_caj_executor_configured = azure_caj_executor.configured(
     {
         "container_app_job_name": "cfa-dagster",
-        "cpu": 2,
-        "memory": 4,
+        "cpu": 4,
+        "memory": 8,
         "image": image,
         # "env_vars": [f"DAGSTER_USER={user}"],
     }
