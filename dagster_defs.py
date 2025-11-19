@@ -32,7 +32,7 @@ from cfa_dagster.azure_container_app_job.executor import (
 from cfa_dagster.docker.executor import docker_executor
 
 from cfa_config_generator.utils.epinow2.driver_functions import (
-    generate_local_config
+    generate_config
 )
 from cfa_config_generator.utils.epinow2.constants import (
     nssp_valid_states,
@@ -83,7 +83,7 @@ class RtConfig(dg.Config):
     # Since this is a multi-dimension partition, it ends up being 3 runs
     backfill_policy=dg.BackfillPolicy.single_run()
 )
-def single_run_rt_config(
+def cfa_config_generator(
     context: dg.AssetExecutionContext,
     config: RtConfig
 ) -> None:
@@ -108,7 +108,7 @@ def single_run_rt_config(
         zip(*[key.split("|") for key in context.partition_keys])
     )
 
-    rt_configs = generate_local_config(
+    rt_configs = generate_config(
         state=states,
         disease=diseases,
         report_date=report_date,
@@ -150,16 +150,16 @@ def single_run_rt_config(
 @dg.asset(
     description="The Rt pipeline",
     partitions_def=rt_partitions,
-    deps=[single_run_rt_config],
+    deps=[cfa_config_generator],
 )
-def single_config_rt_pipeline(
+def cfa_epinow2_pipeline(
     context: dg.AssetExecutionContext,
     config: RtConfig,
 ) -> str:
 
     metadata = get_latest_metadata_for_partition(
         context.instance,
-        "single_run_rt_config",
+        "cfa_config_generator",
         context.partition_key
     )
     context.log.debug(f"metadata: '{metadata}'")
@@ -241,7 +241,7 @@ azure_batch_executor_configured = azure_batch_executor.configured(
 @dg.op
 def launch_pipeline(context: dg.OpExecutionContext):
     partition_keys = rt_partitions.get_partition_keys()[:3]
-    asset_selection = ["single_run_rt_config", "single_config_rt_pipeline"]
+    asset_selection = ["cfa_config_generator", "cfa_epinow2_pipeline"]
     backfill_id = launch_asset_backfill(
         asset_selection,
         partition_keys,
