@@ -46,7 +46,8 @@ bootstrap_dev()
 user = os.environ["DAGSTER_USER"]
 
 # check Dagster-set env var if we're in dev mode
-is_production = not os.getenv("DAGSTER_IS_DEV_CLI")
+is_production = os.getenv("DAGSTER_IS_DEV_CLI", "false") == "false"
+
 
 STORAGE_ACCOUNT = "cfaazurebatchprd"
 STORAGE_ACCOUNT_PATH = f"https://{STORAGE_ACCOUNT}.blob.core.windows.net"
