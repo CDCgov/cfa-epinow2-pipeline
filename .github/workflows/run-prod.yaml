@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Checkout Repo
         id: checkout_repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
