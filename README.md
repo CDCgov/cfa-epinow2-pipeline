@@ -207,6 +207,8 @@ flowchart LR
   end
 ```
 
+### [Standard Operating Procedure](https://cdc.sharepoint.com/:w:/r/teams/CenterforForecastingandOutbreakAnalytics/_layouts/15/doc2.aspx?sourcedoc=%7B5AE5D695-1474-4122-842D-103B621F7C7E%7D&file=NSSP%20Rt%20Production%20Notes.docx&wdOrigin=TEAMS-WEB.null_ns.rwc&action=default&mobileredirect=true&wdExp=TEAMS-TREATMENT&wdhostclicktime=1764338443017&web=1)
+
 ## General Disclaimer
 This repository was created for use by CDC programs to collaborate on public health related projects in support of the [CDC mission](https://www.cdc.gov/about/organization/mission.htm).  GitHub is not hosted by the CDC, but is a third party website used by CDC and its partners to share information and collaborate on software. CDC use of GitHub does not imply an endorsement of any one particular service, product, or enterprise.
 

@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Added a link to the most current SOP for production runs.
 * Adjust run trigger for time change
 * Move first run earlier in the day
 * Removing duplicative r-cmd-check.yaml file (already checking in Dockerfile)
