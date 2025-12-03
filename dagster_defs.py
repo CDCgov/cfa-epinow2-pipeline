@@ -24,7 +24,6 @@ from cfa_dagster import (
     ADLS2PickleIOManager,
     bootstrap_dev,
     collect_definitions,
-    get_latest_metadata_for_partition,
     launch_asset_backfill,
     azure_batch_executor,
     azure_container_app_job_executor as azure_caj_executor,
@@ -79,10 +78,6 @@ class RtConfig(dg.Config):
 @dg.asset(
     description="The Rt pipeline config",
     partitions_def=rt_partitions,
-    # BackfillPolicy.single_run() will allow all partitions to be materialized
-    # in a single run aka a single container app job execution.
-    # Since this is a multi-dimension partition, it ends up being 3 runs
-    backfill_policy=dg.BackfillPolicy.single_run()
 )
 def cfa_config_generator(
     context: dg.AssetExecutionContext,
@@ -92,6 +87,9 @@ def cfa_config_generator(
     The Rt pipeline config
     """
     context.log.debug(f"config: '{config}'")
+    keys_by_dimension: dg.MultiPartitionKey = context.partition_key.keys_by_dimension
+    state = keys_by_dimension["state"]
+    disease = keys_by_dimension["disease"]
     report_date: date = date.fromisoformat(config.report_date_str)
     production_date: date = date.fromisoformat(config.production_date_str)
     now: datetime = datetime.now(timezone.utc)
@@ -102,16 +100,9 @@ def cfa_config_generator(
             "facility_active_proportion must be between 0 and 1, inclusive."
         )
 
-    # split list of disease|state pairs into comma-separated strings
-    # e.g. ["RSV|AK", "COVID-19|AR"] -> "RSV,COVID-19", "AK,AR"
-    diseases, states = map(
-        lambda x: ",".join(sorted(set(x))),
-        zip(*[key.split("|") for key in context.partition_keys])
-    )
-
-    rt_configs = generate_config(
-        state=states,
-        disease=diseases,
+    rt_config = generate_config(
+        state=state,
+        disease=disease,
         report_date=report_date,
         reference_dates=[
             report_date - timedelta(days=1),
@@ -124,47 +115,29 @@ def cfa_config_generator(
         as_of_date=now.isoformat(),
         output_container=config.output_container,
         facility_active_proportion=config.facility_active_proportion,
+    )[0]  # only exepecting one
+    task_id = rt_config["task_id"]
+    yield dg.MaterializeResult(
+        value=rt_config,
+        metadata={
+            "storage_account": STORAGE_ACCOUNT,
+            "storage_container": CONFIG_CONTAINER,
+            "job_id": config.job_id,
+            "blob": f"{config.job_id}/{task_id}.json",
+            "config": rt_config
+        }
     )
-    for rt_config in rt_configs:
-        disease = rt_config["disease"]
-        state = rt_config["geo_value"]
-        task_id = rt_config["task_id"]
-        partition_key = f"{disease}|{state}"
-        # Materialize asset metadata per partition
-        yield dg.AssetMaterialization(
-            asset_key=context.asset_key,
-            partition=partition_key,
-            metadata={
-                "storage_account": STORAGE_ACCOUNT,
-                "storage_container": CONFIG_CONTAINER,
-                "job_id": config.job_id,
-                "blob": f"{config.job_id}/{task_id}.json",
-                "config": rt_config
-            }
-        )
-    context.log.debug(f"partition_key_range: '{context.partition_key_range}'")
-    # materialize empty result since Dagster
-    # can't output values per-partition for BackfillPolicy.single_run()
-    yield dg.MaterializeResult()
 
 
 @dg.asset(
     description="The Rt pipeline",
     partitions_def=rt_partitions,
-    deps=[cfa_config_generator],
 )
 def cfa_epinow2_pipeline(
     context: dg.AssetExecutionContext,
-    config: RtConfig,
+    cfa_config_generator
 ) -> str:
-
-    metadata = get_latest_metadata_for_partition(
-        context.instance,
-        "cfa_config_generator",
-        context.partition_key
-    )
-    context.log.debug(f"metadata: '{metadata}'")
-    config = metadata.get("config")
+    config = cfa_config_generator
 
     job_id = config.get("job_id")
     blob_name = f"{job_id}/{config.get('task_id')}.json"
@@ -200,7 +173,7 @@ docker_executor_configured = docker_executor.configured(
     {
         # specify a default image
         "image": image,
-        # "env_vars": [f"DAGSTER_USER={user}"],
+        # "env_vars": ["DAGSTER_USER"],
         "container_kwargs": {
             "volumes": [
                 # bind the ~/.azure folder for optional cli login
@@ -217,11 +190,11 @@ docker_executor_configured = docker_executor.configured(
 # add this to a job or the Definitions class to use it
 azure_caj_executor_configured = azure_caj_executor.configured(
     {
-        "container_app_job_name": "cfa-dagster",
+        "container_app_job_name": "cfa-epinow2-pipeline",
         "cpu": 4,
         "memory": 8,
         "image": image,
-        # "env_vars": [f"DAGSTER_USER={user}"],
+        # "env_vars": ["DAGSTER_USER"],
     }
 )
 
@@ -231,7 +204,7 @@ azure_batch_executor_configured = azure_batch_executor.configured(
     {
         "pool_name": "cfa-dagster",
         "image": image,
-        # "env_vars": [f"DAGSTER_USER={user}"],
+        # "env_vars": ["DAGSTER_USER"],
         "container_kwargs": {
             "working_dir": workdir,
         },
