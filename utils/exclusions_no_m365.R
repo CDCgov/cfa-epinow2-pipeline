@@ -204,7 +204,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     #   row.names = FALSE
     # )
 
-    write.csv(state_exclusions,paste0("~/Downloads/",file ),row.names = FALSE)
+    write.csv(state_exclusions, paste0("~/Downloads/", file), row.names = FALSE)
   }
 }
 
