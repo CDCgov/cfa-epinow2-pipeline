@@ -164,10 +164,11 @@ create_pt_excl_from_rt_xslx <- function(dates) {
     #     row.names = FALSE
     #   )
     # }
-    write.csv(point_exclusions,
-    paste0("~/Downloads/",lubridate::ymd(report_date), ".csv"),
-    row.names = FALSE )
-
+    write.csv(
+      point_exclusions,
+      paste0("~/Downloads/", lubridate::ymd(report_date), ".csv"),
+      row.names = FALSE
+    )
 
     #### State exclusions #####
     state_exclusions <- combined_df |>
