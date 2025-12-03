@@ -93,12 +93,22 @@ authenticate_blob <- function() {
     "http://169.254.169.254/metadata/identity/oauth2/token"
   )
 
+  # Check if using a user-assigned identity
+  client_id <- Sys.getenv("AZURE_CLIENT_ID", unset = NA)
+
+  query_params <- list(
+    resource = "https://storage.azure.com/",
+    "api-version" = "2019-08-01"
+  )
+
+  # Only add client_id if present
+  if (!is.na(client_id) && nchar(client_id) > 0) {
+    query_params$client_id <- client_id
+  }
+
   response <- httr::GET(
     url = aad_host,
-    query = list(
-      resource = "https://storage.azure.com/",
-      "api-version" = "2019-08-01"
-    ),
+    query = query_params,
     httr::add_headers(
       Metadata = "true",
       "X-IDENTITY-HEADER" = Sys.getenv("IDENTITY_HEADER")
