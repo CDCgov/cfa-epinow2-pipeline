@@ -7,29 +7,29 @@
 #    "dagster-webserver==1.12.2",
 #    "dagster==1.12.2",
 #    "dagster-graphql==1.12.2",
-#    "cfa-dagster @ git+https://github.com/cdcgov/cfa-dagster.git",
+#    "cfa-dagster @ git+https://github.com/cdcgov/cfa-dagster.git@gio-run-launcher",
 #    "pyyaml>=6.0.2",
 #     "cfa-config-generator @ git+https://github.com/cdcgov/cfa-config-generator.git@gio-return-config",
 # ]
 # ///
+
 from datetime import date, datetime, timedelta, timezone
 import os
 import subprocess
 
 import dagster as dg
 
-from cfa_dagster.azure_adls2 import ADLS2PickleIOManager
-from cfa_dagster.utils import (
+from cfa_dagster import (
+    AzureContainerAppJobRunLauncher,
+    ADLS2PickleIOManager,
     bootstrap_dev,
     collect_definitions,
     get_latest_metadata_for_partition,
     launch_asset_backfill,
-)
-from cfa_dagster.azure_batch.executor import azure_batch_executor
-from cfa_dagster.azure_container_app_job.executor import (
+    azure_batch_executor,
     azure_container_app_job_executor as azure_caj_executor,
+    docker_executor,
 )
-from cfa_dagster.docker.executor import docker_executor
 
 from cfa_config_generator.utils.epinow2.driver_functions import (
     generate_config
@@ -46,7 +46,7 @@ bootstrap_dev()
 user = os.environ["DAGSTER_USER"]
 
 # check Dagster-set env var if we're in dev mode
-is_production = os.getenv("DAGSTER_IS_DEV_CLI", "false") == "false"
+is_production = not os.getenv("DAGSTER_IS_DEV_CLI")
 
 
 STORAGE_ACCOUNT = "cfaazurebatchprd"
@@ -282,8 +282,17 @@ defs = dg.Definitions(
     },
     # setting Docker as the default executor. comment this out to use
     # the default executor that runs directly on your computer
-    # executor=dg.in_process_executor
+    executor=dg.in_process_executor,
     # executor=docker_executor_configured,
-    executor=azure_caj_executor_configured,
+    # executor=azure_caj_executor_configured,
     # executor=azure_batch_executor_configured,
+    metadata={
+        "cfa_dagster/launcher": {
+            "class": AzureContainerAppJobRunLauncher.__name__,
+            "config": {
+                "image": image,
+                "container_app_job_name": "cfa-epinow2-pipeline"
+            }
+        }
+    }
 )
