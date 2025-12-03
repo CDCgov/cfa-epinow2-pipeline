@@ -80,7 +80,7 @@ read_process_excel_func <- function(
 
 create_pt_excl_from_rt_xslx <- function(dates) {
   for (report_date in dates) {
-    username= Sys.info()[['user']]
+    username = Sys.info()[['user']]
     fname <- paste0("~/Downloads/Rt_Review_", report_date, ".xlsx") # /home/",username,"/
     # read and process the COVID sheet
     covid_df <- read_process_excel_func(
