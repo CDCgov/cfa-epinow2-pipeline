@@ -1,5 +1,5 @@
 # Local edits
-if (!require("pacman")) install.packages("pacman"); library(pacman) 
+if (!require("pacman")) install.packages("pacman"); library(pacman)
 
 pacman::p_load(
   "dplyr",
