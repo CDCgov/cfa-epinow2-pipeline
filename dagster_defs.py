@@ -7,8 +7,7 @@
 #    "dagster-webserver==1.12.2",
 #    "dagster==1.12.2",
 #    "dagster-graphql==1.12.2",
-#    "cfa-dagster @ git+https://github.com/cdcgov/cfa-dagster.git@gio-run-launcher",
-#    "pyyaml>=6.0.2",
+#    "cfa-dagster @ git+https://github.com/cdcgov/cfa-dagster.git",
 #     "cfa-config-generator @ git+https://github.com/cdcgov/cfa-config-generator.git@gio-return-config",
 # ]
 # ///
@@ -22,7 +21,7 @@ import dagster as dg
 from cfa_dagster import (
     AzureContainerAppJobRunLauncher,
     ADLS2PickleIOManager,
-    bootstrap_dev,
+    start_dev_env,
     collect_definitions,
     launch_asset_backfill,
     azure_batch_executor,
@@ -39,7 +38,7 @@ from cfa_config_generator.utils.epinow2.constants import (
 )
 
 # start the Dagster dev server
-bootstrap_dev()
+start_dev_env(__name__)
 
 # get the user from the environment, throw an error if variable is not set
 user = os.environ["DAGSTER_USER"]
@@ -52,7 +51,7 @@ STORAGE_ACCOUNT = "cfaazurebatchprd"
 STORAGE_ACCOUNT_PATH = f"https://{STORAGE_ACCOUNT}.blob.core.windows.net"
 CONFIG_CONTAINER = "rt-epinow2-config"
 # OUTPUT_CONTAINER = "nssp-rt-v2" if is_production else "nssp-rt-testing"
-OUTPUT_CONTAINER = "nssp-rt-testing"
+OUTPUT_CONTAINER = "nssp-rt-testing"  # hard-coding test during Dagster evaluation
 
 
 state_partitions = dg.StaticPartitionsDefinition(sorted(nssp_valid_states))
@@ -82,7 +81,7 @@ class RtConfig(dg.Config):
 def cfa_config_generator(
     context: dg.AssetExecutionContext,
     config: RtConfig
-) -> None:
+) -> dict:
     """
     The Rt pipeline config
     """
@@ -191,8 +190,6 @@ docker_executor_configured = docker_executor.configured(
 azure_caj_executor_configured = azure_caj_executor.configured(
     {
         "container_app_job_name": "cfa-epinow2-pipeline",
-        "cpu": 4,
-        "memory": 8,
         "image": image,
         # "env_vars": ["DAGSTER_USER"],
     }
@@ -214,7 +211,7 @@ azure_batch_executor_configured = azure_batch_executor.configured(
 
 @dg.op
 def launch_pipeline(context: dg.OpExecutionContext):
-    partition_keys = rt_partitions.get_partition_keys()[:3]
+    partition_keys = rt_partitions.get_partition_keys()
     asset_selection = ["cfa_config_generator", "cfa_epinow2_pipeline"]
     backfill_id = launch_asset_backfill(
         asset_selection,
@@ -222,8 +219,16 @@ def launch_pipeline(context: dg.OpExecutionContext):
     )
     context.log.info(f"Launched backfill with id: '{backfill_id}'")
 
-
-@dg.job
+# This just calls the graphql api to launch the pipeline so it's
+# small enough to run directly on the code location
+@dg.job(
+    executor_def=dg.in_process_executor,
+    tags={
+        "cfa_dagster/launcher": {
+            "class": dg.DefaultRunLauncher.__name__
+        }
+    }
+)
 def weekly_rt_pipeline():
     launch_pipeline()
 
@@ -253,8 +258,9 @@ defs = dg.Definitions(
         # in Azure to pass between assets
         "io_manager": ADLS2PickleIOManager(),
     },
-    # setting Docker as the default executor. comment this out to use
-    # the default executor that runs directly on your computer
+    # in_process_executor runs steps directly in the RunLauncher environment
+    # When paired with the AzureContainerAppJobRunLauncher, this lets
+    # cfa-config-generator and cfa-epinow2-pipeline run on the same CAJ
     executor=dg.in_process_executor,
     # executor=docker_executor_configured,
     # executor=azure_caj_executor_configured,
