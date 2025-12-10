@@ -11,10 +11,9 @@ pacman::p_load(
   "readxl",
   "tidyr",
   "AzureStor",
-  "cli",
+  "cli"
 )
 source("R/azure.R")
-
 option_list <- list(
   optparse::make_option(
     c("-d", "--dates"),
