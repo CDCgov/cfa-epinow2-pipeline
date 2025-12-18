@@ -154,9 +154,9 @@ fetch_blob_container <- function(container_name) {
   rlang::try_fetch(
     {
       container <- AzureStor::blob_container(
-          authenticate_blob(),
-          container_name
-        )
+        authenticate_blob(),
+        container_name
+      )
     },
     error = function(cnd) {
       cli::cli_abort(
