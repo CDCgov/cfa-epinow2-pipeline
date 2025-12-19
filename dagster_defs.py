@@ -163,62 +163,29 @@ def cfa_epinow2_pipeline(
     )
 
 
-workdir = "/app"
 # change from :dagster to :latest tag once merged to main
 image = "cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:dagster"
-
-# configuring an executor to run workflow steps on Docker
-# add this to a job or the Definitions class to use it
-docker_executor_configured = docker_executor.configured(
-    {
-        # specify a default image
-        "image": image,
-        # "env_vars": ["DAGSTER_USER"],
-        "container_kwargs": {
-            "volumes": [
-                # bind the ~/.azure folder for optional cli login
-                f"/home/{user}/.azure:/root/.azure",
-                # bind current file so we don't have to rebuild
-                # the container image for workflow changes
-                f"{__file__}:{workdir}/{os.path.basename(__file__)}",
-            ]
-        },
-    }
-)
-
-# configuring an executor to run workflow steps on Azure Container App Jobs
-# add this to a job or the Definitions class to use it
-azure_caj_executor_configured = azure_caj_executor.configured(
-    {
-        "container_app_job_name": "cfa-epinow2-pipeline",
-        "image": image,
-        # "env_vars": ["DAGSTER_USER"],
-    }
-)
-
-# configuring an executor to run workflow steps on Azure Batch 4CPU 16GB pool
-# add this to a job or the Definitions class to use it
-azure_batch_executor_configured = azure_batch_executor.configured(
-    {
-        "pool_name": "cfa-dagster",
-        "image": image,
-        # "env_vars": ["DAGSTER_USER"],
-        "container_kwargs": {
-            "working_dir": workdir,
-        },
-    }
-)
 
 
 @dg.op
 def launch_pipeline(context: dg.OpExecutionContext):
     partition_keys = rt_partitions.get_partition_keys()
+    partition_keys = ["COVID-19|AL"]
     asset_selection = ["cfa_config_generator", "cfa_epinow2_pipeline"]
     backfill_id = launch_asset_backfill(
         asset_selection,
         partition_keys,
     )
-    context.log.info(f"Launched backfill with id: '{backfill_id}'")
+    context.log.info(
+        f"Launched backfill with id: '{backfill_id}'. "
+        "Click the output metadata url to monitor"
+    )
+    return dg.Output(
+        value=backfill_id,
+        metadata={
+            "url": dg.MetadataValue.url(f"/runs/b/{backfill_id}")
+        }
+    )
 
 
 # This just calls the graphql api to launch the pipeline so it's
