@@ -8,7 +8,7 @@
 #    "dagster==1.12.2",
 #    "dagster-graphql==1.12.2",
 #    "cfa-dagster @ git+https://github.com/cdcgov/cfa-dagster.git",
-#     "cfa-config-generator @ git+https://github.com/cdcgov/cfa-config-generator.git@gio-return-config",
+#     "cfa-config-generator @ git+https://github.com/cdcgov/cfa-config-generator.git",
 # ]
 # ///
 
@@ -28,7 +28,7 @@ from cfa_dagster import (
     azure_container_app_job_executor as azure_caj_executor,
     docker_executor,
 )
-
+from dagster_docker import DockerRunLauncher
 from cfa_config_generator.utils.epinow2.driver_functions import (
     generate_config
 )
@@ -164,6 +164,7 @@ def cfa_epinow2_pipeline(
 
 
 workdir = "/app"
+# change from :dagster to :latest tag once merged to main
 image = "cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:dagster"
 
 # configuring an executor to run workflow steps on Docker
@@ -219,6 +220,7 @@ def launch_pipeline(context: dg.OpExecutionContext):
     )
     context.log.info(f"Launched backfill with id: '{backfill_id}'")
 
+
 # This just calls the graphql api to launch the pipeline so it's
 # small enough to run directly on the code location
 @dg.job(
@@ -262,11 +264,13 @@ defs = dg.Definitions(
     # When paired with the AzureContainerAppJobRunLauncher, this lets
     # cfa-config-generator and cfa-epinow2-pipeline run on the same CAJ
     executor=dg.in_process_executor,
-    # executor=docker_executor_configured,
-    # executor=azure_caj_executor_configured,
-    # executor=azure_batch_executor_configured,
     metadata={
         "cfa_dagster/launcher": {
+            # uncomment the below to run locally using Docker
+            # "class": DockerRunLauncher.__name__,
+            # "config": {
+            #     "image": image,
+            # }
             "class": AzureContainerAppJobRunLauncher.__name__,
             "config": {
                 "image": image,

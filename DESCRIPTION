@@ -51,6 +51,7 @@ Imports:
     tidyr,
     tidybayes,
     optparse,
+    httr,
     Microsoft365R
 Additional_repositories:
 	https://stan-dev.r-universe.dev
