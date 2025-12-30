@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Add a utility script for reading, preparing, and uploading Rt review decisions
 * Adjust run trigger for time change
 * Move first run earlier in the day
 * Removing duplicative r-cmd-check.yaml file (already checking in Dockerfile)
