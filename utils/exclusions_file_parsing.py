@@ -112,12 +112,8 @@ def prep_single_sheet(
         # Explode the drop_dates column into multiple rows, split by "|"
         .with_columns(pl.col("drop_dates").cast(pl.String, strict=False).str.split("|"))
         .explode("drop_dates")
-        # Clean up drop_dates values: strip whitespace, leaving any nulls as nulls
-        .with_columns(
-            drop_dates=pl.when(pl.col("drop_dates").is_not_null()).then(
-                pl.col("drop_dates").str.strip_chars()
-            )
-        )
+        # Clean up drop_dates values: first strip whitespace
+        .with_columns(drop_dates=pl.col("drop_dates").str.strip_chars())
         # Convert empty drop_dates to nulls
         .with_columns(
             drop_dates=pl.when(
