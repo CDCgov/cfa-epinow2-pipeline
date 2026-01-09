@@ -43,7 +43,7 @@ jobs:
 
       - name: Save artifact
         if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pkgdown-site
           path: ./docs
