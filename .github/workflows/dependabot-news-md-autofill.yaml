@@ -38,7 +38,7 @@ jobs:
             PKG="${BASH_REMATCH[1]}"
             FROM="${BASH_REMATCH[2]}"
             TO="${BASH_REMATCH[3]}"
-            ENTRY="dependabot updating package ${PKG} from version ${FROM} to version ${TO} new"
+            ENTRY="* dependabot updating package ${PKG} from version ${FROM} to version ${TO} new"
           else
             # Fallback if title format differs (rare, but happens)
             ENTRY="* dependabot updating dependencies new"
