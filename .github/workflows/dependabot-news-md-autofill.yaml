@@ -41,7 +41,7 @@ jobs:
             ENTRY="dependabot updating package ${PKG} from version ${FROM} to version ${TO} new"
           else
             # Fallback if title format differs (rare, but happens)
-            ENTRY="dependabot updating dependencies new"
+            ENTRY="* dependabot updating dependencies new"
           fi
 
           echo "entry=$ENTRY" >> "$GITHUB_OUTPUT"
