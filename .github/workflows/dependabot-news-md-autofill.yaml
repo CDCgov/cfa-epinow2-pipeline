@@ -1,19 +1,19 @@
 name: Dependabot NEWS.md autofill
- 
+
 on:
   pull_request_target:
     branches: [main]
     types: [opened, synchronize, reopened, edited]
- 
+
 permissions:
   contents: write
   pull-requests: read
- 
+
 jobs:
   add-news-entry:
     if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
- 
+
     steps:
       - name: Checkout PR head
         uses: actions/checkout@v5
@@ -23,15 +23,15 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           fetch-depth: 0
           persist-credentials: true
- 
+
       - name: Compute NEWS.md entry from Dependabot title
         id: news
         shell: bash
         run: |
           set -euo pipefail
- 
+
           TITLE="${{ github.event.pull_request.title }}"
- 
+
           # Typical Dependabot titles:
           # "Bump <package> from <old> to <new>"
           if [[ "$TITLE" =~ ^Bump[[:space:]]+(.+)[[:space:]]+from[[:space:]]+([^[:space:]]+)[[:space:]]+to[[:space:]]+([^[:space:]]+) ]]; then
@@ -43,46 +43,46 @@ jobs:
             # Fallback if title format differs (rare, but happens)
             ENTRY="dependabot updating dependencies new"
           fi
- 
+
           echo "entry=$ENTRY" >> "$GITHUB_OUTPUT"
- 
+
       - name: Append entry to NEWS.md
         shell: bash
         run: |
           set -euo pipefail
           ENTRY="${{ steps.news.outputs.entry }}"
- 
+
           if [[ ! -f NEWS.md ]]; then
             echo "::error file=NEWS.md,line=1,col=1::NEWS.md not found."
             exit 1
           fi
- 
+
           # If already present anywhere, do nothing.
           if grep -Fqx "$ENTRY" NEWS.md; then
             echo "NEWS.md already contains the entry. Skipping."
             exit 0
           fi
- 
+
           # Prepend with a newline after, so the top stays readable.
           tmp="$(mktemp)"
           printf "%s\n" "$ENTRY" > "$tmp"
           printf "\n" >> "$tmp"
           cat NEWS.md >> "$tmp"
           mv "$tmp" NEWS.md
- 
+
       - name: Commit and push (only if changed)
         shell: bash
         run: |
           set -euo pipefail
- 
+
           if git diff --quiet; then
             echo "No changes to commit."
             exit 0
           fi
- 
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
- 
+
           git add NEWS.md
           git commit -m "Update NEWS.md for Dependabot PR"
           git push
