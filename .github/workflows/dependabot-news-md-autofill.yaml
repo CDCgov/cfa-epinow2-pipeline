@@ -46,8 +46,10 @@ jobs:
 
           echo "entry=$ENTRY" >> "$GITHUB_OUTPUT"
 
-      - name: Append entry to NEWS.md
+            - name: Insert Dependabot entry under latest Features section
+
         shell: bash
+
         run: |
           set -euo pipefail
           ENTRY="${{ steps.news.outputs.entry }}"
@@ -57,17 +59,33 @@ jobs:
             exit 1
           fi
 
-          # If already present anywhere, do nothing.
+          # If entry already exists anywhere, do nothing
           if grep -Fqx "$ENTRY" NEWS.md; then
             echo "NEWS.md already contains the entry. Skipping."
             exit 0
           fi
 
-          # Prepend with a newline after, so the top stays readable.
           tmp="$(mktemp)"
-          printf "%s\n" "$ENTRY" > "$tmp"
-          printf "\n" >> "$tmp"
-          cat NEWS.md >> "$tmp"
+
+          awk -v entry="$ENTRY" '
+            BEGIN { inserted=0 }
+            {
+              print $0
+              if ($0 ~ /^##[[:space:]]+Features/ && inserted == 0) {
+                getline
+                print entry
+                print $0
+                inserted=1
+              }
+            }
+            END {
+              if (inserted == 0) {
+                print ""
+                print entry
+              }
+            }
+          ' NEWS.md > "$tmp"
+
           mv "$tmp" NEWS.md
 
       - name: Commit and push (only if changed)
