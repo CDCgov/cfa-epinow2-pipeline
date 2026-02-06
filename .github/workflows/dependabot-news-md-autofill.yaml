@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout PR head
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           # IMPORTANT: checkout the PR branch, not main
           ref: ${{ github.event.pull_request.head.ref }}
