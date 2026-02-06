@@ -10,25 +10,25 @@ on:
 
 jobs:
   check-news-md-modification:
-
     name: Check NEWS.md modification
-
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0 # Fetch all history for all tags and branches
 
       - name: Check for NEWS.md changes
+        shell: bash
         run: |
+          set -euo pipefail
           echo "Current SHA: $GITHUB_SHA"
           echo "Base SHA: ${{ github.event.pull_request.base.sha }}"
 
           git fetch origin ${{ github.event.pull_request.base.ref }}
 
-          CHANGED_FILES=$(git diff --name-only $GITHUB_SHA $(git merge-base $GITHUB_SHA origin/${{ github.event.pull_request.base.ref }}))
+          CHANGED_FILES=$(git diff --name-only "$GITHUB_SHA" "$(git merge-base "$GITHUB_SHA" "origin/${{ github.event.pull_request.base.ref }}")")
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
@@ -38,7 +38,6 @@ jobs:
             echo "::error file=NEWS.md,line=1,col=5::NEWS.md must be updated with each PR." >&2
             exit 1
           fi
-        shell: /usr/bin/bash -e {0}
 
   dry-run-dependabot-news-insertion:
     name: Dry-run Dependabot NEWS.md insertion
@@ -62,18 +61,21 @@ jobs:
             exit 1
           fi
 
-          cp NEWS.md NEWS.md.orig
+          # If entry already exists anywhere, do nothing (idempotent)
+          if grep -Fqx "$ENTRY" NEWS.md; then
+            echo "NEWS.md already contains the entry. Skipping."
+            exit 0
+          fi
 
           tmp="$(mktemp)"
 
+          # Insert directly after the first "## Features" header
           awk -v entry="$ENTRY" '
             BEGIN { inserted=0 }
             {
               print $0
-              if ($0 ~ /^##[[:space:]]+Features/ && inserted == 0) {
-                getline
+              if ($0 ~ /^##[[:space:]]+Features[[:space:]]*$/ && inserted == 0) {
                 print entry
-                print $0
                 inserted=1
               }
             }
