@@ -5,8 +5,11 @@
 #' @param seed The random seed, used for both initialization by `EpiNow2` in R
 #'   and sampling in Stan
 #' @param horizon The number of days, as an integer, to forecast
-#' @param priors A list of lists. The first level should contain the key `rt`
-#'   with elements `mean` and `sd` and the key `gp` with element `alpha_sd`.
+#' @param priors A list of lists. The first level should contain the key `rt`.
+#'   If `rw` is included, it should be a list with a single element `rw`
+#'   containing the random walk prior. If `mean` and `sd` are included, they
+#'   should be provided as a list with elements `mean` and `sd` and the key `gp`
+#'   with element `alpha_sd`.
 #' @param sampler_opts A list. The Stan sampler options to be passed through
 #'   EpiNow2. It has required keys: `cores`, `chains`, `iter_warmup`,
 #'   `iter_sampling`, `max_treedepth`, and `adapt_delta`.
@@ -24,16 +27,23 @@ fit_model <- function(
   sampler_opts
 ) {
   # Priors ------------------------------------------------------------------
-  rt <- EpiNow2::rt_opts(
-    list(
+  if (length(setdiff(names(priors[["rt"]]), "rw")) == 0) {
+    rt <- EpiNow2::rt_opts(rw = priors[["rt"]][["rw"]])
+    gp <- NULL
+  } else if (length(setdiff(names(priors[["rt"]]), c("mean", "sd"))) == 0) {
+    rt <- EpiNow2::rt_opts(list(
       mean = priors[["rt"]][["mean"]],
       sd = priors[["rt"]][["sd"]]
+    ))
+    gp <- EpiNow2::gp_opts(
+      alpha_sd = priors[["gp"]][["alpha_sd"]]
     )
-  )
-  gp <- EpiNow2::gp_opts(
-    alpha_sd = priors[["gp"]][["alpha_sd"]]
-  )
-
+  } else {
+    cli::cli_abort(c(
+      "Rt priors must include either {.val mean} and {.val sd}, or {.val rw}",
+      "Got: {.val {names(priors[['rt']])}}"
+    ))
+  }
   # Distributions -----------------------------------------------------------
   generation_time <- format_generation_interval(
     parameters[["generation_interval"]]
@@ -73,7 +83,7 @@ fit_model <- function(
           mirror_to_console = TRUE,
           name = "EpiNow2"
         ),
-        filter_leading_zeros = FALSE,
+        filter_leading_zeros = FALSE
       )
     }),
     error = function(cnd) {
