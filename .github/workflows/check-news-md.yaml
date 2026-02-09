@@ -10,9 +10,7 @@ on:
 
 jobs:
   check-news-md-modification:
-
     name: Check NEWS.md modification
-
     runs-on: ubuntu-latest
 
     steps:
@@ -22,13 +20,15 @@ jobs:
           fetch-depth: 0 # Fetch all history for all tags and branches
 
       - name: Check for NEWS.md changes
+        shell: bash
         run: |
+          set -euo pipefail
           echo "Current SHA: $GITHUB_SHA"
           echo "Base SHA: ${{ github.event.pull_request.base.sha }}"
 
           git fetch origin ${{ github.event.pull_request.base.ref }}
 
-          CHANGED_FILES=$(git diff --name-only $GITHUB_SHA $(git merge-base $GITHUB_SHA origin/${{ github.event.pull_request.base.ref }}))
+          CHANGED_FILES=$(git diff --name-only "$GITHUB_SHA" "$(git merge-base "$GITHUB_SHA" "origin/${{ github.event.pull_request.base.ref }}")")
           echo "Changed files:"
           echo "$CHANGED_FILES"
 
@@ -38,4 +38,3 @@ jobs:
             echo "::error file=NEWS.md,line=1,col=5::NEWS.md must be updated with each PR." >&2
             exit 1
           fi
-        shell: /usr/bin/bash -e {0}

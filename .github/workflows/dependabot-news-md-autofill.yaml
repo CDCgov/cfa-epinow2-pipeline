@@ -1,0 +1,103 @@
+name: Dependabot NEWS.md autofill
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  add-news-entry:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v6
+        with:
+          # IMPORTANT: checkout the PR branch, not main
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Compute NEWS.md entry from Dependabot title
+        id: news
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          TITLE="${{ github.event.pull_request.title }}"
+
+          # Typical Dependabot titles:
+          # "Bump <package> from <old> to <new>"
+          if [[ "$TITLE" =~ ^Bump[[:space:]]+(.+)[[:space:]]+from[[:space:]]+([^[:space:]]+)[[:space:]]+to[[:space:]]+([^[:space:]]+)$ ]]; then
+            PKG="${BASH_REMATCH[1]}"
+            FROM="${BASH_REMATCH[2]}"
+            TO="${BASH_REMATCH[3]}"
+            ENTRY="* dependabot updating package ${PKG} from version ${FROM} to version ${TO} new"
+          else
+            # Fallback if title format differs (rare, but happens)
+            ENTRY="* dependabot updating dependencies new"
+          fi
+
+          echo "entry=$ENTRY" >> "$GITHUB_OUTPUT"
+
+      - name: Insert Dependabot entry under latest Features section
+        shell: bash
+        run: |
+          set -euo pipefail
+          ENTRY="${{ steps.news.outputs.entry }}"
+
+          if [[ ! -f NEWS.md ]]; then
+            echo "::error file=NEWS.md,line=1,col=1::NEWS.md not found."
+            exit 1
+          fi
+
+          # If entry already exists anywhere, do nothing
+          if grep -Fqx "$ENTRY" NEWS.md; then
+            echo "NEWS.md already contains the entry. Skipping."
+            exit 0
+          fi
+
+          tmp="$(mktemp)"
+
+          # Insert directly after the first "## Features" header
+          awk -v entry="$ENTRY" '
+            BEGIN { inserted=0 }
+            {
+              print $0
+              if ($0 ~ /^##[[:space:]]+Features[[:space:]]*$/ && inserted == 0) {
+                print entry
+                inserted=1
+              }
+            }
+            END {
+              if (inserted == 0) {
+                print ""
+                print entry
+              }
+            }
+          ' NEWS.md > "$tmp"
+
+          mv "$tmp" NEWS.md
+
+      - name: Commit and push (only if changed)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add NEWS.md
+          git commit -m "Update NEWS.md for Dependabot PR"
+          git push
