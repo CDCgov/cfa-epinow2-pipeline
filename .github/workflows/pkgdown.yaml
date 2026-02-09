@@ -23,7 +23,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -43,14 +43,14 @@ jobs:
 
       - name: Save artifact
         if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pkgdown-site
           path: ./docs
           retention-days: 7
 
       - name: Post to PR
-        uses: CDCgov/cfa-actions/post-artifact@v1.4.0
+        uses: CDCgov/cfa-actions/post-artifact@v1.5.0
         if: ${{ github.event_name == 'pull_request' }}
         with:
           artifact-name: pkgdown-site
@@ -58,7 +58,7 @@ jobs:
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
-        uses: JamesIves/github-pages-deploy-action@v4.7.3
+        uses: JamesIves/github-pages-deploy-action@v4.8.0
         with:
           clean: false
           branch: gh-pages
