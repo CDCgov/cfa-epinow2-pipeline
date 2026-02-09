@@ -2,6 +2,12 @@
 
 ## Features
 * Updating EpiNow2 from version 1.6.1 to latest (1.7.1)
+* Adding image tag validation when dependabot PRs are opened and automatic update to NEWs md
+* Add a utility script for reading, preparing, and uploading Rt review decisions
+* Adjust run trigger for time change
+* Move first run earlier in the day
+* Removing duplicative r-cmd-check.yaml file (already checking in Dockerfile)
+* Upgrade checkout action to v5
 * Updating github-script action to v8
 * adds RSV into the Rt exclusions file
 * add pathogen-specific low case count thresholds options

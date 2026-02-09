@@ -2,7 +2,8 @@ name: make run-prod (or custom)
 
 on:
   schedule:
-    - cron: '0 13 * * 3'
+    # Run at 11:30 AM UTC on Wednesdays
+    - cron: '30 11 * * 3'
   workflow_dispatch:
     inputs:
       command:
@@ -23,7 +24,7 @@ jobs:
     steps:
       - name: Checkout Repo
         id: checkout_repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
