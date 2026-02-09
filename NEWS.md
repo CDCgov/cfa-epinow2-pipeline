@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* dependabot updating package actions/upload-artifact from version 4 to version 6 new
 * Add a utility script for reading, preparing, and uploading Rt review decisions
 * Adjust run trigger for time change
 * Move first run earlier in the day
