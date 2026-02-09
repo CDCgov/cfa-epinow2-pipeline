@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* dependabot updating package JamesIves/github-pages-deploy-action from version 4.7.3 to version 4.8.0 new
 * Add a utility script for reading, preparing, and uploading Rt review decisions
 * Adjust run trigger for time change
 * Move first run earlier in the day
