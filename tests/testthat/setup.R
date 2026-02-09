@@ -44,12 +44,22 @@ sampler_opts <- list(
   iter_sampling = 25
 )
 
+gostic_priors <- list(
+  rt = list(
+    mean = 2,
+    sd = 0.2
+  ),
+  gp = list(
+    alpha_sd = 0.05
+  )
+)
+
 # Sampler
 gostic_sampler_opts <- list(
   cores = 2,
   chains = 2,
-  adapt_delta = 0.8,
-  max_treedepth = 10,
+  adapt_delta = 0.9,
+  max_treedepth = 12,
   iter_warmup = 1000,
   iter_sampling = 1000
 )
@@ -69,7 +79,7 @@ fit <- fit_model(
 gostic_data <- gostic_toy_rt |>
   dplyr::mutate(reference_date = as.Date("2023-01-01") + time) |>
   dplyr::filter(reference_date <= "2023-03-01") |>
-  dplyr::rename(confirm = incidence)
+  dplyr::rename(confirm = obs_incidence)
 
 gostic_parameters <- list(
   generation_interval = sir_gt_pmf,
@@ -80,8 +90,8 @@ gostic_parameters <- list(
 gostic_fit <- fit_model(
   data = gostic_data,
   parameters = gostic_parameters,
-  seed = 12345,
+  seed = 123456,
   horizon = 0,
-  priors = priors,
+  priors = gostic_priors,
   sampler = gostic_sampler_opts
 )

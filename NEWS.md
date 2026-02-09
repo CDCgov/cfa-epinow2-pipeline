@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Updating EpiNow2 from version 1.6.1 to latest (1.7.1)
 * Adding image tag validation when dependabot PRs are opened and automatic update to NEWs md
 * Add a utility script for reading, preparing, and uploading Rt review decisions
 * Adjust run trigger for time change
