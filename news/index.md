@@ -4,6 +4,8 @@
 
 ### Features
 
+- Adding image tag validation when dependabot PRs are opened and
+  automatic update to NEWs md
 - Add a utility script for reading, preparing, and uploading Rt review
   decisions
 - Adjust run trigger for time change
