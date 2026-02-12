@@ -1,5 +1,15 @@
 FROM docker.io/rocker/r-ver:4.4.1
 
+# We need curl to get UV and git to get a python dependency from GitHub
+RUN apt-get update && apt-get install -y curl git
+
+# install uv and add to PATH
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
+
+ARG WORKDIR=/app
+WORKDIR ${WORKDIR}
+
 # Will copy the package to the container preserving the directory structure
 RUN mkdir -p pkg
 
@@ -25,5 +35,19 @@ RUN R CMD build --no-build-vignettes --no-manual pkg && \
 
 # Ensure the package is working properly
 RUN R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
+
+# add Dagster workflow file
+COPY ./dagster_defs.py .
+
+# the virtual environment MUST be .venv in the same directory as your dagster workflow file
+ENV VIRTUAL_ENV=${WORKDIR}/.venv
+# create a virtual environment for the dagster workflows
+RUN uv venv ${VIRTUAL_ENV}
+
+# install the dagster workflow dependencies
+RUN uv sync --script dagster_defs.py --active
+
+# add the dagster workflow dependencies to the system path
+ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
 
 CMD ["bash"]
