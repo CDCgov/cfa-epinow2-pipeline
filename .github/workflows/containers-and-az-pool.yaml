@@ -32,7 +32,7 @@ on:
 
 env:
   # Together, these form: cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline
-  REGISTRY: cfaprdbatchcr.azurecr.io/
+  REGISTRY: cfaprdbatchcr.azurecr.io
   IMAGE_NAME: cfa-epinow2-pipeline
 
 jobs:
@@ -51,7 +51,7 @@ jobs:
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
@@ -63,15 +63,26 @@ jobs:
       # Getting the tag
       # The tag will be used for both the docker image and the batch pool
       #########################################################################
-      - name: Figure out tag (either latest if it is main or the branch name)
+      - name: Figure out tag (latest on main, dependabot PR number, else branch)
         shell: bash
         id: image-tag
         run: |
-          if [ "${{ steps.branch-name.outputs.branch }}" = "main" ]; then
-            echo "tag=latest" >> $GITHUB_OUTPUT
-          else
-            echo "tag=${{ steps.branch-name.outputs.branch }}" >> $GITHUB_OUTPUT
+          BRANCH="${{ steps.branch-name.outputs.branch }}"
+
+          # main => latest
+          if [[ "$BRANCH" == "main" ]]; then
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+
+          # dependabot PRs => dependabot-pr-<number>
+          if [[ "${{ github.event_name }}" == "pull_request" ]] && [[ "${{ github.actor }}" == "dependabot[bot]" ]]; then
+            echo "tag=dependabot-pr-${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # everything else => branch name (existing behavior)
+          echo "tag=$BRANCH" >> "$GITHUB_OUTPUT"
 
       - name: Docker Login
         uses: docker/login-action@v3
@@ -90,9 +101,9 @@ jobs:
     needs: build-pipeline-image
     uses: ./.github/workflows/test-coverage.yaml
 
-  r-cmd-check:
+  test-documentation:
     needs: build-pipeline-image
-    uses: ./.github/workflows/r-cmd-check.yaml
+    uses: ./.github/workflows/test-documentation.yaml
 
   acr-import:
     needs: build-pipeline-image
@@ -112,7 +123,7 @@ jobs:
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
       - name: Get Id Token
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         id: idtoken
         with:
           script: |
@@ -121,7 +132,7 @@ jobs:
             coredemo.setOutput('id_token', id_token)
 
       - name: ACR Import
-        uses: CDCgov/cfa-actions/runner-action@v1.4.0
+        uses: CDCgov/cfa-actions/runner-action@v1.5.0
         with:
           github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
           github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
@@ -172,7 +183,7 @@ jobs:
     steps:
       - name: Checkout Repo
         id: checkout_repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # From: https://stackoverflow.com/a/58035262/2097171
       - name: Extract branch name
@@ -184,7 +195,7 @@ jobs:
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
       - name: Get Id Token
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         id: idtoken
         with:
           script: |
@@ -196,7 +207,7 @@ jobs:
       - name: Create cfa-epinow2-pipeline Pool
         id: create_batch_pool
         # Removed invalid condition referencing steps.check_pool_id.outputs.pool-exists
-        uses: CDCgov/cfa-actions/runner-action@v1.4.0
+        uses: CDCgov/cfa-actions/runner-action@v1.5.0
         with:
           github_app_id: ${{ secrets.CDCENT_ACTOR_APP_ID }}
           github_app_pem: ${{ secrets.CDCENT_ACTOR_APP_PEM }}
@@ -213,7 +224,7 @@ jobs:
             export CONTAINER_REGISTRY_USERNAME=${{ secrets.CONTAINER_REGISTRY_USERNAME }}
             export CONTAINER_REGISTRY_PASSWORD=${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
             export CONTAINER_REGISTRY_URL=${{ secrets.CONTAINER_REGISTRY_URL }}
-            export CONTAINER_IMAGE_NAME=${{ env.REGISTRY }}${{ env.IMAGE_NAME }}:${{ env.TAG }}
+            export CONTAINER_IMAGE_NAME=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
             export POOL_ID=${{ env.POOL_ID }}
             export SUBNET_ID=${{ secrets.BATCH_SUBNET_ID }}
             export RESOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}

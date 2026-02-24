@@ -61,9 +61,9 @@ run-batch: ## Runs job.py on Azure Batch
 		--pool_id="$(POOL)" \
 		--job_id="$(JOB)"
 
-run-prod: config run-batch ## Calls config and run-batch
+run-prod: config run-caj ## Calls config and run-caj
 
-rerun-prod: rerun-config run-batch ## Calls rerun-config and run-batch
+rerun-prod: rerun-config run-caj ## Calls rerun-config and run-caj
 
 run: ## Run pipeline from R interactively in the container
 	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
@@ -94,10 +94,19 @@ test-batch: ## Run GitHub Actions workflow and then job.py for testing on Azure 
 			--job_id="$(JOB)"
 
 test: ## Run unit tests for the CFAEpiNow2Pipeline R package
-	Rscript -e "testthat::test_local()"
+	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--env-file .env \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
+	Rscript -e "testthat::test_local('cfa-epinow2-pipeline')"
 
 document: ## Generate roxygen2 documentation for the CFAEpiNow2Pipeline R package
-	Rscript -e "roxygen2::roxygenize()"
+	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--env-file .env \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
+	Rscript -e "roxygen2::roxygenize('cfa-epinow2-pipeline')"
 
 check: ## Perform R CMD check for the CFAEpiNow2Pipeline R package
-	Rscript -e "rcmdcheck::rcmdcheck()"
+	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	--env-file .env \
+	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
+	Rscript -e "rcmdcheck::rcmdcheck('cfa-epinow2-pipeline')"

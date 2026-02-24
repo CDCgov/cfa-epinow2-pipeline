@@ -101,8 +101,15 @@ create_pt_excl_from_rt_xslx <- function(dates) {
       file_name = fname,
       report_date = report_date
     )
+    # read and process the RSV sheet
+    rsv_df <- read_process_excel_func(
+      sheet_name = "Rt_Review_RSV",
+      pathogen = "rsv",
+      file_name = fname,
+      report_date = report_date
+    )
     # Overall Rt_review machine readable format
-    combined_df <- rbind(covid_df, influenza_df)
+    combined_df <- rbind(covid_df, influenza_df, rsv_df)
     if (file.exists(paste0(fname))) {
       # Delete file if it exists
       file.remove(paste0(fname))
@@ -114,6 +121,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
         report_date = lubridate::ymd(report_date),
         geo_value = state_abb,
         pathogen = dplyr::case_when(
+          pathogen == "rsv" ~ "RSV",
           pathogen == "influenza" ~ "Influenza",
           pathogen == "covid" ~ "COVID-19",
           .default = as.character(pathogen)
@@ -217,6 +225,7 @@ create_pt_excl_from_rt_xslx <- function(dates) {
       dplyr::mutate(
         geo_value = tolower(geo_value),
         pathogen = dplyr::case_when(
+          pathogen == "RSV" ~ "rsv",
           pathogen == "Influenza" ~ "flu",
           pathogen == "COVID-19" ~ "covid",
           .default = as.character(pathogen)
