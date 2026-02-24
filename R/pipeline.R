@@ -296,7 +296,7 @@ execute_model_logic <- function(config, input_dir, output_dir) {
     ),
     # Add the config container here when refactoring out to outer func
     run_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z"),
-    facility_active_proportion = config@facility_active_proportion,
+    facility_active_proportion = config@facility_active_proportion
   )
 
   write_model_outputs(
