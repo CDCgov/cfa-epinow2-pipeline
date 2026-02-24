@@ -25,7 +25,8 @@ Config(
   parameters = class_missing,
   sampler_opts = class_missing,
   exclusions = class_missing,
-  output_container = class_missing
+  output_container = class_missing,
+  facility_active_proportion = class_missing
 )
 }
 \arguments{
