@@ -3,10 +3,19 @@ IMAGE_NAME=cfa-epinow2-pipeline
 BRANCH=$(shell git branch --show-current)
 CONFIG_CONTAINER=rt-epinow2-config
 CNTR_MGR=docker
+DATA_API=v1
 ifeq ($(BRANCH), main)
 TAG=latest
 else
 TAG=$(BRANCH)
+endif
+
+ifeq ($(DATA_API),v1)
+API_CONTAINER := nssp-etl
+else ifeq ($(DATA_API),v2)
+API_CONTAINER := nssp-etl-api-v2
+else
+$(error Unknown DATA_API '$(DATA_API)'. Expected v1 or v2)
 endif
 
 CONFIG=test.json
@@ -38,12 +47,14 @@ config: ## Generates a configuration file for running the model
 		--disease="COVID-19,Influenza,RSV" \
 		--state=all \
 		--output-container=nssp-rt-v2 \
+		--input-container=$(API_CONTAINER) \
 		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
 
 rerun-config: ## Generate a configuration file to rerun a previous model
 	uv run azure/generate_rerun_configs.py \
 		--output-container=nssp-rt-v2 \
+		--input-container=$(API_CONTAINER) \
 		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
 
