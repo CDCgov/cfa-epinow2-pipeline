@@ -95,6 +95,7 @@ test-batch: ## Run GitHub Actions workflow and then job.py for testing on Azure 
 		--disease="COVID-19,Influenza,RSV" \
 		--state=NY \
 		--output-container=nssp-rt-testing \
+		--input-container=$(API_CONTAINER) \
 		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
 	uv run --env-file .env \
