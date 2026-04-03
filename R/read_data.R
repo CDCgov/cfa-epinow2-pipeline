@@ -98,7 +98,8 @@ read_data <- function(
   }
 
   if (!is_api_v2) {
-    query <- glue::glue("
+    query <- glue::glue(
+      "
       SELECT
         report_date,
         reference_date,
@@ -117,14 +118,16 @@ read_data <- function(
         {geo_filter}
       {group_by}
       ORDER BY reference_date
-    ")
+    "
+    )
 
     params <- base_params
     if (!is_us) {
       params <- c(params, list(geo_value = geo_value))
     }
   } else {
-    query <- glue::glue("
+    query <- glue::glue(
+      "
       WITH facility_checks AS (
         SELECT
           *,
@@ -152,7 +155,8 @@ read_data <- function(
       WHERE proportion_true >= ?
       {group_by}
       ORDER BY reference_date
-    ")
+    "
+    )
 
     params <- base_params
     if (!is_us) {
@@ -203,7 +207,8 @@ read_data <- function(
   }
 
   n_rows_expected <- as.Date(max_reference_date) -
-    as.Date(min_reference_date) + 1
+    as.Date(min_reference_date) +
+    1
 
   if (nrow(df) != n_rows_expected) {
     expected_dates <- seq.Date(
