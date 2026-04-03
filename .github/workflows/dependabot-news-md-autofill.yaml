@@ -1,9 +1,9 @@
 name: Dependabot NEWS.md autofill
 
 on:
-  pull_request_target:
-    branches: [main]
-    types: [opened, synchronize, reopened, edited]
+pull_request:
+  branches: [main]
+  types: [opened, synchronize, reopened, edited]
 
 permissions:
   contents: write
@@ -15,41 +15,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout PR head
+      - name: Checkout base branch
         uses: actions/checkout@v6
         with:
-          # IMPORTANT: checkout the PR branch, not main
-          ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: main
           fetch-depth: 0
-          persist-credentials: true
 
       - name: Compute NEWS.md entry from Dependabot title
         id: news
         shell: bash
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
         run: |
           set -euo pipefail
 
-          TITLE="${{ github.event.pull_request.title }}"
+          sanitize() {
+            printf '%s' "$1" \
+              | tr -d '\r\n' \
+              | tr -cd '[:alnum:][:space:].,_@%:/+-' \
+              | sed 's/[[:space:]]\+/ /g'
+          }
 
-          # Typical Dependabot titles:
-          # "Bump <package> from <old> to <new>"
           if [[ "$TITLE" =~ ^Bump[[:space:]]+(.+)[[:space:]]+from[[:space:]]+([^[:space:]]+)[[:space:]]+to[[:space:]]+([^[:space:]]+)$ ]]; then
-            PKG="${BASH_REMATCH[1]}"
-            FROM="${BASH_REMATCH[2]}"
-            TO="${BASH_REMATCH[3]}"
+            RAW_PKG="${BASH_REMATCH[1]}"
+            RAW_FROM="${BASH_REMATCH[2]}"
+            RAW_TO="${BASH_REMATCH[3]}"
+
+            PKG="$(sanitize "$RAW_PKG")"
+            FROM="$(sanitize "$RAW_FROM")"
+            TO="$(sanitize "$RAW_TO")"
+
             ENTRY="* dependabot updating package ${PKG} from version ${FROM} to version ${TO} new"
           else
-            # Fallback if title format differs (rare, but happens)
             ENTRY="* dependabot updating dependencies new"
           fi
 
-          echo "entry=$ENTRY" >> "$GITHUB_OUTPUT"
+          {
+            echo "entry<<EOF"
+            echo "$ENTRY"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
-      - name: Insert Dependabot entry under latest Features section
+      - name: Update NEWS.md
+        id: update
         shell: bash
         run: |
           set -euo pipefail
+
           ENTRY="${{ steps.news.outputs.entry }}"
 
           if [[ ! -f NEWS.md ]]; then
@@ -57,15 +69,13 @@ jobs:
             exit 1
           fi
 
-          # If entry already exists anywhere, do nothing
           if grep -Fqx "$ENTRY" NEWS.md; then
-            echo "NEWS.md already contains the entry. Skipping."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           tmp="$(mktemp)"
 
-          # Insert directly after the first "## Features" header
           awk -v entry="$ENTRY" '
             BEGIN { inserted=0 }
             {
@@ -85,19 +95,21 @@ jobs:
 
           mv "$tmp" NEWS.md
 
-      - name: Commit and push (only if changed)
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push to PR branch
+        if: steps.update.outputs.changed == 'true'
         shell: bash
         run: |
           set -euo pipefail
 
-          if git diff --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
+          git fetch origin "${{ github.event.pull_request.head.ref }}"
+          git checkout "${{ github.event.pull_request.head.ref }}"
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add NEWS.md
           git commit -m "Update NEWS.md for Dependabot PR"
-          git push
+          git push origin HEAD
+    ```
