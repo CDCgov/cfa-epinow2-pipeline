@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* Patch dependabot-new-md-autofill.yaml to address CDC GitHub security concern
 * dependabot updating package docker/login-action from version 3 to version 4 new
 * Adding image tag validation when dependabot PRs are opened and automatic update to NEWs md
 * Add a utility script for reading, preparing, and uploading Rt review decisions
