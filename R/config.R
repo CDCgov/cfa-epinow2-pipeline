@@ -200,7 +200,10 @@ Config <- S7::new_class(
       S7::class_double,
       default = quote(0.94),
       validator = \(value) {
-        if (length(value) == 1 && value >= 0 && value <= 1) {
+        if (rlang::is_bare_numeric(value) &&
+              length(value) == 1 &&
+              value >= 0 &&
+              value <= 1) {
           NULL
         } else {
           paste0(
