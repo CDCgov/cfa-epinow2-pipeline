@@ -52,7 +52,8 @@ Imports:
     tidybayes,
     optparse,
     Microsoft365R,
-    stringr
+    stringr,
+    glue
 Additional_repositories:
 	https://stan-dev.r-universe.dev
 URL: https://cdcgov.github.io/cfa-epinow2-pipeline/

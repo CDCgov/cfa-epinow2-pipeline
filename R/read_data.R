@@ -30,7 +30,7 @@ read_data <- function(
   report_date,
   max_reference_date,
   min_reference_date,
-  facility_active_proportion
+  facility_active_proportion = 0.94
 ) {
   rlang::arg_match(disease)
   check_file_exists(data_path)
@@ -38,6 +38,9 @@ read_data <- function(
   con <- DBI::dbConnect(duckdb::duckdb())
   on.exit(DBI::dbDisconnect(con), add = TRUE)
 
+  # any_visits_this_day is calculated for API v2
+  # True if a given facility, on a given reference_date had a DDI count > 0
+  # Same across all diseases and metrics for (facility, reference_date)
   is_api_v2 <- rlang::try_fetch(
     {
       cols <- DBI::dbGetQuery(
@@ -153,6 +156,8 @@ read_data <- function(
         SUM(value) AS confirm
       FROM facility_checks
       WHERE proportion_true >= ?
+      -- `WHERE` filters before the GROUP BY, so this filter excludes
+      -- from the agg all facilities with insufficient reporting
       {group_by}
       ORDER BY reference_date
     "
