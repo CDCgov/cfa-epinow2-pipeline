@@ -160,7 +160,7 @@ Data <- S7::new_class(
 #' container.
 #' @param facility_active_proportion A numeric value between 0 and 1 specifying
 #' the proportion of days during the modeling period that facilities must have
-#' valid DDI codes to be included in the analysis. Default is 1.0 (facilities
+#' valid DDI codes to be included in the analysis. Default is 0.94 (facilities
 #' must have visits every day). Lower values allow inclusion of facilities
 #' with fewer active days.
 #' @family config
