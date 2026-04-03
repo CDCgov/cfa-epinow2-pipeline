@@ -11,7 +11,7 @@ read_data(
   report_date,
   max_reference_date,
   min_reference_date,
-  facility_active_proportion
+  facility_active_proportion = 0.94
 )
 }
 \arguments{
