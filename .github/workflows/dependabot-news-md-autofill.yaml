@@ -112,4 +112,3 @@ jobs:
           git add NEWS.md
           git commit -m "Update NEWS.md for Dependabot PR"
           git push origin HEAD
-    ```
