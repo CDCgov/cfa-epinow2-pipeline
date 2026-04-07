@@ -1,7 +1,7 @@
 
 - **Parquet test fixtures**
-  - `CA_test.parquet`: Synthetic test data containing metric 'count_ed_visits' and 'COVID-19/Omicron' as disease (data in format of API v1). `read_data` converts 'COVID-19/Omicron' disease to 'COVID-19'. Does _not_ contain column `any_visits_this_day`.
-  - `CA_apiv2_test.parquet`: Synthetic test data containing metric 'count_ed_visits' and 'COVID-19' as disease (data in format of API v2). Contains column `any_visits_this_day`.
+  - `CA_test.parquet`: Synthetic test data containing metric 'count_ed_visits' and 'COVID-19/Omicron' as disease (data in format of API v1). `read_data` converts 'COVID-19/Omicron' disease to 'COVID-19'. Does _not_ contain column `any_visits_this_day`. This data was created in Fall 2024 by taking the format of a production DATA API v1 .parquet file and adding synthetic data to it.
+  - `CA_apiv2_test.parquet`: Synthetic test data containing metric 'count_ed_visits' and 'COVID-19' as disease (data in format of API v2). Contains column `any_visits_this_day`. This data was created in Fall 2024 by taking the format of a production DATA API v2 .parquet file and adding synthetic data to it.
   - `test_data.parquet`/`us_overall_test_data.parquet`: Package data. See `?gostic_toy_rt` and `data-raw/convert_gostic_toy_rt_to_test_dataset.R`
   - `test_parameters.parquet`: Package data. See `?sir_gt_pmf` and `data-raw/sir_gt_pmf.R`
 
