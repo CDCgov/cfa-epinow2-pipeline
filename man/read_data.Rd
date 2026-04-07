@@ -35,9 +35,9 @@ date. Formatted as "YYYY-MM-DD".}
 
 \item{facility_active_proportion}{A numeric value between 0 and 1 specifying
 the proportion of days during the modeling period that facilities must have
-valid DDI codes to be included in the analysis. Default is 0.94 (facilities
-must have visits every day). Lower values allow inclusion of facilities
-with fewer active days.}
+valid DDI codes to be included in the analysis. Default is 0.94 (require
+active reporting for >=53 of 56 days in the training period).
+Lower values allow inclusion of facilities with fewer active days.}
 }
 \value{
 A dataframe with one or more rows and columns \code{report_date},
