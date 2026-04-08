@@ -45,14 +45,14 @@ A dataframe with one or more rows and columns \code{report_date},
 \code{reference_date}, \code{geo_value}, \code{confirm}
 }
 \description{
-Reads in data from either DATA API v1 or v2. Data API version is
+Reads in data from either data API v1 or v2. Data API version is
 intuited by read_data by the presence of the \code{any_visits_this_day} column
 in the underlying data. Each row of the table corresponds to a single
 facilities' cases for a reference-date/report-date/disease tuple.
 We want to aggregate these counts to the level of geographic
 aggregate/report-date/reference-date/disease. The
 \emph{facility_active_proportion} field is used to filter facilities with data
-outages from the DATA API v2 (this field is not used for DATA API v1).
+outages from the data API v2 (this field is not used for data API v1).
 }
 \details{
 We handle two distinct cases for geographic aggregates:
