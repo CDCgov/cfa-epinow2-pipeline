@@ -98,7 +98,7 @@ def main(image_name: str, config_container: str, job_id: str):
         state_config = config_path.split("/").pop()
         job_execution_id = job_execution.id.split("/").pop()
         print(
-            f"Started Container App Job #{i+1}/{len(task_configs)} for {state_config} with execution ID: {job_execution_id}"
+            f"Started Container App Job #{i + 1}/{len(task_configs)} for {state_config} with execution ID: {job_execution_id}"
         )
 
 
@@ -118,7 +118,7 @@ if __name__ == "__main__":
         "--config_container",
         type=str,
         help="The name of the storage container where config files are located",
-        default="rt-epinow2-config"
+        default="rt-epinow2-config",
     )
     parser.add_argument(
         "--job_id",

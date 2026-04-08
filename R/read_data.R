@@ -1,8 +1,13 @@
 #' Read in the dataset of incident case counts
 #'
-#' Each row of the table corresponds to a single facilities' cases for a
-#' reference-date/report-date/disease tuple. We want to aggregate these counts
-#' to the level of geographic aggregate/report-date/reference-date/disease.
+#' Reads in data from either data API v1 or v2. Data API version is
+#' intuited by read_data by the presence of the `any_visits_this_day` column
+#' in the underlying data. Each row of the table corresponds to a single
+#' facilities' cases for a reference-date/report-date/disease tuple.
+#' We want to aggregate these counts to the level of geographic
+#' aggregate/report-date/reference-date/disease. The
+#' _facility_active_proportion_ field is used to filter facilities with data
+#' outages from the data API v2 (this field is not used for data API v1).
 #'
 #' We handle two distinct cases for geographic aggregates:
 #'
@@ -29,102 +34,171 @@ read_data <- function(
   geo_value,
   report_date,
   max_reference_date,
-  min_reference_date
+  min_reference_date,
+  facility_active_proportion = 0.94
 ) {
   rlang::arg_match(disease)
-  # NOTE: this is temporary workaround until we switch to the new API. I'm not
-  # sure if there's a better way to do this without a whole bunch of special
-  # casing -- which is its own code smell. I think this should really be handled
-  # upstream in the ETL job and standardize on "COVID-19", but that's beyond
-  # scope here and we need to do _something_ in the meantime so this runs.
-  disease_map <- c(
-    "COVID-19" = "COVID-19/Omicron",
-    "Influenza" = "Influenza",
-    "RSV" = "RSV",
-    "test" = "test"
-  )
-  mapped_disease <- disease_map[[disease]]
-
   check_file_exists(data_path)
 
-  parameters <- list(
+  con <- DBI::dbConnect(duckdb::duckdb())
+  on.exit(DBI::dbDisconnect(con), add = TRUE)
+
+  # any_visits_this_day is calculated for API v2
+  # True if a given facility, on a given reference_date had a DDI count > 0
+  # Same across all diseases and metrics for (facility, reference_date)
+  is_api_v2 <- rlang::try_fetch(
+    {
+      cols <- DBI::dbGetQuery(
+        con,
+        "SELECT * FROM read_parquet(?) LIMIT 0;",
+        params = list(data_path)
+      ) |>
+        names()
+
+      "any_visits_this_day" %in% cols
+    },
+    error = function(con) {
+      cli::cli_abort(
+        c(
+          "Error reading schema from {.path {data_path}}",
+          "Original error: {con}"
+        ),
+        class = "wrapped_schema_read_error"
+      )
+    }
+  )
+
+  is_us <- identical(geo_value, "US")
+
+  cli::cli_inform(
+    c(
+      "Using {if (is_api_v2) 'API v2 (facility filtered)' else 'API v1'}",
+      "query for {.val {geo_value}}"
+    )
+  )
+
+  disease_param <- if (disease == "COVID-19") paste0(disease, "%") else disease
+
+  base_params <- list(
     data_path = data_path,
-    disease = mapped_disease,
+    disease = disease_param,
     min_ref_date = stringify_date(min_reference_date),
     max_ref_date = stringify_date(max_reference_date),
     report_date = stringify_date(report_date)
   )
 
-  # We need different queries for the states and the US overall. For US overall
-  # we need to aggregate over all the facilities in all the states. For the
-  # states, we need to aggregate over all the facilities in that one state
-  if (geo_value == "US") {
-    query <- "
-   SELECT
-     report_date,
-     reference_date,
-     CASE
-       WHEN disease = 'COVID-19/Omicron' THEN 'COVID-19'
-       ELSE disease
-     END AS disease,
-     -- We want to inject the 'US' as our abbrevation here bc data is not agg'd
-     'US' AS geo_value,
-      sum(value) AS confirm
-    FROM read_parquet(?)
-    WHERE 1=1
-      AND disease = ?
-      AND metric = 'count_ed_visits'
-      AND reference_date >= ? :: DATE
-      AND reference_date <= ? :: DATE
-      AND report_date = ? :: DATE
-    GROUP BY reference_date, report_date, disease
-    ORDER BY reference_date
-   "
+  geo_select <- if (is_us) {
+    "'US' AS geo_value"
   } else {
-    # We want just one state so aggregate over facilites in that one state only
-    query <- "
-  SELECT
-    report_date,
-    reference_date,
-    CASE
-     WHEN disease = 'COVID-19/Omicron' THEN 'COVID-19'
-     ELSE disease
-    END AS disease,
-    geo_value AS geo_value,
-    sum(value) AS confirm,
-  FROM read_parquet(?)
-  WHERE 1=1
-    AND disease = ?
-    AND metric = 'count_ed_visits'
-    AND reference_date >= ? :: DATE
-    AND reference_date <= ? :: DATE
-    AND report_date = ? :: DATE
-    AND geo_value = ?
-  GROUP BY geo_value, reference_date, report_date, disease
-  ORDER BY reference_date
-  "
-    # Append `geo_value` to the query
-    parameters <- c(parameters, list(geo_value = geo_value))
+    "geo_value"
   }
 
-  con <- DBI::dbConnect(duckdb::duckdb())
-  on.exit(expr = DBI::dbDisconnect(con))
+  geo_filter <- if (is_us) {
+    ""
+  } else {
+    "AND geo_value = ?"
+  }
+
+  group_by <- if (is_us) {
+    "GROUP BY reference_date, report_date, disease"
+  } else {
+    "GROUP BY geo_value, reference_date, report_date, disease"
+  }
+
+  if (!is_api_v2) {
+    query <- glue::glue(
+      "
+      SELECT
+        report_date,
+        reference_date,
+        CASE
+          WHEN disease = 'COVID-19/Omicron' THEN 'COVID-19'
+          ELSE disease
+        END AS disease,
+        {geo_select},
+        SUM(value) AS confirm
+      FROM read_parquet(?)
+      WHERE disease LIKE ?
+        AND metric = 'count_ed_visits'
+        AND reference_date >= ?::DATE
+        AND reference_date <= ?::DATE
+        AND report_date = ?::DATE
+        {geo_filter}
+      {group_by}
+      ORDER BY reference_date
+    "
+    )
+
+    params <- base_params
+    if (!is_us) {
+      params <- c(params, list(geo_value = geo_value))
+    }
+  } else {
+    query <- glue::glue(
+      "
+      WITH facility_checks AS (
+        SELECT
+          *,
+          AVG(IF(any_visits_this_day, 1, 0)) OVER (
+            PARTITION BY facility
+          ) AS proportion_true
+        FROM read_parquet(?)
+        WHERE disease LIKE ?
+          AND metric = 'count_ed_visits'
+          AND reference_date >= ?::DATE
+          AND reference_date <= ?::DATE
+          AND report_date = ?::DATE
+          {geo_filter}
+      )
+      SELECT
+        report_date,
+        reference_date,
+        CASE
+          WHEN disease = 'COVID-19/Omicron' THEN 'COVID-19'
+          ELSE disease
+        END AS disease,
+        {geo_select},
+        SUM(value) AS confirm
+      FROM facility_checks
+      WHERE proportion_true >= ?
+      -- `WHERE` filters before the GROUP BY, so this filter excludes
+      -- from the agg all facilities with insufficient reporting
+      {group_by}
+      ORDER BY reference_date
+    "
+    )
+
+    params <- base_params
+    if (!is_us) {
+      params <- c(params, list(geo_value = geo_value))
+    }
+    params <- c(
+      params,
+      list(facility_active_proportion = facility_active_proportion)
+    )
+  }
+
   df <- rlang::try_fetch(
     DBI::dbGetQuery(
       con,
       statement = query,
-      params = unname(parameters)
+      params = unname(params)
     ),
     error = function(con) {
       cli::cli_abort(
         c(
           "Error fetching data from {.path {data_path}}",
           "Using parameters:",
-          "*" = "data_path: {.path {parameters[['data_path']]}}",
-          "*" = "mapped_disease: {.val {parameters[['disease']]}}",
-          "*" = "min_reference_date: {.val {parameters[['min_ref_date']]}}",
-          "*" = "max_reference_date: {.val {parameters[['max_ref_date']]}}",
-          "*" = "report_date: {.val {parameters[['report_date']]}}",
+          "*" = "data_path: {.path {base_params[['data_path']]}}",
+          "*" = "disease: {.val {base_params[['disease']]}}",
+          "*" = "min_reference_date: {.val {base_params[['min_ref_date']]}}",
+          "*" = "max_reference_date: {.val {base_params[['max_ref_date']]}}",
+          "*" = "report_date: {.val {base_params[['report_date']]}}",
+          "*" = "geo_value: {.val {geo_value}}",
+          "*" = paste0(
+            "facility_active_proportion: ",
+            "{.val {facility_active_proportion}}"
+          ),
           "Original error: {con}"
         ),
         class = "wrapped_invalid_query"
@@ -132,20 +206,20 @@ read_data <- function(
     }
   )
 
-  # Guard against empty return
   if (nrow(df) == 0) {
     cli::cli_abort(
       c(
         "No data matching returned from {.path {data_path}}",
-        "Using parameters {parameters}"
+        "Using parameters {base_params}"
       ),
       class = "empty_return"
     )
   }
-  # Warn for incomplete return
+
   n_rows_expected <- as.Date(max_reference_date) -
     as.Date(min_reference_date) +
     1
+
   if (nrow(df) != n_rows_expected) {
     expected_dates <- seq.Date(
       from = as.Date(min_reference_date),
@@ -153,12 +227,9 @@ read_data <- function(
       by = "day"
     )
     missing_dates <- stringify_date(
-      # Setdiff strips the date attribute from the objects; re-add it so that we
-      # can pretty-format the date for printing
-      as.Date(
-        setdiff(expected_dates, df[["reference_date"]])
-      )
+      as.Date(setdiff(expected_dates, df[["reference_date"]]))
     )
+
     cli::cli_warn(
       c(
         "Incomplete number of rows returned",
@@ -171,5 +242,5 @@ read_data <- function(
   }
 
   cli::cli_alert_success("Read {nrow(df)} rows from {.path {data_path}}")
-  return(df)
+  df
 }
