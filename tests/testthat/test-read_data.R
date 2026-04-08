@@ -121,7 +121,7 @@ test_that("Incomplete return throws warning", {
   )
 })
 
-test_that("Replace COVID-19/Omicron with COVID-19, one state", {
+test_that("Replace COVID-19/Omicron with COVID-19, one state (API v1)", {
   data_path <- test_path("data/CA_test.parquet")
 
   actual <- read_data(
@@ -140,7 +140,7 @@ test_that("Replace COVID-19/Omicron with COVID-19, one state", {
 })
 
 
-test_that("Replace COVID-19/Omicron with COVID-19, US", {
+test_that("Replace COVID-19/Omicron with COVID-19, US (API v1)", {
   data_path <- test_path("data/CA_test.parquet")
 
   actual <- read_data(
@@ -177,8 +177,7 @@ test_that("API v2 with COVID-19, one state", {
   expect_true(all(actual$disease == "COVID-19"))
 })
 
-
-test_that("API v2 with COVID-19, US", {
+test_that("API v2 with COVID-19, US (default facility_active_proportion)", {
   data_path <- test_path("data/CA_apiv2_test.parquet")
 
   actual <- read_data(
@@ -187,8 +186,7 @@ test_that("API v2 with COVID-19, US", {
     geo_value = "US",
     report_date = "2024-11-26",
     min_reference_date = as.Date("2024-06-01"),
-    max_reference_date = "2024-11-25",
-    facility_active_proportion = 1.0
+    max_reference_date = "2024-11-25"
   )
 
   # Expect that there should be no "COVID-19/Omicron" in the data,
@@ -197,7 +195,7 @@ test_that("API v2 with COVID-19, US", {
   expect_true(all(actual$disease == "COVID-19"))
 })
 
-test_that("facility_active_proportion affects counts", {
+test_that("facility_active_proportion affects counts (API v2)", {
   data_path <- test_path("data/CA_apiv2_test.parquet")
 
   # Read data with facility_active_proportion = 1.0
@@ -232,4 +230,22 @@ test_that("facility_active_proportion affects counts", {
     all(data_lenient$confirm >= data_strict$confirm),
     info = "Lenient data should have equal or more counts than strict data"
   )
+})
+
+test_that("facility_active_proportion doesn't affects counts (API v1)", {
+  # facility_active_proportion is ignored for API v1
+  data_path <- test_path("data/CA_test.parquet")
+
+  actual <- read_data(
+    data_path,
+    disease = "COVID-19",
+    geo_value = "US",
+    report_date = "2024-11-26",
+    min_reference_date = as.Date("2024-06-01"),
+    max_reference_date = "2024-11-25"
+  )
+
+  expected_rows <- 178
+  actual_rows <- actual |> nrow()
+  expect_equal(expected_rows, actual_rows)
 })
