@@ -35,7 +35,8 @@ date. Formatted as "YYYY-MM-DD".}
 
 \item{facility_active_proportion}{A numeric value between 0 and 1 specifying
 the proportion of days during the modeling period that facilities must have
-valid DDI codes to be included in the analysis. Default is 0.94 (require
+reported at least one informative discharge diagnosis (DDI) to be included in
+the analysis. Default is 0.94 (require
 active reporting for >=53 of 56 days in the training period).
 Lower values allow inclusion of facilities with fewer active days.}
 }
@@ -44,9 +45,14 @@ A dataframe with one or more rows and columns \code{report_date},
 \code{reference_date}, \code{geo_value}, \code{confirm}
 }
 \description{
-Each row of the table corresponds to a single facilities' cases for a
-reference-date/report-date/disease tuple. We want to aggregate these counts
-to the level of geographic aggregate/report-date/reference-date/disease.
+Reads in data from either DATA API v1 or v2. Data API version is
+intuited by read_data by the presence of the \code{any_visits_this_day} column
+in the underlying data. Each row of the table corresponds to a single
+facilities' cases for a reference-date/report-date/disease tuple.
+We want to aggregate these counts to the level of geographic
+aggregate/report-date/reference-date/disease. The
+\emph{facility_active_proportion} field is used to filter facilities with data
+outages from the DATA API v2 (this field is not used for DATA API v1).
 }
 \details{
 We handle two distinct cases for geographic aggregates:
