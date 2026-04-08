@@ -13,6 +13,7 @@
   "geo_type": "state",
   "report_date": "2024-11-26",
   "production_date": "2024-11-26",
+  "output_container": "testing",
   "parameters": {
     "as_of_date": "2024-11-26",
     "generation_interval": {
@@ -59,5 +60,6 @@
     0.5,
     0.95
   ],
-  "model": "EpiNow2"
+  "model": "EpiNow2",
+  "facility_active_proportion": 0.94
 }
