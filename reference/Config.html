@@ -59,7 +59,8 @@
 <span>  parameters <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  sampler_opts <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  exclusions <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  output_container <span class="op">=</span> <span class="va">class_missing</span></span>
+<span>  output_container <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  facility_active_proportion <span class="op">=</span> <span class="va">class_missing</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -164,6 +165,15 @@ criteria.</p></dd>
 <dt id="arg-output-container">output_container<a class="anchor" aria-label="anchor" href="#arg-output-container"></a></dt>
 <dd><p>An optional string specifying the output blob storage
 container.</p></dd>
+
+
+<dt id="arg-facility-active-proportion">facility_active_proportion<a class="anchor" aria-label="anchor" href="#arg-facility-active-proportion"></a></dt>
+<dd><p>A numeric value between 0 and 1 specifying
+the proportion of days during the modeling period that facilities must have
+reported at least one informative discharge diagnosis (DDI) to be included in
+the analysis. Default is 0.94 (require
+active reporting for &gt;=53 of 56 days in the training period).
+Lower values allow inclusion of facilities with fewer active days.</p></dd>
 
 </dl></div>
     <div class="section level2">
