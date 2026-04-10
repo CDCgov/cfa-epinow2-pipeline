@@ -2,6 +2,8 @@
 
 ## Features
 * dependabot updating package actions/upload-artifact from version 6 to version 7 new
+* Add the ability to read data from API v2 as well as v1
+* dependabot updating package docker/login-action from version 3 to version 4 new
 * Adding image tag validation when dependabot PRs are opened and automatic update to NEWs md
 * Add a utility script for reading, preparing, and uploading Rt review decisions
 * Adjust run trigger for time change
