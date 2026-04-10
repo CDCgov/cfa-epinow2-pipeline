@@ -104,9 +104,9 @@ def list_task_configs(
     container_client = blob_service_client.get_container_client(
         container=config_container
     )
-    task_configs = [
+    task_configs = sorted(
         b.name for b in container_client.list_blobs(name_starts_with=f"{job_id}/")
-    ]
+    )
     if not task_configs:
         raise ValueError(f"No config blobs found for job_id {job_id}")
     return task_configs
