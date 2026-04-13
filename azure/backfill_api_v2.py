@@ -34,7 +34,11 @@ def iter_wednesdays(start_date: date, end_date: date) -> list[date]:
         raise ValueError(
             f"{start_date} is a {start_date.strftime('%A')}. "
             "start_date must be a Wednesday"
-    )
+        )
+    if end_date.weekday() != 2:
+        raise ValueError(
+            f"{end_date} is a {end_date.strftime('%A')}. end_date must be a Wednesday"
+        )
     current = start_date
     dates: list[date] = []
     while current <= end_date:
@@ -172,7 +176,7 @@ def submit_caj_job(
 
 def main(
     start_date_str: str = typer.Option(
-        "2024-03-06",
+        ...,
         "--start-date",
         help="First Wednesday to backfill, in ISO format.",
     ),
@@ -182,7 +186,7 @@ def main(
         help="Last Wednesday to backfill, in ISO format. Defaults to the latest Wednesday on or before today.",
     ),
     prefix: str = typer.Option(
-        "2026-04-api-v2-backfill",
+        ...,
         "--prefix",
         help="Job ID prefix. Each job ID becomes <prefix>-YYYY-MM-DD.",
     ),
