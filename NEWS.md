@@ -1,12 +1,8 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
-<<<<<<< azure-backfill-api-v2
 * Added a PEP723 script for running backfills more easily.
-=======
-
 * Add the ability to read data from API v2 as well as v1
->>>>>>> main
 * dependabot updating package docker/login-action from version 3 to version 4 new
 * Adding image tag validation when dependabot PRs are opened and automatic update to NEWs md
 * Add a utility script for reading, preparing, and uploading Rt review decisions
