@@ -31,7 +31,10 @@ def iter_wednesdays(start_date: date, end_date: date) -> list[date]:
     if start_date > end_date:
         raise ValueError("start_date must be on or before end_date")
     if start_date.weekday() != 2:
-        raise ValueError("start_date must be a Wednesday")
+        raise ValueError(
+            f"{start_date} is a {start_date.strftime('%A')}. "
+            "start_date must be a Wednesday"
+    )
     current = start_date
     dates: list[date] = []
     while current <= end_date:
