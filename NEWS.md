@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* dependabot updating package snok/container-retention-policy from version 3.0.0 to version 3.1.0 new
 
 * Add the ability to read data from API v2 as well as v1
 * dependabot updating package docker/login-action from version 3 to version 4 new
