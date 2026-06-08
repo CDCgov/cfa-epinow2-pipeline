@@ -51,6 +51,7 @@ Imports:
     tidyr,
     tidybayes,
     optparse,
+    httr,
     Microsoft365R,
     stringr,
     glue
