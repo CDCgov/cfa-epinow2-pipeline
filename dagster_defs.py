@@ -4,6 +4,7 @@
 # requires-python = ">=3.13,<3.14"
 # dependencies = [
 #    "cfa-dagster[dev] @ git+https://github.com/cdcgov/cfa-dagster.git",
+#    "cfa-config-generator @ git+https://github.com/cdcgov/cfa-config-generator.git"
 # ]
 # ///
 
@@ -29,13 +30,13 @@ from cfa_dagster import (
     start_dev_env,
 )
 from dagster_docker import DockerRunLauncher
-#from cfa_config_generator.utils.epinow2.driver_functions import (
-#    generate_config
-#)
-#from cfa_config_generator.utils.epinow2.constants import (
-#    nssp_valid_states,
-#    all_diseases
-#)
+from cfa_config_generator.utils.epinow2.driver_functions import (
+    generate_config
+)
+from cfa_config_generator.utils.epinow2.constants import (
+    nssp_valid_states,
+    all_diseases
+)
 
 # start the Dagster dev server
 start_dev_env(__name__)
@@ -73,19 +74,16 @@ class RtConfig(dg.Config):
     production_date_str: str = date.today().isoformat()
     facility_active_proportion: float = 0.94
     disease: list[str] = list(all_diseases)
-    states: list[str] = sorted(nssp_valid_states)
+    #states: list[str] = sorted(nssp_valid_states)
+    states: list[str] = ['AZ']
 
 @dynamic_graph_asset(
     graph_dimensions = ["disease", "states"],
     description = "Rt pipeline config generation",
 )
-#@dg.asset(
-#    description="The Rt pipeline config",
-#    partitions_def=rt_partitions,
-#)
 def cfa_config_generator(
-    context: dg.AssetExecutionContext,
-    config: RtConfig
+    context: DynamicGraphAssetExecutionContext,
+    config: RtConfig,
 ) -> dict:
     """
     The Rt pipeline config
@@ -93,7 +91,7 @@ def cfa_config_generator(
     context.log.debug(f"config: '{config}'")
     #keys_by_dimension: dg.MultiPartitionKey = context.partition_key.keys_by_dimension
     #state = keys_by_dimension["state"]
-    state = config.state
+    state = config.states
     #disease = keys_by_dimension["disease"]
     disease = config.disease
     report_date: date = date.fromisoformat(config.report_date_str)
@@ -133,6 +131,7 @@ def cfa_config_generator(
             "config": rt_config
         }
     )
+    return rt_config
 
 
 @dynamic_graph_asset(
@@ -140,13 +139,14 @@ def cfa_config_generator(
     description = "A parallel asset that runs the Rt pipeline for different diseases and states",
 )
 def cfa_epinow2_pipeline(
-    context: dg.AssetExecutionContext,
-    cfa_config_generator
+    context: DynamicGraphAssetExecutionContext,
+    config: RtConfig,
+    cfa_config_generator: dict,
 ) -> str:
-    config = cfa_config_generator
+    config_results = cfa_config_generator.value
 
-    job_id = config.get("job_id")
-    blob_name = f"{job_id}/{config.get('task_id')}.json"
+    job_id = config_results["job_id"]
+    blob_name = f"{job_id}/{config_results["task_id"]}.json"
 
     context.log.debug(f"job_id: '{job_id}'")
     context.log.debug(f"blob_name: '{blob_name}'")
