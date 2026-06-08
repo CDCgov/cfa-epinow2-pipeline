@@ -29,13 +29,13 @@ from cfa_dagster import (
     start_dev_env,
 )
 from dagster_docker import DockerRunLauncher
-from cfa_config_generator.utils.epinow2.driver_functions import (
-    generate_config
-)
-from cfa_config_generator.utils.epinow2.constants import (
-    nssp_valid_states,
-    all_diseases
-)
+#from cfa_config_generator.utils.epinow2.driver_functions import (
+#    generate_config
+#)
+#from cfa_config_generator.utils.epinow2.constants import (
+#    nssp_valid_states,
+#    all_diseases
+#)
 
 # start the Dagster dev server
 start_dev_env(__name__)
@@ -45,7 +45,6 @@ user = os.environ["DAGSTER_USER"]
 
 # check Dagster-set env var if we're in dev mode
 is_production = not os.getenv("DAGSTER_IS_DEV_CLI")
-
 
 STORAGE_ACCOUNT = "cfaazurebatchprd"
 STORAGE_ACCOUNT_PATH = f"https://{STORAGE_ACCOUNT}.blob.core.windows.net"
@@ -169,8 +168,8 @@ def cfa_epinow2_pipeline(
             "blob_path": job_id,
         }
     )
-'''
 
+'''
 # change from :dagster to :latest tag once merged to main
 image = "cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:dagster"
 
@@ -254,3 +253,4 @@ defs = dg.Definitions(
         }
     }
 )
+'''
