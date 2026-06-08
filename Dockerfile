@@ -10,11 +10,40 @@ ENV PATH="/root/.local/bin:$PATH"
 ARG WORKDIR=/app
 WORKDIR ${WORKDIR}
 
+# Python from https://docs.astral.sh/uv/guides/integration/docker/
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/ 
+
+# Some handy uv environment variables
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
+ENV UV_PYTHON_CACHE_DIR=/root/.cache/uv/python
+
+#
+# Bring in python project dependency information and set the virtual env
+#
+
+# Dependency information
+COPY pyproject.toml ./pyproject.toml
+COPY uv.lock ./uv.lock
+
+# Set VIRTUAL_ENV variable at runtime
+ENV VIRTUAL_ENV=/cfa-stf-routine-forecasting/.venv
+
+# Create the virtual environment
+RUN uv venv "${VIRTUAL_ENV}"
+
+# Update PATH to use the selected venv at runtime
+ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
+
+# Sync all python dependencies (excluding the local project itself)
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --no-install-project --no-dev
+
+
 # Will copy the package to the container preserving the directory structure
 RUN mkdir -p pkg
 
 COPY ./DESCRIPTION pkg/
-
 
 # Installing missing dependencies (removing pandoc-citeproc install)
 RUN apt-get update
@@ -40,15 +69,7 @@ RUN R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
 # add Dagster workflow file
 COPY ./dagster_defs.py .
 
-# the virtual environment MUST be .venv in the same directory as your dagster workflow file
-ENV VIRTUAL_ENV=${WORKDIR}/.venv
-# create a virtual environment for the dagster workflows
-RUN uv venv ${VIRTUAL_ENV}
-
 # install the dagster workflow dependencies
 RUN uv sync --script dagster_defs.py --active
-
-# add the dagster workflow dependencies to the system path
-ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
 
 CMD ["bash"]
