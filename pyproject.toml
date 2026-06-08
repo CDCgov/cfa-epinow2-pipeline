@@ -1,6 +1,6 @@
 [project]
 name = "cfa-epinow2-pipeline"
-version = ""
+version = "0.2.0"
 description = "CFA Epinow2 Pipeline"
 readme = "README.md"
 authors = [
