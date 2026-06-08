@@ -29,3 +29,4 @@ $Dockerfile-batch^
 ^rules_of_behavior.md$
 ^start.sh$
 ^thanks.md$
+^.venv$
