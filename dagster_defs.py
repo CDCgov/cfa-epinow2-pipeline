@@ -146,7 +146,7 @@ def cfa_epinow2_pipeline(
     config_results = cfa_config_generator.value
 
     job_id = config_results["job_id"]
-    blob_name = f"{job_id}/{config_results["task_id"]}.json"
+    blob_name = blob_path = cfa_config_generator.metadata["blob"]
 
     context.log.debug(f"job_id: '{job_id}'")
     context.log.debug(f"blob_name: '{blob_name}'")
