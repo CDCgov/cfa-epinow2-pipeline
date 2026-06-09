@@ -1,0 +1,21 @@
+{
+  "job_id": "Rt-estimation-2024-12-17T19-50-06.000814+00-00-1d15d198bcb011ef9673696322d524e5",
+  "task_id": "CA_Influenza_2024-12-17T19:50:06.001714+00:00_1d15d198bcb011ef9673696322d524e5",
+  "data_path": "gold/2024-12-17.parquet",
+  "model": "EpiNow2",
+  "disease": "Influenza",
+  "low_case_count_threshold": 10,
+  "geo_value": "CA",
+  "report_date": "2024-12-17",
+  "production_date": "2024-12-17",
+  "max_reference_date": "2024-12-16",
+  "min_reference_date": "2024-10-22",
+  "exclusions_path": "",
+  "exclusions_blob_container": "",
+  "run_at": "2026-06-09T17:00:08+0000",
+  "facility_active_proportion": 0.94,
+  "samples_path": "/mnt/Rt-estimation-2024-12-17T19-50-06.000814+00-00-1d15d198bcb011ef9673696322d524e5/samples/CA_Influenza_2024-12-17T19:50:06.001714+00:00_1d15d198bcb011ef9673696322d524e5.parquet",
+  "summaries_path": "/mnt/Rt-estimation-2024-12-17T19-50-06.000814+00-00-1d15d198bcb011ef9673696322d524e5/summaries/CA_Influenza_2024-12-17T19:50:06.001714+00:00_1d15d198bcb011ef9673696322d524e5.parquet",
+  "model_path": "/mnt/Rt-estimation-2024-12-17T19-50-06.000814+00-00-1d15d198bcb011ef9673696322d524e5/tasks/CA_Influenza_2024-12-17T19:50:06.001714+00:00_1d15d198bcb011ef9673696322d524e5/model.rds",
+  "diagnostics_path": "/mnt/Rt-estimation-2024-12-17T19-50-06.000814+00-00-1d15d198bcb011ef9673696322d524e5/tasks/CA_Influenza_2024-12-17T19:50:06.001714+00:00_1d15d198bcb011ef9673696322d524e5/diagnostics.parquet"
+}
