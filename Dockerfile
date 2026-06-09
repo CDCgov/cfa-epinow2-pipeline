@@ -1,5 +1,11 @@
 FROM docker.io/rocker/r-ver:4.4.1
 
+# Set VIRTUAL_ENV variable at runtime
+ENV VIRTUAL_ENV=/.venv
+
+# Update PATH to use the selected venv at runtime
+ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
+
 # Will copy the package to the container preserving the directory structure
 RUN mkdir -p pkg
 
@@ -37,14 +43,8 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 COPY pyproject.toml ./pyproject.toml
 COPY uv.lock ./uv.lock
 
-# Set VIRTUAL_ENV variable at runtime
-ENV VIRTUAL_ENV=/.venv
-
 # Create the virtual environment
 RUN uv venv "${VIRTUAL_ENV}"
-
-# Update PATH to use the selected venv at runtime
-ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
 
 # Dagster
 COPY dagster_defs.py ./dagster_defs.py
