@@ -18,6 +18,10 @@ else
 $(error Unknown DATA_API '$(DATA_API)'. Expected v1 or v2)
 endif
 
+# Temporary clean directory for builds/tests
+TMP_BUILD_DIR=$(shell mktemp -d)
+RSYNC_EXCLUDES=--exclude='.venv' --exclude='.env' --exclude='.git' --exclude='tmp_pkg'
+
 CONFIG=test.json
 POOL="cfa-epinow2-$(TAG)"
 TIMESTAMP:=$(shell  date -u +"%Y%m%d_%H%M%S")
@@ -77,7 +81,16 @@ run-prod: config run-caj ## Calls config and run-caj
 rerun-prod: rerun-config run-caj ## Calls rerun-config and run-caj
 
 run: ## Run pipeline from R interactively in the container
-	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
+	@echo "Preparing clean run directory..."
+	@rsync -av $(RSYNC_EXCLUDES) ./ $(TMP_BUILD_DIR)/ && \
+	docker run --mount type=bind,source=$(TMP_BUILD_DIR),target=/mnt -it \
+		--env-file .env \
+		--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
+		Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt')" && \
+	rm -rf $(TMP_BUILD_DIR)
+	
+#run: ## Run pipeline from R interactively in the container
+#	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/mnt -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 	Rscript -e "CFAEpiNow2Pipeline::orchestrate_pipeline('$(CONFIG)', config_container = 'rt-epinow2-config', input_dir = '/mnt/input', output_dir = '/mnt')"
@@ -118,7 +131,19 @@ document: ## Generate roxygen2 documentation for the CFAEpiNow2Pipeline R packag
 	Rscript -e "roxygen2::roxygenize('cfa-epinow2-pipeline')"
 
 check: ## Perform R CMD check for the CFAEpiNow2Pipeline R package
-	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
+	@echo "Preparing clean build directory..."
+	@TMPDIR=$$(mktemp -d) && \
+	rsync -av --exclude='.venv' --exclude='.env' --exclude='.git' --exclude='tmp_pkg' ./ $$TMPDIR/ && \
+	echo "Running R CMD check inside Docker..." && \
+	docker run --mount type=bind,source=$$TMPDIR,target=/cfa-epinow2-pipeline -it \
+		--env-file .env \
+		--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
+		Rscript -e "rcmdcheck::rcmdcheck('cfa-epinow2-pipeline')" && \
+	echo "Cleaning up temporary directory..." && \
+	rm -rf $$TMPDIR
+
+#check: ## Perform R CMD check for the CFAEpiNow2Pipeline R package
+#	$(CNTR_MGR) run --mount type=bind,source=$(PWD),target=/cfa-epinow2-pipeline -it \
 	--env-file .env \
 	--rm $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 	Rscript -e "rcmdcheck::rcmdcheck('cfa-epinow2-pipeline')"
