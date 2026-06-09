@@ -66,8 +66,9 @@ rt_partitions = dg.MultiPartitionsDefinition({
 class RtConfig(dg.Config):
     job_id: str = (
         "Rt-estimation-" +
-        datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%S.%f%z")
     )
+   
     report_date_str: str = datetime.now(timezone.utc).strftime("%F")
     output_container: str = OUTPUT_CONTAINER
     input_container: str = "nssp-etl"
@@ -146,11 +147,15 @@ def cfa_epinow2_pipeline(
     config_results = cfa_config_generator.value
 
     job_id = config_results["job_id"]
-    blob_name = blob_path = cfa_config_generator.metadata["blob"]
-
+    task_id = config_results['task_id']
+    
+    blob_name = f"{job_id}-{task_id}.json"
+    #blob_name = 'Rt-estimation-2024-12-17T19-50-06.000814+00-00-1d15d198bcb011ef9673696322d524e5'
+                    Rt-estimation-20260609_160433-AZ_COVID-19_2026-06-09T16:04:37.973199+00:00.json
     context.log.debug(f"job_id: '{job_id}'")
     context.log.debug(f"blob_name: '{blob_name}'")
     context.log.debug(f"config: '{config}'")
+    context.log.debug(f"task_id: '{task_id}'")
     subprocess.run([
             "Rscript",
             "-e",
