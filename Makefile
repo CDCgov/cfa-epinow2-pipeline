@@ -43,6 +43,9 @@ build: ## Build the Docker image with given tag
 	$(CNTR_MGR) build -t $(REGISTRY)$(IMAGE_NAME):$(TAG) \
 		--build-arg TAG=$(TAG) -f Dockerfile .
 
+container_login:
+	az acr login --name cfaprdbatchcr
+
 tag: ## Tags the local image for pushing to the container registry
 	$(CNTR_MGR) tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
