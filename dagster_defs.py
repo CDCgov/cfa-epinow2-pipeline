@@ -13,8 +13,10 @@ import os
 import subprocess
 
 import dagster as dg
-
-# ruff: noqa: F401
+from dagster_azure.blob import (
+    AzureBlobStorageDefaultCredential,
+    AzureBlobStorageResource,
+)
 from cfa_dagster import (
     ADLS2PickleIOManager,
     DynamicGraphAssetExecutionContext,
@@ -44,29 +46,122 @@ start_dev_env(__name__)
 # get the user from the environment, throw an error if variable is not set
 user = os.environ["DAGSTER_USER"]
 
-# check Dagster-set env var if we're in dev mode
-is_production = not os.getenv("DAGSTER_IS_DEV_CLI")
-
-STORAGE_ACCOUNT = "cfaazurebatchprd"
+STORAGE_ACCOUNT = IMAGE_REGISTRY = "cfaazurebatchprd"
 STORAGE_ACCOUNT_PATH = f"https://{STORAGE_ACCOUNT}.blob.core.windows.net"
 CONFIG_CONTAINER = "rt-epinow2-config"
 # OUTPUT_CONTAINER = "nssp-rt-v2" if is_production else "nssp-rt-testing"
 OUTPUT_CONTAINER = "nssp-rt-testing"  # hard-coding test during Dagster evaluation
+image_tag = "latest" if is_production() else user
+image = f"{IMAGE_REGISTRY}.azurecr.io/cfa-epinow2-pipeline:{image_tag}"
 
-'''
-# Moved this code to the RtConfig class 
-state_partitions = dg.StaticPartitionsDefinition(sorted(nssp_valid_states))
-disease_partitions = dg.StaticPartitionsDefinition(list(all_diseases))
-rt_partitions = dg.MultiPartitionsDefinition({
-    "state": state_partitions,
-    "disease": disease_partitions,
-})
-'''
+
+workdir = "/app"
+
+# this is the default run config that launches the job in your local shell
+# and executes each step in a separate system process
+default_config = ExecutionConfig(
+    launcher=SelectorConfig(class_name=dg.DefaultRunLauncher.__name__),
+    executor=SelectorConfig(class_name=dg.multiprocess_executor.__name__),
+)
+
+# configuring an executor to run each workflow step in a new Docker container
+# add this to a job or the Definitions class to use it
+docker_config = ExecutionConfig(
+    executor=SelectorConfig(
+        class_name=docker_executor.__name__,
+        config={
+            # specify a default image
+            "image": image,
+            # set env vars here
+            # "env_vars": [f"DAGSTER_USER"],
+            "container_kwargs": {
+                "volumes": [
+                    # bind the ~/.azure folder for optional cli login
+                    f"/home/{user}/.azure:/root/.azure",
+                    # bind current file so we don't have to rebuild
+                    # the container image for workflow changes
+                    f"{__file__}:{workdir}/{os.path.basename(__file__)}",
+                ]
+            },
+        },
+    )
+)
+
+# configuring an executor to run each workflow step in a new Docker container
+# add this to a job or the Definitions class to use it
+docker_config = ExecutionConfig(
+    executor=SelectorConfig(
+        class_name=docker_executor.__name__,
+        config={
+            # specify a default image
+            "image": image,
+            # set env vars here
+            # "env_vars": [f"DAGSTER_USER"],
+            "container_kwargs": {
+                "volumes": [
+                    # bind the ~/.azure folder for optional cli login
+                    f"/home/{user}/.azure:/root/.azure",
+                    # bind current file so we don't have to rebuild
+                    # the container image for workflow changes
+                    f"{__file__}:{workdir}/{os.path.basename(__file__)}",
+                ]
+            },
+        },
+    )
+)
+
+
+# configuring an executor to run each workflow step in a new Azure Container
+# App Job execution
+# add this to a job or the Definitions class to use it
+azure_caj_config = ExecutionConfig(
+    executor=SelectorConfig(
+        class_name=azure_container_app_job_executor.__name__,
+        config={
+            "container_app_job_name": "cfa-dagster",
+            # specify a default image
+            "image": image,
+            # set env vars here
+            # "env_vars": [f"DAGSTER_USER"],
+        },
+    )
+)
+
+# configuring a run launcher to launch each run in an Azure Container App Job
+# and configuring an executor to run each workflow steps in a new Azure Batch
+# task for maximum scale
+# add this to a job or the Definitions class to use it
+azure_batch_config = ExecutionConfig(
+    executor=SelectorConfig(
+        class_name=azure_batch_executor.__name__,
+        config={
+            # change the pool_name to your existing pool name
+            "pool_name": "cfa-dagster",
+            # specify a default image
+            "image": image,
+            # set env vars here
+            "env_vars": ["CFA_DAGSTER_LOG_LEVEL=debug"],
+            "container_kwargs": {
+                # set the working directory to match your Dockerfile
+                # required for Azure Batch
+                "working_dir": workdir,
+                # mount config if your existing Batch pool already has Blob mounts
+                # "volumes": [
+                #     "nssp-etl:nssp-etl",
+                # ]
+            },
+        },
+    ),
+)
+
+# ----------------
+# Assets - operations that produce tracked artifacts
+# ----------------
 
 class RtConfig(dg.Config):
     job_id: str = (
         "Rt-estimation-" +
-        datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%S.%f%z")
+        datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     )
    
     report_date_str: str = datetime.now(timezone.utc).strftime("%F")
@@ -90,11 +185,8 @@ def cfa_config_generator(
     The Rt pipeline config
     """
     context.log.debug(f"config: '{config}'")
-    #keys_by_dimension: dg.MultiPartitionKey = context.partition_key.keys_by_dimension
-    #state = keys_by_dimension["state"]
-    state = config.states
-    #disease = keys_by_dimension["disease"]
-    disease = config.disease
+    state = context.graph_dimension["states"]
+    disease = context.graph_dimension["disease"]
     report_date: date = date.fromisoformat(config.report_date_str)
     production_date: date = date.fromisoformat(config.production_date_str)
     now: datetime = datetime.now(timezone.utc)
@@ -151,7 +243,7 @@ def cfa_epinow2_pipeline(
     
     blob_name = f"{job_id}-{task_id}.json"
     #blob_name = 'Rt-estimation-2024-12-17T19-50-06.000814+00-00-1d15d198bcb011ef9673696322d524e5'
-                    Rt-estimation-20260609_160433-AZ_COVID-19_2026-06-09T16:04:37.973199+00:00.json
+                    #Rt-estimation-20260609_160433-AZ_COVID-19_2026-06-09T16:04:37.973199+00:00.json
     context.log.debug(f"job_id: '{job_id}'")
     context.log.debug(f"blob_name: '{blob_name}'")
     context.log.debug(f"config: '{config}'")
@@ -174,88 +266,69 @@ def cfa_epinow2_pipeline(
         }
     )
 
-'''
-# change from :dagster to :latest tag once merged to main
-image = "cfaprdbatchcr.azurecr.io/cfa-epinow2-pipeline:dagster"
+# ------------------------------------------------
+# Jobs - tasks that don't produce tracked artifacts
+# ------------------------------------------------
 
 
 @dg.op
-def launch_pipeline(context: dg.OpExecutionContext):
-    partition_keys = rt_partitions.get_partition_keys()
-    partition_keys = ["COVID-19|AL"]
-    asset_selection = ["cfa_config_generator", "cfa_epinow2_pipeline"]
-    backfill_id = launch_asset_backfill(
-        asset_selection,
-        partition_keys,
-    )
-    context.log.info(
-        f"Launched backfill with id: '{backfill_id}'. "
-        "Click the output metadata url to monitor"
-    )
-    return dg.Output(
-        value=backfill_id,
-        metadata={
-            "url": dg.MetadataValue.url(f"/runs/b/{backfill_id}")
-        }
-    )
+def build_image(context: dg.OpExecutionContext, should_push: bool):
+    cmd = f"docker build -t {image} ."
+
+    if should_push:
+        subprocess.run(
+            f"az login --identity && az acr login -n {IMAGE_REGISTRY}",
+            check=True,
+            shell=True,
+        )
+        cmd += " --push"
+
+    context.log.debug(f"Running {cmd}")
+    subprocess.run(cmd, check=True, shell=True)
 
 
-# This just calls the graphql api to launch the pipeline so it's
-# small enough to run directly on the code location
 @dg.job(
-    executor_def=dg.in_process_executor,
-    tags={
-        "cfa_dagster/launcher": {
-            "class": dg.DefaultRunLauncher.__name__
-        }
-    }
-)
-def weekly_rt_pipeline():
-    launch_pipeline()
-
-
-schedule_weekly_rt_pipeline = dg.ScheduleDefinition(
-    default_status=(
-        dg.DefaultScheduleStatus.RUNNING
-        # don't run locally by default
-        if is_production else dg.DefaultScheduleStatus.STOPPED
+    config=dg.RunConfig(
+        ops={"build_image": {"inputs": {"should_push": False}}},
+        # configure this job to run on your computer
+        execution=default_config.to_run_config(),
     ),
-    job=weekly_rt_pipeline,
-    cron_schedule="30 6 * * 3",
-    execution_timezone="America/New_York",
+    executor_def=dynamic_executor(),
 )
+def build_image_job():
+    build_image()
 
+# change storage accounts between dev and prod
+storage_account = "cfadagster" if is_production() else "cfadagsterdev"
+
+# automatically collect Dagster definitions from the current file
 collected_defs = collect_definitions(globals())
 
-# Create Definitions object
+# Create Dagster definitions
 defs = dg.Definitions(
-    assets=collected_defs["assets"],
-    asset_checks=collected_defs["asset_checks"],
-    jobs=collected_defs["jobs"],
-    sensors=collected_defs["sensors"],
-    schedules=collected_defs["schedules"],
+    **collected_defs,
     resources={
         # This IOManager lets Dagster serialize asset outputs and store them
         # in Azure to pass between assets
         "io_manager": ADLS2PickleIOManager(),
+        # an example storage account
+        "azure_blob_storage": AzureBlobStorageResource(
+            account_url=f"{storage_account}.blob.core.windows.net",
+            credential=AzureBlobStorageDefaultCredential(),
+        ),
     },
-    # in_process_executor runs steps directly in the RunLauncher environment
-    # When paired with the AzureContainerAppJobRunLauncher, this lets
-    # cfa-config-generator and cfa-epinow2-pipeline run on the same CAJ
-    executor=dg.in_process_executor,
-    metadata={
-        "cfa_dagster/launcher": {
-            # uncomment the below to run locally using Docker
-            # "class": DockerRunLauncher.__name__,
-            # "config": {
-            #     "image": image,
-            # }
-            "class": AzureContainerAppJobRunLauncher.__name__,
-            "config": {
-                "image": image,
-                "container_app_job_name": "cfa-epinow2-pipeline"
-            }
-        }
-    }
+    executor=dynamic_executor(
+        # try switching to Azure compute after pushing your image
+        default_config=default_config,
+        # default_config=docker_config,
+        # default_config=azure_caj_config,
+        # default_config=azure_batch_config,
+        # alternate configs show you default values in the Launchpad on hover
+        alternate_configs=[
+            default_config,
+            docker_config,
+            azure_caj_config,
+            azure_batch_config,
+        ],
+    ),
 )
-'''
