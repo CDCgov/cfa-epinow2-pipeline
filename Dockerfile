@@ -6,6 +6,9 @@ ENV VIRTUAL_ENV=/.venv
 # Update PATH to use the selected venv at runtime
 ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
 
+ARG WORKDIR=/app
+WORKDIR ${WORKDIR}
+
 # Will copy the package to the container preserving the directory structure
 RUN mkdir -p pkg
 
@@ -32,21 +35,25 @@ RUN R CMD build --no-build-vignettes --no-manual pkg && \
 # Ensure the package is working properly
 RUN R CMD check --no-build-vignettes --no-manual CFAEpiNow2Pipeline_*.tar.gz
 
-#
-# Bring in python project dependency information and set the virtual env
-#
+# We need curl to get UV and git to get a python dependency from GitHub
+RUN apt-get update && apt-get install -y curl git
 
-# Python from https://docs.astral.sh/uv/guides/integration/docker/
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+# install uv and add to PATH
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
 
-# Dependency information
-COPY pyproject.toml ./pyproject.toml
-COPY uv.lock ./uv.lock
+# add Dagster workflow file
+COPY ./dagster_defs.py .
 
-# Create the virtual environment
-RUN uv venv "${VIRTUAL_ENV}"
+# remove dev depencies before install
+RUN sed -i 's/cfa-dagster\[[^]]*\]/cfa-dagster/' dagster_defs.py
 
-# Dagster
-COPY dagster_defs.py ./dagster_defs.py
+# create a virtual environment for the dagster workflows
+ENV VIRTUAL_ENV=${WORKDIR}/.venv
+RUN uv venv ${VIRTUAL_ENV}
 
-CMD ["bash"]
+# install the dagster workflow dependencies
+RUN uv sync --script dagster_defs.py --active
+
+# add the dagster workflow dependencies to the system path
+ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
