@@ -51,11 +51,33 @@ STORAGE_ACCOUNT_PATH = f"https://{STORAGE_ACCOUNT}.blob.core.windows.net"
 CONFIG_CONTAINER = "rt-epinow2-config"
 # OUTPUT_CONTAINER = "nssp-rt-v2" if is_production else "nssp-rt-testing"
 OUTPUT_CONTAINER = "nssp-rt-testing"  # hard-coding test during Dagster evaluation
-image_tag = "latest" if is_production() else user
+
+# get the Git branch name 
+def get_git_branch() -> str:
+    try:
+        branch = subprocess.check_output(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+        return branch.replace("/", "-")
+    except Exception:
+        return "latest"
+
+# set the current Git branch as the image tag
+branch = get_git_branch()
+IMAGE_REGISTRY = "cfaprdbatchcr"
+image_tag = "latest" if is_production() else branch
 image = f"{IMAGE_REGISTRY}.azurecr.io/cfa-epinow2-pipeline:{image_tag}"
 
-
+# Setting the working directory to match the working directory in the 
+# Dockerfile 
 workdir = "/app"
+
+# ----------------
+# Dagster configs - defines executors
+# Executors control how steps in a job run are executed
+# ---------------- 
 
 # this is the default run config that launches the job in your local shell
 # and executes each step in a separate system process
@@ -118,7 +140,7 @@ azure_caj_config = ExecutionConfig(
     executor=SelectorConfig(
         class_name=azure_container_app_job_executor.__name__,
         config={
-            "container_app_job_name": "cfa-dagster",
+            "container_app_job_name": "cfa-epinow2-pipeline",
             # specify a default image
             "image": image,
             # set env vars here
@@ -136,7 +158,7 @@ azure_batch_config = ExecutionConfig(
         class_name=azure_batch_executor.__name__,
         config={
             # change the pool_name to your existing pool name
-            "pool_name": "cfa-dagster",
+            "pool_name": "cfa-epinow2-pipeline",
             # specify a default image
             "image": image,
             # set env vars here
@@ -159,19 +181,26 @@ azure_batch_config = ExecutionConfig(
 # ----------------
 
 class RtConfig(dg.Config):
+    # Define a unique job identifier by combining a fixed string with the current UTC timestamp
     job_id: str = (
         "Rt-estimation-" +
-        datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")  # Format: YYYYMMDD_HHMMSS
     )
-   
-    report_date_str: str = datetime.now(timezone.utc).strftime("%F")
+    # Set the report date as a string in the format YYYY-MM-DD using current UTC time
+    report_date_str: str = datetime.now(timezone.utc).strftime("%F")  # Equivalent to "%Y-%m-%d"
+    # Name of the storage container where outputs will be saved
     output_container: str = OUTPUT_CONTAINER
+    # Name of the storage container from which input data will be read
     input_container: str = "nssp-etl"
+    # The production date in ISO format (YYYY-MM-DD), using local date
     production_date_str: str = date.today().isoformat()
+    # The proportion of active facilities to consider in the Rt estimation
     facility_active_proportion: float = 0.94
+    # List of diseases to include in the Rt estimation
     disease: list[str] = list(all_diseases)
-    #states: list[str] = sorted(nssp_valid_states)
-    states: list[str] = ['AZ']
+    # List of states to process. The full list is commented out, currently only AZ is used for testing
+    # states: list[str] = sorted(nssp_valid_states)
+    states: list[str] = ['AZ']  # Subset of states used for testing purposes
 
 @dynamic_graph_asset(
     graph_dimensions = ["disease", "states"],
@@ -214,14 +243,13 @@ def cfa_config_generator(
         facility_active_proportion=config.facility_active_proportion,
     )[0]  # only exepecting one
     task_id = rt_config["task_id"]
-    yield dg.MaterializeResult(
+    yield dg.Output(
         value=rt_config,
         metadata={
             "storage_account": STORAGE_ACCOUNT,
             "storage_container": CONFIG_CONTAINER,
             "job_id": config.job_id,
             "blob": f"{config.job_id}/{task_id}.json",
-            "config": rt_config
         }
     )
     return rt_config
@@ -234,16 +262,15 @@ def cfa_config_generator(
 def cfa_epinow2_pipeline(
     context: DynamicGraphAssetExecutionContext,
     config: RtConfig,
-    cfa_config_generator: dict,
+    cfa_config_generator: dict, #this is the output from the config asset 
 ) -> str:
-    config_results = cfa_config_generator.value
+    config_results = cfa_config_generator
 
     job_id = config_results["job_id"]
-    task_id = config_results['task_id']
+    task_id = config_results["task_id"]
+    blob_name = f"{job_id}/{task_id}.json"
     
-    blob_name = f"{job_id}-{task_id}.json"
-    #blob_name = 'Rt-estimation-2024-12-17T19-50-06.000814+00-00-1d15d198bcb011ef9673696322d524e5'
-                    #Rt-estimation-20260609_160433-AZ_COVID-19_2026-06-09T16:04:37.973199+00:00.json
+    # debug logs printed in 
     context.log.debug(f"job_id: '{job_id}'")
     context.log.debug(f"blob_name: '{blob_name}'")
     context.log.debug(f"config: '{config}'")
@@ -255,10 +282,9 @@ def cfa_epinow2_pipeline(
              f"config_container = '{CONFIG_CONTAINER}')"),
     ], check=True)
     output_path = f"{STORAGE_ACCOUNT_PATH}/{OUTPUT_CONTAINER}/{job_id}"
-    return dg.MaterializeResult(
+    return dg.Output(
         value=output_path,
         metadata={
-            "config": config,
             "output_path": output_path,
             "storage_account": STORAGE_ACCOUNT,
             "storage_container": OUTPUT_CONTAINER,
@@ -269,8 +295,7 @@ def cfa_epinow2_pipeline(
 # ------------------------------------------------
 # Jobs - tasks that don't produce tracked artifacts
 # ------------------------------------------------
-
-
+# build and push the image to azure 
 @dg.op
 def build_image(context: dg.OpExecutionContext, should_push: bool):
     cmd = f"docker build -t {image} ."
@@ -286,7 +311,7 @@ def build_image(context: dg.OpExecutionContext, should_push: bool):
     context.log.debug(f"Running {cmd}")
     subprocess.run(cmd, check=True, shell=True)
 
-
+# run the build_image() code 
 @dg.job(
     config=dg.RunConfig(
         ops={"build_image": {"inputs": {"should_push": False}}},
@@ -319,9 +344,9 @@ defs = dg.Definitions(
     },
     executor=dynamic_executor(
         # try switching to Azure compute after pushing your image
-        default_config=default_config,
-        # default_config=docker_config,
-        # default_config=azure_caj_config,
+        # default_config=default_config,
+        #default_config=docker_config,
+        default_config=azure_caj_config,
         # default_config=azure_batch_config,
         # alternate configs show you default values in the Launchpad on hover
         alternate_configs=[
