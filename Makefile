@@ -49,11 +49,13 @@ container_login:
 tag: ## Tags the local image for pushing to the container registry
 	$(CNTR_MGR) tag $(IMAGE_NAME):$(TAG) $(REGISTRY)$(IMAGE_NAME):$(TAG)
 
+# Current config outputs to nssp-rt-testing container
+# Change to nssp-rt-v2 if prod
 config: ## Generates a configuration file for running the model
 	uv run azure/generate_configs.py \
 		--disease="COVID-19,Influenza,RSV" \
 		--state=all \
-		--output-container=nssp-rt-v2 \
+		--output-container=nssp-rt-testing \
 		--input-container=$(API_CONTAINER) \
 		--job-id=$(JOB) \
 		--report-date-str=$(REPORT_DATE)
@@ -68,6 +70,7 @@ rerun-config: ## Generate a configuration file to rerun a previous model
 run-caj: ## Runs run_container_app_job.py on Azure Container App Jobs
 	uv run azure/run_container_app_job.py \
 		--image_name="$(REGISTRY)$(IMAGE_NAME):$(TAG)" \
+		--config_container="$(CONFIG_CONTAINER)" \
 		--job_id="$(JOB)"
 
 
