@@ -4,7 +4,7 @@ version = "0.2.0"
 description = "CFA Epinow2 Pipeline"
 readme = "README.md"
 authors = [
-    { name = "Kelly Reagan", email = "kelly.a.reagan@gmail.com" }
+    { name = "Kelly Reagan" }
 ]
 requires-python = ">=3.10,<3.14"
 dependencies = [
@@ -24,7 +24,8 @@ dependencies = [
     "azure-keyvault-secrets",
     "psycopg2-binary",
     # used by dagster clis, just importing an error
-    "click"
+    "click",
+    "cfa-dagster @ git+https://github.com/cdcgov/cfa-dagster.git",
 ]
 
 [project.scripts]

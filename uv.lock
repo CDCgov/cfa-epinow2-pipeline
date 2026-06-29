@@ -359,6 +359,29 @@ wheels = [
 ]
 
 [[package]]
+name = "cfa-dagster"
+version = "1.3.0"
+source = { git = "https://github.com/cdcgov/cfa-dagster.git#07b85bd20902be406893e2a9f55d7611660cdade" }
+dependencies = [
+    { name = "aiofiles" },
+    { name = "azure-batch" },
+    { name = "azure-identity" },
+    { name = "azure-keyvault-secrets" },
+    { name = "azure-mgmt-appcontainers" },
+    { name = "azure-mgmt-subscription" },
+    { name = "click" },
+    { name = "dagster" },
+    { name = "dagster-azure" },
+    { name = "dagster-docker" },
+    { name = "dagster-graphql" },
+    { name = "dagster-postgres" },
+    { name = "dagster-shared" },
+    { name = "msrest" },
+    { name = "psycopg2-binary" },
+    { name = "pyyaml" },
+]
+
+[[package]]
 name = "cfa-epinow2-pipeline"
 version = "0.2.0"
 source = { editable = "." }
@@ -369,6 +392,7 @@ dependencies = [
     { name = "azure-keyvault-secrets" },
     { name = "azure-mgmt-appcontainers" },
     { name = "azure-mgmt-subscription" },
+    { name = "cfa-dagster" },
     { name = "click" },
     { name = "dagster" },
     { name = "dagster-azure" },
@@ -398,6 +422,7 @@ requires-dist = [
     { name = "azure-keyvault-secrets" },
     { name = "azure-mgmt-appcontainers", specifier = "~=4.0.0" },
     { name = "azure-mgmt-subscription", specifier = "~=3.1.1" },
+    { name = "cfa-dagster", git = "https://github.com/cdcgov/cfa-dagster.git" },
     { name = "click" },
     { name = "dagster", specifier = ">=1.12.2,<1.14" },
     { name = "dagster-azure", specifier = "~=0.29.2" },
