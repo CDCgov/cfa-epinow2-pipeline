@@ -6,7 +6,7 @@ ENV VIRTUAL_ENV=/.venv
 # Update PATH to use the selected venv at runtime
 ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
 
-ARG WORKDIR=/app
+ARG WORKDIR=/cfa-epinow2-pipeline
 WORKDIR ${WORKDIR}
 
 # Will copy the package to the container preserving the directory structure
