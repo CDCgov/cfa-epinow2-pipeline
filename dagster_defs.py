@@ -88,11 +88,7 @@ container_workdir = Path(
 # In prod, launches on the code location but runs in Azure Container App Jobs
 # Used for lightweight assets and jobs, etc. where volume mounts are not needed
 basic_execution_config = ExecutionConfig(
-    executor=SelectorConfig(
-        class_name=azure_container_app_job_executor.__name__
-        if is_production
-        else dg.multiprocess_executor.__name__
-    ),
+    executor=SelectorConfig(class_name=dg.multiprocess_executor.__name__),
 )
 
 # configuring an executor to run each workflow step in a new Docker container
@@ -182,16 +178,15 @@ class RtConfig(dg.ConfigurableResource):
     facility_active_proportion: float = 0.94
     # List of diseases to include in the Rt estimation
     # disease: list[str] = list(all_diseases)
-    # disease: GraphDimension[str] = GraphDimension(["COVID", "FLU", "RSV"])
-    disease: GraphDimension[str] = GraphDimension(["FLU"])
-
+    disease: GraphDimension[str] = GraphDimension(["COVID-19","Influenza","RSV"])
+    #disease: GraphDimension[str] = GraphDimension("COVID-19")
     # List of states to process. The full list is commented out, currently only AZ is used for testing
     # states: list[str] = sorted(nssp_valid_states)
     # states: list[str] = ['AZ']  # Subset of states used for testing purposes
     states: GraphDimension[str] = GraphDimension(["AZ"])
 
 @dynamic_graph_asset(
-    description = "Rt pipeline config generation",
+    description = "Rt pipeline config generation"
 )
 def cfa_config_generator(
     context: dg.OpExecutionContext,
@@ -201,7 +196,7 @@ def cfa_config_generator(
     The Rt pipeline config
     """
     context.log.debug(f"config: '{rt_config}'")
-    state = rt_config.state.current_value
+    state = rt_config.states.current_value
     context.log.info(f"Running for state: {state}")
     disease = rt_config.disease.current_value
     context.log.info(f"Running for disease: {disease}")
@@ -210,7 +205,7 @@ def cfa_config_generator(
     now: datetime = datetime.now(timezone.utc)
 
     # Make sure facility_active_proportion is between 0 and 1.
-    if not (0 <= config.facility_active_proportion <= 1):
+    if not (0 <= rt_config.facility_active_proportion <= 1):
         raise ValueError(
             "facility_active_proportion must be between 0 and 1, inclusive."
         )
@@ -226,7 +221,7 @@ def cfa_config_generator(
         data_path=f"gold/{report_date.isoformat()}.parquet",
         data_container=rt_config.input_container,
         production_date=production_date,
-        job_id=config.job_id,
+        job_id=rt_config.job_id,
         as_of_date=now.isoformat(),
         output_container=rt_config.output_container,
         facility_active_proportion=rt_config.facility_active_proportion,
@@ -239,23 +234,23 @@ def cfa_config_generator(
             "storage_container": CONFIG_CONTAINER,
             "job_id": rt_config.job_id,
             "blob": f"{rt_config.job_id}/{task_id}.json",
-        }
+        },
     )
-    return rt_config_dict
-
 
 @dynamic_graph_asset(
     description = "A parallel asset that runs the Rt pipeline for different diseases and states",
+    ins={"cfa_config_generator": dg.In()},
 )
 def cfa_epinow2_pipeline(
     context: dg.OpExecutionContext,
     rt_config: RtConfig,
     cfa_config_generator: dict, #this is the output from the config asset 
 ) -> str:
-    config_results = cfa_config_generator
+    values = cfa_config_generator[0]
 
-    job_id = config_results["job_id"]
-    task_id = config_results["task_id"]
+    job_id = values["job_id"]
+    task_id = values["task_id"]
+
     blob_name = f"{job_id}/{task_id}.json"
     
     # debug logs printed in 
@@ -310,7 +305,6 @@ if not is_production():
 
         build_command = [
             "docker",
-            "buildx",
             "build",
             "-t",
             image,
@@ -324,7 +318,7 @@ if not is_production():
                 ["az", "login", "--identity"],
                 check=True,
             )
-            subprocess.run(["az", "acr", "login", "-n", registry], check=True)
+            subprocess.run(["az", "acr", "login", "-n", IMAGE_REGISTRY], check=True)
             build_command.append("--push")
         context.log.info(f"Running {' '.join(build_command)}")
         subprocess.run(build_command, check=True)
@@ -403,6 +397,76 @@ if not is_production():
     def explore_image():
         explore_image_op()
 
+
+    @dg.op(
+    description="Runs the 'run-prod' command: generates a configuration file and runs the container app job.",
+)
+    def run_prod_op(context, api_container: str, job_id: str, report_date: str, registry: str, image_name: str, tag: str, config_container: str) -> str:
+        """
+        Dagster op to perform the 'run-prod' command.
+        """
+        # Step 1: Run the 'config' command
+        config_command = [
+            "uv", "run", "azure/generate_configs.py",
+            f"--disease=COVID-19,Influenza,RSV",
+            f"--state=all",
+            f"--output-container=nssp-rt-testing",
+            f"--input-container={api_container}",
+            f"--job-id={job_id}",
+            f"--report-date-str={report_date}",
+        ]
+
+        context.log.info(f"Running 'config' command: {' '.join(config_command)}")
+        try:
+            subprocess.run(config_command, check=True, capture_output=True, text=True)
+            context.log.info("Successfully ran 'config' command.")
+        except subprocess.CalledProcessError as e:
+            context.log.error(f"Failed to run 'config' command: {e.stderr}")
+            raise
+
+        # Step 2: Run the 'run-caj' command
+        run_caj_command = [
+            "uv", "run", "azure/run_container_app_job.py",
+            f"--image_name={registry}{image_name}:{tag}",
+            f"--config_container={config_container}",
+            f"--job_id={job_id}",
+        ]
+
+        context.log.info(f"Running 'run-caj' command: {' '.join(run_caj_command)}")
+        try:
+            subprocess.run(run_caj_command, check=True, capture_output=True, text=True)
+            context.log.info("Successfully ran 'run-caj' command.")
+        except subprocess.CalledProcessError as e:
+            context.log.error(f"Failed to run 'run-caj' command: {e.stderr}")
+            raise
+
+        return "Successfully completed 'run-prod' command."
+    @dg.job(
+        description=(
+            "Build the config container and run the container."
+        ),
+        config=dg.RunConfig(
+                ops={
+                    "run_prod_op": {
+                        "inputs": {
+                            "api_container": "nssp-etl",
+                            "job_id": "Rt-estimation-" + datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"),
+                            "report_date": datetime.now(timezone.utc).strftime("%F"),
+                            "registry": IMAGE_REGISTRY,
+                            "image_name": "cfa-epinow2-pipeline",
+                            "tag": image_tag,
+                            "config_container": CONFIG_CONTAINER,
+                        }
+                    }
+                },
+                # configure this job to run on your computer
+                execution=basic_execution_config.to_run_config(),
+            ),
+            executor_def=dynamic_executor(),
+        )
+    def run_prod():
+        run_prod_op()
+
 # ============================================================================
 # Dagster Definitions object 
 # ============================================================================
@@ -428,9 +492,9 @@ defs = dg.Definitions(
     },
     executor=dynamic_executor(
         # try switching to Azure compute after pushing your image
-        default_config=basic_execution_config,
+        #default_config=basic_execution_config,
         #default_config=docker_config,
-        #default_config=azure_caj_config,
+        default_config=azure_caj_config,
         # default_config=azure_batch_config,
         # alternate configs show you default values in the Launchpad on hover
         alternate_configs=[
