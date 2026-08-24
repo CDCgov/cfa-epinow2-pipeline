@@ -6,42 +6,42 @@ readme = "README.md"
 authors = [
     { name = "Kelly Reagan" }
 ]
-requires-python = ">=3.10,<3.14"
+requires-python = ">=3.13.2,<3.14"
 dependencies = [
     "pyyaml~=6.0.2",
     "azure-identity~=1.25.1",
     "msrest~=0.7.1",
-    "azure-batch~=14.2.0",
     "azure-mgmt-appcontainers~=4.0.0",
     "azure-mgmt-subscription~=3.1.1",
-    "dagster-azure~=0.29.2",
-    "dagster-docker~=0.29.2",
-    "dagster>=1.12.2,<1.14",
-    "dagster-shared>=1.12.2,<1.14",
-    "dagster-graphql>=1.12.2,<1.14",
-    "dagster-postgres~=0.29.2",
     "aiofiles~=24.1.0",
     "azure-keyvault-secrets",
-    "psycopg2-binary",
-    # used by dagster clis, just importing an error
-    "click",
-    "cfa-dagster @ git+https://github.com/cdcgov/cfa-dagster.git",
+    "cfa-dagster",
+    "cfa-config-generator",
 ]
 
-[project.scripts]
-cfa-dagster = "cfa_dagster.utils:run_dagster"
-cfa-dg = "cfa_dagster.utils:run_dg"
-cfa-dagster-webserver = "cfa_dagster.utils:run_dagster_webserver"
 
 [project.optional-dependencies]
 test = [
     "pytest>=7.0.0",
 ]
+[dependency-groups]
 dev = [
-    "dagster-webserver>=1.12.2,<1.14",
-    "dagster-dg-cli~=1.13.3",
+    "cfa-dagster[dev]"
 ]
 
 [build-system]
 requires = ["uv_build>=0.8.4,<0.9.0"]
 build-backend = "uv_build"
+
+[tool.dg]
+directory_type = "project"
+
+[tool.dg.project]
+root_module = "cfa_epinow2_pipeline"
+defs_module = "cfa_epinow2_pipeline.dg_defs"
+code_location_target_module = "cfa_epinow2_pipeline.dg_defs"
+
+[tool.uv.sources]
+# cfa-dagster = { git = "https://github.com/cdcgov/cfa-dagster", rev = "v1.4.3" }
+cfa-dagster = { git = "https://github.com/cdcgov/cfa-dagster", rev = "gio-flex-defs" }
+cfa-config-generator = { git = "https://github.com/cdcgov/cfa-config-generator.git" }

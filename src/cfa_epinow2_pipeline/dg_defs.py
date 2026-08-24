@@ -71,6 +71,7 @@ branch = get_git_branch()
 IMAGE_REGISTRY = "cfaprdbatchcr"
 image_tag = "latest" if is_production() else branch
 image = f"{IMAGE_REGISTRY}.azurecr.io/cfa-epinow2-pipeline:{image_tag}"
+image = "ghcr.io/giomrella/cfa_dagster:epinow2"
 
 # Instead of hardcoding the repo name, this will always find the containing directory of this defs file
 local_workdir = Path(__file__).parent.resolve()  # absolute path to the workdir
@@ -289,8 +290,6 @@ if not is_production():
         context: dg.OpExecutionContext,
         should_push: bool,
         should_deploy_to_prod: bool,
-        dockerfile_path: str,
-        build_context: str,
         image: str,
     ):
         """
@@ -298,8 +297,6 @@ if not is_production():
 
         should_push: bool - should the image be pushed to the Container Registry?
         should_deploy_to_prod: bool - should the prod server be updated with the newest image? (usually you do not want to do this)
-        dockerfile_path: str - where is the Dockerfile located locally? (has a default)
-        build_context: str - where should we build from? (has a default)
         image: str - the full name (including registry and tag) of the image
         """
 
@@ -308,17 +305,15 @@ if not is_production():
             "build",
             "-t",
             image,
-            "-f",
-            dockerfile_path,
-            build_context,
+            ".",
         ]
 
         if should_push:
-            subprocess.run(
-                ["az", "login", "--identity"],
-                check=True,
-            )
-            subprocess.run(["az", "acr", "login", "-n", IMAGE_REGISTRY], check=True)
+            # subprocess.run(
+            #     ["az", "login", "--identity"],
+            #     check=True,
+            # )
+            # subprocess.run(["az", "acr", "login", "-n", IMAGE_REGISTRY], check=True)
             build_command.append("--push")
         context.log.info(f"Running {' '.join(build_command)}")
         subprocess.run(build_command, check=True)
@@ -349,9 +344,6 @@ if not is_production():
                     "inputs": {
                         "should_push": True,
                         "should_deploy_to_prod": False,
-                        "dockerfile_path": f"{local_workdir}/Dockerfile",
-                        # the build context should be the top level of the repo
-                        "build_context": str(local_workdir),
                         "image": image,
                     }
                 }

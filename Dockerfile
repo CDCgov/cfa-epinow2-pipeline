@@ -42,18 +42,21 @@ RUN apt-get update && apt-get install -y curl git
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="/root/.local/bin:$PATH"
 
-# add Dagster workflow file
-COPY ./dagster_defs.py .
-
-# remove dev depencies before install
-RUN sed -i 's/cfa-dagster\[[^]]*\]/cfa-dagster/' dagster_defs.py
+# copy dependency files
+COPY ./pyproject.toml .
+COPY ./uv.lock .
 
 # create a virtual environment for the dagster workflows
 ENV VIRTUAL_ENV=${WORKDIR}/.venv
 RUN uv venv ${VIRTUAL_ENV}
+# sync python dependencies
+RUN uv sync --no-dev --no-install-project
 
-# install the dagster workflow dependencies
-RUN uv sync --script dagster_defs.py --active
+# add Dagster workflow file
+COPY ./src/cfa_epinow2_pipeline/dg_defs.py ./src/cfa_epinow2_pipeline/dg_defs.py
+COPY ./src/cfa_epinow2_pipeline/__init__.py ./src/cfa_epinow2_pipeline/__init__.py
+
+
 
 # add the dagster workflow dependencies to the system path
 ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
