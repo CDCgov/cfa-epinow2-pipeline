@@ -4,6 +4,7 @@
 
 ### Features
 
+- Updated the runner-actionv1.7.0
 - Add the ability to read data from API v2 as well as v1
 - dependabot updating package docker/login-action from version 3 to
   version 4 new

@@ -114,7 +114,7 @@ Each task is reproducible and defined by its own .json config file.
 
 3.  Run the job. Once all the required inputs are on a computer, inside
     the appropriate container image, for each task, the epinow2 model
-    will run, generate $R_{t}$ estimates, and write them to the
+    will run, generate $`R_t`$ estimates, and write them to the
     container’s file system.
 
 4.  Upload the outputs from the container to a persistent storage

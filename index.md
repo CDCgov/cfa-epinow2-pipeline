@@ -167,7 +167,7 @@ model quantities (as samples and summaries):
     `expected_obs_cases`.
 4.  `R[t]`: The time-varying effective reproduction number. Processed as
     `Rt`.
-5.  `r[t]` The instantaneous growth rate at time $t$. Processed as
+5.  `r[t]` The instantaneous growth rate at time $`t`$. Processed as
     `growth_rate`.
 
 ## Running the pipeline
@@ -266,6 +266,7 @@ script.
 > [here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-name-rules#microsoftcontainerregistry).
 
 ``` mermaid
+
 flowchart LR
 
   START((Start))---DEPS_CACHED
