@@ -1,6 +1,7 @@
 # CFAEpiNow2Pipeline v0.2.0
 
 ## Features
+* dependabot updating package actions/checkout from version 5 to version 7 new
 
 * Updated the runner-actionv1.7.0
 * Add the ability to read data from API v2 as well as v1
